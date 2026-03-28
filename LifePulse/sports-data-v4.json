@@ -1,0 +1,1543 @@
+{
+  "version": "2026-03-25",
+  "summerOlympicsDates": [
+    "1896-04-06",
+    "1900-05-14",
+    "1904-07-01",
+    "1908-04-27",
+    "1912-05-05",
+    "1920-04-20",
+    "1924-05-04",
+    "1928-05-17",
+    "1932-07-30",
+    "1936-08-01",
+    "1948-07-29",
+    "1952-07-19",
+    "1956-11-22",
+    "1960-08-25",
+    "1964-10-10",
+    "1968-10-12",
+    "1972-08-26",
+    "1976-07-17",
+    "1980-07-19",
+    "1984-07-28",
+    "1988-09-17",
+    "1992-07-25",
+    "1996-07-19",
+    "2000-09-15",
+    "2004-08-13",
+    "2008-08-08",
+    "2012-07-27",
+    "2016-08-05",
+    "2021-07-23",
+    "2024-07-26"
+  ],
+  "winterOlympicsDates": [
+    "1924-01-25",
+    "1928-02-11",
+    "1932-02-04",
+    "1936-02-06",
+    "1948-01-30",
+    "1952-02-14",
+    "1956-01-26",
+    "1960-02-18",
+    "1964-01-29",
+    "1968-02-06",
+    "1972-02-03",
+    "1976-02-04",
+    "1980-02-13",
+    "1984-02-08",
+    "1988-02-13",
+    "1992-02-08",
+    "1994-02-12",
+    "1998-02-07",
+    "2002-02-08",
+    "2006-02-10",
+    "2010-02-12",
+    "2014-02-07",
+    "2018-02-09",
+    "2022-02-04",
+    "2026-02-06"
+  ],
+  "worldCupDates": [
+    "1930-07-13",
+    "1934-05-27",
+    "1938-06-04",
+    "1950-06-24",
+    "1954-06-16",
+    "1958-06-08",
+    "1962-05-30",
+    "1966-07-11",
+    "1970-05-31",
+    "1974-06-13",
+    "1978-06-01",
+    "1982-06-13",
+    "1986-05-31",
+    "1990-06-08",
+    "1994-06-17",
+    "1998-06-10",
+    "2002-05-31",
+    "2006-06-09",
+    "2010-06-11",
+    "2014-06-12",
+    "2018-06-14",
+    "2022-11-20",
+    "2026-06-11"
+  ],
+  "superBowls": [
+    {
+      "date": "1967-01-15",
+      "conference": "NFC",
+      "team": "Green Bay Packers"
+    },
+    {
+      "date": "1968-01-14",
+      "conference": "NFC",
+      "team": "Green Bay Packers"
+    },
+    {
+      "date": "1969-01-12",
+      "conference": "AFC",
+      "team": "New York Jets"
+    },
+    {
+      "date": "1970-01-11",
+      "conference": "AFC",
+      "team": "Kansas City Chiefs"
+    },
+    {
+      "date": "1971-01-17",
+      "conference": "AFC",
+      "team": "Baltimore Colts"
+    },
+    {
+      "date": "1972-01-16",
+      "conference": "NFC",
+      "team": "Dallas Cowboys"
+    },
+    {
+      "date": "1973-01-14",
+      "conference": "AFC",
+      "team": "Miami Dolphins"
+    },
+    {
+      "date": "1974-01-13",
+      "conference": "AFC",
+      "team": "Miami Dolphins"
+    },
+    {
+      "date": "1975-01-12",
+      "conference": "AFC",
+      "team": "Pittsburgh Steelers"
+    },
+    {
+      "date": "1976-01-18",
+      "conference": "AFC",
+      "team": "Pittsburgh Steelers"
+    },
+    {
+      "date": "1977-01-09",
+      "conference": "AFC",
+      "team": "Oakland Raiders"
+    },
+    {
+      "date": "1978-01-15",
+      "conference": "NFC",
+      "team": "Dallas Cowboys"
+    },
+    {
+      "date": "1979-01-21",
+      "conference": "AFC",
+      "team": "Pittsburgh Steelers"
+    },
+    {
+      "date": "1980-01-20",
+      "conference": "AFC",
+      "team": "Pittsburgh Steelers"
+    },
+    {
+      "date": "1981-01-25",
+      "conference": "AFC",
+      "team": "Oakland Raiders"
+    },
+    {
+      "date": "1982-01-24",
+      "conference": "NFC",
+      "team": "San Francisco 49ers"
+    },
+    {
+      "date": "1983-01-30",
+      "conference": "NFC",
+      "team": "Washington Redskins"
+    },
+    {
+      "date": "1984-01-22",
+      "conference": "AFC",
+      "team": "Los Angeles Raiders"
+    },
+    {
+      "date": "1985-01-20",
+      "conference": "NFC",
+      "team": "San Francisco 49ers"
+    },
+    {
+      "date": "1986-01-26",
+      "conference": "NFC",
+      "team": "Chicago Bears"
+    },
+    {
+      "date": "1987-01-25",
+      "conference": "NFC",
+      "team": "New York Giants"
+    },
+    {
+      "date": "1988-01-31",
+      "conference": "NFC",
+      "team": "Washington Redskins"
+    },
+    {
+      "date": "1989-01-22",
+      "conference": "NFC",
+      "team": "San Francisco 49ers"
+    },
+    {
+      "date": "1990-01-28",
+      "conference": "NFC",
+      "team": "San Francisco 49ers"
+    },
+    {
+      "date": "1991-01-27",
+      "conference": "NFC",
+      "team": "New York Giants"
+    },
+    {
+      "date": "1992-01-26",
+      "conference": "NFC",
+      "team": "Washington Redskins"
+    },
+    {
+      "date": "1993-01-31",
+      "conference": "NFC",
+      "team": "Dallas Cowboys"
+    },
+    {
+      "date": "1994-01-30",
+      "conference": "NFC",
+      "team": "Dallas Cowboys"
+    },
+    {
+      "date": "1995-01-29",
+      "conference": "NFC",
+      "team": "San Francisco 49ers"
+    },
+    {
+      "date": "1996-01-28",
+      "conference": "NFC",
+      "team": "Dallas Cowboys"
+    },
+    {
+      "date": "1997-01-26",
+      "conference": "NFC",
+      "team": "Green Bay Packers"
+    },
+    {
+      "date": "1998-01-25",
+      "conference": "AFC",
+      "team": "Denver Broncos"
+    },
+    {
+      "date": "1999-01-31",
+      "conference": "AFC",
+      "team": "Denver Broncos"
+    },
+    {
+      "date": "2000-01-30",
+      "conference": "NFC",
+      "team": "St. Louis Rams"
+    },
+    {
+      "date": "2001-01-28",
+      "conference": "AFC",
+      "team": "Baltimore Ravens"
+    },
+    {
+      "date": "2002-02-03",
+      "conference": "AFC",
+      "team": "New England Patriots"
+    },
+    {
+      "date": "2003-01-26",
+      "conference": "NFC",
+      "team": "Tampa Bay Buccaneers"
+    },
+    {
+      "date": "2004-02-01",
+      "conference": "AFC",
+      "team": "New England Patriots"
+    },
+    {
+      "date": "2005-02-06",
+      "conference": "AFC",
+      "team": "New England Patriots"
+    },
+    {
+      "date": "2006-02-05",
+      "conference": "AFC",
+      "team": "Pittsburgh Steelers"
+    },
+    {
+      "date": "2007-02-04",
+      "conference": "AFC",
+      "team": "Indianapolis Colts"
+    },
+    {
+      "date": "2008-02-03",
+      "conference": "NFC",
+      "team": "New York Giants"
+    },
+    {
+      "date": "2009-02-01",
+      "conference": "AFC",
+      "team": "Pittsburgh Steelers"
+    },
+    {
+      "date": "2010-02-07",
+      "conference": "NFC",
+      "team": "New Orleans Saints"
+    },
+    {
+      "date": "2011-02-06",
+      "conference": "NFC",
+      "team": "Green Bay Packers"
+    },
+    {
+      "date": "2012-02-05",
+      "conference": "NFC",
+      "team": "New York Giants"
+    },
+    {
+      "date": "2013-02-03",
+      "conference": "AFC",
+      "team": "Baltimore Ravens"
+    },
+    {
+      "date": "2014-02-02",
+      "conference": "NFC",
+      "team": "Seattle Seahawks"
+    },
+    {
+      "date": "2015-02-01",
+      "conference": "AFC",
+      "team": "New England Patriots"
+    },
+    {
+      "date": "2016-02-07",
+      "conference": "AFC",
+      "team": "Denver Broncos"
+    },
+    {
+      "date": "2017-02-05",
+      "conference": "NFC",
+      "team": "New England Patriots"
+    },
+    {
+      "date": "2018-02-04",
+      "conference": "AFC",
+      "team": "Philadelphia Eagles"
+    },
+    {
+      "date": "2019-02-03",
+      "conference": "AFC",
+      "team": "New England Patriots"
+    },
+    {
+      "date": "2020-02-02",
+      "conference": "NFC",
+      "team": "Kansas City Chiefs"
+    },
+    {
+      "date": "2021-02-07",
+      "conference": "AFC",
+      "team": "Tampa Bay Buccaneers"
+    },
+    {
+      "date": "2022-02-13",
+      "conference": "NFC",
+      "team": "Los Angeles Rams"
+    },
+    {
+      "date": "2023-02-12",
+      "conference": "NFC",
+      "team": "Kansas City Chiefs"
+    },
+    {
+      "date": "2024-02-11",
+      "conference": "AFC",
+      "team": "Kansas City Chiefs"
+    },
+    {
+      "date": "2025-02-09",
+      "conference": "AFC",
+      "team": "Philadelphia Eagles"
+    },
+    {
+      "date": "2026-02-08",
+      "conference": "NFC"
+    }
+  ],
+  "worldSeries": [
+    {
+      "year": 1903,
+      "league": "AL",
+      "date": "1903-11-01",
+      "team": "Boston Americans"
+    },
+    {
+      "year": 1905,
+      "league": "NL",
+      "date": "1905-11-01",
+      "team": "New York Giants"
+    },
+    {
+      "year": 1906,
+      "league": "AL",
+      "date": "1906-11-01",
+      "team": "Chicago White Sox"
+    },
+    {
+      "year": 1907,
+      "league": "NL",
+      "date": "1907-11-01",
+      "team": "Chicago Cubs"
+    },
+    {
+      "year": 1908,
+      "league": "NL",
+      "date": "1908-11-01",
+      "team": "Chicago Cubs"
+    },
+    {
+      "year": 1909,
+      "league": "NL",
+      "date": "1909-11-01",
+      "team": "Pittsburgh Pirates"
+    },
+    {
+      "year": 1910,
+      "league": "AL",
+      "date": "1910-11-01",
+      "team": "Philadelphia Athletics"
+    },
+    {
+      "year": 1911,
+      "league": "AL",
+      "date": "1911-11-01",
+      "team": "Philadelphia Athletics"
+    },
+    {
+      "year": 1912,
+      "league": "AL",
+      "date": "1912-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 1913,
+      "league": "AL",
+      "date": "1913-11-01",
+      "team": "Philadelphia Athletics"
+    },
+    {
+      "year": 1914,
+      "league": "NL",
+      "date": "1914-11-01",
+      "team": "Boston Braves"
+    },
+    {
+      "year": 1915,
+      "league": "AL",
+      "date": "1915-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 1916,
+      "league": "AL",
+      "date": "1916-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 1917,
+      "league": "AL",
+      "date": "1917-11-01",
+      "team": "Chicago White Sox"
+    },
+    {
+      "year": 1918,
+      "league": "AL",
+      "date": "1918-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 1919,
+      "league": "NL",
+      "date": "1919-11-01",
+      "team": "Cincinnati Reds"
+    },
+    {
+      "year": 1920,
+      "league": "AL",
+      "date": "1920-11-01",
+      "team": "Cleveland Indians"
+    },
+    {
+      "year": 1921,
+      "league": "NL",
+      "date": "1921-11-01",
+      "team": "New York Giants"
+    },
+    {
+      "year": 1922,
+      "league": "NL",
+      "date": "1922-11-01",
+      "team": "New York Giants"
+    },
+    {
+      "year": 1923,
+      "league": "AL",
+      "date": "1923-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1924,
+      "league": "AL",
+      "date": "1924-11-01",
+      "team": "Washington Senators"
+    },
+    {
+      "year": 1925,
+      "league": "NL",
+      "date": "1925-11-01",
+      "team": "Pittsburgh Pirates"
+    },
+    {
+      "year": 1926,
+      "league": "NL",
+      "date": "1926-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1927,
+      "league": "AL",
+      "date": "1927-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1928,
+      "league": "AL",
+      "date": "1928-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1929,
+      "league": "AL",
+      "date": "1929-11-01",
+      "team": "Philadelphia Athletics"
+    },
+    {
+      "year": 1930,
+      "league": "AL",
+      "date": "1930-11-01",
+      "team": "Philadelphia Athletics"
+    },
+    {
+      "year": 1931,
+      "league": "NL",
+      "date": "1931-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1932,
+      "league": "AL",
+      "date": "1932-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1933,
+      "league": "NL",
+      "date": "1933-11-01",
+      "team": "New York Giants"
+    },
+    {
+      "year": 1934,
+      "league": "NL",
+      "date": "1934-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1935,
+      "league": "AL",
+      "date": "1935-11-01",
+      "team": "Detroit Tigers"
+    },
+    {
+      "year": 1936,
+      "league": "AL",
+      "date": "1936-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1937,
+      "league": "AL",
+      "date": "1937-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1938,
+      "league": "AL",
+      "date": "1938-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1939,
+      "league": "AL",
+      "date": "1939-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1940,
+      "league": "NL",
+      "date": "1940-11-01",
+      "team": "Cincinnati Reds"
+    },
+    {
+      "year": 1941,
+      "league": "AL",
+      "date": "1941-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1942,
+      "league": "NL",
+      "date": "1942-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1943,
+      "league": "AL",
+      "date": "1943-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1944,
+      "league": "NL",
+      "date": "1944-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1945,
+      "league": "AL",
+      "date": "1945-11-01",
+      "team": "Detroit Tigers"
+    },
+    {
+      "year": 1946,
+      "league": "NL",
+      "date": "1946-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1947,
+      "league": "AL",
+      "date": "1947-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1948,
+      "league": "AL",
+      "date": "1948-11-01",
+      "team": "Cleveland Indians"
+    },
+    {
+      "year": 1949,
+      "league": "AL",
+      "date": "1949-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1950,
+      "league": "AL",
+      "date": "1950-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1951,
+      "league": "AL",
+      "date": "1951-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1952,
+      "league": "AL",
+      "date": "1952-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1953,
+      "league": "AL",
+      "date": "1953-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1954,
+      "league": "NL",
+      "date": "1954-11-01",
+      "team": "New York Giants"
+    },
+    {
+      "year": 1955,
+      "league": "NL",
+      "date": "1955-11-01",
+      "team": "Brooklyn Dodgers"
+    },
+    {
+      "year": 1956,
+      "league": "AL",
+      "date": "1956-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1957,
+      "league": "NL",
+      "date": "1957-11-01",
+      "team": "Milwaukee Braves"
+    },
+    {
+      "year": 1958,
+      "league": "AL",
+      "date": "1958-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1959,
+      "league": "NL",
+      "date": "1959-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 1960,
+      "league": "NL",
+      "date": "1960-11-01",
+      "team": "Pittsburgh Pirates"
+    },
+    {
+      "year": 1961,
+      "league": "AL",
+      "date": "1961-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1962,
+      "league": "AL",
+      "date": "1962-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1963,
+      "league": "NL",
+      "date": "1963-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 1964,
+      "league": "NL",
+      "date": "1964-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1965,
+      "league": "NL",
+      "date": "1965-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 1966,
+      "league": "AL",
+      "date": "1966-11-01",
+      "team": "Baltimore Orioles"
+    },
+    {
+      "year": 1967,
+      "league": "NL",
+      "date": "1967-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1968,
+      "league": "AL",
+      "date": "1968-11-01",
+      "team": "Detroit Tigers"
+    },
+    {
+      "year": 1969,
+      "league": "NL",
+      "date": "1969-11-01",
+      "team": "New York Mets"
+    },
+    {
+      "year": 1970,
+      "league": "AL",
+      "date": "1970-11-01",
+      "team": "Baltimore Orioles"
+    },
+    {
+      "year": 1971,
+      "league": "NL",
+      "date": "1971-11-01",
+      "team": "Pittsburgh Pirates"
+    },
+    {
+      "year": 1972,
+      "league": "AL",
+      "date": "1972-11-01",
+      "team": "Oakland Athletics"
+    },
+    {
+      "year": 1973,
+      "league": "AL",
+      "date": "1973-11-01",
+      "team": "Oakland Athletics"
+    },
+    {
+      "year": 1974,
+      "league": "AL",
+      "date": "1974-11-01",
+      "team": "Oakland Athletics"
+    },
+    {
+      "year": 1975,
+      "league": "NL",
+      "date": "1975-11-01",
+      "team": "Cincinnati Reds"
+    },
+    {
+      "year": 1976,
+      "league": "NL",
+      "date": "1976-11-01",
+      "team": "Cincinnati Reds"
+    },
+    {
+      "year": 1977,
+      "league": "AL",
+      "date": "1977-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1978,
+      "league": "AL",
+      "date": "1978-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1979,
+      "league": "NL",
+      "date": "1979-11-01",
+      "team": "Pittsburgh Pirates"
+    },
+    {
+      "year": 1980,
+      "league": "NL",
+      "date": "1980-11-01",
+      "team": "Philadelphia Phillies"
+    },
+    {
+      "year": 1981,
+      "league": "NL",
+      "date": "1981-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 1982,
+      "league": "NL",
+      "date": "1982-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 1983,
+      "league": "AL",
+      "date": "1983-11-01",
+      "team": "Baltimore Orioles"
+    },
+    {
+      "year": 1984,
+      "league": "AL",
+      "date": "1984-11-01",
+      "team": "Detroit Tigers"
+    },
+    {
+      "year": 1985,
+      "league": "AL",
+      "date": "1985-11-01",
+      "team": "Kansas City Royals"
+    },
+    {
+      "year": 1986,
+      "league": "NL",
+      "date": "1986-11-01",
+      "team": "New York Mets"
+    },
+    {
+      "year": 1987,
+      "league": "AL",
+      "date": "1987-11-01",
+      "team": "Minnesota Twins"
+    },
+    {
+      "year": 1988,
+      "league": "NL",
+      "date": "1988-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 1989,
+      "league": "AL",
+      "date": "1989-11-01",
+      "team": "Oakland Athletics"
+    },
+    {
+      "year": 1990,
+      "league": "NL",
+      "date": "1990-11-01",
+      "team": "Cincinnati Reds"
+    },
+    {
+      "year": 1991,
+      "league": "AL",
+      "date": "1991-11-01",
+      "team": "Minnesota Twins"
+    },
+    {
+      "year": 1992,
+      "league": "AL",
+      "date": "1992-11-01",
+      "team": "Toronto Blue Jays"
+    },
+    {
+      "year": 1993,
+      "league": "AL",
+      "date": "1993-11-01",
+      "team": "Toronto Blue Jays"
+    },
+    {
+      "year": 1995,
+      "league": "NL",
+      "date": "1995-11-01",
+      "team": "Atlanta Braves"
+    },
+    {
+      "year": 1996,
+      "league": "AL",
+      "date": "1996-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1997,
+      "league": "NL",
+      "date": "1997-11-01",
+      "team": "Florida Marlins"
+    },
+    {
+      "year": 1998,
+      "league": "AL",
+      "date": "1998-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 1999,
+      "league": "AL",
+      "date": "1999-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 2000,
+      "league": "AL",
+      "date": "2000-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 2001,
+      "league": "NL",
+      "date": "2001-11-01",
+      "team": "Arizona Diamondbacks"
+    },
+    {
+      "year": 2002,
+      "league": "AL",
+      "date": "2002-11-01",
+      "team": "Anaheim Angels"
+    },
+    {
+      "year": 2003,
+      "league": "NL",
+      "date": "2003-11-01",
+      "team": "Florida Marlins"
+    },
+    {
+      "year": 2004,
+      "league": "AL",
+      "date": "2004-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 2005,
+      "league": "AL",
+      "date": "2005-11-01",
+      "team": "Chicago White Sox"
+    },
+    {
+      "year": 2006,
+      "league": "NL",
+      "date": "2006-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 2007,
+      "league": "AL",
+      "date": "2007-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 2008,
+      "league": "NL",
+      "date": "2008-11-01",
+      "team": "Philadelphia Phillies"
+    },
+    {
+      "year": 2009,
+      "league": "AL",
+      "date": "2009-11-01",
+      "team": "New York Yankees"
+    },
+    {
+      "year": 2010,
+      "league": "NL",
+      "date": "2010-11-01",
+      "team": "San Francisco Giants"
+    },
+    {
+      "year": 2011,
+      "league": "NL",
+      "date": "2011-11-01",
+      "team": "St. Louis Cardinals"
+    },
+    {
+      "year": 2012,
+      "league": "NL",
+      "date": "2012-11-01",
+      "team": "San Francisco Giants"
+    },
+    {
+      "year": 2013,
+      "league": "AL",
+      "date": "2013-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 2014,
+      "league": "NL",
+      "date": "2014-11-01",
+      "team": "San Francisco Giants"
+    },
+    {
+      "year": 2015,
+      "league": "AL",
+      "date": "2015-11-01",
+      "team": "Kansas City Royals"
+    },
+    {
+      "year": 2016,
+      "league": "NL",
+      "date": "2016-11-01",
+      "team": "Chicago Cubs"
+    },
+    {
+      "year": 2017,
+      "league": "AL",
+      "date": "2017-11-01",
+      "team": "Houston Astros"
+    },
+    {
+      "year": 2018,
+      "league": "AL",
+      "date": "2018-11-01",
+      "team": "Boston Red Sox"
+    },
+    {
+      "year": 2019,
+      "league": "NL",
+      "date": "2019-11-01",
+      "team": "Washington Nationals"
+    },
+    {
+      "year": 2020,
+      "league": "NL",
+      "date": "2020-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 2021,
+      "league": "NL",
+      "date": "2021-11-01",
+      "team": "Atlanta Braves"
+    },
+    {
+      "year": 2022,
+      "league": "AL",
+      "date": "2022-11-01",
+      "team": "Houston Astros"
+    },
+    {
+      "year": 2023,
+      "league": "AL",
+      "date": "2023-11-01",
+      "team": "Texas Rangers"
+    },
+    {
+      "year": 2024,
+      "league": "NL",
+      "date": "2024-11-01",
+      "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 2025,
+      "league": "NL",
+      "date": "2025-11-01",
+      "team": "Los Angeles Dodgers"
+    }
+  ],
+  "dynastyMilestones": [
+    {
+      "date": "1974-01-12",
+      "label": "Steelers 70s"
+    },
+    {
+      "date": "1980-05-16",
+      "label": "Showtime Lakers"
+    },
+    {
+      "date": "1991-06-12",
+      "label": "Bulls 90s"
+    },
+    {
+      "date": "1996-10-26",
+      "label": "Yankees Core Four"
+    },
+    {
+      "date": "2001-02-04",
+      "label": "Patriots/Brady"
+    },
+    {
+      "date": "2010-11-01",
+      "label": "Giants Even-Year Run"
+    },
+    {
+      "date": "2015-06-16",
+      "label": "Warriors Run"
+    }
+  ],
+  "nbaFinals": [
+    {
+      "year": 1947,
+      "team": "Philadelphia Warriors",
+      "date": "1947-06-15"
+    },
+    {
+      "year": 1948,
+      "team": "Baltimore Bullets",
+      "date": "1948-06-15"
+    },
+    {
+      "year": 1949,
+      "team": "Minneapolis Lakers",
+      "date": "1949-06-15"
+    },
+    {
+      "year": 1950,
+      "team": "Minneapolis Lakers",
+      "date": "1950-06-15"
+    },
+    {
+      "year": 1951,
+      "team": "Rochester Royals",
+      "date": "1951-06-15"
+    },
+    {
+      "year": 1952,
+      "team": "Minneapolis Lakers",
+      "date": "1952-06-15"
+    },
+    {
+      "year": 1953,
+      "team": "Minneapolis Lakers",
+      "date": "1953-06-15"
+    },
+    {
+      "year": 1954,
+      "team": "Minneapolis Lakers",
+      "date": "1954-06-15"
+    },
+    {
+      "year": 1955,
+      "team": "Syracuse Nationals",
+      "date": "1955-06-15"
+    },
+    {
+      "year": 1956,
+      "team": "Philadelphia Warriors",
+      "date": "1956-06-15"
+    },
+    {
+      "year": 1957,
+      "team": "Boston Celtics",
+      "date": "1957-06-15"
+    },
+    {
+      "year": 1958,
+      "team": "St. Louis Hawks",
+      "date": "1958-06-15"
+    },
+    {
+      "year": 1959,
+      "team": "Boston Celtics",
+      "date": "1959-06-15"
+    },
+    {
+      "year": 1960,
+      "team": "Boston Celtics",
+      "date": "1960-06-15"
+    },
+    {
+      "year": 1961,
+      "team": "Boston Celtics",
+      "date": "1961-06-15"
+    },
+    {
+      "year": 1962,
+      "team": "Boston Celtics",
+      "date": "1962-06-15"
+    },
+    {
+      "year": 1963,
+      "team": "Boston Celtics",
+      "date": "1963-06-15"
+    },
+    {
+      "year": 1964,
+      "team": "Boston Celtics",
+      "date": "1964-06-15"
+    },
+    {
+      "year": 1965,
+      "team": "Boston Celtics",
+      "date": "1965-06-15"
+    },
+    {
+      "year": 1966,
+      "team": "Boston Celtics",
+      "date": "1966-06-15"
+    },
+    {
+      "year": 1967,
+      "team": "Philadelphia 76ers",
+      "date": "1967-06-15"
+    },
+    {
+      "year": 1968,
+      "team": "Boston Celtics",
+      "date": "1968-06-15"
+    },
+    {
+      "year": 1969,
+      "team": "Boston Celtics",
+      "date": "1969-06-15"
+    },
+    {
+      "year": 1970,
+      "team": "New York Knicks",
+      "date": "1970-06-15"
+    },
+    {
+      "year": 1971,
+      "team": "Milwaukee Bucks",
+      "date": "1971-06-15"
+    },
+    {
+      "year": 1972,
+      "team": "Los Angeles Lakers",
+      "date": "1972-06-15"
+    },
+    {
+      "year": 1973,
+      "team": "New York Knicks",
+      "date": "1973-06-15"
+    },
+    {
+      "year": 1974,
+      "team": "Boston Celtics",
+      "date": "1974-06-15"
+    },
+    {
+      "year": 1975,
+      "team": "Golden State Warriors",
+      "date": "1975-06-15"
+    },
+    {
+      "year": 1976,
+      "team": "Boston Celtics",
+      "date": "1976-06-15"
+    },
+    {
+      "year": 1977,
+      "team": "Portland Trail Blazers",
+      "date": "1977-06-15"
+    },
+    {
+      "year": 1978,
+      "team": "Washington Bullets",
+      "date": "1978-06-15"
+    },
+    {
+      "year": 1979,
+      "team": "Seattle SuperSonics",
+      "date": "1979-06-15"
+    },
+    {
+      "year": 1980,
+      "team": "Los Angeles Lakers",
+      "date": "1980-06-15"
+    },
+    {
+      "year": 1981,
+      "team": "Boston Celtics",
+      "date": "1981-06-15"
+    },
+    {
+      "year": 1982,
+      "team": "Los Angeles Lakers",
+      "date": "1982-06-15"
+    },
+    {
+      "year": 1983,
+      "team": "Philadelphia 76ers",
+      "date": "1983-06-15"
+    },
+    {
+      "year": 1984,
+      "team": "Boston Celtics",
+      "date": "1984-06-15"
+    },
+    {
+      "year": 1985,
+      "team": "Los Angeles Lakers",
+      "date": "1985-06-15"
+    },
+    {
+      "year": 1986,
+      "team": "Boston Celtics",
+      "date": "1986-06-15"
+    },
+    {
+      "year": 1987,
+      "team": "Los Angeles Lakers",
+      "date": "1987-06-15"
+    },
+    {
+      "year": 1988,
+      "team": "Los Angeles Lakers",
+      "date": "1988-06-15"
+    },
+    {
+      "year": 1989,
+      "team": "Detroit Pistons",
+      "date": "1989-06-15"
+    },
+    {
+      "year": 1990,
+      "team": "Detroit Pistons",
+      "date": "1990-06-15"
+    },
+    {
+      "year": 1991,
+      "team": "Chicago Bulls",
+      "date": "1991-06-15"
+    },
+    {
+      "year": 1992,
+      "team": "Chicago Bulls",
+      "date": "1992-06-15"
+    },
+    {
+      "year": 1993,
+      "team": "Chicago Bulls",
+      "date": "1993-06-15"
+    },
+    {
+      "year": 1994,
+      "team": "Houston Rockets",
+      "date": "1994-06-15"
+    },
+    {
+      "year": 1995,
+      "team": "Houston Rockets",
+      "date": "1995-06-15"
+    },
+    {
+      "year": 1996,
+      "team": "Chicago Bulls",
+      "date": "1996-06-15"
+    },
+    {
+      "year": 1997,
+      "team": "Chicago Bulls",
+      "date": "1997-06-15"
+    },
+    {
+      "year": 1998,
+      "team": "Chicago Bulls",
+      "date": "1998-06-15"
+    },
+    {
+      "year": 1999,
+      "team": "San Antonio Spurs",
+      "date": "1999-06-15"
+    },
+    {
+      "year": 2000,
+      "team": "Los Angeles Lakers",
+      "date": "2000-06-15"
+    },
+    {
+      "year": 2001,
+      "team": "Los Angeles Lakers",
+      "date": "2001-06-15"
+    },
+    {
+      "year": 2002,
+      "team": "Los Angeles Lakers",
+      "date": "2002-06-15"
+    },
+    {
+      "year": 2003,
+      "team": "San Antonio Spurs",
+      "date": "2003-06-15"
+    },
+    {
+      "year": 2004,
+      "team": "Detroit Pistons",
+      "date": "2004-06-15"
+    },
+    {
+      "year": 2005,
+      "team": "San Antonio Spurs",
+      "date": "2005-06-15"
+    },
+    {
+      "year": 2006,
+      "team": "Miami Heat",
+      "date": "2006-06-15"
+    },
+    {
+      "year": 2007,
+      "team": "San Antonio Spurs",
+      "date": "2007-06-15"
+    },
+    {
+      "year": 2008,
+      "team": "Boston Celtics",
+      "date": "2008-06-15"
+    },
+    {
+      "year": 2009,
+      "team": "Los Angeles Lakers",
+      "date": "2009-06-15"
+    },
+    {
+      "year": 2010,
+      "team": "Los Angeles Lakers",
+      "date": "2010-06-15"
+    },
+    {
+      "year": 2011,
+      "team": "Dallas Mavericks",
+      "date": "2011-06-15"
+    },
+    {
+      "year": 2012,
+      "team": "Miami Heat",
+      "date": "2012-06-15"
+    },
+    {
+      "year": 2013,
+      "team": "Miami Heat",
+      "date": "2013-06-15"
+    },
+    {
+      "year": 2014,
+      "team": "San Antonio Spurs",
+      "date": "2014-06-15"
+    },
+    {
+      "year": 2015,
+      "team": "Golden State Warriors",
+      "date": "2015-06-15"
+    },
+    {
+      "year": 2016,
+      "team": "Cleveland Cavaliers",
+      "date": "2016-06-15"
+    },
+    {
+      "year": 2017,
+      "team": "Golden State Warriors",
+      "date": "2017-06-15"
+    },
+    {
+      "year": 2018,
+      "team": "Golden State Warriors",
+      "date": "2018-06-15"
+    },
+    {
+      "year": 2019,
+      "team": "Toronto Raptors",
+      "date": "2019-06-15"
+    },
+    {
+      "year": 2020,
+      "team": "Los Angeles Lakers",
+      "date": "2020-06-15"
+    },
+    {
+      "year": 2021,
+      "team": "Milwaukee Bucks",
+      "date": "2021-06-15"
+    },
+    {
+      "year": 2022,
+      "team": "Golden State Warriors",
+      "date": "2022-06-15"
+    },
+    {
+      "year": 2023,
+      "team": "Denver Nuggets",
+      "date": "2023-06-15"
+    },
+    {
+      "year": 2024,
+      "team": "Boston Celtics",
+      "date": "2024-06-15"
+    },
+    {
+      "year": 2025,
+      "team": "Oklahoma City Thunder",
+      "date": "2025-06-15"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sports-data-v4.json
+  Cache-Control: no-cache, no-store, must-revalidate
