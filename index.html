@@ -1418,6 +1418,14 @@
       letter-spacing: 0.08em;
     }
 
+    .birth-card .source-line {
+      display: none;
+    }
+
+    body.diagnostics-open .birth-card .source-line {
+      display: block;
+    }
+
     .source-line .state-pill,
     .diagnostic-state {
       display: inline-flex;
@@ -1537,9 +1545,6 @@
     }
 
   </style>
-
-  <!-- GitHub Pages note: after deployment, replace YOUR-USERNAME and YOUR-REPO-NAME above with your actual GitHub Pages URL. -->
-
 </head>
 <body id="mainBody">
   <noscript>
@@ -1752,7 +1757,7 @@
     <div class="panel">
       <div class="section-title">You&#39;ve Lived Through</div>
       <div class="insight-grid compact-grid-2">
-        <div class="insight-card compact-card insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source" data-source-target="first-sports-event" data-source-target="dynasties" data-source-target="nl-worldseries" data-source-target="al-worldseries" data-source-target="nfc-superbowls" data-source-target="afc-superbowls" data-source-target="palindrome-dates" data-source-target="internet-eras" data-source-target="leapseconds"><span class="insight-value" id="sunrises-value">0</span><span class="micro-label">Sunrises</span></div>
+        <div class="insight-card compact-card insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source" data-source-target="first-sports-event" data-source-target="repeat-champions" data-source-target="nl-worldseries" data-source-target="al-worldseries" data-source-target="nfc-superbowls" data-source-target="afc-superbowls" data-source-target="palindrome-dates" data-source-target="internet-eras" data-source-target="leapseconds"><span class="insight-value" id="sunrises-value">0</span><span class="micro-label">Sunrises</span></div>
         <div class="insight-card compact-card"><span class="insight-value" id="weekends-value">0</span><span class="micro-label">Weekends</span></div>
 
         <div class="insight-card compact-card"><span class="insight-value" id="mondays-lived-value">0</span><span class="micro-label">Mondays Lived</span></div>
@@ -1841,9 +1846,9 @@
         <div class="insight-card compact-card"><span class="insight-value" id="summer-olympics-value">0</span><span class="micro-label">Summer Olympics</span></div>
 
         <div class="insight-card compact-card"><span class="insight-value" id="worldcups-value">0</span><span class="micro-label">World Cups</span></div>
-        <div class="insight-card compact-card"><span class="insight-value" id="dynasties-value">0</span><span class="micro-label">Dynasties Witnessed</span>
-          <button class="source-toggle" type="button" data-source-target="dynasties" aria-expanded="false">Source</button>
-          <div class="source-drawer" id="source-drawer-dynasties" hidden></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="repeat-champions-value">0</span><span class="micro-label">Repeat Title Defenses</span>
+          <button class="source-toggle" type="button" data-source-target="repeat-champions" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-repeat-champions" hidden></div>
 </div>
 
         <div class="insight-card compact-card insight-card--wide source-card"><span class="insight-value" id="first-sports-event-value">...</span><span class="micro-label">First Major Sports Event Since Birth</span><p class="insight-copy" id="first-sports-event-copy"></p>
@@ -2388,7 +2393,7 @@
       summerOlympicsValue:   document.getElementById('summer-olympics-value'),
       winterOlympicsValue:   document.getElementById('winter-olympics-value'),
       worldcupsValue:        document.getElementById('worldcups-value'),
-      dynastiesValue:        document.getElementById('dynasties-value'),
+      repeatChampionsValue:        document.getElementById('repeat-champions-value'),
       firstSportsEventValue: document.getElementById('first-sports-event-value'),
       firstSportsEventCopy:  document.getElementById('first-sports-event-copy'),
       mercuryBirthdaysValue: document.getElementById('mercury-birthdays-value'),
@@ -3224,6 +3229,7 @@
 
     function renderDiagnostics() {
       const env = getRuntimeEnvironment();
+      document.body.classList.toggle('diagnostics-open', !!diagnosticsOpen);
 
       if (els.buildChip) els.buildChip.textContent = BUILD_LABEL;
       if (els.buildLabel) els.buildLabel.textContent = BUILD_LABEL;
@@ -4937,6 +4943,88 @@
       { year: 2023, league: 'AL' }, { year: 2024, league: 'NL' }, { year: 2025, league: 'NL' }
     ].map(entry => ({ ...entry, team: {"1903": "Boston Americans", "1905": "New York Giants", "1906": "Chicago White Sox", "1907": "Chicago Cubs", "1908": "Chicago Cubs", "1909": "Pittsburgh Pirates", "1910": "Philadelphia Athletics", "1911": "Philadelphia Athletics", "1912": "Boston Red Sox", "1913": "Philadelphia Athletics", "1914": "Boston Braves", "1915": "Boston Red Sox", "1916": "Boston Red Sox", "1917": "Chicago White Sox", "1918": "Boston Red Sox", "1919": "Cincinnati Reds", "1920": "Cleveland Indians", "1921": "New York Giants", "1922": "New York Giants", "1923": "New York Yankees", "1924": "Washington Senators", "1925": "Pittsburgh Pirates", "1926": "St. Louis Cardinals", "1927": "New York Yankees", "1928": "New York Yankees", "1929": "Philadelphia Athletics", "1930": "Philadelphia Athletics", "1931": "St. Louis Cardinals", "1932": "New York Yankees", "1933": "New York Giants", "1934": "St. Louis Cardinals", "1935": "Detroit Tigers", "1936": "New York Yankees", "1937": "New York Yankees", "1938": "New York Yankees", "1939": "New York Yankees", "1940": "Cincinnati Reds", "1941": "New York Yankees", "1942": "St. Louis Cardinals", "1943": "New York Yankees", "1944": "St. Louis Cardinals", "1945": "Detroit Tigers", "1946": "St. Louis Cardinals", "1947": "New York Yankees", "1948": "Cleveland Indians", "1949": "New York Yankees", "1950": "New York Yankees", "1951": "New York Yankees", "1952": "New York Yankees", "1953": "New York Yankees", "1954": "New York Giants", "1955": "Brooklyn Dodgers", "1956": "New York Yankees", "1957": "Milwaukee Braves", "1958": "New York Yankees", "1959": "Los Angeles Dodgers", "1960": "Pittsburgh Pirates", "1961": "New York Yankees", "1962": "New York Yankees", "1963": "Los Angeles Dodgers", "1964": "St. Louis Cardinals", "1965": "Los Angeles Dodgers", "1966": "Baltimore Orioles", "1967": "St. Louis Cardinals", "1968": "Detroit Tigers", "1969": "New York Mets", "1970": "Baltimore Orioles", "1971": "Pittsburgh Pirates", "1972": "Oakland Athletics", "1973": "Oakland Athletics", "1974": "Oakland Athletics", "1975": "Cincinnati Reds", "1976": "Cincinnati Reds", "1977": "New York Yankees", "1978": "New York Yankees", "1979": "Pittsburgh Pirates", "1980": "Philadelphia Phillies", "1981": "Los Angeles Dodgers", "1982": "St. Louis Cardinals", "1983": "Baltimore Orioles", "1984": "Detroit Tigers", "1985": "Kansas City Royals", "1986": "New York Mets", "1987": "Minnesota Twins", "1988": "Los Angeles Dodgers", "1989": "Oakland Athletics", "1990": "Cincinnati Reds", "1991": "Minnesota Twins", "1992": "Toronto Blue Jays", "1993": "Toronto Blue Jays", "1995": "Atlanta Braves", "1996": "New York Yankees", "1997": "Florida Marlins", "1998": "New York Yankees", "1999": "New York Yankees", "2000": "New York Yankees", "2001": "Arizona Diamondbacks", "2002": "Anaheim Angels", "2003": "Florida Marlins", "2004": "Boston Red Sox", "2005": "Chicago White Sox", "2006": "St. Louis Cardinals", "2007": "Boston Red Sox", "2008": "Philadelphia Phillies", "2009": "New York Yankees", "2010": "San Francisco Giants", "2011": "St. Louis Cardinals", "2012": "San Francisco Giants", "2013": "Boston Red Sox", "2014": "San Francisco Giants", "2015": "Kansas City Royals", "2016": "Chicago Cubs", "2017": "Houston Astros", "2018": "Boston Red Sox", "2019": "Washington Nationals", "2020": "Los Angeles Dodgers", "2021": "Atlanta Braves", "2022": "Houston Astros", "2023": "Texas Rangers", "2024": "Los Angeles Dodgers", "2025": "Los Angeles Dodgers"}[entry.year], date: new Date(`${entry.year}-11-01T12:00:00`) }));
 
+    const NBA_FINALS_RESULTS = [
+      { year: 1947, team: "Philadelphia Warriors" },
+      { year: 1948, team: "Baltimore Bullets" },
+      { year: 1949, team: "Minneapolis Lakers" },
+      { year: 1950, team: "Minneapolis Lakers" },
+      { year: 1951, team: "Rochester Royals" },
+      { year: 1952, team: "Minneapolis Lakers" },
+      { year: 1953, team: "Minneapolis Lakers" },
+      { year: 1954, team: "Minneapolis Lakers" },
+      { year: 1955, team: "Syracuse Nationals" },
+      { year: 1956, team: "Philadelphia Warriors" },
+      { year: 1957, team: "Boston Celtics" },
+      { year: 1958, team: "St. Louis Hawks" },
+      { year: 1959, team: "Boston Celtics" },
+      { year: 1960, team: "Boston Celtics" },
+      { year: 1961, team: "Boston Celtics" },
+      { year: 1962, team: "Boston Celtics" },
+      { year: 1963, team: "Boston Celtics" },
+      { year: 1964, team: "Boston Celtics" },
+      { year: 1965, team: "Boston Celtics" },
+      { year: 1966, team: "Boston Celtics" },
+      { year: 1967, team: "Philadelphia 76ers" },
+      { year: 1968, team: "Boston Celtics" },
+      { year: 1969, team: "Boston Celtics" },
+      { year: 1970, team: "New York Knicks" },
+      { year: 1971, team: "Milwaukee Bucks" },
+      { year: 1972, team: "Los Angeles Lakers" },
+      { year: 1973, team: "New York Knicks" },
+      { year: 1974, team: "Boston Celtics" },
+      { year: 1975, team: "Golden State Warriors" },
+      { year: 1976, team: "Boston Celtics" },
+      { year: 1977, team: "Portland Trail Blazers" },
+      { year: 1978, team: "Washington Bullets" },
+      { year: 1979, team: "Seattle SuperSonics" },
+      { year: 1980, team: "Los Angeles Lakers" },
+      { year: 1981, team: "Boston Celtics" },
+      { year: 1982, team: "Los Angeles Lakers" },
+      { year: 1983, team: "Philadelphia 76ers" },
+      { year: 1984, team: "Boston Celtics" },
+      { year: 1985, team: "Los Angeles Lakers" },
+      { year: 1986, team: "Boston Celtics" },
+      { year: 1987, team: "Los Angeles Lakers" },
+      { year: 1988, team: "Los Angeles Lakers" },
+      { year: 1989, team: "Detroit Pistons" },
+      { year: 1990, team: "Detroit Pistons" },
+      { year: 1991, team: "Chicago Bulls" },
+      { year: 1992, team: "Chicago Bulls" },
+      { year: 1993, team: "Chicago Bulls" },
+      { year: 1994, team: "Houston Rockets" },
+      { year: 1995, team: "Houston Rockets" },
+      { year: 1996, team: "Chicago Bulls" },
+      { year: 1997, team: "Chicago Bulls" },
+      { year: 1998, team: "Chicago Bulls" },
+      { year: 1999, team: "San Antonio Spurs" },
+      { year: 2000, team: "Los Angeles Lakers" },
+      { year: 2001, team: "Los Angeles Lakers" },
+      { year: 2002, team: "Los Angeles Lakers" },
+      { year: 2003, team: "San Antonio Spurs" },
+      { year: 2004, team: "Detroit Pistons" },
+      { year: 2005, team: "San Antonio Spurs" },
+      { year: 2006, team: "Miami Heat" },
+      { year: 2007, team: "San Antonio Spurs" },
+      { year: 2008, team: "Boston Celtics" },
+      { year: 2009, team: "Los Angeles Lakers" },
+      { year: 2010, team: "Los Angeles Lakers" },
+      { year: 2011, team: "Dallas Mavericks" },
+      { year: 2012, team: "Miami Heat" },
+      { year: 2013, team: "Miami Heat" },
+      { year: 2014, team: "San Antonio Spurs" },
+      { year: 2015, team: "Golden State Warriors" },
+      { year: 2016, team: "Cleveland Cavaliers" },
+      { year: 2017, team: "Golden State Warriors" },
+      { year: 2018, team: "Golden State Warriors" },
+      { year: 2019, team: "Toronto Raptors" },
+      { year: 2020, team: "Los Angeles Lakers" },
+      { year: 2021, team: "Milwaukee Bucks" },
+      { year: 2022, team: "Golden State Warriors" },
+      { year: 2023, team: "Denver Nuggets" },
+      { year: 2024, team: "Boston Celtics" },
+      { year: 2025, team: "Oklahoma City Thunder" }
+    ].map(entry => ({ ...entry, date: new Date(`${entry.year}-06-15T12:00:00`) }));
+
     function getSuperBowlConferenceWinsSinceBirth(start, end) {
       let afc = 0;
       let nfc = 0;
@@ -4968,6 +5056,7 @@
       for (const d of SUMMER_OLYMPICS_DATES) events.push({ date: d, label: 'Summer Olympics' });
       for (const d of WORLD_CUP_DATES) events.push({ date: d, label: 'FIFA World Cup' });
       for (const s of WORLD_SERIES_RESULTS) events.push({ date: s.date, label: 'World Series' });
+      for (const n of NBA_FINALS_RESULTS) events.push({ date: n.date, label: 'NBA Finals' });
 
       events.sort((a, b) => a.date - b.date);
       for (const event of events) {
@@ -4985,15 +5074,6 @@
     }
 
     const SPORTS_DATA_FEED_URL = 'sports-data-v4.json';
-    const DYNASTY_MILESTONES = [
-      { label: "Steelers 70s", date: new Date('1974-01-12T12:00:00') },
-      { label: "Showtime Lakers", date: new Date('1980-05-16T12:00:00') },
-      { label: "Bulls 90s", date: new Date('1991-06-12T12:00:00') },
-      { label: "Yankees Core Four", date: new Date('1996-10-26T12:00:00') },
-      { label: "Patriots/Brady", date: new Date('2001-02-04T12:00:00') },
-      { label: "Giants Even-Year Run", date: new Date('2010-11-01T12:00:00') },
-      { label: "Warriors Run", date: new Date('2015-06-16T12:00:00') }
-    ];
 
     function replaceArrayContents(target, values) {
       target.length = 0;
@@ -5014,6 +5094,7 @@
       if (Array.isArray(payload.superBowls)) {
         replaceArrayContents(SUPER_BOWL_DATES, payload.superBowls.map(item => new Date(`${item.date}T12:00:00`)));
         replaceArrayContents(SUPER_BOWL_WINNER_CONFERENCES, payload.superBowls.map(item => String(item.conference || '').toUpperCase()));
+        replaceArrayContents(SUPER_BOWL_WINNER_TEAMS, payload.superBowls.map(item => String(item.team || '')));
       }
       if (Array.isArray(payload.worldSeries)) {
         replaceArrayContents(WORLD_SERIES_RESULTS, payload.worldSeries.map(entry => ({
@@ -5023,20 +5104,72 @@
           date: new Date(`${entry.date || `${entry.year}-11-01`}T12:00:00`)
         })));
       }
-      if (Array.isArray(payload.dynastyMilestones)) {
-        replaceArrayContents(DYNASTY_MILESTONES, payload.dynastyMilestones.map(entry => ({
-          label: String(entry.label || ''),
-          date: new Date(`${entry.date}T12:00:00`)
+      if (Array.isArray(payload.nbaFinals)) {
+        replaceArrayContents(NBA_FINALS_RESULTS, payload.nbaFinals.map(entry => ({
+          year: Number(entry.year),
+          team: String(entry.team || ''),
+          date: new Date(`${entry.date || `${entry.year}-06-15`}T12:00:00`)
         })));
+      }
+      if (Array.isArray(payload.dynastyMilestones)) {
+        // legacy field ignored in repeat-champions build
       }
     }
 
-    function countDynastiesWitnessed(start, end) {
-      let count = 0;
-      for (const dynasty of DYNASTY_MILESTONES) {
-        if (dynasty.date >= start && dynasty.date <= end) count++;
+    function getRepeatChampionEntriesSinceBirth(start, end) {
+      const entries = [];
+
+      for (let i = 1; i < SUPER_BOWL_DATES.length; i++) {
+        const currentDate = SUPER_BOWL_DATES[i];
+        const currentTeam = SUPER_BOWL_WINNER_TEAMS[i] || '';
+        const previousTeam = SUPER_BOWL_WINNER_TEAMS[i - 1] || '';
+        if (currentDate >= start && currentDate <= end && currentTeam && currentTeam === previousTeam) {
+          entries.push({
+            date: currentDate,
+            startYear: SUPER_BOWL_DATES[i - 1].getFullYear(),
+            endYear: currentDate.getFullYear(),
+            team: currentTeam,
+            sport: 'NFL'
+          });
+        }
       }
-      return count;
+
+      const ws_sorted = sortedWorldSeriesResults();
+      for (let i = 1; i < ws_sorted.length; i++) {
+        const current = ws_sorted[i];
+        const previous = ws_sorted[i - 1];
+        if (current.date >= start && current.date <= end && current.team && current.team === previous.team) {
+          entries.push({
+            date: current.date,
+            startYear: previous.year,
+            endYear: current.year,
+            team: current.team,
+            sport: 'MLB'
+          });
+        }
+      }
+
+      const nba_sorted = sortedNBAFinalsResults();
+      for (let i = 1; i < nba_sorted.length; i++) {
+        const current = nba_sorted[i];
+        const previous = nba_sorted[i - 1];
+        if (current.date >= start && current.date <= end && current.team && current.team === previous.team) {
+          entries.push({
+            date: current.date,
+            startYear: previous.year,
+            endYear: current.year,
+            team: current.team,
+            sport: 'NBA'
+          });
+        }
+      }
+
+      entries.sort((a, b) => a.date - b.date);
+      return entries;
+    }
+
+    function countRepeatChampionsSinceBirth(start, end) {
+      return getRepeatChampionEntriesSinceBirth(start, end).length;
     }
 
     async function loadSportsDataFeed() {
@@ -5051,37 +5184,103 @@
       }
     }
 
-    const PRESIDENT_STARTS = [
-      '1789-04-30','1797-03-04','1801-03-04','1809-03-04','1817-03-04',
-      '1825-03-04','1829-03-04','1837-03-04','1841-03-04','1841-04-06',
-      '1845-03-04','1849-03-05','1850-07-09','1853-03-04','1857-03-04',
-      '1861-03-04','1865-04-15','1865-03-04','1869-03-04','1877-03-05',
-      '1881-03-04','1881-09-20','1885-03-04','1889-03-04','1893-03-04',
-      '1897-03-04','1901-09-14','1909-03-04','1913-03-04','1921-03-04',
-      '1923-08-02','1929-03-04','1933-03-04','1945-04-12','1953-01-20',
-      '1961-01-20','1963-11-22','1969-01-20','1974-08-09','1977-01-20',
-      '1981-01-20','1989-01-20','1993-01-20','2001-01-20','2009-01-20',
-      '2017-01-20','2021-01-20'
-    ].map(d => new Date(`${d}T12:00:00`));
+    const PRESIDENT_TERMS = [
+      { name: 'George Washington', ordinals: ['1st'], start: new Date('1789-04-30T12:00:00') },
+      { name: 'John Adams', ordinals: ['2nd'], start: new Date('1797-03-04T12:00:00') },
+      { name: 'Thomas Jefferson', ordinals: ['3rd'], start: new Date('1801-03-04T12:00:00') },
+      { name: 'James Madison', ordinals: ['4th'], start: new Date('1809-03-04T12:00:00') },
+      { name: 'James Monroe', ordinals: ['5th'], start: new Date('1817-03-04T12:00:00') },
+      { name: 'John Quincy Adams', ordinals: ['6th'], start: new Date('1825-03-04T12:00:00') },
+      { name: 'Andrew Jackson', ordinals: ['7th'], start: new Date('1829-03-04T12:00:00') },
+      { name: 'Martin Van Buren', ordinals: ['8th'], start: new Date('1837-03-04T12:00:00') },
+      { name: 'William Henry Harrison', ordinals: ['9th'], start: new Date('1841-03-04T12:00:00') },
+      { name: 'John Tyler', ordinals: ['10th'], start: new Date('1841-04-06T12:00:00') },
+      { name: 'James K. Polk', ordinals: ['11th'], start: new Date('1845-03-04T12:00:00') },
+      { name: 'Zachary Taylor', ordinals: ['12th'], start: new Date('1849-03-05T12:00:00') },
+      { name: 'Millard Fillmore', ordinals: ['13th'], start: new Date('1850-07-09T12:00:00') },
+      { name: 'Franklin Pierce', ordinals: ['14th'], start: new Date('1853-03-04T12:00:00') },
+      { name: 'James Buchanan', ordinals: ['15th'], start: new Date('1857-03-04T12:00:00') },
+      { name: 'Abraham Lincoln', ordinals: ['16th'], start: new Date('1861-03-04T12:00:00') },
+      { name: 'Andrew Johnson', ordinals: ['17th'], start: new Date('1865-04-15T12:00:00') },
+      { name: 'Ulysses S. Grant', ordinals: ['18th'], start: new Date('1869-03-04T12:00:00') },
+      { name: 'Rutherford B. Hayes', ordinals: ['19th'], start: new Date('1877-03-05T12:00:00') },
+      { name: 'James A. Garfield', ordinals: ['20th'], start: new Date('1881-03-04T12:00:00') },
+      { name: 'Chester A. Arthur', ordinals: ['21st'], start: new Date('1881-09-20T12:00:00') },
+      { name: 'Grover Cleveland', ordinals: ['22nd', '24th'], start: new Date('1885-03-04T12:00:00') },
+      { name: 'Benjamin Harrison', ordinals: ['23rd'], start: new Date('1889-03-04T12:00:00') },
+      { name: 'William McKinley', ordinals: ['25th'], start: new Date('1897-03-04T12:00:00') },
+      { name: 'Theodore Roosevelt', ordinals: ['26th'], start: new Date('1901-09-14T12:00:00') },
+      { name: 'William Howard Taft', ordinals: ['27th'], start: new Date('1909-03-04T12:00:00') },
+      { name: 'Woodrow Wilson', ordinals: ['28th'], start: new Date('1913-03-04T12:00:00') },
+      { name: 'Warren G. Harding', ordinals: ['29th'], start: new Date('1921-03-04T12:00:00') },
+      { name: 'Calvin Coolidge', ordinals: ['30th'], start: new Date('1923-08-02T12:00:00') },
+      { name: 'Herbert Hoover', ordinals: ['31st'], start: new Date('1929-03-04T12:00:00') },
+      { name: 'Franklin D. Roosevelt', ordinals: ['32nd'], start: new Date('1933-03-04T12:00:00') },
+      { name: 'Harry S. Truman', ordinals: ['33rd'], start: new Date('1945-04-12T12:00:00') },
+      { name: 'Dwight D. Eisenhower', ordinals: ['34th'], start: new Date('1953-01-20T12:00:00') },
+      { name: 'John F. Kennedy', ordinals: ['35th'], start: new Date('1961-01-20T12:00:00') },
+      { name: 'Lyndon B. Johnson', ordinals: ['36th'], start: new Date('1963-11-22T12:00:00') },
+      { name: 'Richard Nixon', ordinals: ['37th'], start: new Date('1969-01-20T12:00:00') },
+      { name: 'Gerald Ford', ordinals: ['38th'], start: new Date('1974-08-09T12:00:00') },
+      { name: 'Jimmy Carter', ordinals: ['39th'], start: new Date('1977-01-20T12:00:00') },
+      { name: 'Ronald Reagan', ordinals: ['40th'], start: new Date('1981-01-20T12:00:00') },
+      { name: 'George H. W. Bush', ordinals: ['41st'], start: new Date('1989-01-20T12:00:00') },
+      { name: 'Bill Clinton', ordinals: ['42nd'], start: new Date('1993-01-20T12:00:00') },
+      { name: 'George W. Bush', ordinals: ['43rd'], start: new Date('2001-01-20T12:00:00') },
+      { name: 'Barack Obama', ordinals: ['44th'], start: new Date('2009-01-20T12:00:00') },
+      { name: 'Donald Trump', ordinals: ['45th', '47th'], start: new Date('2017-01-20T12:00:00') },
+      { name: 'Joe Biden', ordinals: ['46th'], start: new Date('2021-01-20T12:00:00') }
+    ];
 
-    const PRESIDENT_DETAILS = [
-      ['George Washington','1789-04-30'],['John Adams','1797-03-04'],['Thomas Jefferson','1801-03-04'],
-      ['James Madison','1809-03-04'],['James Monroe','1817-03-04'],['John Quincy Adams','1825-03-04'],
-      ['Andrew Jackson','1829-03-04'],['Martin Van Buren','1837-03-04'],['William Henry Harrison','1841-03-04'],
-      ['John Tyler','1841-04-06'],['James K. Polk','1845-03-04'],['Zachary Taylor','1849-03-05'],
-      ['Millard Fillmore','1850-07-09'],['Franklin Pierce','1853-03-04'],['James Buchanan','1857-03-04'],
-      ['Abraham Lincoln','1861-03-04'],['Andrew Johnson','1865-04-15'],['Ulysses S. Grant','1869-03-04'],
-      ['Rutherford B. Hayes','1877-03-05'],['James A. Garfield','1881-03-04'],['Chester A. Arthur','1881-09-20'],
-      ['Grover Cleveland','1885-03-04'],['Benjamin Harrison','1889-03-04'],['Grover Cleveland','1893-03-04'],
-      ['William McKinley','1897-03-04'],['Theodore Roosevelt','1901-09-14'],['William Howard Taft','1909-03-04'],
-      ['Woodrow Wilson','1913-03-04'],['Warren G. Harding','1921-03-04'],['Calvin Coolidge','1923-08-02'],
-      ['Herbert Hoover','1929-03-04'],['Franklin D. Roosevelt','1933-03-04'],['Harry S. Truman','1945-04-12'],
-      ['Dwight D. Eisenhower','1953-01-20'],['John F. Kennedy','1961-01-20'],['Lyndon B. Johnson','1963-11-22'],
-      ['Richard Nixon','1969-01-20'],['Gerald Ford','1974-08-09'],['Jimmy Carter','1977-01-20'],
-      ['Ronald Reagan','1981-01-20'],['George H. W. Bush','1989-01-20'],['Bill Clinton','1993-01-20'],
-      ['George W. Bush','2001-01-20'],['Barack Obama','2009-01-20'],['Donald Trump','2017-01-20'],
-      ['Joe Biden','2021-01-20']
-    ].map(([name, start]) => ({ name, date: new Date(`${start}T12:00:00`) }));
+    const PRESIDENT_TERM_STARTS = [
+      { name: 'George Washington', ordinal: '1st', start: new Date('1789-04-30T12:00:00') },
+      { name: 'John Adams', ordinal: '2nd', start: new Date('1797-03-04T12:00:00') },
+      { name: 'Thomas Jefferson', ordinal: '3rd', start: new Date('1801-03-04T12:00:00') },
+      { name: 'James Madison', ordinal: '4th', start: new Date('1809-03-04T12:00:00') },
+      { name: 'James Monroe', ordinal: '5th', start: new Date('1817-03-04T12:00:00') },
+      { name: 'John Quincy Adams', ordinal: '6th', start: new Date('1825-03-04T12:00:00') },
+      { name: 'Andrew Jackson', ordinal: '7th', start: new Date('1829-03-04T12:00:00') },
+      { name: 'Martin Van Buren', ordinal: '8th', start: new Date('1837-03-04T12:00:00') },
+      { name: 'William Henry Harrison', ordinal: '9th', start: new Date('1841-03-04T12:00:00') },
+      { name: 'John Tyler', ordinal: '10th', start: new Date('1841-04-06T12:00:00') },
+      { name: 'James K. Polk', ordinal: '11th', start: new Date('1845-03-04T12:00:00') },
+      { name: 'Zachary Taylor', ordinal: '12th', start: new Date('1849-03-05T12:00:00') },
+      { name: 'Millard Fillmore', ordinal: '13th', start: new Date('1850-07-09T12:00:00') },
+      { name: 'Franklin Pierce', ordinal: '14th', start: new Date('1853-03-04T12:00:00') },
+      { name: 'James Buchanan', ordinal: '15th', start: new Date('1857-03-04T12:00:00') },
+      { name: 'Abraham Lincoln', ordinal: '16th', start: new Date('1861-03-04T12:00:00') },
+      { name: 'Andrew Johnson', ordinal: '17th', start: new Date('1865-04-15T12:00:00') },
+      { name: 'Ulysses S. Grant', ordinal: '18th', start: new Date('1869-03-04T12:00:00') },
+      { name: 'Rutherford B. Hayes', ordinal: '19th', start: new Date('1877-03-05T12:00:00') },
+      { name: 'James A. Garfield', ordinal: '20th', start: new Date('1881-03-04T12:00:00') },
+      { name: 'Chester A. Arthur', ordinal: '21st', start: new Date('1881-09-20T12:00:00') },
+      { name: 'Grover Cleveland', ordinal: '22nd', start: new Date('1885-03-04T12:00:00') },
+      { name: 'Benjamin Harrison', ordinal: '23rd', start: new Date('1889-03-04T12:00:00') },
+      { name: 'Grover Cleveland', ordinal: '24th', start: new Date('1893-03-04T12:00:00') },
+      { name: 'William McKinley', ordinal: '25th', start: new Date('1897-03-04T12:00:00') },
+      { name: 'Theodore Roosevelt', ordinal: '26th', start: new Date('1901-09-14T12:00:00') },
+      { name: 'William Howard Taft', ordinal: '27th', start: new Date('1909-03-04T12:00:00') },
+      { name: 'Woodrow Wilson', ordinal: '28th', start: new Date('1913-03-04T12:00:00') },
+      { name: 'Warren G. Harding', ordinal: '29th', start: new Date('1921-03-04T12:00:00') },
+      { name: 'Calvin Coolidge', ordinal: '30th', start: new Date('1923-08-02T12:00:00') },
+      { name: 'Herbert Hoover', ordinal: '31st', start: new Date('1929-03-04T12:00:00') },
+      { name: 'Franklin D. Roosevelt', ordinal: '32nd', start: new Date('1933-03-04T12:00:00') },
+      { name: 'Harry S. Truman', ordinal: '33rd', start: new Date('1945-04-12T12:00:00') },
+      { name: 'Dwight D. Eisenhower', ordinal: '34th', start: new Date('1953-01-20T12:00:00') },
+      { name: 'John F. Kennedy', ordinal: '35th', start: new Date('1961-01-20T12:00:00') },
+      { name: 'Lyndon B. Johnson', ordinal: '36th', start: new Date('1963-11-22T12:00:00') },
+      { name: 'Richard Nixon', ordinal: '37th', start: new Date('1969-01-20T12:00:00') },
+      { name: 'Gerald Ford', ordinal: '38th', start: new Date('1974-08-09T12:00:00') },
+      { name: 'Jimmy Carter', ordinal: '39th', start: new Date('1977-01-20T12:00:00') },
+      { name: 'Ronald Reagan', ordinal: '40th', start: new Date('1981-01-20T12:00:00') },
+      { name: 'George H. W. Bush', ordinal: '41st', start: new Date('1989-01-20T12:00:00') },
+      { name: 'Bill Clinton', ordinal: '42nd', start: new Date('1993-01-20T12:00:00') },
+      { name: 'George W. Bush', ordinal: '43rd', start: new Date('2001-01-20T12:00:00') },
+      { name: 'Barack Obama', ordinal: '44th', start: new Date('2009-01-20T12:00:00') },
+      { name: 'Donald Trump', ordinal: '45th', start: new Date('2017-01-20T12:00:00') },
+      { name: 'Joe Biden', ordinal: '46th', start: new Date('2021-01-20T12:00:00') },
+      { name: 'Donald Trump', ordinal: '47th', start: new Date('2025-01-20T12:00:00') }
+    ];
 
     function countDatedEventsExperienced(start, end, events) {
       let count = 0;
@@ -5092,13 +5291,13 @@
     }
 
     function countPresidentsExperienced(start, end) {
-      let count = 0;
-      for (let i = 0; i < PRESIDENT_STARTS.length; i++) {
-        const presidentStart = PRESIDENT_STARTS[i];
-        const presidentEnd = PRESIDENT_STARTS[i + 1] || new Date(2100, 0, 1);
-        if (presidentEnd > start && presidentStart <= end) count++;
+      const names = new Set();
+      for (let i = 0; i < PRESIDENT_TERM_STARTS.length; i++) {
+        const current = PRESIDENT_TERM_STARTS[i];
+        const nextDate = i + 1 < PRESIDENT_TERM_STARTS.length ? PRESIDENT_TERM_STARTS[i + 1].start : new Date('2100-01-01T12:00:00');
+        if (nextDate > start && current.start <= end) names.add(current.name);
       }
-      return count;
+      return names.size;
     }
 
     const PRESIDENTIAL_ELECTION_DATES = [
@@ -5564,18 +5763,22 @@ ${shareUrl}`);
       return LEAP_SECOND_DATES.filter(d => d >= start && d <= end);
     }
 
-    function getDynastyEntriesSinceBirth(start, end) {
-      return DYNASTY_MILESTONES.filter(item => item.date >= start && item.date <= end);
+    function sortedWorldSeriesResults() {
+      return [...WORLD_SERIES_RESULTS].sort((a, b) => a.date - b.date);
+    }
+
+    function sortedNBAFinalsResults() {
+      return [...NBA_FINALS_RESULTS].sort((a, b) => a.date - b.date);
     }
 
     function getPresidentsExperiencedDetailed(start, end) {
-      const entries = [];
-      for (let i = 0; i < PRESIDENT_DETAILS.length; i++) {
-        const current = PRESIDENT_DETAILS[i];
-        const nextDate = i + 1 < PRESIDENT_DETAILS.length ? PRESIDENT_DETAILS[i + 1].date : new Date('2100-01-01T12:00:00');
-        if (nextDate > start && current.date <= end) entries.push(current);
+      const names = new Set();
+      for (let i = 0; i < PRESIDENT_TERM_STARTS.length; i++) {
+        const current = PRESIDENT_TERM_STARTS[i];
+        const nextDate = i + 1 < PRESIDENT_TERM_STARTS.length ? PRESIDENT_TERM_STARTS[i + 1].start : new Date('2100-01-01T12:00:00');
+        if (nextDate > start && current.start <= end) names.add(current.name);
       }
-      return entries;
+      return PRESIDENT_TERMS.filter(entry => names.has(entry.name));
     }
 
     function getAllPalindromeDatesExperienced(start, end) {
@@ -5639,9 +5842,9 @@ ${shareUrl}`);
 
       const presidentEntries = getPresidentsExperiencedDetailed(birthMomentGlobal, now);
       setSourceDrawer('presidents', {
-        meta: 'Source: curated list of U.S. presidential start dates.',
+        meta: 'Source: curated list of U.S. presidential terms.',
         lines: presidentEntries.length
-          ? presidentEntries.map(entry => `${entry.name} — ${formatSourceDate(entry.date)}`)
+          ? presidentEntries.map(entry => `${entry.name} (${entry.ordinals.join(' / ')})`)
           : ['No presidential transitions from the current list overlap your lifetime yet.']
       });
 
@@ -5661,12 +5864,12 @@ ${shareUrl}`);
           : ['No palindrome dates have landed during your lifetime yet.']
       });
 
-      const dynastyEntries = getDynastyEntriesSinceBirth(birthMomentGlobal, now);
-      setSourceDrawer('dynasties', {
-        meta: 'Source: curated cross-sport dynasty milestones from the sports JSON feed.',
-        lines: dynastyEntries.length
-          ? dynastyEntries.map(entry => `${entry.label} — ${formatSourceDate(entry.date)}`)
-          : ['No dynasty milestones from the current curated list have landed since your birth.']
+      const repeatChampionEntries = getRepeatChampionEntriesSinceBirth(birthMomentGlobal, now);
+      setSourceDrawer('repeat-champions', {
+        meta: 'Source: consecutive title winners from NFL, MLB, and NBA championship results.',
+        lines: repeatChampionEntries.length
+          ? repeatChampionEntries.map(entry => `${entry.team} (${entry.startYear}/${entry.endYear}) - ${entry.sport}`)
+          : ['No repeat title defenses have landed in the included NFL, MLB, or NBA title results since your birth.']
       });
 
       const firstSportsEvent = getFirstMajorSportsEventSinceBirth(birthMomentGlobal, now);
@@ -5820,8 +6023,8 @@ ${shareUrl}`);
       els.winterOlympicsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WINTER_OLYMPICS_DATES).toLocaleString();
       els.worldcupsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WORLD_CUP_DATES).toLocaleString();
 
-      if (els.dynastiesValue) {
-        els.dynastiesValue.textContent = countDynastiesWitnessed(birthMomentGlobal, now).toLocaleString();
+      if (els.repeatChampionsValue) {
+        els.repeatChampionsValue.textContent = countRepeatChampionsSinceBirth(birthMomentGlobal, now).toLocaleString();
       }
 
       const firstSportsEvent = getFirstMajorSportsEventSinceBirth(birthMomentGlobal, now);
