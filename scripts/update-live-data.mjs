@@ -386,7 +386,8 @@ async function buildCivicReference(previous) {
 
 async function buildSportsCoverage() {
   try {
-    const payload = JSON.parse(await readFile(SPORTS_PATH, 'utf8'));
+    const sportsText = await readFile(SPORTS_PATH, 'utf8');
+    const payload = JSON.parse(sportsText.replace(/^\uFEFF/, ''));
     const maxDate = values => values.filter(Boolean).sort().at(-1) || null;
     return {
       value: {
@@ -459,6 +460,7 @@ const signs = {};
 const failures = [];
 const providerCounts = {};
 const providerErrors = [];
+let primaryQuotaUnavailable = false;
 const calculationTime = new Date();
 const astronomy = buildAstronomySnapshot(calculationTime);
 const currentComparisons = await buildCurrentComparisons(previous);
@@ -480,11 +482,14 @@ for (let index = 0; index < SIGNS.length; index += 1) {
   const sign = SIGNS[index];
   const errors = [];
   let reading = null;
-  try {
-    reading = await fetchPrimaryReading(sign, previousSigns[sign]);
-  } catch (error) {
-    errors.push(`primary: ${error.message}`);
-    providerErrors.push({ sign, provider: 'primary', message: error.message });
+  if (!primaryQuotaUnavailable) {
+    try {
+      reading = await fetchPrimaryReading(sign, previousSigns[sign]);
+    } catch (error) {
+      errors.push(`primary: ${error.message}`);
+      providerErrors.push({ sign, provider: 'primary', message: error.message });
+      if (/\b429\b|daily limit|rate limit/i.test(error.message)) primaryQuotaUnavailable = true;
+    }
   }
   if (!reading) {
     try {
@@ -502,7 +507,7 @@ for (let index = 0; index < SIGNS.length; index += 1) {
   } else {
     failures.push({ sign, errors });
   }
-  if (PRIMARY_API_KEY && index < SIGNS.length - 1) await new Promise(resolve => setTimeout(resolve, 1100));
+  if (PRIMARY_API_KEY && !primaryQuotaUnavailable && index < SIGNS.length - 1) await new Promise(resolve => setTimeout(resolve, 1100));
 }
 
 if (!Object.keys(signs).length) throw new Error('No current or recent horoscope readings are available.');
@@ -583,5 +588,6 @@ if (PRIMARY_API_KEY && primaryCount !== SIGNS.length) {
   console.warn(`Primary provider issues: ${primaryErrors.map(item => `${item.sign}: ${item.message}`).join(' | ')}`);
 }
 if (!PRIMARY_API_KEY) console.warn('FREE_ASTRO_API_KEY is not configured; the legacy provider was used.');
+
 
 
