@@ -1,4 +1,4 @@
-﻿import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
 const OUTPUT_PATH = new URL('../live-data.json', import.meta.url);
@@ -170,22 +170,28 @@ const previousSigns = previous?.horoscope?.signs || {};
 const signs = {};
 const failures = [];
 const providerCounts = {};
+const providerErrors = [];
 
-await Promise.all(SIGNS.map(async (sign) => {
+for (let index = 0; index < SIGNS.length; index += 1) {
+  const sign = SIGNS[index];
   const errors = [];
   let reading = null;
 
   try {
     reading = await fetchPrimaryReading(sign, previousSigns[sign]);
   } catch (error) {
-    errors.push(`primary: ${error.message}`);
+    const message = `primary: ${error.message}`;
+    errors.push(message);
+    providerErrors.push({ sign, provider: 'primary', message: error.message });
   }
 
   if (!reading) {
     try {
       reading = await fetchLegacyReading(sign, previousSigns[sign]);
     } catch (error) {
-      errors.push(`legacy: ${error.message}`);
+      const message = `legacy: ${error.message}`;
+      errors.push(message);
+      providerErrors.push({ sign, provider: 'legacy', message: error.message });
     }
   }
 
@@ -198,7 +204,11 @@ await Promise.all(SIGNS.map(async (sign) => {
   } else {
     failures.push({ sign, errors });
   }
-}));
+
+  if (PRIMARY_API_KEY && index < SIGNS.length - 1) {
+    await new Promise(resolve => setTimeout(resolve, 1100));
+  }
+}
 
 if (!Object.keys(signs).length) {
   throw new Error('No current or recent horoscope readings are available.');
@@ -240,10 +250,15 @@ const output = {
     legacy: legacyCount,
     previous: previousCount,
     primaryConfigured: Boolean(PRIMARY_API_KEY),
+    providerErrors,
     failures
   }
 };
 
 await writeFile(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
 console.log(`Prepared ${Object.keys(signs).length} readings: ${primaryCount} primary, ${legacyCount} legacy, ${previousCount} previous.`);
+if (PRIMARY_API_KEY && primaryCount !== SIGNS.length) {
+  const primaryErrors = providerErrors.filter(item => item.provider === 'primary');
+  console.warn(`Primary provider issues: ${primaryErrors.map(item => `${item.sign}: ${item.message}`).join(' | ')}`);
+}
 if (!PRIMARY_API_KEY) console.warn('FREE_ASTRO_API_KEY is not configured; the legacy provider was used.');
