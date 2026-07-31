@@ -29,6 +29,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install astronomy calculations
+        run: npm install --no-audit --no-fund
+
       - name: Refresh daily data
         env:
           FREE_ASTRO_API_KEY: ${{ secrets.FREE_ASTRO_API_KEY }}
@@ -39,8 +42,9 @@ jobs:
 
       - name: Prepare the public site
         run: |
-          mkdir _site
+          mkdir -p _site/vendor
           cp index.html live-data.json sports-data-v4.json _site/
+          cp node_modules/astronomy-engine/astronomy.browser.min.js _site/vendor/
           touch _site/.nojekyll
 
       - name: Upload the site
@@ -58,5 +62,3 @@ jobs:
       - name: Publish GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-
