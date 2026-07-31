@@ -1456,7 +1456,18 @@
       font-size: 0.7rem;
     }
 
-    .diagnostics-toggle { white-space: nowrap; }
+    .diagnostics-toggle {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
+      border: 0;
+      white-space: nowrap;
+    }
 
     .multiline-copy { white-space: pre-line; }
 
@@ -1994,7 +2005,7 @@
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="blue-moons-value">0</span>
-          <span class="micro-label">Est. Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
+          <span class="micro-label">Approx. Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="fullmoons-value">0</span>
@@ -2002,11 +2013,11 @@
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="eclipses-value">0</span>
-          <span class="micro-label">Est. Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
+          <span class="micro-label">Approx. Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="total-lunar-eclipses-value">0</span>
-          <span class="micro-label">Est. Total Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
+          <span class="micro-label">Approx. Total Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
         </div>
       </div>
     </div>
@@ -5990,13 +6001,15 @@ ${shareUrl}`);
     }
 
     function formatSourceDate(date) {
-      return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return new Date(date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
     }
 
     function setSourceDrawer(key, options = {}) {
       const drawer = document.getElementById(`source-drawer-${key}`);
       if (!drawer) return;
-      const meta = '';
+      const meta = options.meta
+        ? `<span class="source-meta">${escapeSourceHtml(options.meta)}</span>`
+        : '';
       const lines = Array.isArray(options.lines) ? options.lines.filter(Boolean) : [];
       const listHtml = lines.length
         ? `<ul>${lines.map(line => `<li>${escapeSourceHtml(line)}</li>`).join('')}</ul>`
@@ -7232,6 +7245,7 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
 
 
 
