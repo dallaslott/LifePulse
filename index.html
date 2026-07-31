@@ -1518,6 +1518,18 @@
       display: block;
     }
 
+    body:not(.diagnostics-open) .source-line,
+    body:not(.diagnostics-open) .daily-pulse-source,
+    body:not(.diagnostics-open) .horoscope-status {
+      display: none !important;
+    }
+
+    body.diagnostics-open .source-line,
+    body.diagnostics-open .daily-pulse-source,
+    body.diagnostics-open .horoscope-status {
+      display: block;
+    }
+
     .source-line .state-pill,
     .diagnostic-state {
       display: inline-flex;
@@ -2019,7 +2031,7 @@
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="blue-moons-value">0</span>
-          <span class="micro-label">Approx. Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
+          <span class="micro-label">Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="fullmoons-value">0</span>
@@ -2027,11 +2039,11 @@
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="eclipses-value">0</span>
-          <span class="micro-label">Approx. Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
+          <span class="micro-label">Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="total-lunar-eclipses-value">0</span>
-          <span class="micro-label">Approx. Total Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
+          <span class="micro-label">Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
         </div>
       </div>
     </div>
@@ -2138,10 +2150,10 @@
     <div class="slate-card slate-card--zodiac" id="zodiac-card">
       <div class="badge-row">
         <div class="chip"><span>💎</span><strong id="badge-stone-name">...</strong></div>
-        <div class="chip"><span>🌸</span><strong id="badge-flower-name">...</strong></div>
+        <div class="chip"><span id="badge-flower-icon">🌸</span><strong id="badge-flower-name">...</strong></div>
         <div class="chip"><span id="badge-chinese-icon">🐉</span><strong id="badge-chinese-name">...</strong></div>
-        <div class="chip"><span>🌙</span><strong id="badge-moon-name">...</strong></div>
-        <div class="chip"><span>✨</span><strong id="badge-arrival-name">...</strong></div>
+        <div class="chip"><span id="badge-moon-icon">🌙</span><strong id="badge-moon-name">...</strong></div>
+        <div class="chip"><span id="badge-arrival-icon">✨</span><strong id="badge-arrival-name">...</strong></div>
       </div>
 
       <div class="zodiac-stack">
@@ -2172,7 +2184,7 @@
             <p id="zodiac-arrival-copy" class="slate-body" style="margin-top:8px; font-size:0.84rem;">...</p>
           </div>
           <div class="zodiac-info-card">
-            <span class="zodiac-info-value" id="current-sky-moon">Updating...</span>
+            <span class="zodiac-info-value"><span id="current-sky-icon">🌙</span> <span id="current-sky-moon">Updating...</span></span>
             <span class="zodiac-info-label">Current Sky</span>
             <p id="current-sky-copy" class="slate-body multiline-copy" style="margin-top:8px; font-size:0.84rem;">Loading moon phases and planetary motion...</p>
             <span id="current-sky-status" class="source-line"><span class="state-pill state-static">WAIT</span>Scheduled astronomy feed.</span>
@@ -2547,10 +2559,13 @@
       horoscopeStatus:       document.getElementById('horoscope-status'),
       horoscopeToggle:       document.getElementById('horoscope-toggle'),
       badgeStone:            document.getElementById('badge-stone-name'),
+      badgeFlowerIcon:       document.getElementById('badge-flower-icon'),
       badgeFlower:           document.getElementById('badge-flower-name'),
       badgeChinese:          document.getElementById('badge-chinese-name'),
       badgeChineseIcon:      document.getElementById('badge-chinese-icon'),
+      badgeMoonIcon:         document.getElementById('badge-moon-icon'),
       badgeMoon:             document.getElementById('badge-moon-name'),
+      badgeArrivalIcon:      document.getElementById('badge-arrival-icon'),
       badgeArrival:          document.getElementById('badge-arrival-name'),
       zodiacMoonName:        document.getElementById('zodiac-moon-name'),
       zodiacMoonCopy:        document.getElementById('zodiac-moon-copy'),
@@ -2558,6 +2573,7 @@
       zodiacChineseCopy:     document.getElementById('zodiac-chinese-copy'),
       zodiacArrivalTitle:    document.getElementById('zodiac-arrival-title'),
       zodiacArrivalCopy:     document.getElementById('zodiac-arrival-copy'),
+      currentSkyIcon:        document.getElementById('current-sky-icon'),
       currentSkyMoon:        document.getElementById('current-sky-moon'),
       currentSkyCopy:        document.getElementById('current-sky-copy'),
       currentSkyStatus:      document.getElementById('current-sky-status'),
@@ -2671,6 +2687,15 @@
       { stone: 'Topaz',     flower: 'Chrysanthemum' },
       { stone: 'Turquoise', flower: 'Narcissus' }
     ];
+
+    const FLOWER_ICONS = {
+      Daisy: '🌼',
+      Rose: '🌹'
+    };
+
+    function getFlowerIcon(flowerName) {
+      return FLOWER_ICONS[flowerName] || '🌸';
+    }
 
     const YEAR_SOUNDTRACKS = {
       1950: { genre: 'Vocal / Pop',          song: 'Goodnight, Irene',                    artist: 'The Weavers' },
@@ -3379,8 +3404,34 @@
       return `${okCount} of ${keys.length} diagnostic channels currently healthy or intentionally local/static.`;
     }
 
+    function auditAllCardDiagnostics() {
+      const diagnosticElements = Array.from(document.querySelectorAll('.source-line, .daily-pulse-source, .horoscope-status'));
+      const sourceButtons = Array.from(document.querySelectorAll('.source-toggle[data-source-target]'));
+      const cardCount = document.querySelectorAll('.insight-card, .birth-card, .zodiac-info-card, .dna-card, .forecast-shell, .daily-pulse-card').length;
+      const sourceRoutingOkay = sourceButtons.length > 0 && sourceButtons.every(button => {
+        const target = button.dataset.sourceTarget;
+        const drawer = document.getElementById(`source-drawer-${target}`);
+        return drawer && button.getAttribute('aria-controls') === drawer.id;
+      });
+      const originallyOpen = document.body.classList.contains('diagnostics-open');
+      document.body.classList.remove('diagnostics-open');
+      const hiddenOutsideDiagnostics = diagnosticElements.every(element => getComputedStyle(element).display === 'none');
+      document.body.classList.add('diagnostics-open');
+      const visibleInsideDiagnostics = diagnosticElements.every(element => getComputedStyle(element).display !== 'none');
+      document.body.classList.toggle('diagnostics-open', originallyOpen);
+      return {
+        cardCount,
+        diagnosticCount: diagnosticElements.length,
+        sourceButtonCount: sourceButtons.length,
+        sourceRoutingOkay,
+        hiddenOutsideDiagnostics,
+        visibleInsideDiagnostics,
+        passed: sourceRoutingOkay && hiddenOutsideDiagnostics && visibleInsideDiagnostics
+      };
+    }
     function getSelfCheckItems() {
       const env = getRuntimeEnvironment();
+      const cardAudit = auditAllCardDiagnostics();
       const launchReady = !!birthMomentGlobal && !!currentZodiac && !els.resultView.classList.contains('hidden');
       const storageOkay = (() => {
         try {
@@ -3407,6 +3458,8 @@
         { label: 'Browser storage', state: storageOkay ? 'live' : 'error', detail: storageOkay ? 'Saved profiles and local preferences can be written.' : 'Browser storage is blocked in this context.' },
         { label: 'Share links', state: shareReady ? 'live' : 'error', detail: shareReady ? 'Pre-filled profile links can be generated.' : 'Share-link encoding is unavailable.' },
         { label: 'Source routing', state: sourceRoutingOkay ? 'live' : 'fallback', detail: sourceRoutingOkay ? 'Weather, history, and horoscope each have a usable live or fallback route.' : 'One or more source routes have not initialized.' },
+        { label: 'Card Diagnostic Isolation', state: cardAudit.passed ? 'live' : 'error', detail: cardAudit.passed ? `${cardAudit.diagnosticCount} diagnostic elements across ${cardAudit.cardCount} cards are hidden normally and visible only in Diagnostics.` : 'One or more card diagnostic elements are leaking into normal view or unavailable in Diagnostics.' },
+        { label: 'Source Drawer Routing', state: cardAudit.sourceRoutingOkay ? 'live' : 'error', detail: cardAudit.sourceRoutingOkay ? `${cardAudit.sourceButtonCount} Source buttons connect to their matching relatable-information drawers.` : 'One or more Source buttons do not connect to a matching drawer.' },
         { label: 'Published daily feed', state: selfCheckFeedResult.state, detail: selfCheckFeedResult.detail },
         { label: 'Astronomy calculator', state: astronomyReady ? 'live' : 'error', detail: astronomyReady ? 'Moon, eclipse, and local-visibility calculations are available.' : 'The astronomy library did not load.' },
         { label: 'Layout anchors', state: layoutOkay ? 'live' : 'error', detail: layoutOkay ? 'Primary dashboard and Current Sky elements are present.' : 'A required interface element is missing.' },
@@ -4248,13 +4301,13 @@
     // ─── Cosmic data helpers ──────────────────────────────────────────────────
     function getWeekdayArrivalVibe(date) {
       const weekdays = [
-        { label: 'Solar Reset',     copy: 'Sunday arrivals carry visible energy and a spotlight quality. They often feel like the beginning of a new cycle.' },
-        { label: 'Momentum Builder',copy: 'Monday arrivals often bring emotional drive and family-rooted motivation. They tend to carry a push to begin.' },
-        { label: 'Signal Carrier',  copy: 'Tuesday arrivals tend to move with directness, action, and a fast-reacting pulse. They often bring urgency and spark.' },
-        { label: 'Bridge Mind',     copy: 'Wednesday arrivals blend communication, adaptability, and social intelligence. They often connect people and ideas quickly.' },
-        { label: 'Expansion Core',  copy: 'Thursday arrivals often carry optimism, growth energy, and broad-view thinking. They tend to lean toward opportunity and scale.' },
-        { label: 'Harmony Maker',   copy: 'Friday arrivals often feel magnetic, relational, and tuned to connection. They carry social warmth, beauty, and people energy.' },
-        { label: 'Deep Current',    copy: 'Saturday arrivals tend to carry structure, gravity, and contemplative power. They often feel grounded, serious, and quietly strong.' }
+        { label: 'Solar Reset',      icon: '☀️', copy: 'Sunday arrivals carry visible energy and a spotlight quality. They often feel like the beginning of a new cycle.' },
+        { label: 'Momentum Builder', icon: '🌙', copy: 'Monday arrivals often bring emotional drive and family-rooted motivation. They tend to carry a push to begin.' },
+        { label: 'Signal Carrier',   icon: '♂️', copy: 'Tuesday arrivals tend to move with directness, action, and a fast-reacting pulse. They often bring urgency and spark.' },
+        { label: 'Bridge Mind',      icon: '☿️', copy: 'Wednesday arrivals blend communication, adaptability, and social intelligence. They often connect people and ideas quickly.' },
+        { label: 'Expansion Core',   icon: '♃', copy: 'Thursday arrivals often carry optimism, growth energy, and broad-view thinking. They tend to lean toward opportunity and scale.' },
+        { label: 'Harmony Maker',    icon: '♀️', copy: 'Friday arrivals often feel magnetic, relational, and tuned to connection. They carry social warmth, beauty, and people energy.' },
+        { label: 'Deep Current',     icon: '♄', copy: 'Saturday arrivals tend to carry structure, gravity, and contemplative power. They often feel grounded, serious, and quietly strong.' }
       ];
       return weekdays[date.getDay()];
     }
@@ -4321,6 +4374,18 @@
       return `The world is ${absDiffF.toFixed(2)}°F cooler today than when you were born (today’s est. global average: ${currentF.toFixed(2)}°F).`;
     }
 
+    function getMoonPhaseIcon(phaseName) {
+      const phase = String(phaseName || '').toLowerCase();
+      if (phase.includes('new')) return '🌑';
+      if (phase.includes('waxing crescent')) return '🌒';
+      if (phase.includes('first quarter')) return '🌓';
+      if (phase.includes('waxing gibbous')) return '🌔';
+      if (phase.includes('full')) return '🌕';
+      if (phase.includes('waning gibbous')) return '🌖';
+      if (phase.includes('last quarter') || phase.includes('third quarter')) return '🌗';
+      if (phase.includes('waning crescent')) return '🌘';
+      return '🌙';
+    }
     function getMoonPhase(date) {
       const synodicMonth = 29.530588853;
       const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0, 0);
@@ -5032,7 +5097,9 @@
 
       els.badgeChinese.textContent  = chinese.animal;
       if (els.badgeChineseIcon) els.badgeChineseIcon.textContent = chinese.icon;
+      if (els.badgeMoonIcon) els.badgeMoonIcon.textContent = getMoonPhaseIcon(moon.name);
       els.badgeMoon.textContent     = moon.name;
+      if (els.badgeArrivalIcon) els.badgeArrivalIcon.textContent = vibe.icon;
       els.badgeArrival.textContent  = vibe.label;
 
       els.zodiacMoonName.textContent     = `${moon.name} • ${moon.illuminationPct.toFixed(0)}%`;
@@ -5875,7 +5942,29 @@ function countPresidentialElectionsExperienced(start, end) {
       }
       return count;
     }
+    function countCalculatedBlueMoonsExperienced(start, end) {
+      const engine = window.Astronomy;
+      if (!engine?.SearchMoonPhase) return null;
+      let cursor = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1) - 40 * 86400000);
+      let previous = null;
+      let count = 0;
+      for (let guard = 0; guard < 2000; guard += 1) {
+        const result = engine.SearchMoonPhase(180, cursor, 40);
+        const date = result?.date || result?.time?.date;
+        if (!(date instanceof Date) || Number.isNaN(date.getTime()) || date > end) break;
+        if (previous && date >= start
+          && previous.getUTCFullYear() === date.getUTCFullYear()
+          && previous.getUTCMonth() === date.getUTCMonth()) {
+          count += 1;
+        }
+        previous = date;
+        cursor = new Date(date.getTime() + 36 * 3600000);
+      }
+      return count;
+    }
     function estimateBlueMoonsExperienced(start, end) {
+      const calculated = countCalculatedBlueMoonsExperienced(start, end);
+      if (Number.isInteger(calculated)) return calculated;
       const months = Math.max(0, ((end.getFullYear() - start.getFullYear()) * 12) + (end.getMonth() - start.getMonth()) + 1);
       return Math.round(months / 33);
     }
@@ -6152,6 +6241,8 @@ ${shareUrl}`);
 
     function initSourceDrawers() {
       document.querySelectorAll('.source-toggle').forEach(btn => {
+        const target = btn.dataset.sourceTarget;
+        if (target) btn.setAttribute('aria-controls', `source-drawer-${target}`);
         btn.addEventListener('click', (event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -6840,6 +6931,7 @@ ${shareUrl}`);
       const retrogradeText = retrogrades.length ? retrogrades.join(', ') : 'None';
       const calculated = formatLiveDataTimestamp(astronomy.calculatedAt);
 
+      if (els.currentSkyIcon) els.currentSkyIcon.textContent = getMoonPhaseIcon(moon.phase);
       if (els.currentSkyMoon) els.currentSkyMoon.textContent = `${moon.phase} • ${Number(moon.illuminationPercent).toFixed(0)}%`;
       if (els.currentSkyCopy) {
         els.currentSkyCopy.textContent = `Next New Moon: ${formatScheduledDate(moon.nextNewMoon)}\nNext Full Moon: ${formatScheduledDate(moon.nextFullMoon)}\nRetrograde: ${retrogradeText}`;
@@ -7082,6 +7174,7 @@ ${shareUrl}`);
       els.zodiacName.textContent         = currentZodiac.n.toUpperCase();
       renderHoroscopeState();
       els.badgeStone.textContent         = currentZodiac.stone;
+      if (els.badgeFlowerIcon) els.badgeFlowerIcon.textContent = getFlowerIcon(currentZodiac.flower);
       els.badgeFlower.textContent        = currentZodiac.flower;
       document.documentElement.style.setProperty('--zodiac-color', currentZodiac.c);
 
@@ -7431,6 +7524,16 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 
 
