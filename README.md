@@ -32,7 +32,12 @@ GitHub Actions runs daily and publishes one cache-busted `live-data.json` file c
 - Next global solar and lunar eclipses
 - Current planetary retrograde status
 - World population from Worldometer
-- U.S. national gas average from AAA
+- U.S. national gas average from EIA when configured, with AAA fallback
+- IERS leap-second announcements
+- World Bank historical population
+- NASA GISTEMP climate history
+- USAGov civic reference
+- Component freshness and sports-coverage metadata
 
 Astronomy dates and planetary motion are calculated with Astronomy Engine, which is tested against JPL Horizons and NOVAS data. When a matched birthplace is saved, the browser calculates the next solar eclipse for those coordinates without sending the birthplace to an astronomy service.
 
@@ -63,5 +68,38 @@ Until the secret is added, the updater uses the existing Free Horoscope API and 
 
 Diagnostics is a developer-only panel. After a profile launches, tap or click the build label five times quickly to open or close it. **Run Self-Check** makes a fresh request for the published daily JSON and validates its schema, all 12 horoscopes, freshness, astronomy, population, and gas sections. It also checks browser storage, sharing, the astronomy calculator, and required layout elements. Technical dataset and calculation notes in card Source drawers are shown only while developer Diagnostics is open.
 
-Leap-second counts use the IERS Bulletin C historical record embedded through December 31, 2016.
+Leap-second history is refreshed against the latest IERS Bulletin C. December 31, 2016 remains the last actual insertion date because IERS has not introduced another leap second; the feed also carries the latest no-change or future announcement.
+
+
+## Data longevity and freshness
+
+The scheduled feed uses schema 4. Every updateable component has a registry entry with its status, source, retrieval time, expiration time, fallback state, and—where relevant—coverage end. The hidden Self-Check reads that registry and reports missing, unavailable, or expired components.
+
+Authoritative or calculation-first routes now include:
+
+- IERS Bulletin C for current leap-second announcements, while the full historical event list remains available offline
+- World Bank annual population history for birth-year comparisons
+- NASA GISTEMP v4 annual global temperature history
+- USAGov for the current U.S. president reference
+- Astronomy Engine for Moon phases, Blue Moons, eclipses, local eclipse visibility, and retrogrades
+- Worldometer for the current population estimate
+- U.S. EIA weekly gasoline data when `EIA_API_KEY` is configured, with AAA as the automatic fallback
+- Open-Meteo for matched birthplace timezone and historical weather
+- A validated local sports dataset with explicit result and schedule coverage dates
+
+`version.json` is generated with each feed refresh. Hosted browsers check it at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears so a phone can reload without relying on an old cached page.
+
+## Optional EIA gasoline key
+
+The existing AAA route remains active without setup. To prefer the more stable U.S. Energy Information Administration API, create an EIA API key and add it as the repository Actions secret `EIA_API_KEY`. The key is used only inside GitHub Actions and is never published.
+
+## Validation and maintenance
+
+`scripts/validate-live-data.mjs` runs after every refresh and before Pages packaging. It verifies schema 4, all twelve horoscope signs, astronomy, current comparisons, authoritative reference histories, registered component freshness, a future sports event, and the match between `version.json` and `live-data.json`. A failed validation stops that deployment.
+
+Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. Astronomy Engine remains pinned until an update is reviewed and merged.
+
+Live age counters update four times per second, while the heavier lifetime, calendar, source-drawer, and card calculations run once per minute or on an explicit profile/control change. This keeps the dashboard responsive on phones without making the displayed age feel less live.
+
+Editorial concepts—generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals—remain clearly curated rather than presented as live facts. Sports results are coverage-monitored but still editorially validated; connecting a licensed or chosen sports-results provider is the one remaining product decision before those records can be fully automatic.
 

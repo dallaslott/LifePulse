@@ -1456,6 +1456,19 @@
       font-size: 0.7rem;
     }
 
+    
+    .update-available-btn {
+      border: 1px solid rgba(125, 211, 252, 0.5);
+      background: rgba(14, 116, 144, 0.26);
+      color: #bae6fd;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+    }
+
     .diagnostics-toggle {
       position: absolute;
       width: 1px;
@@ -1694,6 +1707,7 @@
     <button id="mute-toggle" type="button" aria-label="Toggle sound">🔊</button>
     <div class="build-ribbon">
       <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
+      <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
     </div>
 
@@ -2325,6 +2339,7 @@
     const GEOCODE_BASE    = 'https://geocoding-api.open-meteo.com/v1/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
     const LIVE_DATA_URL   = 'live-data.json';
+    const VERSION_URL     = 'version.json';
     const HOROSCOPE_PROXY_ALLORIGINS = 'https://api.allorigins.win/get?url=';
     const HOROSCOPE_PROXY_WHATEVERORIGIN = 'https://whateverorigin.org/get?url=';
     const AAA_GAS_URL = 'https://gasprices.aaa.com/aaa-gas-cost-calculator/';
@@ -2338,6 +2353,7 @@
     const horoscopeCache  = new Map();
     const liveCompareCache = new Map();
     let liveDataPromise   = null;
+    let currentLiveData   = null;
 
     // ─── State ────────────────────────────────────────────────────────────────
     let isMuted               = false;
@@ -2376,6 +2392,8 @@
     let secretDiagnosticsTapTimer  = null;
     let selfCheckRunning       = false;
     let lastSelfCheckAt        = null;
+    let lastSlowStatsKey      = '';
+    let updateCheckTimer      = null;
     let selfCheckFeedResult    = { state: 'fallback', detail: 'Press Run Self-Check to validate the published daily feed.' };
     const liveDiagnostics     = {
       environment: { state: 'idle', label: 'Environment', detail: 'Checking runtime environment…', source: 'App runtime' },
@@ -2387,7 +2405,8 @@
       population:  { state: 'idle', label: 'Live population compare', detail: 'Waiting for birth snapshot…', source: 'Worldometer via proxy' },
       gas:         { state: 'idle', label: 'Live gas compare', detail: 'Waiting for birth snapshot…', source: 'AAA via proxy' },
       song:        { state: 'idle', label: 'Birth-date soundtrack', detail: 'Waiting for birth snapshot…', source: 'Wikipedia chart history' },
-      movie:       { state: 'idle', label: 'Birth-date movie', detail: 'Waiting for birth snapshot…', source: 'Wikipedia box-office history' }
+      movie:       { state: 'idle', label: 'Birth-date movie', detail: 'Waiting for birth snapshot…', source: 'Wikipedia box-office history' },
+      civic:       { state: 'idle', label: 'Civic reference', detail: 'Waiting for the scheduled USAGov reference…', source: 'USAGov' }
     };
 
 
@@ -2413,6 +2432,7 @@
       clearFormBtn:          document.getElementById('clear-form-btn'),
       muteToggle:            document.getElementById('mute-toggle'),
       buildChip:             document.getElementById('build-chip'),
+      updateAvailableBtn:    document.getElementById('update-available-btn'),
       diagnosticsToggle:     document.getElementById('diagnostics-toggle'),
       diagnosticsPanel:      document.getElementById('diagnostics-panel'),
       diagnosticsSummary:    document.getElementById('diagnostics-summary'),
@@ -3456,7 +3476,7 @@
     async function runSelfCheck() {
       if (selfCheckRunning) return;
       selfCheckRunning = true;
-      selfCheckFeedResult = { state: 'fallback', detail: 'Checking the published JSON feed and its required sections...' };
+      selfCheckFeedResult = { state: 'fallback', detail: 'Checking the published JSON feed and every registered data component...' };
       renderDiagnostics();
 
       try {
@@ -3467,13 +3487,26 @@
         const astronomyOkay = Boolean(payload?.astronomy?.moon?.nextFullMoon && payload?.astronomy?.eclipses?.nextSolar?.date);
         const comparisonsOkay = Number.isFinite(Number(payload?.current?.worldPopulation?.value))
           && Number.isFinite(Number(payload?.current?.gasPrice?.value));
-        const schemaOkay = Number(payload?.schemaVersion) >= 3;
-        const passed = schemaOkay && signCount === 12 && feedFresh && astronomyOkay && comparisonsOkay;
+        const components = payload?.components && typeof payload.components === 'object' ? payload.components : {};
+        const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'populationHistory', 'civic', 'sports'];
+        const missingComponents = requiredComponents.filter(key => !components[key]);
+        const unavailableComponents = requiredComponents.filter(key => components[key]?.status === 'unavailable');
+        const expiredComponents = requiredComponents.filter(key => {
+          const expiry = Date.parse(components[key]?.expiresAt || '');
+          return Number.isFinite(expiry) && expiry < Date.now();
+        });
+        const referenceOkay = Array.isArray(payload?.reference?.leapSeconds?.events)
+          && Object.keys(payload?.reference?.populationHistory?.series || {}).length > 40
+          && Object.keys(payload?.reference?.climate?.series || {}).length > 100;
+        const schemaOkay = Number(payload?.schemaVersion) >= 4;
+        const passed = schemaOkay && signCount === 12 && feedFresh && astronomyOkay && comparisonsOkay
+          && referenceOkay && !missingComponents.length && !unavailableComponents.length && !expiredComponents.length;
         const updatedLabel = formatLiveDataTimestamp(payload?.updatedAt);
+        const componentSummary = `${requiredComponents.length - missingComponents.length}/${requiredComponents.length} components registered`;
 
         selfCheckFeedResult = passed
-          ? { state: 'live', detail: `Schema ${payload.schemaVersion}, 12 horoscopes, astronomy, population, and gas are present. Updated ${updatedLabel}.` }
-          : { state: 'error', detail: `Feed validation failed: schema ${payload?.schemaVersion || 'missing'}, ${signCount}/12 horoscopes, freshness ${feedFresh ? 'current' : 'stale'}, astronomy ${astronomyOkay ? 'present' : 'missing'}, comparisons ${comparisonsOkay ? 'present' : 'missing'}.` };
+          ? { state: 'live', detail: `Schema ${payload.schemaVersion}; ${componentSummary}; horoscopes, calculations, reference histories, freshness, and coverage checks passed. Updated ${updatedLabel}.` }
+          : { state: 'error', detail: `Validation failed: schema ${payload?.schemaVersion || 'missing'}, ${signCount}/12 horoscopes, ${componentSummary}, missing ${missingComponents.join(', ') || 'none'}, unavailable ${unavailableComponents.join(', ') || 'none'}, expired ${expiredComponents.join(', ') || 'none'}, references ${referenceOkay ? 'present' : 'incomplete'}.` };
 
         if (birthMomentGlobal && currentProfile) {
           await Promise.allSettled([
@@ -4329,15 +4362,16 @@
 
     // Fixed: accounts for Chinese New Year falling mid-Jan to mid-Feb
     function getChineseZodiacYear(date) {
-      const year  = date.getFullYear();
+      try {
+        const parts = new Intl.DateTimeFormat('en-u-ca-chinese', { year: 'numeric' }).formatToParts(date);
+        const relatedYear = Number(parts.find(part => part.type === 'relatedYear')?.value);
+        if (Number.isInteger(relatedYear)) return relatedYear;
+      } catch {}
+      const year = date.getFullYear();
       const month = date.getMonth() + 1;
-      const day   = date.getDate();
-      // Approximate: Chinese New Year falls between Jan 21 – Feb 20.
-      // If we're in January, or early-to-mid February, attribute to previous year.
-      if (month === 1 || (month === 2 && day < 11)) return year - 1;
-      return year;
+      const day = date.getDate();
+      return month === 1 || (month === 2 && day < 11) ? year - 1 : year;
     }
-
     function getChineseZodiac(date) {
       const lunarYear = getChineseZodiacYear(date);
       const animal    = CHINESE_ZODIAC[(lunarYear - 1900) % 12];
@@ -4464,7 +4498,8 @@
         admin1: item.admin1 || '',
         country: item.country || '',
         latitude: item.latitude,
-        longitude: item.longitude
+        longitude: item.longitude,
+        timezone: item.timezone || ''
       };
     }
 
@@ -4900,7 +4935,7 @@
       const currentPopulationEstimate = interpolateFromAnchors(new Date().getFullYear(), WORLD_POPULATION_ANCHORS);
       els.birthPopulation.textContent = formatPopulationBillions(population);
       els.birthPopulationCopy.textContent = buildPopulationComparisonCopy(population, currentPopulationEstimate, 'today’s est. global population');
-      if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Worldometer via proxy', 'Preparing a live world-population comparison…');
+      if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Scheduled Daily Feed', 'Preparing the latest population comparison…');
 
       const tech = getTechSnapshot(birthYear);
       els.birthTechTitle.textContent = tech.title;
@@ -4910,7 +4945,7 @@
       const currentGasEstimate = interpolateFromAnchors(new Date().getFullYear(), GAS_ANCHORS);
       els.birthGasPrice.textContent = formatCurrency(gas);
       els.birthGasCopy.textContent  = buildGasComparisonCopy(gas, currentGasEstimate, 'today’s est. national average');
-      if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'AAA via proxy', 'Preparing a live gas-price comparison…');
+      if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Scheduled Daily Feed', 'Preparing the latest national gas-price comparison…');
 
       const birthTempC   = interpolateFromAnchors(birthYear, TEMP_ANCHORS_C);
       const currentTempC = interpolateFromAnchors(currentYear, TEMP_ANCHORS_C);
@@ -4925,7 +4960,7 @@
 
     async function populateLiveBirthComparisons(date) {
       const birthYear = date.getFullYear();
-      const birthPopulation = interpolateFromAnchors(birthYear, WORLD_POPULATION_ANCHORS);
+      let birthPopulation = interpolateFromAnchors(birthYear, WORLD_POPULATION_ANCHORS);
       const birthGas = interpolateFromAnchors(birthYear, GAS_ANCHORS);
 
       if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Scheduled daily feed', 'Checking the latest server-refreshed population value.');
@@ -4934,6 +4969,20 @@
       const [populationResult, gasResult] = await Promise.allSettled([
         fetchLiveWorldPopulation(), fetchLiveGasAverage()
       ]);
+
+      const populationHistory = currentLiveData?.reference?.populationHistory?.series || {};
+      const authoritativeBirthPopulation = Number(populationHistory[birthYear]);
+      if (Number.isFinite(authoritativeBirthPopulation)) {
+        birthPopulation = authoritativeBirthPopulation / 1_000_000_000;
+        els.birthPopulation.textContent = formatPopulationBillions(birthPopulation);
+      }
+      const climateSeries = currentLiveData?.reference?.climate?.series || {};
+      const birthClimate = climateSeries[birthYear];
+      const latestClimate = currentLiveData?.reference?.climate;
+      if (Number.isFinite(Number(birthClimate?.estimatedAbsoluteC)) && Number.isFinite(Number(latestClimate?.latestEstimatedAbsoluteC))) {
+        els.birthTemp.textContent = formatTempF(Number(birthClimate.estimatedAbsoluteC));
+        els.birthTempCopy.textContent = describeTempChange(Number(birthClimate.estimatedAbsoluteC), Number(latestClimate.latestEstimatedAbsoluteC), birthYear);
+      }
 
       if (populationResult.status === 'fulfilled' && Number.isFinite(populationResult.value.population)) {
         const feed = populationResult.value;
@@ -5509,17 +5558,22 @@
       return names.size;
     }
 
-    const PRESIDENTIAL_ELECTION_DATES = [
-      '1900-11-06','1904-11-08','1908-11-03','1912-11-05','1916-11-07',
-      '1920-11-02','1924-11-04','1928-11-06','1932-11-08','1936-11-03',
-      '1940-11-05','1944-11-07','1948-11-02','1952-11-04','1956-11-06',
-      '1960-11-08','1964-11-03','1968-11-05','1972-11-07','1976-11-02',
-      '1980-11-04','1984-11-06','1988-11-08','1992-11-03','1996-11-05',
-      '2000-11-07','2004-11-02','2008-11-04','2012-11-06','2016-11-08',
-      '2020-11-03','2024-11-05','2028-11-07'
-    ].map(d => new Date(`${d}T12:00:00`));
+    function getPresidentialElectionDate(year) {
+      const novemberFirst = new Date(year, 10, 1, 12, 0, 0, 0);
+      const firstMonday = 1 + ((8 - novemberFirst.getDay()) % 7);
+      return new Date(year, 10, firstMonday + 1, 12, 0, 0, 0);
+    }
 
-    function countPresidentialElectionsExperienced(start, end) {
+    function buildPresidentialElectionDates(startYear = 1900, endYear = new Date().getFullYear() + 40) {
+      const dates = [];
+      for (let year = startYear; year <= endYear; year += 1) {
+        if (year % 4 === 0) dates.push(getPresidentialElectionDate(year));
+      }
+      return dates;
+    }
+
+    const PRESIDENTIAL_ELECTION_DATES = buildPresidentialElectionDates();
+function countPresidentialElectionsExperienced(start, end) {
       return countDatedEventsExperienced(start, end, PRESIDENTIAL_ELECTION_DATES);
     }
 
@@ -5529,16 +5583,40 @@
       return Math.floor(days / mercuryYearDays);
     }
 
+    const eclipseExperienceCache = new Map();
+
+    function countCalculatedEclipsesExperienced(start, end, type) {
+      const engine = window.Astronomy;
+      const method = type === 'solar' ? 'SearchGlobalSolarEclipse' : 'SearchLunarEclipse';
+      if (!engine?.[method]) return null;
+      const cacheKey = `${method}|${start.toISOString().slice(0, 10)}|${end.toISOString().slice(0, 10)}`;
+      if (eclipseExperienceCache.has(cacheKey)) return eclipseExperienceCache.get(cacheKey);
+      let count = 0;
+      let cursor = new Date(start);
+      for (let guard = 0; guard < 1000; guard += 1) {
+        const event = engine[method](cursor);
+        const date = event?.peak?.date || event?.peak?.time?.date;
+        if (!(date instanceof Date) || Number.isNaN(date.getTime()) || date > end) break;
+        if (date >= start) count += 1;
+        cursor = new Date(date.getTime() + 36 * 3600000);
+      }
+      eclipseExperienceCache.set(cacheKey, count);
+      return count;
+    }
+
     function estimateSolarEclipsesExperienced(start, end) {
+      const calculated = countCalculatedEclipsesExperienced(start, end, 'solar');
+      if (Number.isInteger(calculated)) return calculated;
       const years = Math.max(0, (end - start) / 86400000 / 365.2425);
       return Math.round(years * 2.39);
     }
 
     function estimateTotalLunarEclipsesExperienced(start, end) {
+      const calculated = countCalculatedEclipsesExperienced(start, end, 'lunar');
+      if (Number.isInteger(calculated)) return calculated;
       const years = Math.max(0, (end - start) / 86400000 / 365.2425);
       return Math.round(years * 0.83);
     }
-
     function countFriday13thsExperienced(start, end) {
       const cursor = new Date(start.getFullYear(), start.getMonth(), 1, 12, 0, 0, 0);
       const limit = new Date(end.getFullYear(), end.getMonth(), 1, 12, 0, 0, 0);
@@ -5551,22 +5629,23 @@
       return count;
     }
 
-    function countPalindromeDatesExperienced(start, end) {
-      let count = 0;
-      const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
-      const limit = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
-
-      while (cursor <= limit) {
-        const mm = String(cursor.getMonth() + 1).padStart(2, '0');
-        const dd = String(cursor.getDate()).padStart(2, '0');
-        const yyyy = String(cursor.getFullYear()).padStart(4, '0');
-        const token = `${mm}${dd}${yyyy}`;
-        if (token === token.split('').reverse().join('')) count++;
-        cursor.setDate(cursor.getDate() + 1);
+    function calculatePalindromeDates(start, end) {
+      const dates = [];
+      for (let year = start.getFullYear(); year <= end.getFullYear(); year += 1) {
+        const reversedYear = String(year).padStart(4, '0').split('').reverse().join('');
+        const month = Number(reversedYear.slice(0, 2));
+        const day = Number(reversedYear.slice(2, 4));
+        const candidate = new Date(year, month - 1, day, 12, 0, 0, 0);
+        const valid = month >= 1 && month <= 12 && day >= 1
+          && candidate.getFullYear() === year && candidate.getMonth() === month - 1 && candidate.getDate() === day;
+        if (valid && candidate >= start && candidate <= end) dates.push(candidate);
       }
-      return count;
+      return dates;
     }
 
+    function countPalindromeDatesExperienced(start, end) {
+      return calculatePalindromeDates(start, end).length;
+    }
     const HALLEY_COMET_DATES = [
       new Date('1910-04-20T12:00:00'),
       new Date('1986-02-09T12:00:00'),
@@ -5634,6 +5713,46 @@
         previous: new Date(FULL_MOON_REFERENCE.getTime() + completedCycles * SYNODIC_MONTH_MS),
         next: new Date(FULL_MOON_REFERENCE.getTime() + (completedCycles + 1) * SYNODIC_MONTH_MS)
       };
+    }
+
+    function getNextMonthlyBlueMoon(now) {
+      const engine = window.Astronomy;
+      if (!engine?.SearchMoonPhase) return getEventWindow(BLUE_MOON_EVENTS, now).next;
+      let cursor = new Date(now);
+      const fullMoons = [];
+      for (let index = 0; index < 140; index += 1) {
+        const result = engine.SearchMoonPhase(180, cursor, 40);
+        const date = result?.date || result?.time?.date;
+        if (!(date instanceof Date) || Number.isNaN(date.getTime())) break;
+        fullMoons.push(date);
+        const nextCursor = new Date(date.getTime() + 36 * 3600000);
+        cursor = nextCursor;
+        if (date.getUTCFullYear() > now.getUTCFullYear() + 10) break;
+      }
+      for (let index = 1; index < fullMoons.length; index += 1) {
+        const previous = fullMoons[index - 1];
+        const candidate = fullMoons[index];
+        if (candidate > now && previous.getUTCFullYear() === candidate.getUTCFullYear() && previous.getUTCMonth() === candidate.getUTCMonth()) {
+          return { date: candidate, type: 'Monthly' };
+        }
+      }
+      return null;
+    }
+
+    function calculateNextSolarEclipse(now) {
+      try {
+        const eclipse = window.Astronomy?.SearchGlobalSolarEclipse(now);
+        const date = eclipse?.peak?.date || eclipse?.peak?.time?.date;
+        return date instanceof Date ? { date, type: browserEclipseKind(eclipse?.kind) } : null;
+      } catch { return null; }
+    }
+
+    function calculateNextLunarEclipse(now) {
+      try {
+        const eclipse = window.Astronomy?.SearchLunarEclipse(now);
+        const date = eclipse?.peak?.date || eclipse?.peak?.time?.date;
+        return date instanceof Date ? { date, type: browserEclipseKind(eclipse?.kind) } : null;
+      } catch { return null; }
     }
 
     function getNextFriday13th(now) {
@@ -5725,18 +5844,37 @@
       return { count: eras.length, eras };
     }
 
+    function getTimezoneOffsetMinutes(date, timeZone) {
+      try {
+        const parts = new Intl.DateTimeFormat('en-US', {
+          timeZone,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+        }).formatToParts(date).reduce((result, part) => {
+          if (part.type !== 'literal') result[part.type] = part.value;
+          return result;
+        }, {});
+        const representedUtc = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), Number(parts.hour), Number(parts.minute), Number(parts.second));
+        return Math.round((representedUtc - date.getTime()) / 60000);
+      } catch {
+        return null;
+      }
+    }
+
     function countDSTShiftsExperienced(start, end) {
+      const timeZone = currentProfile?.birthPlaceGeo?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
       let count = 0;
-      for (let year = start.getFullYear(); year <= end.getFullYear(); year++) {
-        if (year < 1918) continue;
-        const spring = new Date(year, 2, 10, 12, 0, 0, 0);
-        const fall = new Date(year, 10, 3, 12, 0, 0, 0);
-        if (spring >= start && spring <= end) count++;
-        if (fall >= start && fall <= end) count++;
+      let previousOffset = null;
+      const cursor = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1, 12));
+      const finish = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1, 12));
+      while (cursor <= finish) {
+        const offset = getTimezoneOffsetMinutes(cursor, timeZone);
+        if (offset != null && previousOffset != null && offset !== previousOffset) count += 1;
+        if (offset != null) previousOffset = offset;
+        cursor.setUTCMonth(cursor.getUTCMonth() + 1);
       }
       return count;
     }
-
     function estimateBlueMoonsExperienced(start, end) {
       const months = Math.max(0, ((end.getFullYear() - start.getFullYear()) * 12) + (end.getMonth() - start.getMonth()) + 1);
       return Math.round(months / 33);
@@ -5750,28 +5888,13 @@
     }
 
     function getPalindromeDatesExperienced(start, end, limit = 6) {
-      const results = [];
-      const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
-      const finish = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
-
-      while (cursor <= finish) {
-        const mm = String(cursor.getMonth() + 1).padStart(2, '0');
-        const dd = String(cursor.getDate()).padStart(2, '0');
-        const yyyy = String(cursor.getFullYear()).padStart(4, '0');
-        const token = `${mm}${dd}${yyyy}`;
-        if (token === token.split('').reverse().join('')) {
-          results.push(new Date(cursor));
-        }
-        cursor.setDate(cursor.getDate() + 1);
-      }
-
+      const all = calculatePalindromeDates(start, end);
       return {
-        count: results.length,
-        dates: results.slice(0, limit).map(formatSlashDate),
-        extraCount: Math.max(0, results.length - limit)
+        count: all.length,
+        dates: all.slice(0, Math.max(1, limit)).map(formatSlashDate),
+        extraCount: Math.max(0, all.length - limit)
       };
     }
-
     function getTechSnapshot(year) {
       if (year < 1955) return { title: 'Radio + Black-and-White TV', copy: 'Mass culture still moved through radio sets, print, cinema palaces, and early television.' };
       if (year < 1965) return { title: 'Vinyl + Rotary Phone Era', copy: 'Music lived on records, calls happened on cords, and broadcast TV shaped the room.' };
@@ -6082,20 +6205,8 @@ ${shareUrl}`);
     }
 
     function getAllPalindromeDatesExperienced(start, end) {
-      const dates = [];
-      const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 12, 0, 0, 0);
-      const finish = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12, 0, 0, 0);
-      while (cursor <= finish) {
-        const mm = String(cursor.getMonth() + 1).padStart(2, '0');
-        const dd = String(cursor.getDate()).padStart(2, '0');
-        const yyyy = String(cursor.getFullYear()).padStart(4, '0');
-        const token = `${mm}${dd}${yyyy}`;
-        if (token === token.split('').reverse().join('')) dates.push(new Date(cursor));
-        cursor.setDate(cursor.getDate() + 1);
-      }
-      return dates;
+      return calculatePalindromeDates(start, end);
     }
-
     function refreshSourceDrawers(now = new Date()) {
       if (!birthMomentGlobal) return;
 
@@ -6124,14 +6235,17 @@ ${shareUrl}`);
       });
 
       const leapSecondEntries = getLeapSecondEntriesSinceBirth(birthMomentGlobal, now);
+      const leapReference = currentLiveData?.reference?.leapSeconds;
       setSourceDrawer('leapseconds', {
-        diagnosticMeta: 'IERS Bulletin C historical leap-second record, embedded through 12/31/2016.',
+        diagnosticMeta: `${leapReference?.source || 'IERS Bulletin C fallback'}${leapReference?.bulletinNumber ? ` • Bulletin ${leapReference.bulletinNumber}` : ''}${leapReference?.bulletinDate ? ` • Checked ${formatSourceDate(new Date(leapReference.bulletinDate))}` : ''}.`,
         lines: [
           'Meaning: UTC occasionally receives one extra second to remain close to Earth’s measured rotation.',
           `Since Your Birth: ${leapSecondEntries.length}`,
-          leapSecondEntries.length ? `Added On: ${leapSecondEntries.map(formatSourceDate).join(', ')}` : 'Added On: None since your birth.'
+          leapSecondEntries.length ? `Added On: ${leapSecondEntries.map(formatSourceDate).join(', ')}` : 'Added On: None since your birth.',
+          leapReference?.announcement || 'No new leap second is currently announced.'
         ]
       });
+
 
       const internetEntries = INTERNET_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now);
       setSourceDrawer('internet-eras', {
@@ -6186,7 +6300,7 @@ ${shareUrl}`);
       });
     }
 
-    function updateLiveStats() {
+    function updateLiveStats(forceSlow = false) {
       if (!birthMomentGlobal) return;
       const now          = new Date();
       const diff         = now - birthMomentGlobal;
@@ -6218,6 +6332,10 @@ ${shareUrl}`);
       els.minutesValue.textContent   = Math.floor(secondsTotal / 60).toLocaleString();
       els.secondsValue.textContent   = secondsTotal.toLocaleString();
       els.planetAge.textContent      = orbitalYears.toFixed(6);
+
+      const slowStatsKey = birthMomentGlobal.getTime() + '|' + now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + '-' + now.getHours() + '-' + now.getMinutes();
+      if (!forceSlow && slowStatsKey === lastSlowStatsKey) return;
+      lastSlowStatsKey = slowStatsKey;
 
       const heartbeats = Math.floor(secondsTotal * 1.0);
       const breaths    = Math.floor(secondsTotal * (16 / 60));
@@ -6286,10 +6404,10 @@ ${shareUrl}`);
       els.fullmoonsValue.textContent = Math.floor(daysExact / 29.53).toLocaleString();
       els.blueMoonsValue.textContent = estimateBlueMoonsExperienced(birthMomentGlobal, now).toLocaleString();
       if (els.blueMoonsCopy) {
-        const blueMoonWindow = getEventWindow(BLUE_MOON_EVENTS, now);
-        els.blueMoonsCopy.textContent = blueMoonWindow.next
-          ? `Next: ${formatEventDate(blueMoonWindow.next.date)} \u2022 ${blueMoonWindow.next.type}`
-          : 'The Blue Moon schedule needs its next update.';
+        const nextBlueMoon = getNextMonthlyBlueMoon(now);
+        els.blueMoonsCopy.textContent = nextBlueMoon
+          ? `Next: ${formatEventDate(nextBlueMoon.date)} \u2022 ${nextBlueMoon.type}`
+          : 'Next Monthly Blue Moon: Calculation unavailable.';
       }
       if (els.fullmoonsCopy && !currentAstronomy) {
         const fullMoonWindow = getFullMoonWindow(now);
@@ -6307,17 +6425,17 @@ ${shareUrl}`);
       }
       els.eclipsesValue.textContent = estimateSolarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
       els.totalLunarEclipsesValue.textContent = estimateTotalLunarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
-      const nextSolarEclipse = getEventWindow(SOLAR_ECLIPSE_EVENTS, now).next;
-      const nextLunarEclipse = getEventWindow(LUNAR_ECLIPSE_EVENTS, now).next;
+      const nextSolarEclipse = calculateNextSolarEclipse(now) || getEventWindow(SOLAR_ECLIPSE_EVENTS, now).next;
+      const nextLunarEclipse = calculateNextLunarEclipse(now) || getEventWindow(LUNAR_ECLIPSE_EVENTS, now).next;
       if (els.eclipsesCopy && !currentAstronomy) {
         els.eclipsesCopy.textContent = nextSolarEclipse
           ? `Next: ${formatEventDate(nextSolarEclipse.date)} \u2022 ${nextSolarEclipse.type}`
-          : 'NASA schedule update needed.';
+          : 'Next eclipse calculation unavailable.';
       }
       if (els.totalLunarEclipsesCopy && !currentAstronomy) {
         els.totalLunarEclipsesCopy.textContent = nextLunarEclipse
           ? `Next: ${formatEventDate(nextLunarEclipse.date)} \u2022 ${nextLunarEclipse.type}`
-          : 'NASA schedule update needed.';
+          : 'Next eclipse calculation unavailable.';
       }
       els.presidentsValue.textContent = countPresidentsExperienced(birthMomentGlobal, now).toLocaleString();
       els.presidentialElectionsValue.textContent = countPresidentialElectionsExperienced(birthMomentGlobal, now).toLocaleString();
@@ -6325,7 +6443,7 @@ ${shareUrl}`);
         const nextElection = PRESIDENTIAL_ELECTION_DATES.find(date => date > now);
         els.presidentialElectionsCopy.textContent = nextElection
           ? `Next: ${formatEventDate(nextElection)}`
-          : 'Election schedule update needed.';
+          : 'Next election date is calculated automatically.';
       }
       const internetEras = getInternetErasExperienced(birthMomentGlobal, now);
       els.internetErasValue.textContent = internetEras.count.toLocaleString();
@@ -6362,15 +6480,15 @@ ${shareUrl}`);
       els.worldcupsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WORLD_CUP_DATES).toLocaleString();
       if (els.summerOlympicsCopy) {
         const nextSummerGames = SUMMER_OLYMPICS_DATES.find(date => date > now);
-        els.summerOlympicsCopy.textContent = nextSummerGames ? `Next: ${formatEventDate(nextSummerGames)} \u2022 Los Angeles` : 'Schedule update needed.';
+        els.summerOlympicsCopy.textContent = nextSummerGames ? `Next: ${formatEventDate(nextSummerGames)} \u2022 Los Angeles` : 'Next: Awaiting Official Date';
       }
       if (els.winterOlympicsCopy) {
         const nextWinterGames = WINTER_OLYMPICS_DATES.find(date => date > now);
-        els.winterOlympicsCopy.textContent = nextWinterGames ? `Next: ${formatEventDate(nextWinterGames)} \u2022 French Alps` : 'Schedule update needed.';
+        els.winterOlympicsCopy.textContent = nextWinterGames ? `Next: ${formatEventDate(nextWinterGames)} \u2022 French Alps` : 'Next: Awaiting Official Date';
       }
       if (els.worldcupsCopy) {
         const nextWorldCup = WORLD_CUP_DATES.find(date => date > now);
-        els.worldcupsCopy.textContent = nextWorldCup ? `Next: ${formatEventDate(nextWorldCup)} \u2022 2030 Hosts` : 'Schedule update needed.';
+        els.worldcupsCopy.textContent = nextWorldCup ? `Next: ${formatEventDate(nextWorldCup)} \u2022 2030 Hosts` : 'Next: Awaiting Official Date';
       }
 
       if (els.repeatChampionsValue) {
@@ -6616,6 +6734,64 @@ ${shareUrl}`);
       }
     }
 
+    function applyScheduledReferenceData(payload) {
+      if (!payload || typeof payload !== 'object') return;
+      currentLiveData = payload;
+
+      Object.entries(payload.components || {}).forEach(([key, component]) => {
+        const expired = Number.isFinite(Date.parse(component?.expiresAt || '')) && Date.parse(component.expiresAt) < Date.now();
+        const state = component?.status === 'unavailable' || expired
+          ? 'error'
+          : ['fallback', 'stale', 'previous'].includes(component?.status) || component?.fallbackUsed
+            ? 'cached'
+            : ['live', 'legacy', 'partial'].includes(component?.status)
+              ? 'live'
+              : 'static';
+        liveDiagnostics[`component-${key}`] = {
+          label: `Data: ${key.replace(/([A-Z])/g, ' $1').replace(/^./, value => value.toUpperCase())}`,
+          state,
+          detail: `${component?.note || 'Registered data component.'}${expired ? ` Expired ${formatLiveDataTimestamp(component.expiresAt)}.` : component?.expiresAt ? ` Fresh through ${formatLiveDataTimestamp(component.expiresAt)}.` : ''}`,
+          source: component?.source || 'Life Pulse registry',
+          updatedAt: payload.updatedAt || new Date().toISOString()
+        };
+      });
+
+      const leapEvents = payload?.reference?.leapSeconds?.events;
+      if (Array.isArray(leapEvents) && leapEvents.length) {
+        const parsed = leapEvents.map(value => new Date(`${value}T12:00:00Z`)).filter(date => !Number.isNaN(date.getTime()));
+        if (parsed.length) LEAP_SECOND_DATES.splice(0, LEAP_SECOND_DATES.length, ...parsed);
+      }
+
+      const civic = payload?.reference?.civic;
+      if (civic?.currentPresident) {
+        setLiveDiagnostic('civic', {
+          state: payload?.components?.civic?.fallbackUsed ? 'cached' : 'live',
+          detail: `Current president reference verified as ${civic.currentPresident}.`,
+          source: civic.source || 'USAGov'
+        });
+      }
+
+      if (birthMomentGlobal) refreshSourceDrawers();
+    }
+
+    async function checkForDashboardUpdate() {
+      if (location.protocol === 'file:') return;
+      try {
+        const response = await fetch(`version.json?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) return;
+        const version = await response.json();
+        const hash = String(version?.contentHash || '');
+        if (!hash) return;
+        const priorHash = sessionStorage.getItem('lifePulseLoadedVersion');
+        if (!priorHash) {
+          sessionStorage.setItem('lifePulseLoadedVersion', hash);
+        } else if (priorHash !== hash && els.updateAvailableBtn) {
+          els.updateAvailableBtn.classList.remove('hidden');
+          els.updateAvailableBtn.textContent = 'UPDATE AVAILABLE';
+        }
+      } catch {}
+    }
+
     async function loadScheduledLiveData(force = false) {
       if (force) liveDataPromise = null;
       if (!liveDataPromise) {
@@ -6630,6 +6806,10 @@ ${shareUrl}`);
         }).then(response => {
           if (!response.ok) throw new Error(`Scheduled live data failed (${response.status}).`);
           return response.json();
+        })
+        .then(payload => {
+          applyScheduledReferenceData(payload);
+          return payload;
         }).catch(error => {
           liveDataPromise = null;
           throw error;
@@ -6974,7 +7154,8 @@ ${shareUrl}`);
         els.formView.classList.add('hidden');
         els.resultView.classList.remove('hidden');
 
-        updateLiveStats();
+        lastSlowStatsKey = '';
+        updateLiveStats(true);
         refreshInsightPanels();
         renderDiagnostics();
 
@@ -7131,11 +7312,12 @@ ${shareUrl}`);
       els.diagnosticsToggle.addEventListener('click', toggleDiagnosticsPanel);
       els.buildChip.addEventListener('click', registerSecretDiagnosticsTap);
       els.buildChip.addEventListener('touchstart', registerSecretDiagnosticsTap, { passive: true });
+      els.updateAvailableBtn?.addEventListener('click', () => location.reload());
       els.rerunDiagnosticsBtn.addEventListener('click', runSelfCheck);
 
       els.mockToggleBtn.addEventListener('click', toggleMockMode);
       els.clearCacheBtn.addEventListener('click', clearLiveCaches);
-      els.planetChoice.addEventListener('change',   updateLiveStats);
+      els.planetChoice.addEventListener('change', () => updateLiveStats(true));
       els.saveCardBtn.addEventListener('click',     () => exportElementAsImage(els.shareCard,   'LifePulse-Card.png'));
       els.saveDashboardBtn.addEventListener('click',() => exportElementAsImage(els.resultView,  'LifePulse-Dashboard.png'));
       els.shareBtn.addEventListener('click',        sharePulse);
@@ -7194,6 +7376,7 @@ ${shareUrl}`);
           if (starRafId) { cancelAnimationFrame(starRafId); starRafId = null; }
         } else {
           if (!starRafId) starRafId = requestAnimationFrame(drawStars);
+          checkForDashboardUpdate();
         }
       });
     }
@@ -7213,6 +7396,8 @@ ${shareUrl}`);
       }
 
       syncDiagnosticBootState();
+      checkForDashboardUpdate();
+      updateCheckTimer = setInterval(checkForDashboardUpdate, 15 * 60 * 1000);
       loadSportsDataFeed();
       initSourceDrawers();
 
@@ -7246,6 +7431,12 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 
