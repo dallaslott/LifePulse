@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -939,7 +939,7 @@
       grid-column: 1 / -1;
       min-height: 94px;
     }
-    .insight-copy {
+    .insight-copy { white-space: pre-line;
       margin-top: 8px;
       font-size: 0.82rem;
       line-height: 1.42;
@@ -974,6 +974,84 @@
       font-size: 0.82rem;
       line-height: 1.45;
       color: #eef3fb;
+    }
+
+    .daily-pulse {
+      margin: 14px 0 18px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(0, 210, 255, 0.32);
+      background:
+        radial-gradient(circle at top right, rgba(0, 255, 136, 0.13), transparent 42%),
+        linear-gradient(145deg, rgba(0, 210, 255, 0.12), rgba(255,255,255,0.035));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .daily-pulse-head,
+    .daily-pulse-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .daily-pulse-kicker {
+      display: block;
+      color: var(--primary);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .daily-pulse-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.25);
+      color: #dbe8f7;
+      font-size: 0.63rem;
+      font-weight: 900;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+    }
+
+    .daily-pulse-title {
+      margin-top: 12px;
+      color: #fff;
+      font-size: clamp(1.24rem, 5vw, 1.72rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .daily-pulse-copy {
+      min-height: 76px;
+      margin-top: 9px;
+      color: #edf5ff;
+      font-size: 0.9rem;
+      line-height: 1.58;
+    }
+
+    .daily-pulse-meta {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .daily-pulse-source {
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .daily-pulse-refresh {
+      padding: 9px 11px;
+      font-size: 0.66rem;
     }
 
     .life-scale-panel {
@@ -1640,6 +1718,21 @@
       </div>
     </div>
 
+    <section class="daily-pulse" aria-labelledby="daily-pulse-title">
+      <div class="daily-pulse-head">
+        <span class="daily-pulse-kicker">Today&#39;s Life Pulse</span>
+        <span class="daily-pulse-badge" id="daily-pulse-badge">Preparing Live Reading</span>
+      </div>
+      <h2 class="daily-pulse-title" id="daily-pulse-title">Your Daily Zodiac Signal</h2>
+      <p class="daily-pulse-copy" id="daily-pulse-copy" role="status" aria-live="polite">
+        Your personalized daily reading will appear here.
+      </p>
+      <div class="daily-pulse-meta">
+        <span class="daily-pulse-source" id="daily-pulse-source">Life Pulse fallback is ready.</span>
+        <button class="control-btn daily-pulse-refresh" id="daily-pulse-refresh" type="button">REFRESH</button>
+      </div>
+    </section>
+
     <div class="progress-label">
       <span>CENTURY PROGRESS (100Y)</span>
       <span id="percent-label">0.00000%</span>
@@ -1757,17 +1850,17 @@
     <div class="panel">
       <div class="section-title">You&#39;ve Lived Through</div>
       <div class="insight-grid compact-grid-2">
-        <div class="insight-card compact-card insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source insight-card--source" data-source-target="first-sports-event" data-source-target="repeat-champions" data-source-target="nl-worldseries" data-source-target="al-worldseries" data-source-target="nfc-superbowls" data-source-target="afc-superbowls" data-source-target="palindrome-dates" data-source-target="internet-eras" data-source-target="leapseconds"><span class="insight-value" id="sunrises-value">0</span><span class="micro-label">Sunrises</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="sunrises-value">0</span><span class="micro-label">Sunrises</span></div>
         <div class="insight-card compact-card"><span class="insight-value" id="weekends-value">0</span><span class="micro-label">Weekends</span></div>
 
         <div class="insight-card compact-card"><span class="insight-value" id="mondays-lived-value">0</span><span class="micro-label">Mondays Lived</span></div>
         <div class="insight-card compact-card"><span class="insight-value" id="fridays-lived-value">0</span><span class="micro-label">Fridays Survived</span></div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="friday13ths-value">0</span><span class="micro-label">Friday the 13ths</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="friday13ths-value">0</span><span class="micro-label">Friday the 13ths</span><p class="insight-copy" id="friday13ths-copy"></p></div>
         <div class="insight-card compact-card"><span class="insight-value" id="dst-switches-value">0</span><span class="micro-label">DST Shifts</span></div>
 
         <div class="insight-card compact-card"><span class="insight-value" id="seasons-value">0</span><span class="micro-label">Season Changes</span></div>
-        <div class="insight-card compact-card"><span class="insight-value" id="leapdays-value">0</span><span class="micro-label">Leap Days</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="leapdays-value">0</span><span class="micro-label">Leap Days</span><p class="insight-copy" id="leapdays-copy"></p></div>
 
         <div class="insight-card compact-card insight-card--wide source-card"><span class="insight-value" id="leapseconds-value">0</span><span class="micro-label">Leap Seconds</span><p class="insight-copy" id="leapseconds-copy"></p>
           <button class="source-toggle" type="button" data-source-target="leapseconds" aria-expanded="false">Source</button>
@@ -1779,7 +1872,7 @@
           <button class="source-toggle" type="button" data-source-target="presidents" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-presidents" hidden></div>
         </div>
-        <div class="insight-card compact-card"><span class="insight-value" id="presidential-elections-value">0</span><span class="micro-label">Presidential Elections</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="presidential-elections-value">0</span><span class="micro-label">Presidential Elections</span><p class="insight-copy" id="presidential-elections-copy"></p></div>
 
         <div class="insight-card compact-card"><span class="insight-value" id="console-eras-value">0</span><span class="micro-label">Gaming Console Eras</span></div>
         <div class="insight-card compact-card source-card">
@@ -1842,10 +1935,10 @@
           <div class="source-drawer" id="source-drawer-nl-worldseries" hidden></div>
 </div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="winter-olympics-value">0</span><span class="micro-label">Winter Olympics</span></div>
-        <div class="insight-card compact-card"><span class="insight-value" id="summer-olympics-value">0</span><span class="micro-label">Summer Olympics</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="winter-olympics-value">0</span><span class="micro-label">Winter Olympics</span><p class="insight-copy" id="winter-olympics-copy"></p></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="summer-olympics-value">0</span><span class="micro-label">Summer Olympics</span><p class="insight-copy" id="summer-olympics-copy"></p></div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="worldcups-value">0</span><span class="micro-label">World Cups</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="worldcups-value">0</span><span class="micro-label">World Cups</span><p class="insight-copy" id="worldcups-copy"></p></div>
         <div class="insight-card compact-card"><span class="insight-value" id="repeat-champions-value">0</span><span class="micro-label">Repeat Title Defenses</span>
           <button class="source-toggle" type="button" data-source-target="repeat-champions" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-repeat-champions" hidden></div>
@@ -1892,7 +1985,7 @@
         <div class="insight-card compact-card">
           <span class="insight-value" id="saturn-return-value">...</span>
           <span class="micro-label" id="saturn-return-label">Saturn Returns Lived</span>
-          <p class="insight-copy" id="saturn-return-copy">Your Saturn phase and next return will appear here.</p>
+          <p class="insight-copy" id="saturn-return-copy">Your Saturn Phase and Next Return will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="space-miles-value">0</span>
@@ -1902,28 +1995,28 @@
         <div class="insight-card compact-card">
           <span class="insight-value" id="halley-value">0</span>
           <span class="micro-label">Halley&#39;s Comet Passes</span>
-          <p class="insight-copy">Halley swings through the inner solar system roughly every 76 years, so very few people live through more than one pass.</p>
+          <p class="insight-copy" id="halley-copy">Last and Next dates will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="mercury-birthdays-value">0</span>
           <span class="micro-label">Mercury Birthdays</span>
-          <p class="insight-copy">Mercury circles the Sun about every 88 Earth days, so this is how many Mercury years have passed during your life.</p>
+          <p class="insight-copy" id="mercury-birthdays-copy">Your next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="blue-moons-value">0</span>
-          <span class="micro-label">Est. Blue Moons</span>
+          <span class="micro-label">Est. Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="fullmoons-value">0</span>
-          <span class="micro-label">Full Moon Cycles</span>
+          <span class="micro-label">Full Moon Cycles</span><p class="insight-copy" id="fullmoons-copy">Previous and next dates will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="eclipses-value">0</span>
-          <span class="micro-label">Est. Solar Eclipses</span>
+          <span class="micro-label">Est. Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="total-lunar-eclipses-value">0</span>
-          <span class="micro-label">Est. Total Lunar Eclipses</span>
+          <span class="micro-label">Est. Total Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
         </div>
       </div>
     </div>
@@ -2041,7 +2134,7 @@
           <span class="slate-header slate-header--zodiac">Zodiac Alignment</span>
           <div class="slate-title-main">
             <div class="slate-title"><span id="zodiac-sym"></span><span id="zodiac-name">ZODIAC</span></div>
-            <button class="control-btn" id="horoscope-toggle" type="button">VIEW LIVE HOROSCOPE</button>
+            <button class="control-btn" id="horoscope-toggle" type="button">View Live Horoscope</button>
           </div>
           <div id="zodiac-box" class="slate-body">...</div>
           <div id="horoscope-status" class="micro-label horoscope-status">Archetype view • built into the app.</div>
@@ -2224,6 +2317,7 @@
     const GEOCODE_BASE    = 'https://geocoding-api.open-meteo.com/v1/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
     const HOROSCOPE_BASE  = 'https://freehoroscopeapi.com/api/v1/get-horoscope/daily';
+    const LIVE_DATA_URL   = 'live-data.json';
     const HOROSCOPE_PROXY_ALLORIGINS = 'https://api.allorigins.win/get?url=';
     const HOROSCOPE_PROXY_WHATEVERORIGIN = 'https://whateverorigin.org/get?url=';
     const AAA_GAS_URL = 'https://gasprices.aaa.com/aaa-gas-cost-calculator/';
@@ -2236,6 +2330,7 @@
     const weatherCache    = new Map();
     const horoscopeCache  = new Map();
     const liveCompareCache = new Map();
+    let liveDataPromise   = null;
 
     // ─── State ────────────────────────────────────────────────────────────────
     let isMuted               = false;
@@ -2323,6 +2418,11 @@
       bornDate:              document.getElementById('born-date'),
       bornTime:              document.getElementById('born-time'),
       bornPlace:             document.getElementById('born-place'),
+      dailyPulseBadge:       document.getElementById('daily-pulse-badge'),
+      dailyPulseTitle:       document.getElementById('daily-pulse-title'),
+      dailyPulseCopy:        document.getElementById('daily-pulse-copy'),
+      dailyPulseSource:      document.getElementById('daily-pulse-source'),
+      dailyPulseRefresh:     document.getElementById('daily-pulse-refresh'),
       percentLabel:          document.getElementById('percent-label'),
       progressFill:          document.getElementById('progress-fill'),
       chronoYears:           document.getElementById('chrono-years'),
@@ -2362,6 +2462,7 @@
       fridaysLivedValue:     document.getElementById('fridays-lived-value'),
       fridaysLivedCopy:      document.getElementById('fridays-lived-copy'),
       friday13thsValue:      document.getElementById('friday13ths-value'),
+      friday13thsCopy:       document.getElementById('friday13ths-copy'),
       dstSwitchesValue:      document.getElementById('dst-switches-value'),
       palindromeDatesValue:  document.getElementById('palindrome-dates-value'),
       palindromeDatesCopy:   document.getElementById('palindrome-dates-copy'),
@@ -2372,16 +2473,23 @@
       seasonsValue:          document.getElementById('seasons-value'),
       fullmoonsValue:        document.getElementById('fullmoons-value'),
       blueMoonsValue:        document.getElementById('blue-moons-value'),
+      blueMoonsCopy:         document.getElementById('blue-moons-copy'),
+      fullmoonsCopy:         document.getElementById('fullmoons-copy'),
       leapdaysValue:         document.getElementById('leapdays-value'),
+      leapdaysCopy:          document.getElementById('leapdays-copy'),
       leapsecondsValue:      document.getElementById('leapseconds-value'),
       eclipsesValue:         document.getElementById('eclipses-value'),
+      eclipsesCopy:          document.getElementById('eclipses-copy'),
       totalLunarEclipsesValue: document.getElementById('total-lunar-eclipses-value'),
+      totalLunarEclipsesCopy: document.getElementById('total-lunar-eclipses-copy'),
       presidentsValue:       document.getElementById('presidents-value'),
       presidentialElectionsValue: document.getElementById('presidential-elections-value'),
+      presidentialElectionsCopy: document.getElementById('presidential-elections-copy'),
       internetErasValue:     document.getElementById('internet-eras-value'),
       consoleErasValue:      document.getElementById('console-eras-value'),
       phoneErasValue:        document.getElementById('phone-eras-value'),
       halleyValue:           document.getElementById('halley-value'),
+      halleyCopy:            document.getElementById('halley-copy'),
       afcSuperbowlsValue:   document.getElementById('afc-superbowls-value'),
       afcSuperbowlsCopy:    document.getElementById('afc-superbowls-copy'),
       nfcSuperbowlsValue:   document.getElementById('nfc-superbowls-value'),
@@ -2391,12 +2499,16 @@
       nlWorldSeriesValue:   document.getElementById('nl-worldseries-value'),
       nlWorldSeriesCopy:    document.getElementById('nl-worldseries-copy'),
       summerOlympicsValue:   document.getElementById('summer-olympics-value'),
+      summerOlympicsCopy:    document.getElementById('summer-olympics-copy'),
       winterOlympicsValue:   document.getElementById('winter-olympics-value'),
+      winterOlympicsCopy:    document.getElementById('winter-olympics-copy'),
       worldcupsValue:        document.getElementById('worldcups-value'),
+      worldcupsCopy:         document.getElementById('worldcups-copy'),
       repeatChampionsValue:        document.getElementById('repeat-champions-value'),
       firstSportsEventValue: document.getElementById('first-sports-event-value'),
       firstSportsEventCopy:  document.getElementById('first-sports-event-copy'),
       mercuryBirthdaysValue: document.getElementById('mercury-birthdays-value'),
+      mercuryBirthdaysCopy:  document.getElementById('mercury-birthdays-copy'),
       zodiacSym:             document.getElementById('zodiac-sym'),
       zodiacName:            document.getElementById('zodiac-name'),
       zodiacBox:             document.getElementById('zodiac-box'),
@@ -4846,7 +4958,7 @@
       '1948-07-29','1952-07-19','1956-11-22','1960-08-25','1964-10-10',
       '1968-10-12','1972-08-26','1976-07-17','1980-07-19','1984-07-28',
       '1988-09-17','1992-07-25','1996-07-19','2000-09-15','2004-08-13',
-      '2008-08-08','2012-07-27','2016-08-05','2021-07-23','2024-07-26'
+      '2008-08-08','2012-07-27','2016-08-05','2021-07-23','2024-07-26','2028-07-14'
     ].map(d => new Date(`${d}T12:00:00`));
 
     const WINTER_OLYMPICS_DATES = [
@@ -4854,7 +4966,7 @@
       '1952-02-14','1956-01-26','1960-02-18','1964-01-29','1968-02-06',
       '1972-02-03','1976-02-04','1980-02-13','1984-02-08','1988-02-13',
       '1992-02-08','1994-02-12','1998-02-07','2002-02-08','2006-02-10',
-      '2010-02-12','2014-02-07','2018-02-09','2022-02-04','2026-02-06'
+      '2010-02-12','2014-02-07','2018-02-09','2022-02-04','2026-02-06','2030-02-01'
     ].map(d => new Date(`${d}T12:00:00`));
 
     const WORLD_CUP_DATES = [
@@ -4862,7 +4974,7 @@
       '1958-06-08','1962-05-30','1966-07-11','1970-05-31','1974-06-13',
       '1978-06-01','1982-06-13','1986-05-31','1990-06-08','1994-06-17',
       '1998-06-10','2002-05-31','2006-06-09','2010-06-11','2014-06-12',
-      '2018-06-14','2022-11-20','2026-06-11'
+      '2018-06-14','2022-11-20','2026-06-11','2030-06-08'
     ].map(d => new Date(`${d}T12:00:00`));
 
     const SUPER_BOWL_DATES = [
@@ -5364,6 +5476,90 @@
       new Date('2061-07-28T12:00:00')
     ];
 
+    const SOLAR_ECLIPSE_EVENTS = [
+      { date: new Date('2026-02-17T12:13:05Z'), type: 'Annular' },
+      { date: new Date('2026-08-12T17:47:05Z'), type: 'Total' },
+      { date: new Date('2027-02-06T16:00:47Z'), type: 'Annular' },
+      { date: new Date('2027-08-02T10:07:49Z'), type: 'Total' },
+      { date: new Date('2028-01-26T15:08:58Z'), type: 'Annular' },
+      { date: new Date('2028-07-22T02:56:39Z'), type: 'Total' },
+      { date: new Date('2029-01-14T17:13:47Z'), type: 'Partial' },
+      { date: new Date('2029-06-12T04:06:13Z'), type: 'Partial' },
+      { date: new Date('2029-07-11T15:37:18Z'), type: 'Partial' },
+      { date: new Date('2029-12-05T15:03:57Z'), type: 'Partial' },
+      { date: new Date('2030-06-01T06:29:13Z'), type: 'Annular' },
+      { date: new Date('2030-11-25T06:51:37Z'), type: 'Total' }
+    ];
+
+    const LUNAR_ECLIPSE_EVENTS = [
+      { date: new Date('2026-03-03T11:34:52Z'), type: 'Total' },
+      { date: new Date('2026-08-28T04:14:04Z'), type: 'Partial' },
+      { date: new Date('2027-02-20T23:14:06Z'), type: 'Penumbral' },
+      { date: new Date('2027-07-18T16:04:09Z'), type: 'Penumbral' },
+      { date: new Date('2027-08-17T07:14:59Z'), type: 'Penumbral' },
+      { date: new Date('2028-01-12T04:14:13Z'), type: 'Partial' },
+      { date: new Date('2028-07-06T18:20:57Z'), type: 'Partial' },
+      { date: new Date('2028-12-31T16:53:15Z'), type: 'Total' },
+      { date: new Date('2029-06-26T03:23:22Z'), type: 'Total' },
+      { date: new Date('2029-12-20T22:43:12Z'), type: 'Total' },
+      { date: new Date('2030-06-15T18:34:34Z'), type: 'Partial' },
+      { date: new Date('2030-12-09T22:28:51Z'), type: 'Penumbral' }
+    ];
+
+    const BLUE_MOON_EVENTS = [
+      { date: new Date('2026-05-31T08:45:00Z'), type: 'Monthly' },
+      { date: new Date('2027-05-20T12:00:00Z'), type: 'Seasonal' },
+      { date: new Date('2028-12-31T12:00:00Z'), type: 'Monthly' },
+      { date: new Date('2029-08-23T12:00:00Z'), type: 'Seasonal' }
+    ];
+
+    const FULL_MOON_REFERENCE = new Date('2026-07-29T14:35:00Z');
+    const SYNODIC_MONTH_MS = 29.530588853 * 86400000;
+
+    function formatEventDate(date, includeDay = true) {
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) return 'Schedule pending';
+      return date.toLocaleDateString('en-US', includeDay
+        ? { month: '2-digit', day: '2-digit', year: 'numeric' }
+        : { month: 'short', year: 'numeric' });
+    }
+
+    function getEventWindow(events, now) {
+      const sorted = [...events].sort((a, b) => a.date - b.date);
+      return {
+        previous: [...sorted].reverse().find(event => event.date <= now) || null,
+        next: sorted.find(event => event.date > now) || null
+      };
+    }
+
+    function getFullMoonWindow(now) {
+      const completedCycles = Math.floor((now - FULL_MOON_REFERENCE) / SYNODIC_MONTH_MS);
+      return {
+        previous: new Date(FULL_MOON_REFERENCE.getTime() + completedCycles * SYNODIC_MONTH_MS),
+        next: new Date(FULL_MOON_REFERENCE.getTime() + (completedCycles + 1) * SYNODIC_MONTH_MS)
+      };
+    }
+
+    function getNextFriday13th(now) {
+      for (let monthOffset = 0; monthOffset < 120; monthOffset++) {
+        const candidate = new Date(now.getFullYear(), now.getMonth() + monthOffset, 13, 12, 0, 0, 0);
+        if (candidate > now && candidate.getDay() === 5) return candidate;
+      }
+      return null;
+    }
+
+    function getNextLeapDay(now) {
+      for (let year = now.getFullYear(); year <= now.getFullYear() + 12; year++) {
+        const candidate = new Date(year, 1, 29, 12, 0, 0, 0);
+        if (candidate.getMonth() === 1 && candidate > now) return candidate;
+      }
+      return null;
+    }
+
+    function getNextMercuryBirthday(start, now) {
+      const mercuryYearMs = 87.9691 * 86400000;
+      const completed = Math.floor(Math.max(0, now - start) / mercuryYearMs);
+      return new Date(start.getTime() + (completed + 1) * mercuryYearMs);
+    }
     function countHalleyPassesExperienced(start, end) {
       return countDatedEventsExperienced(start, end, HALLEY_COMET_DATES);
     }
@@ -5629,6 +5825,11 @@
     }
 
     async function sharePulse() {
+      const confirmed = window.confirm(
+        'This share link will include your name, birth date, birthplace, gender selection, and birth time. Anyone with the link can read those details. Continue?'
+      );
+      if (!confirmed) return;
+
       const profile = {
         name:       normalizeName(els.userName.value),
         birthPlace: normalizeName(els.birthPlace.value),
@@ -5984,7 +6185,20 @@ ${shareUrl}`);
       els.seasonsValue.textContent = Math.floor(years * 4).toLocaleString();
       els.fullmoonsValue.textContent = Math.floor(daysExact / 29.53).toLocaleString();
       els.blueMoonsValue.textContent = estimateBlueMoonsExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.blueMoonsCopy) {
+        const blueMoonWindow = getEventWindow(BLUE_MOON_EVENTS, now);
+        els.blueMoonsCopy.textContent = blueMoonWindow.next
+          ? `Next: ${formatEventDate(blueMoonWindow.next.date)} \u2022 ${blueMoonWindow.next.type}`
+          : 'The Blue Moon schedule needs its next update.';
+      }
+      if (els.fullmoonsCopy) {
+        const fullMoonWindow = getFullMoonWindow(now);
+        els.fullmoonsCopy.textContent = `Previous: ${formatEventDate(fullMoonWindow.previous)}\nNext: ${formatEventDate(fullMoonWindow.next)}`;
+      }
       els.leapdaysValue.textContent = countLeapYearsExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.leapdaysCopy) {
+        els.leapdaysCopy.textContent = `Next: ${formatEventDate(getNextLeapDay(now))}`;
+      }
       els.dstSwitchesValue.textContent = countDSTShiftsExperienced(birthMomentGlobal, now).toLocaleString();
       const leapSecondsCount = countLeapSecondsExperienced(birthMomentGlobal, now);
       els.leapsecondsValue.textContent = leapSecondsCount.toLocaleString();
@@ -5993,8 +6207,26 @@ ${shareUrl}`);
       }
       els.eclipsesValue.textContent = estimateSolarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
       els.totalLunarEclipsesValue.textContent = estimateTotalLunarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
+      const nextSolarEclipse = getEventWindow(SOLAR_ECLIPSE_EVENTS, now).next;
+      const nextLunarEclipse = getEventWindow(LUNAR_ECLIPSE_EVENTS, now).next;
+      if (els.eclipsesCopy) {
+        els.eclipsesCopy.textContent = nextSolarEclipse
+          ? `Next: ${formatEventDate(nextSolarEclipse.date)} \u2022 ${nextSolarEclipse.type}`
+          : 'NASA schedule update needed.';
+      }
+      if (els.totalLunarEclipsesCopy) {
+        els.totalLunarEclipsesCopy.textContent = nextLunarEclipse
+          ? `Next: ${formatEventDate(nextLunarEclipse.date)} \u2022 ${nextLunarEclipse.type}`
+          : 'NASA schedule update needed.';
+      }
       els.presidentsValue.textContent = countPresidentsExperienced(birthMomentGlobal, now).toLocaleString();
       els.presidentialElectionsValue.textContent = countPresidentialElectionsExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.presidentialElectionsCopy) {
+        const nextElection = PRESIDENTIAL_ELECTION_DATES.find(date => date > now);
+        els.presidentialElectionsCopy.textContent = nextElection
+          ? `Next: ${formatEventDate(nextElection)}`
+          : 'Election schedule update needed.';
+      }
       const internetEras = getInternetErasExperienced(birthMomentGlobal, now);
       els.internetErasValue.textContent = internetEras.count.toLocaleString();
       if (els.internetErasCopy) els.internetErasCopy.textContent = '';
@@ -6003,6 +6235,12 @@ ${shareUrl}`);
       const phoneEras = getPhoneErasExperienced(birthMomentGlobal, now);
       els.phoneErasValue.textContent = phoneEras.count.toLocaleString();
       els.halleyValue.textContent = countHalleyPassesExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.halleyCopy) {
+        const halleyWindow = getEventWindow(HALLEY_COMET_DATES.map(date => ({ date })), now);
+        const lastHalley = halleyWindow.previous ? formatEventDate(halleyWindow.previous.date) : 'Before this timeline';
+        const nextHalley = halleyWindow.next ? formatEventDate(halleyWindow.next.date) : 'Schedule pending';
+        els.halleyCopy.textContent = `Last: ${lastHalley}\nNext: ${nextHalley}`;
+      }
       const totalAfcWins = SUPER_BOWL_WINNER_CONFERENCES.filter(conf => conf === 'AFC').length;
       const totalNfcWins = SUPER_BOWL_WINNER_CONFERENCES.filter(conf => conf === 'NFC').length;
       const superBowlConferenceWins = getSuperBowlConferenceWinsSinceBirth(birthMomentGlobal, now);
@@ -6022,6 +6260,18 @@ ${shareUrl}`);
       els.summerOlympicsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, SUMMER_OLYMPICS_DATES).toLocaleString();
       els.winterOlympicsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WINTER_OLYMPICS_DATES).toLocaleString();
       els.worldcupsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WORLD_CUP_DATES).toLocaleString();
+      if (els.summerOlympicsCopy) {
+        const nextSummerGames = SUMMER_OLYMPICS_DATES.find(date => date > now);
+        els.summerOlympicsCopy.textContent = nextSummerGames ? `Next: ${formatEventDate(nextSummerGames)} \u2022 Los Angeles` : 'Schedule update needed.';
+      }
+      if (els.winterOlympicsCopy) {
+        const nextWinterGames = WINTER_OLYMPICS_DATES.find(date => date > now);
+        els.winterOlympicsCopy.textContent = nextWinterGames ? `Next: ${formatEventDate(nextWinterGames)} \u2022 French Alps` : 'Schedule update needed.';
+      }
+      if (els.worldcupsCopy) {
+        const nextWorldCup = WORLD_CUP_DATES.find(date => date > now);
+        els.worldcupsCopy.textContent = nextWorldCup ? `Next: ${formatEventDate(nextWorldCup)} \u2022 2030 Hosts` : 'Schedule update needed.';
+      }
 
       if (els.repeatChampionsValue) {
         els.repeatChampionsValue.textContent = countRepeatChampionsSinceBirth(birthMomentGlobal, now).toLocaleString();
@@ -6043,12 +6293,18 @@ ${shareUrl}`);
         }
       }
       els.friday13thsValue.textContent = countFriday13thsExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.friday13thsCopy) {
+        els.friday13thsCopy.textContent = `Next: ${formatEventDate(getNextFriday13th(now))}`;
+      }
       const palindromeDates = getPalindromeDatesExperienced(birthMomentGlobal, now, 6);
       els.palindromeDatesValue.textContent = palindromeDates.count.toLocaleString();
       if (els.palindromeDatesCopy) {
         els.palindromeDatesCopy.textContent = palindromeDates.count ? `${palindromeDates.dates.join(' • ')}${palindromeDates.extraCount > 0 ? ` • +${palindromeDates.extraCount} more` : ''}` : 'No palindrome dates have landed during your lifetime yet.';
       }
       els.mercuryBirthdaysValue.textContent = countMercuryBirthdaysExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.mercuryBirthdaysCopy) {
+        els.mercuryBirthdaysCopy.textContent = `Next: ${formatEventDate(getNextMercuryBirthday(birthMomentGlobal, now))}`;
+      }
 
       refreshSourceDrawers(now);
 
@@ -6073,9 +6329,9 @@ ${shareUrl}`);
         const nextSaturnLabel = saturn.yearsAway < 0.01
           ? 'Now'
           : saturn.nextDate
-            ? saturn.nextDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+            ? saturn.nextDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })
             : `${saturn.yearsAway.toFixed(2)}y away`;
-        els.saturnReturnCopy.textContent = `Current phase: ${saturnStory.phase}. Next return: ${nextSaturnLabel}. Saturn milestones tend to land about every 29.5 years.`;
+        els.saturnReturnCopy.textContent = `Current Phase: ${saturnStory.phase}. Saturn milestones tend to land about every 29.5 years.\nNext Return: ${nextSaturnLabel}.`;
       }
       const estimatedSpaceMiles = hoursTotal * 514000;
       els.spaceMilesValue.textContent = formatCompact(estimatedSpaceMiles, 2);
@@ -6208,12 +6464,93 @@ ${shareUrl}`);
         .trim();
     }
 
+    function formatLiveDataTimestamp(value) {
+      if (!value) return 'update time unavailable';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return 'update time unavailable';
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
+
+    function renderDailyPulse() {
+      if (!els.dailyPulseTitle || !els.dailyPulseCopy || !els.dailyPulseBadge || !els.dailyPulseSource) return;
+
+      const signName = currentZodiac?.n || 'Your';
+      els.dailyPulseTitle.textContent = `${signName} Daily Signal`;
+
+      if (!currentLiveHoroscope) {
+        els.dailyPulseBadge.textContent = 'Updating';
+        els.dailyPulseCopy.textContent = currentZodiac
+          ? 'Checking the latest scheduled horoscope reading...'
+          : 'Launch your Life Pulse to reveal today\'s personalized zodiac signal.';
+        els.dailyPulseSource.textContent = 'GitHub Pages refreshes the daily feed automatically.';
+        return;
+      }
+
+      els.dailyPulseCopy.textContent = currentLiveHoroscope.text;
+      if (currentLiveHoroscope.live) {
+        els.dailyPulseBadge.textContent = currentLiveHoroscope.scheduled ? 'Daily Feed' : 'Live Source';
+        const updatedText = formatLiveDataTimestamp(currentLiveHoroscope.updatedAt || currentLiveHoroscope.date);
+        els.dailyPulseSource.textContent = `${currentLiveHoroscope.source} · updated ${updatedText}`;
+      } else {
+        els.dailyPulseBadge.textContent = 'Built-In Fallback';
+        els.dailyPulseSource.textContent = 'The daily source was unavailable, so Life Pulse kept your reading useful.';
+      }
+    }
+
+    async function loadScheduledLiveData(force = false) {
+      if (force) liveDataPromise = null;
+      if (!liveDataPromise) {
+        const separator = LIVE_DATA_URL.includes('?') ? '&' : '?';
+        const url = force ? `${LIVE_DATA_URL}${separator}refresh=${Date.now()}` : LIVE_DATA_URL;
+        liveDataPromise = fetch(url, {
+          cache: force ? 'no-store' : 'default',
+          headers: { 'Accept': 'application/json' }
+        }).then(response => {
+          if (!response.ok) throw new Error(`Scheduled live data failed (${response.status}).`);
+          return response.json();
+        }).catch(error => {
+          liveDataPromise = null;
+          throw error;
+        });
+      }
+      return liveDataPromise;
+    }
+
+    async function readScheduledHoroscope(sign, signName, force = false) {
+      const payload = await loadScheduledLiveData(force);
+      const reading = payload?.horoscope?.signs?.[sign];
+      const text = sanitizeHoroscopeText(reading?.text);
+      if (!text) throw new Error('No scheduled horoscope is available for this sign.');
+
+      const readingDate = new Date(`${reading.date || ''}T12:00:00`);
+      const ageMs = Number.isNaN(readingDate.getTime()) ? Infinity : Date.now() - readingDate.getTime();
+      if (ageMs > 72 * 60 * 60 * 1000) throw new Error('The scheduled horoscope is stale.');
+
+      return {
+        live: true,
+        scheduled: true,
+        cached: true,
+        source: payload?.horoscope?.source || 'Life Pulse daily feed',
+        period: payload?.horoscope?.period || 'daily',
+        sign: reading.sign || signName,
+        date: reading.date || new Date().toISOString().slice(0, 10),
+        updatedAt: payload?.updatedAt || reading.date,
+        text
+      };
+    }
+
     function renderHoroscopeState() {
       if (!currentZodiac) return;
+      renderDailyPulse();
 
       if (!showingHoroscope) {
         els.zodiacBox.textContent = currentZodiac.d;
-        els.horoscopeToggle.textContent = 'VIEW LIVE HOROSCOPE';
+        els.horoscopeToggle.textContent = 'View Live Horoscope';
         if (els.horoscopeStatus) {
           els.horoscopeStatus.textContent = 'Archetype view • built into the app.';
         }
@@ -6227,7 +6564,7 @@ ${shareUrl}`);
 
       if (!currentLiveHoroscope) {
         els.zodiacBox.textContent = 'Loading today\'s live horoscope from the web…';
-        els.horoscopeToggle.textContent = 'VIEW ARCHETYPE';
+        els.horoscopeToggle.textContent = 'View Archetype';
         if (els.horoscopeStatus) {
           els.horoscopeStatus.textContent = 'Fetching a live daily reading…';
         }
@@ -6240,7 +6577,7 @@ ${shareUrl}`);
       }
 
       els.zodiacBox.textContent = currentLiveHoroscope.text;
-      els.horoscopeToggle.textContent = 'VIEW ARCHETYPE';
+      els.horoscopeToggle.textContent = 'View Archetype';
       if (els.horoscopeStatus) {
         if (currentLiveHoroscope.live) {
           if (currentLiveHoroscope.mocked) {
@@ -6251,7 +6588,7 @@ ${shareUrl}`);
             els.horoscopeStatus.textContent = `Live daily horoscope • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
           }
         } else {
-          els.horoscopeStatus.textContent = 'Built-in fallback • the live source or browser CORS path is unavailable right now.';
+          els.horoscopeStatus.textContent = 'Built-In Fallback • the live source or browser CORS path is unavailable right now.';
         }
       }
 
@@ -6286,6 +6623,12 @@ ${shareUrl}`);
         };
       }
       if (horoscopeCache.has(cacheKey)) return { ...horoscopeCache.get(cacheKey), cached: true };
+
+      try {
+        const scheduled = await readScheduledHoroscope(sign, signName);
+        horoscopeCache.set(cacheKey, scheduled);
+        return scheduled;
+      } catch {}
 
       const directUrl = `${HOROSCOPE_BASE}?sign=${encodeURIComponent(sign)}`;
 
@@ -6366,14 +6709,6 @@ ${shareUrl}`);
         async () => {
           payload = await readDirect();
           source = 'Free Horoscope API';
-        },
-        async () => {
-          payload = await readViaAllOrigins();
-          source = 'Free Horoscope API via AllOrigins';
-        },
-        async () => {
-          payload = await readViaWhateverOrigin();
-          source = 'Free Horoscope API via Whatever Origin';
         }
       ];
 
@@ -6691,6 +7026,11 @@ ${shareUrl}`);
 
       els.clearFormBtn.addEventListener('click',    clearForm);
       els.horoscopeToggle.addEventListener('click', toggleHoroscope);
+      els.dailyPulseRefresh.addEventListener('click', () => {
+        horoscopeCache.clear();
+        liveDataPromise = null;
+        refreshLiveHoroscope();
+      });
       els.muteToggle.addEventListener('click',      toggleMute);
       els.diagnosticsToggle.addEventListener('click', toggleDiagnosticsPanel);
       els.buildChip.addEventListener('click', registerSecretDiagnosticsTap);
@@ -6823,3 +7163,11 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+

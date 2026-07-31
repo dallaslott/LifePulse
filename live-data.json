@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": null,
+  "lastAttemptAt": null,
+  "status": "stale",
+  "horoscope": {
+    "period": "daily",
+    "source": "Free Horoscope API",
+    "sourceUrl": "https://freehoroscopeapi.com/",
+    "signs": {}
+  },
+  "refresh": {
+    "requested": 12,
+    "succeeded": 0,
+    "failedSigns": []
+  }
+}
+

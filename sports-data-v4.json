@@ -1,4 +1,4 @@
-{
+﻿{
   "version": "2026-03-25",
   "summerOlympicsDates": [
     "1896-04-06",
@@ -30,7 +30,8 @@
     "2012-07-27",
     "2016-08-05",
     "2021-07-23",
-    "2024-07-26"
+    "2024-07-26",
+    "2028-07-14"
   ],
   "winterOlympicsDates": [
     "1924-01-25",
@@ -57,7 +58,8 @@
     "2014-02-07",
     "2018-02-09",
     "2022-02-04",
-    "2026-02-06"
+    "2026-02-06",
+    "2030-02-01"
   ],
   "worldCupDates": [
     "1930-07-13",
@@ -82,7 +84,8 @@
     "2014-06-12",
     "2018-06-14",
     "2022-11-20",
-    "2026-06-11"
+    "2026-06-11",
+    "2030-06-08"
   ],
   "superBowls": [
     {
@@ -337,12 +340,12 @@
     },
     {
       "date": "2017-02-05",
-      "conference": "NFC",
+      "conference": "AFC",
       "team": "New England Patriots"
     },
     {
       "date": "2018-02-04",
-      "conference": "AFC",
+      "conference": "NFC",
       "team": "Philadelphia Eagles"
     },
     {
@@ -352,12 +355,12 @@
     },
     {
       "date": "2020-02-02",
-      "conference": "NFC",
+      "conference": "AFC",
       "team": "Kansas City Chiefs"
     },
     {
       "date": "2021-02-07",
-      "conference": "AFC",
+      "conference": "NFC",
       "team": "Tampa Bay Buccaneers"
     },
     {
@@ -367,7 +370,7 @@
     },
     {
       "date": "2023-02-12",
-      "conference": "NFC",
+      "conference": "AFC",
       "team": "Kansas City Chiefs"
     },
     {
@@ -377,12 +380,13 @@
     },
     {
       "date": "2025-02-09",
-      "conference": "AFC",
+      "conference": "NFC",
       "team": "Philadelphia Eagles"
     },
     {
       "date": "2026-02-08",
-      "conference": "NFC"
+      "conference": "NFC",
+      "team": "Seattle Seahawks"
     }
   ],
   "worldSeries": [
@@ -1541,3 +1545,4 @@
     }
   ]
 }
+
