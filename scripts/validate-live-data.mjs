@@ -1,8 +1,13 @@
 ﻿import { readFile } from 'node:fs/promises';
 
-const data = JSON.parse(await readFile(new URL('../live-data.json', import.meta.url), 'utf8'));
-const version = JSON.parse(await readFile(new URL('../version.json', import.meta.url), 'utf8'));
-const sports = JSON.parse(await readFile(new URL('../sports-data-v4.json', import.meta.url), 'utf8'));
+async function readJson(url) {
+  const text = await readFile(url, 'utf8');
+  return JSON.parse(text.replace(/^\uFEFF/, ''));
+}
+
+const data = await readJson(new URL('../live-data.json', import.meta.url));
+const version = await readJson(new URL('../version.json', import.meta.url));
+const sports = await readJson(new URL('../sports-data-v4.json', import.meta.url));
 const errors = [];
 const now = Date.now();
 const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'populationHistory', 'civic', 'sports'];
