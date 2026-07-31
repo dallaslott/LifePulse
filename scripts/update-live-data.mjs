@@ -100,13 +100,10 @@ async function fetchPrimaryReading(sign, previousReading) {
     tz_str: 'America/Chicago',
     lang: 'en'
   });
-  const payload = await fetchJson(PRIMARY_URL, {
-    method: 'POST',
+  const payload = await fetchJson(`${PRIMARY_URL}?${body.toString()}`, {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
       'x-api-key': PRIMARY_API_KEY
-    },
-    body
+    }
   });
   const data = payload?.data || {};
   const reading = validateReading({
