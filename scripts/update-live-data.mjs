@@ -10,6 +10,12 @@ const LEGACY_URL = 'https://freehoroscopeapi.com/api/v1/get-horoscope/daily';
 const PREVIOUS_DATA_URL = process.env.PREVIOUS_DATA_URL || 'https://dallaslott.github.io/LifePulse/live-data.json';
 const PRIMARY_API_KEY = String(process.env.FREE_ASTRO_API_KEY || '').trim();
 const TARGET_DATE = process.env.LIFEPULSE_DATE || new Date().toISOString().slice(0, 10);
+const DATA_SCHEMA_VERSION = 4;
+const GITHUB_RUN_NUMBER = String(process.env.GITHUB_RUN_NUMBER || '').trim();
+const GITHUB_RUN_ATTEMPT = String(process.env.GITHUB_RUN_ATTEMPT || '1').trim();
+const RELEASE_VERSION = GITHUB_RUN_NUMBER
+  ? `${DATA_SCHEMA_VERSION}.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}`
+  : `${DATA_SCHEMA_VERSION}.local.${TARGET_DATE.replaceAll('-', '')}`;
 const WORLD_POPULATION_URL = 'https://www.worldometers.info/world-population/';
 const AAA_GAS_URL = 'https://gasprices.aaa.com/aaa-gas-cost-calculator/';
 const EIA_GAS_URL = 'https://api.eia.gov/v2/petroleum/pri/gnd/data/';
@@ -528,7 +534,7 @@ const reference = {
 const populationCurrent = currentComparisons.result.worldPopulation;
 const gasCurrent = currentComparisons.result.gasPrice;
 const output = {
-  schemaVersion: 4,
+  schemaVersion: DATA_SCHEMA_VERSION,
   updatedAt: now,
   lastAttemptAt: now,
   targetDate: TARGET_DATE,
@@ -580,7 +586,8 @@ const output = {
 const serialized = `${JSON.stringify(output, null, 2)}\n`;
 const contentHash = createHash('sha256').update(serialized).digest('hex');
 await writeFile(OUTPUT_PATH, serialized, 'utf8');
-await writeFile(VERSION_PATH, `${JSON.stringify({ schemaVersion: 1, updatedAt: now, targetDate: TARGET_DATE, dataSchemaVersion: output.schemaVersion, contentHash }, null, 2)}\n`, 'utf8');
+await writeFile(VERSION_PATH, `${JSON.stringify({ schemaVersion: 2, releaseVersion: RELEASE_VERSION, updatedAt: now, targetDate: TARGET_DATE, dataSchemaVersion: output.schemaVersion, contentHash }, null, 2)}\n`, 'utf8');
+console.log(`Release v${RELEASE_VERSION}.`);
 console.log(`Prepared ${Object.keys(signs).length} readings: ${primaryCount} primary, ${legacyCount} legacy, ${previousCount} previous.`);
 console.log(`Prepared astronomy snapshot and ${Object.keys(currentComparisons.result).length} current comparison feeds.`);
 if (PRIMARY_API_KEY && primaryCount !== SIGNS.length) {

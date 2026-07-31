@@ -39,9 +39,11 @@ const futureSchedule = [
 ].some(value => Date.parse(value) > now);
 if (!futureSchedule) errors.push('Sports schedules contain no future event.');
 if (!version?.contentHash || Number(version?.dataSchemaVersion) !== Number(data.schemaVersion)) errors.push('version.json does not match live-data.json.');
+const releasePattern = new RegExp(`^${Number(data.schemaVersion)}\\.(?:\\d+\\.\\d+|local\\.\\d{8})$`);
+if (!releasePattern.test(String(version?.releaseVersion || ''))) errors.push(`version.json has an invalid release version: ${version?.releaseVersion || 'missing'}.`);
 
 if (errors.length) {
   console.error(errors.map(error => `- ${error}`).join('\n'));
   process.exit(1);
 }
-console.log(`Validated schema ${data.schemaVersion}, ${requiredComponents.length} registered components, 12 horoscope signs, reference histories, and future sports coverage.`);
+console.log(`Validated release v${version.releaseVersion}: schema ${data.schemaVersion}, ${requiredComponents.length} registered components, 12 horoscope signs, reference histories, and future sports coverage.`);
