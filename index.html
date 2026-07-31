@@ -3492,6 +3492,7 @@
     function toggleDiagnosticsPanel() {
       const hidden = els.diagnosticsPanel.classList.toggle('hidden');
       diagnosticsOpen = !hidden;
+      if (birthMomentGlobal) refreshSourceDrawers();
       if (els.diagnosticsToggle) {
         els.diagnosticsToggle.setAttribute('aria-expanded', String(!hidden));
         els.diagnosticsToggle.textContent = hidden ? 'DIAGNOSTICS' : 'HIDE DIAGNOSTICS';
@@ -6007,14 +6008,14 @@ ${shareUrl}`);
     function setSourceDrawer(key, options = {}) {
       const drawer = document.getElementById(`source-drawer-${key}`);
       if (!drawer) return;
-      const meta = options.meta
-        ? `<span class="source-meta">${escapeSourceHtml(options.meta)}</span>`
+      const diagnosticMeta = diagnosticsOpen && options.diagnosticMeta
+        ? `<span class="source-meta">${escapeSourceHtml(options.diagnosticMeta)}</span>`
         : '';
       const lines = Array.isArray(options.lines) ? options.lines.filter(Boolean) : [];
       const listHtml = lines.length
         ? `<ul>${lines.map(line => `<li>${escapeSourceHtml(line)}</li>`).join('')}</ul>`
         : `<div>No extra source detail for this card yet.</div>`;
-      drawer.innerHTML = `${meta}${listHtml}`;
+      drawer.innerHTML = `${diagnosticMeta}${listHtml}`;
     }
 
     function toggleSourceDrawer(key) {
@@ -6100,31 +6101,31 @@ ${shareUrl}`);
 
       const afcEntries = getConferenceWinEntriesSinceBirth(birthMomentGlobal, now, 'AFC');
       setSourceDrawer('afc-superbowls', {
-        meta: 'Source: embedded sports dataset + sports-data-v4.json when available.',
+        diagnosticMeta: 'Source: embedded sports dataset + sports-data-v4.json when available.',
         lines: afcEntries.length ? afcEntries.map(entry => `${entry.date.getFullYear()} - ${entry.team}`) : ['No AFC Super Bowl wins landed in your lifetime yet.']
       });
 
       const nfcEntries = getConferenceWinEntriesSinceBirth(birthMomentGlobal, now, 'NFC');
       setSourceDrawer('nfc-superbowls', {
-        meta: 'Source: embedded sports dataset + sports-data-v4.json when available.',
+        diagnosticMeta: 'Source: embedded sports dataset + sports-data-v4.json when available.',
         lines: nfcEntries.length ? nfcEntries.map(entry => `${entry.date.getFullYear()} - ${entry.team}`) : ['No NFC Super Bowl wins landed in your lifetime yet.']
       });
 
       const alEntries = getWorldSeriesLeagueEntriesSinceBirth(birthMomentGlobal, now, 'AL');
       setSourceDrawer('al-worldseries', {
-        meta: 'Source: World Series result list bundled in the app.',
+        diagnosticMeta: 'Source: World Series result list bundled in the app.',
         lines: alEntries.length ? alEntries.map(entry => `${entry.year} - ${entry.team || 'AL Champion'}`) : ['No AL World Series titles landed in your lifetime yet.']
       });
 
       const nlEntries = getWorldSeriesLeagueEntriesSinceBirth(birthMomentGlobal, now, 'NL');
       setSourceDrawer('nl-worldseries', {
-        meta: 'Source: World Series result list bundled in the app.',
+        diagnosticMeta: 'Source: World Series result list bundled in the app.',
         lines: nlEntries.length ? nlEntries.map(entry => `${entry.year} - ${entry.team || 'NL Champion'}`) : ['No NL World Series titles landed in your lifetime yet.']
       });
 
       const leapSecondEntries = getLeapSecondEntriesSinceBirth(birthMomentGlobal, now);
       setSourceDrawer('leapseconds', {
-        meta: 'IERS Bulletin C historical leap-second record, embedded through 12/31/2016.',
+        diagnosticMeta: 'IERS Bulletin C historical leap-second record, embedded through 12/31/2016.',
         lines: [
           'Meaning: UTC occasionally receives one extra second to remain close to Earth’s measured rotation.',
           `Since Your Birth: ${leapSecondEntries.length}`,
@@ -6134,7 +6135,7 @@ ${shareUrl}`);
 
       const internetEntries = INTERNET_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now);
       setSourceDrawer('internet-eras', {
-        meta: 'Source: curated in-app internet era milestones.',
+        diagnosticMeta: 'Source: curated in-app internet era milestones.',
         lines: internetEntries.length
           ? internetEntries.map(era => `${era.label} — ${formatSourceDate(era.date)}`)
           : ['You were already here when the current curated internet eras begin.']
@@ -6142,7 +6143,7 @@ ${shareUrl}`);
 
       const presidentEntries = getPresidentsExperiencedDetailed(birthMomentGlobal, now);
       setSourceDrawer('presidents', {
-        meta: 'Source: curated list of U.S. presidential terms.',
+        diagnosticMeta: 'Source: curated list of U.S. presidential terms.',
         lines: presidentEntries.length
           ? presidentEntries.map(entry => `${entry.name} (${entry.ordinals.join(' / ')})`)
           : ['No presidential transitions from the current list overlap your lifetime yet.']
@@ -6150,7 +6151,7 @@ ${shareUrl}`);
 
       const phoneEntries = PHONE_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now);
       setSourceDrawer('phone-eras', {
-        meta: 'Source: curated in-app phone era milestones.',
+        diagnosticMeta: 'Source: curated in-app phone era milestones.',
         lines: phoneEntries.length
           ? phoneEntries.map(entry => `${entry.label} — ${formatSourceDate(entry.date)}`)
           : ['You were already here when the current curated phone eras begin.']
@@ -6158,7 +6159,7 @@ ${shareUrl}`);
 
       const allPalindromeDates = getAllPalindromeDatesExperienced(birthMomentGlobal, now);
       setSourceDrawer('palindrome-dates', {
-        meta: 'Source: computed from your birth date through today using MM/DD/YYYY palindromes.',
+        diagnosticMeta: 'Source: computed from your birth date through today using MM/DD/YYYY palindromes.',
         lines: allPalindromeDates.length
           ? allPalindromeDates.map(formatSourceDate)
           : ['No palindrome dates have landed during your lifetime yet.']
@@ -6166,7 +6167,7 @@ ${shareUrl}`);
 
       const repeatChampionEntries = getRepeatChampionEntriesSinceBirth(birthMomentGlobal, now);
       setSourceDrawer('repeat-champions', {
-        meta: 'Source: consecutive title winners from NFL, MLB, and NBA championship results.',
+        diagnosticMeta: 'Source: consecutive title winners from NFL, MLB, and NBA championship results.',
         lines: repeatChampionEntries.length
           ? repeatChampionEntries.map(entry => `${entry.team} (${entry.startYear}/${entry.endYear}) - ${entry.sport}`)
           : ['No repeat title defenses have landed in the included NFL, MLB, or NBA title results since your birth.']
@@ -6174,7 +6175,7 @@ ${shareUrl}`);
 
       const firstSportsEvent = getFirstMajorSportsEventSinceBirth(birthMomentGlobal, now);
       setSourceDrawer('first-sports-event', {
-        meta: 'Source set compared: Super Bowl, Winter Olympics, Summer Olympics, FIFA World Cup, World Series.',
+        diagnosticMeta: 'Source set compared: Super Bowl, Winter Olympics, Summer Olympics, FIFA World Cup, World Series.',
         lines: firstSportsEvent
           ? [
               `Event: ${firstSportsEvent.label}`,

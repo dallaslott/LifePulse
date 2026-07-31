@@ -61,7 +61,7 @@ Until the secret is added, the updater uses the existing Free Horoscope API and 
 - Historical birthplace weather continues to use Open-Meteo.
 ## Diagnostics and Self-Check
 
-Diagnostics is a developer-only panel. After a profile launches, tap or click the build label five times quickly to open or close it. **Run Self-Check** makes a fresh request for the published daily JSON and validates its schema, all 12 horoscopes, freshness, astronomy, population, and gas sections. It also checks browser storage, sharing, the astronomy calculator, and required layout elements.
+Diagnostics is a developer-only panel. After a profile launches, tap or click the build label five times quickly to open or close it. **Run Self-Check** makes a fresh request for the published daily JSON and validates its schema, all 12 horoscopes, freshness, astronomy, population, and gas sections. It also checks browser storage, sharing, the astronomy calculator, and required layout elements. Technical dataset and calculation notes in card Source drawers are shown only while developer Diagnostics is open.
 
 Leap-second counts use the IERS Bulletin C historical record embedded through December 31, 2016.
 
