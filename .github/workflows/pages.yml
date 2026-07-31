@@ -1,4 +1,4 @@
-name: Refresh Life Pulse and publish Pages
+﻿name: Refresh Life Pulse and publish Pages
 
 on:
   push:
@@ -35,7 +35,11 @@ jobs:
       - name: Refresh daily data
         env:
           FREE_ASTRO_API_KEY: ${{ secrets.FREE_ASTRO_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: node scripts/update-live-data.mjs
+
+      - name: Validate refreshed data
+        run: node scripts/validate-live-data.mjs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -43,7 +47,7 @@ jobs:
       - name: Prepare the public site
         run: |
           mkdir -p _site/vendor
-          cp index.html live-data.json sports-data-v4.json _site/
+          cp index.html live-data.json version.json sports-data-v4.json _site/
           cp node_modules/astronomy-engine/astronomy.browser.min.js _site/vendor/
           touch _site/.nojekyll
 
@@ -62,3 +66,4 @@ jobs:
       - name: Publish GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
