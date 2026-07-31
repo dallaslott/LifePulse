@@ -2311,12 +2311,11 @@
     const STORAGE_VERSION = 4;
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
     const BUILD_CODENAME = 'Rebirth';
-    const BUILD_VARIANT  = 'Verified Live';
+    const BUILD_VARIANT  = 'Verified Daily';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://geocoding-api.open-meteo.com/v1/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
-    const HOROSCOPE_BASE  = 'https://freehoroscopeapi.com/api/v1/get-horoscope/daily';
     const LIVE_DATA_URL   = 'live-data.json';
     const HOROSCOPE_PROXY_ALLORIGINS = 'https://api.allorigins.win/get?url=';
     const HOROSCOPE_PROXY_WHATEVERORIGIN = 'https://whateverorigin.org/get?url=';
@@ -6476,6 +6475,15 @@ ${shareUrl}`);
       });
     }
 
+    function getReadingAgeDays(value) {
+      if (!value) return Infinity;
+      const readingDate = new Date(`${value}T12:00:00`);
+      if (Number.isNaN(readingDate.getTime())) return Infinity;
+      const today = new Date();
+      today.setHours(12, 0, 0, 0);
+      return Math.max(0, Math.floor((today.getTime() - readingDate.getTime()) / 86400000));
+    }
+
     function renderDailyPulse() {
       if (!els.dailyPulseTitle || !els.dailyPulseCopy || !els.dailyPulseBadge || !els.dailyPulseSource) return;
 
@@ -6487,18 +6495,23 @@ ${shareUrl}`);
         els.dailyPulseCopy.textContent = currentZodiac
           ? 'Checking the latest scheduled horoscope reading...'
           : 'Launch your Life Pulse to reveal today\'s personalized zodiac signal.';
-        els.dailyPulseSource.textContent = 'GitHub Pages refreshes the daily feed automatically.';
+        els.dailyPulseSource.textContent = 'GitHub Pages checks the dated feed automatically.';
         return;
       }
 
       els.dailyPulseCopy.textContent = currentLiveHoroscope.text;
-      if (currentLiveHoroscope.live) {
-        els.dailyPulseBadge.textContent = currentLiveHoroscope.scheduled ? 'Daily Feed' : 'Live Source';
-        const updatedText = formatLiveDataTimestamp(currentLiveHoroscope.updatedAt || currentLiveHoroscope.date);
+      if (currentLiveHoroscope.previous) {
+        els.dailyPulseBadge.textContent = 'Previous Reading';
+        els.dailyPulseSource.textContent = `${currentLiveHoroscope.source} · ${formatLiveHoroscopeDate(currentLiveHoroscope.date)}`;
+      } else if (currentLiveHoroscope.live) {
+        els.dailyPulseBadge.textContent = currentLiveHoroscope.quality === 'date-specific'
+          ? 'Today\'s Reading'
+          : 'Legacy Daily Feed';
+        const updatedText = formatLiveDataTimestamp(currentLiveHoroscope.generatedAt || currentLiveHoroscope.updatedAt || currentLiveHoroscope.date);
         els.dailyPulseSource.textContent = `${currentLiveHoroscope.source} · updated ${updatedText}`;
       } else {
         els.dailyPulseBadge.textContent = 'Built-In Fallback';
-        els.dailyPulseSource.textContent = 'The daily source was unavailable, so Life Pulse kept your reading useful.';
+        els.dailyPulseSource.textContent = 'No current or recent web reading was available.';
       }
     }
 
@@ -6506,10 +6519,13 @@ ${shareUrl}`);
       if (force) liveDataPromise = null;
       if (!liveDataPromise) {
         const separator = LIVE_DATA_URL.includes('?') ? '&' : '?';
-        const url = force ? `${LIVE_DATA_URL}${separator}refresh=${Date.now()}` : LIVE_DATA_URL;
+        const url = `${LIVE_DATA_URL}${separator}v=${Date.now()}`;
         liveDataPromise = fetch(url, {
-          cache: force ? 'no-store' : 'default',
-          headers: { 'Accept': 'application/json' }
+          cache: 'no-store',
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+          }
         }).then(response => {
           if (!response.ok) throw new Error(`Scheduled live data failed (${response.status}).`);
           return response.json();
@@ -6527,19 +6543,27 @@ ${shareUrl}`);
       const text = sanitizeHoroscopeText(reading?.text);
       if (!text) throw new Error('No scheduled horoscope is available for this sign.');
 
-      const readingDate = new Date(`${reading.date || ''}T12:00:00`);
-      const ageMs = Number.isNaN(readingDate.getTime()) ? Infinity : Date.now() - readingDate.getTime();
-      if (ageMs > 72 * 60 * 60 * 1000) throw new Error('The scheduled horoscope is stale.');
+      const ageDays = getReadingAgeDays(reading.date);
+      if (ageDays > 7) throw new Error('The scheduled horoscope is more than seven days old.');
+      const previous = Boolean(reading.stale || ageDays > 0);
 
       return {
-        live: true,
+        live: !previous,
+        previous,
         scheduled: true,
-        cached: true,
-        source: payload?.horoscope?.source || 'Life Pulse daily feed',
+        cached: false,
+        source: reading.source || payload?.horoscope?.source || 'Life Pulse daily feed',
+        sourceUrl: reading.sourceUrl || null,
+        provider: reading.provider || null,
+        quality: reading.quality || 'daily',
         period: payload?.horoscope?.period || 'daily',
         sign: reading.sign || signName,
-        date: reading.date || new Date().toISOString().slice(0, 10),
+        date: reading.date,
+        generatedAt: reading.generatedAt || null,
         updatedAt: payload?.updatedAt || reading.date,
+        theme: reading.theme || null,
+        scores: reading.scores || null,
+        lucky: reading.lucky || null,
         text
       };
     }
@@ -6550,28 +6574,28 @@ ${shareUrl}`);
 
       if (!showingHoroscope) {
         els.zodiacBox.textContent = currentZodiac.d;
-        els.horoscopeToggle.textContent = 'View Live Horoscope';
+        els.horoscopeToggle.textContent = 'View Daily Horoscope';
         if (els.horoscopeStatus) {
-          els.horoscopeStatus.textContent = 'Archetype view • built into the app.';
+          els.horoscopeStatus.textContent = 'Archetype View • Built Into The App';
         }
         setLiveDiagnostic('horoscope', {
           state: 'static',
-          detail: 'Showing the built-in zodiac archetype instead of a live daily reading.',
+          detail: 'Showing the built-in zodiac archetype instead of the dated daily reading.',
           source: 'Life Pulse archetype'
         });
         return;
       }
 
       if (!currentLiveHoroscope) {
-        els.zodiacBox.textContent = 'Loading today\'s live horoscope from the web…';
+        els.zodiacBox.textContent = 'Loading today\'s dated horoscope…';
         els.horoscopeToggle.textContent = 'View Archetype';
         if (els.horoscopeStatus) {
-          els.horoscopeStatus.textContent = 'Fetching a live daily reading…';
+          els.horoscopeStatus.textContent = 'Fetching Today\'s Reading…';
         }
         setLiveDiagnostic('horoscope', {
           state: 'fallback',
-          detail: 'A live horoscope request is currently in flight.',
-          source: 'Free Horoscope API'
+          detail: 'A dated horoscope request is currently in flight.',
+          source: 'Life Pulse daily feed'
         });
         return;
       }
@@ -6579,28 +6603,34 @@ ${shareUrl}`);
       els.zodiacBox.textContent = currentLiveHoroscope.text;
       els.horoscopeToggle.textContent = 'View Archetype';
       if (els.horoscopeStatus) {
-        if (currentLiveHoroscope.live) {
-          if (currentLiveHoroscope.mocked) {
-            els.horoscopeStatus.textContent = `Mock daily horoscope • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
-          } else if (currentLiveHoroscope.cached) {
-            els.horoscopeStatus.textContent = `Cached live horoscope • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
-          } else {
-            els.horoscopeStatus.textContent = `Live daily horoscope • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
-          }
+        if (currentLiveHoroscope.mocked) {
+          els.horoscopeStatus.textContent = `Mock Daily Horoscope • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
+        } else if (currentLiveHoroscope.previous) {
+          els.horoscopeStatus.textContent = `Previous Reading • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
+        } else if (currentLiveHoroscope.live) {
+          const label = currentLiveHoroscope.quality === 'date-specific' ? 'Today\'s Reading' : 'Legacy Daily Feed';
+          els.horoscopeStatus.textContent = `${label} • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
         } else {
-          els.horoscopeStatus.textContent = 'Built-In Fallback • the live source or browser CORS path is unavailable right now.';
+          els.horoscopeStatus.textContent = 'Built-In Fallback • No Current Or Recent Web Reading Was Available';
         }
       }
 
+      const diagnosticState = currentLiveHoroscope.mocked
+        ? 'local'
+        : currentLiveHoroscope.previous
+          ? 'cached'
+          : currentLiveHoroscope.live
+            ? 'live'
+            : 'fallback';
       setLiveDiagnostic('horoscope', {
-        state: currentLiveHoroscope.live ? (currentLiveHoroscope.mocked ? 'local' : currentLiveHoroscope.cached ? 'cached' : 'live') : 'fallback',
-        detail: currentLiveHoroscope.live
-          ? (currentLiveHoroscope.mocked
-              ? 'Using a mock horoscope feed for testing and layout validation.'
-              : currentLiveHoroscope.cached
-                ? 'Showing a cached live horoscope for today to reduce repeat fetches.'
-                : 'Showing a fresh live horoscope from the web.')
-          : 'Using the built-in fallback because no live horoscope source succeeded.',
+        state: diagnosticState,
+        detail: currentLiveHoroscope.mocked
+          ? 'Using a mock horoscope feed for testing.'
+          : currentLiveHoroscope.previous
+            ? 'Showing the most recent successful dated reading because today\'s provider validation did not pass.'
+            : currentLiveHoroscope.live
+              ? 'Showing a dated reading from the scheduled GitHub Pages feed.'
+              : 'Using the built-in fallback because no current or recent web reading succeeded.',
         source: currentLiveHoroscope.source || 'Life Pulse fallback'
       });
     }
@@ -6615,134 +6645,19 @@ ${shareUrl}`);
         return {
           live: true,
           mocked: true,
-          source: 'Mock daily horoscope',
+          source: 'Mock Daily Horoscope',
+          quality: 'date-specific',
           period: 'daily',
           sign: signName,
           date: todayKey,
-          text: `Mock reading for ${signName}: this is a synthetic daily horoscope used to test layout, live-source labels, and fallback behavior without relying on the network.`
+          text: `Mock reading for ${signName}: this synthetic daily horoscope tests layout, dated-source labels, and fallback behavior without relying on the network.`
         };
       }
       if (horoscopeCache.has(cacheKey)) return { ...horoscopeCache.get(cacheKey), cached: true };
 
-      try {
-        const scheduled = await readScheduledHoroscope(sign, signName);
-        horoscopeCache.set(cacheKey, scheduled);
-        return scheduled;
-      } catch {}
-
-      const directUrl = `${HOROSCOPE_BASE}?sign=${encodeURIComponent(sign)}`;
-
-      const readDirect = async () => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 7000);
-        try {
-          const response = await fetch(directUrl, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-store',
-            headers: { 'Accept': 'application/json' },
-            signal: controller.signal
-          });
-          if (!response.ok) {
-            throw new Error(`Direct horoscope request failed (${response.status}).`);
-          }
-          return await response.json();
-        } finally {
-          clearTimeout(timeoutId);
-        }
-      };
-
-      const readViaAllOrigins = async () => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 9000);
-        try {
-          const response = await fetch(`${HOROSCOPE_PROXY_ALLORIGINS}${encodeURIComponent(directUrl)}`, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-store',
-            headers: { 'Accept': 'application/json' },
-            signal: controller.signal
-          });
-          if (!response.ok) {
-            throw new Error(`AllOrigins proxy failed (${response.status}).`);
-          }
-          const payload = await response.json();
-          const raw = payload?.contents;
-          if (!raw) {
-            throw new Error('AllOrigins returned no contents.');
-          }
-          return JSON.parse(raw);
-        } finally {
-          clearTimeout(timeoutId);
-        }
-      };
-
-      const readViaWhateverOrigin = async () => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 9000);
-        try {
-          const response = await fetch(`${HOROSCOPE_PROXY_WHATEVERORIGIN}${encodeURIComponent(directUrl)}`, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-store',
-            headers: { 'Accept': 'application/json' },
-            signal: controller.signal
-          });
-          if (!response.ok) {
-            throw new Error(`Whatever Origin proxy failed (${response.status}).`);
-          }
-          const payload = await response.json();
-          const raw = payload?.contents;
-          if (!raw) {
-            throw new Error('Whatever Origin returned no contents.');
-          }
-          return JSON.parse(raw);
-        } finally {
-          clearTimeout(timeoutId);
-        }
-      };
-
-      let payload = null;
-      let source = 'Free Horoscope API';
-
-      const attempts = [
-        async () => {
-          payload = await readDirect();
-          source = 'Free Horoscope API';
-        }
-      ];
-
-      let lastError = null;
-      for (const attempt of attempts) {
-        try {
-          await attempt();
-          break;
-        } catch (error) {
-          lastError = error;
-        }
-      }
-
-      if (!payload) {
-        throw lastError || new Error('No live horoscope source responded.');
-      }
-
-      const textOut = sanitizeHoroscopeText(payload?.data?.horoscope);
-      if (!textOut) {
-        throw new Error('Live horoscope response was empty.');
-      }
-
-      const result = {
-        live: true,
-        source,
-        period: payload?.data?.period || 'daily',
-        sign: payload?.data?.sign || signName,
-        date: payload?.data?.date || todayKey,
-        text: textOut,
-        cached: false
-      };
-
-      horoscopeCache.set(cacheKey, result);
-      return result;
+      const scheduled = await readScheduledHoroscope(sign, signName);
+      horoscopeCache.set(cacheKey, scheduled);
+      return scheduled;
     }
 
     async function refreshLiveHoroscope() {
