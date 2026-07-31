@@ -89,7 +89,7 @@ Authoritative or calculation-first routes now include:
 - Open-Meteo for matched birthplace timezone and historical weather
 - A validated local sports dataset with explicit result and schedule coverage dates
 
-`version.json` is generated with each feed refresh. Hosted browsers check it at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears so a phone can reload without relying on an old cached page.
+`version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; local-file previews show `v4.local`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
 
 ## Optional EIA gasoline key
 
@@ -97,7 +97,7 @@ The existing AAA route remains active without setup. To prefer the more stable U
 
 ## Validation and maintenance
 
-`scripts/validate-live-data.mjs` runs after every refresh and before Pages packaging. It verifies schema 4, all twelve horoscope signs, astronomy, current comparisons, authoritative reference histories, registered component freshness, a future sports event, and the match between `version.json` and `live-data.json`. A failed validation stops that deployment.
+`scripts/validate-live-data.mjs` runs after every refresh and before Pages packaging. It verifies schema 4, the automatic release-number format, all twelve horoscope signs, astronomy, current comparisons, authoritative reference histories, registered component freshness, a future sports event, and the match between `version.json` and `live-data.json`. A failed validation stops that deployment.
 
 Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. Astronomy Engine remains pinned until an update is reviewed and merged.
 
