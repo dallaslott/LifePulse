@@ -2134,10 +2134,10 @@
           <span class="slate-header slate-header--zodiac">Zodiac Alignment</span>
           <div class="slate-title-main">
             <div class="slate-title"><span id="zodiac-sym"></span><span id="zodiac-name">ZODIAC</span></div>
-            <button class="control-btn" id="horoscope-toggle" type="button">View Live Horoscope</button>
+            <button class="control-btn" id="horoscope-toggle" type="button">View Daily Horoscope</button>
           </div>
           <div id="zodiac-box" class="slate-body">...</div>
-          <div id="horoscope-status" class="micro-label horoscope-status">Archetype view • built into the app.</div>
+          <div id="horoscope-status" class="micro-label horoscope-status">Zodiac Profile • Built Into The App</div>
         </div>
 
         <div class="zodiac-mini-grid">
@@ -2155,6 +2155,12 @@
             <span class="zodiac-info-value" id="zodiac-arrival-title">...</span>
             <span class="zodiac-info-label">Arrival Signature</span>
             <p id="zodiac-arrival-copy" class="slate-body" style="margin-top:8px; font-size:0.84rem;">...</p>
+          </div>
+          <div class="zodiac-info-card">
+            <span class="zodiac-info-value" id="current-sky-moon">Updating...</span>
+            <span class="zodiac-info-label">Current Sky</span>
+            <p id="current-sky-copy" class="slate-body" style="margin-top:8px; font-size:0.84rem;">Loading moon phases and planetary motion...</p>
+            <span id="current-sky-status" class="source-line"><span class="state-pill state-static">WAIT</span>Scheduled astronomy feed.</span>
           </div>
         </div>
 
@@ -2305,13 +2311,14 @@
     <button id="reset-btn" class="reset-btn" type="button">Reset System</button>
   </div>
 
+  <script src="vendor/astronomy.browser.min.js"></script>
   <script>
     // ─── Constants ────────────────────────────────────────────────────────────
     const STORAGE_KEY     = 'lifePulseProfile';
     const STORAGE_VERSION = 4;
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
     const BUILD_CODENAME = 'Rebirth';
-    const BUILD_VARIANT  = 'Verified Daily';
+    const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -2348,6 +2355,8 @@
     let currentDNA            = null;
     let currentGeneration     = null;
     let birthMomentGlobal     = null;
+    let currentProfile          = null;
+    let currentAstronomy        = null;
     let userGender            = 'male';
     let showingHoroscope      = false;
     let buildAlpha            = 0;
@@ -2524,6 +2533,9 @@
       zodiacChineseCopy:     document.getElementById('zodiac-chinese-copy'),
       zodiacArrivalTitle:    document.getElementById('zodiac-arrival-title'),
       zodiacArrivalCopy:     document.getElementById('zodiac-arrival-copy'),
+      currentSkyMoon:        document.getElementById('current-sky-moon'),
+      currentSkyCopy:        document.getElementById('current-sky-copy'),
+      currentSkyStatus:      document.getElementById('current-sky-status'),
       forecastEnergyScore:   document.getElementById('forecast-energy-score'),
       forecastFocusScore:    document.getElementById('forecast-focus-score'),
       forecastSocialScore:   document.getElementById('forecast-social-score'),
@@ -3033,13 +3045,26 @@
       const cacheKey = 'aaa-gas-live';
       if (liveCompareCache.has(cacheKey)) return { ...liveCompareCache.get(cacheKey), cached: true };
       if (debugMockMode) {
-        const mocked = { price: 3.63, asOf: new Date().toLocaleDateString('en-US'), mocked: true, cached: false };
+        const mocked = { price: 3.63, asOf: new Date().toLocaleDateString('en-US'), mocked: true, cached: false, source: 'Mock gas feed' };
         liveCompareCache.set(cacheKey, mocked);
         return mocked;
       }
+      try {
+        const payload = await loadScheduledLiveData();
+        const feed = payload?.current?.gasPrice;
+        if (Number.isFinite(Number(feed?.value))) {
+          const scheduled = {
+            price: Number(feed.value), asOf: feed.asOf || payload.updatedAt,
+            source: feed.source || 'AAA', scheduled: true, stale: Boolean(feed.stale),
+            mocked: false, cached: false
+          };
+          liveCompareCache.set(cacheKey, scheduled);
+          return scheduled;
+        }
+      } catch {}
       const text = await fetchTextViaProxy(AAA_GAS_URL);
       const parsed = parseAaaGasAverage(text);
-      const result = { ...parsed, mocked: false, cached: false };
+      const result = { ...parsed, source: 'AAA via browser proxy', scheduled: false, mocked: false, cached: false };
       liveCompareCache.set(cacheKey, result);
       return result;
     }
@@ -3048,17 +3073,29 @@
       const cacheKey = 'world-pop-live';
       if (liveCompareCache.has(cacheKey)) return { ...liveCompareCache.get(cacheKey), cached: true };
       if (debugMockMode) {
-        const mocked = { population: 8280000000, asOf: new Date().toDateString(), mocked: true, cached: false };
+        const mocked = { population: 8280000000, asOf: new Date().toDateString(), mocked: true, cached: false, source: 'Mock population feed' };
         liveCompareCache.set(cacheKey, mocked);
         return mocked;
       }
+      try {
+        const payload = await loadScheduledLiveData();
+        const feed = payload?.current?.worldPopulation;
+        if (Number.isFinite(Number(feed?.value))) {
+          const scheduled = {
+            population: Number(feed.value), asOf: feed.asOf || payload.updatedAt,
+            source: feed.source || 'Worldometer', scheduled: true, stale: Boolean(feed.stale),
+            mocked: false, cached: false
+          };
+          liveCompareCache.set(cacheKey, scheduled);
+          return scheduled;
+        }
+      } catch {}
       const text = await fetchTextViaProxy(WORLD_POPULATION_URL);
       const parsed = parseWorldPopulationLive(text);
-      const result = { ...parsed, mocked: false, cached: false };
+      const result = { ...parsed, source: 'Worldometer via browser proxy', scheduled: false, mocked: false, cached: false };
       liveCompareCache.set(cacheKey, result);
       return result;
     }
-
 
     const MONTH_NAME_PATTERN = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
 
@@ -4827,58 +4864,54 @@
       const birthPopulation = interpolateFromAnchors(birthYear, WORLD_POPULATION_ANCHORS);
       const birthGas = interpolateFromAnchors(birthYear, GAS_ANCHORS);
 
-      if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Worldometer via proxy', 'Request in flight.');
-      if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'AAA via proxy', 'Request in flight.');
+      if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Scheduled daily feed', 'Checking the latest server-refreshed population value.');
+      if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Loading', 'Scheduled daily feed', 'Checking the latest server-refreshed gas value.');
 
       const [populationResult, gasResult] = await Promise.allSettled([
-        fetchLiveWorldPopulation(),
-        fetchLiveGasAverage()
+        fetchLiveWorldPopulation(), fetchLiveGasAverage()
       ]);
 
       if (populationResult.status === 'fulfilled' && Number.isFinite(populationResult.value.population)) {
-        const livePopulation = populationResult.value.population / 1_000_000_000;
+        const feed = populationResult.value;
+        const livePopulation = feed.population / 1_000_000_000;
         els.birthPopulationCopy.textContent = buildPopulationComparisonCopy(
-          birthPopulation,
-          livePopulation,
-          populationResult.value.mocked ? 'today’s mock global population' : 'today’s live global population'
+          birthPopulation, livePopulation,
+          feed.mocked ? 'today’s mock global population' : 'the latest global population'
         );
-        const popState = populationResult.value.mocked ? 'local' : populationResult.value.cached ? 'cached' : 'live';
-        const popDetail = populationResult.value.mocked
-          ? 'Mock live population loaded for testing.'
-          : populationResult.value.cached
-            ? 'Cached live population reused from this session.'
-            : `Fresh live world population parsed from the web (${populationResult.value.asOf}).`;
-        if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine(popState, popState, populationResult.value.mocked ? 'Mock population feed' : 'Worldometer via proxy', popDetail);
-        setLiveDiagnostic('population', { state: popState, detail: popDetail, source: populationResult.value.mocked ? 'Mock population feed' : 'Worldometer via proxy' });
+        const popState = feed.mocked ? 'local' : feed.stale || feed.cached ? 'cached' : 'live';
+        const source = feed.source || 'Worldometer';
+        const popDetail = feed.mocked
+          ? 'Mock population loaded for testing.'
+          : `${feed.scheduled ? 'Server-refreshed' : 'Browser-refreshed'} population value (${feed.asOf}).${feed.stale ? ' The last successful value was retained.' : ''}`;
+        if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine(popState, popState, source, popDetail);
+        setLiveDiagnostic('population', { state: popState, detail: popDetail, source });
       } else {
-        const estimatedCurrentPopulation = interpolateFromAnchors(new Date().getFullYear(), WORLD_POPULATION_ANCHORS);
-        els.birthPopulationCopy.textContent = buildPopulationComparisonCopy(birthPopulation, estimatedCurrentPopulation, 'today’s est. global population');
-        if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Estimate', 'Life Pulse anchors', 'Live world population was unavailable, so an estimated current comparison is shown.');
-        setLiveDiagnostic('population', { state: 'fallback', detail: 'Live world population was unavailable, so an estimated current comparison remained on screen.', source: 'Life Pulse anchors' });
+        const estimated = interpolateFromAnchors(new Date().getFullYear(), WORLD_POPULATION_ANCHORS);
+        els.birthPopulationCopy.textContent = buildPopulationComparisonCopy(birthPopulation, estimated, 'today’s est. global population');
+        if (els.birthPopulationStatus) els.birthPopulationStatus.innerHTML = formatStatusLine('fallback', 'Estimate', 'Life Pulse anchors', 'Both the scheduled feed and browser fallback were unavailable.');
+        setLiveDiagnostic('population', { state: 'fallback', detail: 'Both live population routes were unavailable.', source: 'Life Pulse anchors' });
       }
 
       if (gasResult.status === 'fulfilled' && Number.isFinite(gasResult.value.price)) {
+        const feed = gasResult.value;
         els.birthGasCopy.textContent = buildGasComparisonCopy(
-          birthGas,
-          gasResult.value.price,
-          gasResult.value.mocked ? 'today’s mock national average' : 'today’s live national average'
+          birthGas, feed.price,
+          feed.mocked ? 'today’s mock national average' : 'the latest national average'
         );
-        const gasState = gasResult.value.mocked ? 'local' : gasResult.value.cached ? 'cached' : 'live';
-        const gasDetail = gasResult.value.mocked
+        const gasState = feed.mocked ? 'local' : feed.stale || feed.cached ? 'cached' : 'live';
+        const source = feed.source || 'AAA';
+        const gasDetail = feed.mocked
           ? 'Mock gas average loaded for testing.'
-          : gasResult.value.cached
-            ? 'Cached live gas average reused from this session.'
-            : `Fresh AAA national average parsed from the web (as of ${gasResult.value.asOf}).`;
-        if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine(gasState, gasState, gasResult.value.mocked ? 'Mock gas feed' : 'AAA via proxy', gasDetail);
-        setLiveDiagnostic('gas', { state: gasState, detail: gasDetail, source: gasResult.value.mocked ? 'Mock gas feed' : 'AAA via proxy' });
+          : `${feed.scheduled ? 'Server-refreshed' : 'Browser-refreshed'} national average (as of ${feed.asOf}).${feed.stale ? ' The last successful value was retained.' : ''}`;
+        if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine(gasState, gasState, source, gasDetail);
+        setLiveDiagnostic('gas', { state: gasState, detail: gasDetail, source });
       } else {
-        const estimatedCurrentGas = interpolateFromAnchors(new Date().getFullYear(), GAS_ANCHORS);
-        els.birthGasCopy.textContent = buildGasComparisonCopy(birthGas, estimatedCurrentGas, 'today’s est. national average');
-        if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Estimate', 'Life Pulse anchors', 'Live gas comparison was unavailable, so an estimated current comparison is shown.');
-        setLiveDiagnostic('gas', { state: 'fallback', detail: 'Live gas comparison was unavailable, so an estimated current comparison remained on screen.', source: 'Life Pulse anchors' });
+        const estimated = interpolateFromAnchors(new Date().getFullYear(), GAS_ANCHORS);
+        els.birthGasCopy.textContent = buildGasComparisonCopy(birthGas, estimated, 'today’s est. national average');
+        if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Estimate', 'Life Pulse anchors', 'Both the scheduled feed and browser fallback were unavailable.');
+        setLiveDiagnostic('gas', { state: 'fallback', detail: 'Both live gas routes were unavailable.', source: 'Life Pulse anchors' });
       }
     }
-
     function populateZodiacExtras(date) {
       const moon    = getMoonPhase(date);
       const chinese = getChineseZodiac(date);
@@ -6190,7 +6223,7 @@ ${shareUrl}`);
           ? `Next: ${formatEventDate(blueMoonWindow.next.date)} \u2022 ${blueMoonWindow.next.type}`
           : 'The Blue Moon schedule needs its next update.';
       }
-      if (els.fullmoonsCopy) {
+      if (els.fullmoonsCopy && !currentAstronomy) {
         const fullMoonWindow = getFullMoonWindow(now);
         els.fullmoonsCopy.textContent = `Previous: ${formatEventDate(fullMoonWindow.previous)}\nNext: ${formatEventDate(fullMoonWindow.next)}`;
       }
@@ -6208,12 +6241,12 @@ ${shareUrl}`);
       els.totalLunarEclipsesValue.textContent = estimateTotalLunarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
       const nextSolarEclipse = getEventWindow(SOLAR_ECLIPSE_EVENTS, now).next;
       const nextLunarEclipse = getEventWindow(LUNAR_ECLIPSE_EVENTS, now).next;
-      if (els.eclipsesCopy) {
+      if (els.eclipsesCopy && !currentAstronomy) {
         els.eclipsesCopy.textContent = nextSolarEclipse
           ? `Next: ${formatEventDate(nextSolarEclipse.date)} \u2022 ${nextSolarEclipse.type}`
           : 'NASA schedule update needed.';
       }
-      if (els.totalLunarEclipsesCopy) {
+      if (els.totalLunarEclipsesCopy && !currentAstronomy) {
         els.totalLunarEclipsesCopy.textContent = nextLunarEclipse
           ? `Next: ${formatEventDate(nextLunarEclipse.date)} \u2022 ${nextLunarEclipse.type}`
           : 'NASA schedule update needed.';
@@ -6537,6 +6570,84 @@ ${shareUrl}`);
       return liveDataPromise;
     }
 
+    function formatScheduledDate(value) {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? 'Schedule Pending' : formatEventDate(date);
+    }
+
+    function browserEclipseKind(kind) {
+      const value = String(kind || '').toLowerCase();
+      if (value.includes('annular')) return 'Annular';
+      if (value.includes('total')) return 'Total';
+      return 'Partial';
+    }
+
+    function renderScheduledAstronomy(astronomy) {
+      if (!astronomy?.moon || !astronomy?.eclipses) throw new Error('Astronomy snapshot is incomplete.');
+      currentAstronomy = astronomy;
+      const moon = astronomy.moon;
+      const retrogrades = Array.isArray(astronomy.retrogrades)
+        ? astronomy.retrogrades.filter(item => item.retrograde).map(item => item.planet)
+        : [];
+      const retrogradeText = retrogrades.length ? retrogrades.join(', ') : 'None';
+      const calculated = formatLiveDataTimestamp(astronomy.calculatedAt);
+
+      if (els.currentSkyMoon) els.currentSkyMoon.textContent = `${moon.phase} • ${Number(moon.illuminationPercent).toFixed(0)}%`;
+      if (els.currentSkyCopy) {
+        els.currentSkyCopy.textContent = `Next New Moon: ${formatScheduledDate(moon.nextNewMoon)}\nNext Full Moon: ${formatScheduledDate(moon.nextFullMoon)}\nRetrograde: ${retrogradeText}`;
+      }
+      if (els.currentSkyStatus) {
+        els.currentSkyStatus.innerHTML = formatStatusLine('live', 'Calculated', astronomy.source || 'Astronomy Engine', `Sky positions calculated ${calculated}.`);
+      }
+
+      if (els.fullmoonsCopy) {
+        els.fullmoonsCopy.textContent = `Previous: ${formatScheduledDate(moon.previousFullMoon)}\nNext: ${formatScheduledDate(moon.nextFullMoon)}`;
+      }
+
+      const solar = astronomy.eclipses.nextSolar;
+      const lunar = astronomy.eclipses.nextLunar;
+      let localLine = 'Your Area: Choose A Matched Birthplace';
+      const geo = currentProfile?.birthPlaceGeo;
+      const engine = window.Astronomy;
+      if (geo && Number.isFinite(Number(geo.latitude)) && Number.isFinite(Number(geo.longitude)) && engine) {
+        try {
+          const observer = new engine.Observer(Number(geo.latitude), Number(geo.longitude), 0);
+          const local = engine.SearchLocalSolarEclipse(new Date(), observer);
+          const visible = [local?.partial_begin?.altitude, local?.peak?.altitude, local?.partial_end?.altitude]
+            .some(value => Number(value) > 0);
+          localLine = `Your Area: ${formatScheduledDate(local?.peak?.time?.date)} • ${browserEclipseKind(local?.kind)} • ${visible ? 'Visible Locally' : 'Visibility Limited'}`;
+        } catch {
+          localLine = 'Your Area: Visibility Check Unavailable';
+        }
+      }
+
+      if (els.eclipsesCopy && solar?.date) {
+        els.eclipsesCopy.textContent = `Global: ${formatScheduledDate(solar.date)} • ${solar.type || 'Solar'}\n${localLine}`;
+      }
+      if (els.totalLunarEclipsesCopy && lunar?.date) {
+        const obscuration = Number.isFinite(Number(lunar.obscurationPercent))
+          ? ` • ${Number(lunar.obscurationPercent).toFixed(0)}% Peak Coverage`
+          : '';
+        els.totalLunarEclipsesCopy.textContent = `Next: ${formatScheduledDate(lunar.date)} • ${lunar.type || 'Lunar'}${obscuration}`;
+      }
+      setLiveDiagnostic('astronomy', {
+        state: 'live',
+        detail: `Moon phases, eclipses, and planetary motion calculated ${calculated}.`,
+        source: astronomy.source || 'Astronomy Engine'
+      });
+    }
+
+    async function refreshScheduledAstronomy(force = false) {
+      try {
+        const payload = await loadScheduledLiveData(force);
+        renderScheduledAstronomy(payload?.astronomy);
+      } catch (error) {
+        if (els.currentSkyStatus) {
+          els.currentSkyStatus.innerHTML = formatStatusLine('fallback', 'Built-In', 'Life Pulse estimates', 'The scheduled astronomy feed is unavailable; existing date estimates remain visible.');
+        }
+        setLiveDiagnostic('astronomy', { state: 'fallback', detail: error.message, source: 'Life Pulse estimates' });
+      }
+    }
     async function readScheduledHoroscope(sign, signName, force = false) {
       const payload = await loadScheduledLiveData(force);
       const reading = payload?.horoscope?.signs?.[sign];
@@ -6576,19 +6687,19 @@ ${shareUrl}`);
         els.zodiacBox.textContent = currentZodiac.d;
         els.horoscopeToggle.textContent = 'View Daily Horoscope';
         if (els.horoscopeStatus) {
-          els.horoscopeStatus.textContent = 'Archetype View • Built Into The App';
+          els.horoscopeStatus.textContent = 'Zodiac Profile • Built Into The App';
         }
         setLiveDiagnostic('horoscope', {
           state: 'static',
           detail: 'Showing the built-in zodiac archetype instead of the dated daily reading.',
-          source: 'Life Pulse archetype'
+          source: 'Life Pulse zodiac profile'
         });
         return;
       }
 
       if (!currentLiveHoroscope) {
         els.zodiacBox.textContent = 'Loading today\'s dated horoscope…';
-        els.horoscopeToggle.textContent = 'View Archetype';
+        els.horoscopeToggle.textContent = 'View Zodiac Profile';
         if (els.horoscopeStatus) {
           els.horoscopeStatus.textContent = 'Fetching Today\'s Reading…';
         }
@@ -6601,7 +6712,7 @@ ${shareUrl}`);
       }
 
       els.zodiacBox.textContent = currentLiveHoroscope.text;
-      els.horoscopeToggle.textContent = 'View Archetype';
+      els.horoscopeToggle.textContent = 'View Zodiac Profile';
       if (els.horoscopeStatus) {
         if (currentLiveHoroscope.mocked) {
           els.horoscopeStatus.textContent = `Mock Daily Horoscope • ${formatLiveHoroscopeDate(currentLiveHoroscope.date)} • ${currentLiveHoroscope.source}`;
@@ -6765,6 +6876,7 @@ ${shareUrl}`);
         populateBirthdayHistory(birthMomentGlobal),
         populateBirthWeather(birthMomentGlobal, profile),
         populateLiveBirthComparisons(birthMomentGlobal),
+        refreshScheduledAstronomy(),
         populateExactBirthCulture(birthMomentGlobal)
       ]);
     }
@@ -6778,6 +6890,7 @@ ${shareUrl}`);
 
         profile.name       = normalizeName(profile.name);
         profile.birthPlace = normalizeName(profile.birthPlace);
+        currentProfile = profile;
         if (selectedPlaceSuggestion && placeLooksLikeMatch(profile.birthPlace, selectedPlaceSuggestion)) {
           profile.birthPlaceGeo = serializePlaceSelection(selectedPlaceSuggestion);
         }
@@ -7078,6 +7191,16 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 
 
