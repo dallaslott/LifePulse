@@ -1456,19 +1456,9 @@
       font-size: 0.7rem;
     }
 
-    .diagnostics-toggle {
-      white-space: nowrap;
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      clip-path: inset(50%);
-      border: 0;
-      white-space: nowrap;
-    }
+    .diagnostics-toggle { white-space: nowrap; }
+
+    .multiline-copy { white-space: pre-line; }
 
     .environment-note {
       margin: 8px 0 14px;
@@ -1693,7 +1683,7 @@
     <button id="mute-toggle" type="button" aria-label="Toggle sound">🔊</button>
     <div class="build-ribbon">
       <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-      <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false">DIAGNOSTICS</button>
+      <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
     </div>
 
     <h1 class="hero-title" id="greeting">...</h1>
@@ -2124,7 +2114,7 @@
       <div class="badge-row">
         <div class="chip"><span>💎</span><strong id="badge-stone-name">...</strong></div>
         <div class="chip"><span>🌸</span><strong id="badge-flower-name">...</strong></div>
-        <div class="chip"><span>🐉</span><strong id="badge-chinese-name">...</strong></div>
+        <div class="chip"><span id="badge-chinese-icon">🐉</span><strong id="badge-chinese-name">...</strong></div>
         <div class="chip"><span>🌙</span><strong id="badge-moon-name">...</strong></div>
         <div class="chip"><span>✨</span><strong id="badge-arrival-name">...</strong></div>
       </div>
@@ -2159,7 +2149,7 @@
           <div class="zodiac-info-card">
             <span class="zodiac-info-value" id="current-sky-moon">Updating...</span>
             <span class="zodiac-info-label">Current Sky</span>
-            <p id="current-sky-copy" class="slate-body" style="margin-top:8px; font-size:0.84rem;">Loading moon phases and planetary motion...</p>
+            <p id="current-sky-copy" class="slate-body multiline-copy" style="margin-top:8px; font-size:0.84rem;">Loading moon phases and planetary motion...</p>
             <span id="current-sky-status" class="source-line"><span class="state-pill state-static">WAIT</span>Scheduled astronomy feed.</span>
           </div>
         </div>
@@ -2373,6 +2363,9 @@
     let diagnosticsOpen      = false;
     let secretDiagnosticsTapCount = 0;
     let secretDiagnosticsTapTimer  = null;
+    let selfCheckRunning       = false;
+    let lastSelfCheckAt        = null;
+    let selfCheckFeedResult    = { state: 'fallback', detail: 'Press Run Self-Check to validate the published daily feed.' };
     const liveDiagnostics     = {
       environment: { state: 'idle', label: 'Environment', detail: 'Checking runtime environment…', source: 'App runtime' },
       storage:     { state: 'idle', label: 'Saved profile', detail: 'Waiting for storage check…', source: 'localStorage' },
@@ -2525,6 +2518,7 @@
       badgeStone:            document.getElementById('badge-stone-name'),
       badgeFlower:           document.getElementById('badge-flower-name'),
       badgeChinese:          document.getElementById('badge-chinese-name'),
+      badgeChineseIcon:      document.getElementById('badge-chinese-icon'),
       badgeMoon:             document.getElementById('badge-moon-name'),
       badgeArrival:          document.getElementById('badge-arrival-name'),
       zodiacMoonName:        document.getElementById('zodiac-moon-name'),
@@ -2893,6 +2887,11 @@
       'Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake',
       'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'
     ];
+
+    const CHINESE_ZODIAC_ICONS = {
+      Rat: '🐀', Ox: '🐂', Tiger: '🐅', Rabbit: '🐇', Dragon: '🐉', Snake: '🐍',
+      Horse: '🐎', Goat: '🐐', Monkey: '🐒', Rooster: '🐓', Dog: '🐕', Pig: '🐖'
+    };
 
     const WEATHER_CODE_LABELS = {
       0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
@@ -3360,21 +3359,29 @@
         } catch { return false; }
       })();
       const shareReady = typeof encodeProfileToHash === 'function';
-      const liveOkay = ['live', 'cached', 'fallback', 'static', 'local'].includes(liveDiagnostics.horoscope.state)
-        && ['live', 'cached', 'fallback', 'static', 'local'].includes(liveDiagnostics.history.state)
-        && ['live', 'cached', 'fallback', 'static', 'local'].includes(liveDiagnostics.weather.state);
-      const layoutOkay = !!document.getElementById('chrono-years') && !!document.getElementById('birth-song-title');
+      const routedStates = ['live', 'cached', 'fallback', 'static', 'local'];
+      const sourceRoutingOkay = routedStates.includes(liveDiagnostics.horoscope.state)
+        && routedStates.includes(liveDiagnostics.history.state)
+        && routedStates.includes(liveDiagnostics.weather.state);
+      const layoutOkay = !!document.getElementById('chrono-years')
+        && !!document.getElementById('birth-song-title')
+        && !!document.getElementById('current-sky-moon')
+        && !!document.getElementById('diagnostics-toggle');
+      const astronomyReady = !!window.Astronomy
+        && typeof window.Astronomy.SearchGlobalSolarEclipse === 'function'
+        && typeof window.Astronomy.SearchLocalSolarEclipse === 'function';
 
       return [
-        { label: 'Launch state', state: launchReady ? 'live' : 'fallback', detail: launchReady ? 'Profile is currently hydrated and the dashboard is active.' : 'Launch a profile to verify full runtime behavior.' },
-        { label: 'Browser storage', state: storageOkay ? 'live' : 'error', detail: storageOkay ? 'localStorage is writable for saved profiles, mock mode, and caches.' : 'localStorage is blocked in this browser context.' },
-        { label: 'Share hash', state: shareReady ? 'live' : 'error', detail: shareReady ? 'Pre-filled share links can be generated from the current profile.' : 'Share-link encoding is unavailable.' },
-        { label: 'Live-source routing', state: liveOkay ? 'live' : 'fallback', detail: liveOkay ? 'Weather, history, and horoscope all have a valid live/cached/fallback path.' : 'One or more live routes still need a successful run.' },
-        { label: 'Layout anchors', state: layoutOkay ? 'live' : 'error', detail: layoutOkay ? 'Primary layout anchors are present for the verified build.' : 'A required UI anchor is missing.' },
-        { label: 'Origin mode', state: env.isLocal ? 'local' : 'live', detail: env.isLocal ? 'Local-file mode works, but hosted HTTPS will be more reliable for web fetches.' : 'Hosted mode gives browser fetches the best odds of success.' }
+        { label: 'Launch state', state: launchReady ? 'live' : 'fallback', detail: launchReady ? 'Profile is hydrated and the dashboard is active.' : 'Launch a profile to verify personalized runtime behavior.' },
+        { label: 'Browser storage', state: storageOkay ? 'live' : 'error', detail: storageOkay ? 'Saved profiles and local preferences can be written.' : 'Browser storage is blocked in this context.' },
+        { label: 'Share links', state: shareReady ? 'live' : 'error', detail: shareReady ? 'Pre-filled profile links can be generated.' : 'Share-link encoding is unavailable.' },
+        { label: 'Source routing', state: sourceRoutingOkay ? 'live' : 'fallback', detail: sourceRoutingOkay ? 'Weather, history, and horoscope each have a usable live or fallback route.' : 'One or more source routes have not initialized.' },
+        { label: 'Published daily feed', state: selfCheckFeedResult.state, detail: selfCheckFeedResult.detail },
+        { label: 'Astronomy calculator', state: astronomyReady ? 'live' : 'error', detail: astronomyReady ? 'Moon, eclipse, and local-visibility calculations are available.' : 'The astronomy library did not load.' },
+        { label: 'Layout anchors', state: layoutOkay ? 'live' : 'error', detail: layoutOkay ? 'Primary dashboard and Current Sky elements are present.' : 'A required interface element is missing.' },
+        { label: 'Origin mode', state: env.isLocal ? 'local' : 'live', detail: env.isLocal ? 'Local-file mode is active; hosted HTTPS is more reliable for web feeds.' : 'Hosted HTTPS mode is active.' }
       ];
     }
-
     function renderDiagnostics() {
       const env = getRuntimeEnvironment();
       document.body.classList.toggle('diagnostics-open', !!diagnosticsOpen);
@@ -3387,7 +3394,12 @@
       if (els.selfcheckSummary) {
         const checks = getSelfCheckItems();
         const passCount = checks.filter(item => ['live', 'local'].includes(item.state)).length;
-        els.selfcheckSummary.textContent = `${passCount}/${checks.length} primary checks passing`;
+        const checkedAt = lastSelfCheckAt
+          ? ` • Last Run ${lastSelfCheckAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
+          : '';
+        els.selfcheckSummary.textContent = selfCheckRunning
+          ? 'Checking Published Feed...'
+          : `${passCount}/${checks.length} Checks Passing${checkedAt}`;
       }
 
       if (els.environmentNote) {
@@ -3413,6 +3425,10 @@
       ).join('');
       if (els.selfcheckList) els.selfcheckList.innerHTML = selfChecks;
 
+      if (els.rerunDiagnosticsBtn) {
+        els.rerunDiagnosticsBtn.disabled = selfCheckRunning;
+        els.rerunDiagnosticsBtn.textContent = selfCheckRunning ? 'CHECKING...' : 'RUN SELF-CHECK';
+      }
       if (els.mockToggleBtn) {
         els.mockToggleBtn.textContent = `MOCK LIVE DATA: ${debugMockMode ? 'ON' : 'OFF'}`;
       }
@@ -3426,6 +3442,42 @@
       }
     }
 
+    async function runSelfCheck() {
+      if (selfCheckRunning) return;
+      selfCheckRunning = true;
+      selfCheckFeedResult = { state: 'fallback', detail: 'Checking the published JSON feed and its required sections...' };
+      renderDiagnostics();
+
+      try {
+        const payload = await loadScheduledLiveData(true);
+        const signCount = payload?.horoscope?.signs ? Object.keys(payload.horoscope.signs).length : 0;
+        const updatedMs = Date.parse(payload?.updatedAt || '');
+        const feedFresh = Number.isFinite(updatedMs) && Date.now() - updatedMs < 48 * 3600000;
+        const astronomyOkay = Boolean(payload?.astronomy?.moon?.nextFullMoon && payload?.astronomy?.eclipses?.nextSolar?.date);
+        const comparisonsOkay = Number.isFinite(Number(payload?.current?.worldPopulation?.value))
+          && Number.isFinite(Number(payload?.current?.gasPrice?.value));
+        const schemaOkay = Number(payload?.schemaVersion) >= 3;
+        const passed = schemaOkay && signCount === 12 && feedFresh && astronomyOkay && comparisonsOkay;
+        const updatedLabel = formatLiveDataTimestamp(payload?.updatedAt);
+
+        selfCheckFeedResult = passed
+          ? { state: 'live', detail: `Schema ${payload.schemaVersion}, 12 horoscopes, astronomy, population, and gas are present. Updated ${updatedLabel}.` }
+          : { state: 'error', detail: `Feed validation failed: schema ${payload?.schemaVersion || 'missing'}, ${signCount}/12 horoscopes, freshness ${feedFresh ? 'current' : 'stale'}, astronomy ${astronomyOkay ? 'present' : 'missing'}, comparisons ${comparisonsOkay ? 'present' : 'missing'}.` };
+
+        if (birthMomentGlobal && currentProfile) {
+          await Promise.allSettled([
+            refreshLiveHoroscope(),
+            runAsyncEnhancements(currentProfile)
+          ]);
+        }
+      } catch (error) {
+        selfCheckFeedResult = { state: 'error', detail: `Published feed request failed: ${error.message}` };
+      } finally {
+        lastSelfCheckAt = new Date();
+        selfCheckRunning = false;
+        renderDiagnostics();
+      }
+    }
     function toggleDiagnosticsPanel() {
       const hidden = els.diagnosticsPanel.classList.toggle('hidden');
       diagnosticsOpen = !hidden;
@@ -4291,7 +4343,7 @@
         Dog:     'Loyal, direct, and protective.',
         Pig:     'Warm, generous, and grounded.'
       };
-      return { animal, desc: blurbs[animal] || 'A unique yearly signature.' };
+      return { animal, icon: CHINESE_ZODIAC_ICONS[animal] || '✨', desc: blurbs[animal] || 'A unique yearly signature.' };
     }
 
     function buildSongInfoLink(song, artist) {
@@ -4918,6 +4970,7 @@
       const vibe    = getWeekdayArrivalVibe(date);
 
       els.badgeChinese.textContent  = chinese.animal;
+      if (els.badgeChineseIcon) els.badgeChineseIcon.textContent = chinese.icon;
       els.badgeMoon.textContent     = moon.name;
       els.badgeArrival.textContent  = vibe.label;
 
@@ -5636,7 +5689,7 @@
     }
 
     const LEAP_SECOND_DATES = [
-      '1972-06-30','1972-12-31','1973-06-30','1974-12-31','1975-12-31','1976-12-31',
+      '1972-06-30','1972-12-31','1973-12-31','1974-12-31','1975-12-31','1976-12-31',
       '1977-12-31','1978-12-31','1979-12-31','1981-06-30','1982-06-30','1983-06-30',
       '1985-06-30','1987-12-31','1989-12-31','1990-12-31','1992-06-30','1993-06-30',
       '1994-06-30','1995-12-31','1997-06-30','1998-12-31','2005-12-31','2008-12-31',
@@ -6058,10 +6111,11 @@ ${shareUrl}`);
 
       const leapSecondEntries = getLeapSecondEntriesSinceBirth(birthMomentGlobal, now);
       setSourceDrawer('leapseconds', {
-        meta: 'Source: official historical leap-second dates embedded in the app.',
+        meta: 'IERS Bulletin C historical leap-second record, embedded through 12/31/2016.',
         lines: [
-          `Count since birth: ${leapSecondEntries.length}`,
-          leapSecondEntries.length ? `Dates: ${leapSecondEntries.map(formatSourceDate).join(' • ')}` : 'No leap seconds have been added since your birth.'
+          'Meaning: UTC occasionally receives one extra second to remain close to Earth’s measured rotation.',
+          `Since Your Birth: ${leapSecondEntries.length}`,
+          leapSecondEntries.length ? `Added On: ${leapSecondEntries.map(formatSourceDate).join(', ')}` : 'Added On: None since your birth.'
         ]
       });
 
@@ -6235,7 +6289,7 @@ ${shareUrl}`);
       const leapSecondsCount = countLeapSecondsExperienced(birthMomentGlobal, now);
       els.leapsecondsValue.textContent = leapSecondsCount.toLocaleString();
       if (els.leapsecondsCopy) {
-        els.leapsecondsCopy.textContent = `${leapSecondsCount.toLocaleString()} one-second corrections were added since your birth to keep atomic time aligned with Earth’s slightly uneven rotation.`;
+        els.leapsecondsCopy.textContent = `A leap second is an occasional extra second added to UTC so clock time stays close to Earth’s rotation. ${leapSecondsCount.toLocaleString()} ${leapSecondsCount === 1 ? 'has' : 'have'} occurred since your birth.`;
       }
       els.eclipsesValue.textContent = estimateSolarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
       els.totalLunarEclipsesValue.textContent = estimateTotalLunarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
@@ -7063,21 +7117,8 @@ ${shareUrl}`);
       els.diagnosticsToggle.addEventListener('click', toggleDiagnosticsPanel);
       els.buildChip.addEventListener('click', registerSecretDiagnosticsTap);
       els.buildChip.addEventListener('touchstart', registerSecretDiagnosticsTap, { passive: true });
-      els.rerunDiagnosticsBtn.addEventListener('click', () => {
-        renderDiagnostics();
-        if (birthMomentGlobal) {
-          refreshLiveHoroscope();
-          runAsyncEnhancements({
-            name: normalizeName(els.userName.value),
-            birthPlace: normalizeName(els.birthPlace.value),
-            gender: userGender,
-            month: els.dobMonth.value,
-            day: els.dobDay.value,
-            year: els.dobYear.value,
-            time: els.birthTime.value
-          });
-        }
-      });
+      els.rerunDiagnosticsBtn.addEventListener('click', runSelfCheck);
+
       els.mockToggleBtn.addEventListener('click', toggleMockMode);
       els.clearCacheBtn.addEventListener('click', clearLiveCaches);
       els.planetChoice.addEventListener('change',   updateLiveStats);
@@ -7191,6 +7232,13 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 
