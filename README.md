@@ -75,6 +75,8 @@ Leap-second history is refreshed against the latest IERS Bulletin C. December 31
 
 The scheduled feed uses schema 4. Every updateable component has a registry entry with its status, source, retrieval time, expiration time, fallback state, and—where relevant—coverage end. The hidden Self-Check reads that registry and reports missing, unavailable, or expired components.
 
+Finite timelines use a baseline-plus-reconciliation pattern so they cannot silently age out. IERS replaces the leap-second event history, USAGov verifies and can extend the presidential term timeline, and `sports-data-v4.json` replaces sports results and major-event schedules. Self-Check separately reports expired schedule coverage or a completed sports season whose champion has not yet been added. Intentionally editorial eras remain labeled curated rather than being mistaken for live facts.
+
 Authoritative or calculation-first routes now include:
 
 - IERS Bulletin C for current leap-second announcements, while the full historical event list remains available offline
@@ -102,4 +104,5 @@ Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. 
 Live age counters update four times per second, while the heavier lifetime, calendar, source-drawer, and card calculations run once per minute or on an explicit profile/control change. This keeps the dashboard responsive on phones without making the displayed age feel less live.
 
 Editorial concepts—generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals—remain clearly curated rather than presented as live facts. Sports results are coverage-monitored but still editorially validated; connecting a licensed or chosen sports-results provider is the one remaining product decision before those records can be fully automatic.
+
 

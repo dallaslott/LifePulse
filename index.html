@@ -3429,9 +3429,51 @@
         passed: sourceRoutingOkay && hiddenOutsideDiagnostics && visibleInsideDiagnostics
       };
     }
+    function auditFiniteDatasetCoverage(now = new Date()) {
+      const issues = [];
+      const civic = currentLiveData?.reference?.civic;
+      const currentTermStart = civic?.termStarted ? new Date(`${civic.termStarted}T12:00:00`) : null;
+      const currentTerm = currentTermStart && !Number.isNaN(currentTermStart.getTime())
+        ? PRESIDENT_TERM_STARTS.find(term => term.start.getTime() === currentTermStart.getTime())
+        : null;
+      if (!civic?.currentPresident || !currentTerm || !presidentNamesMatch(currentTerm.name, civic.currentPresident)) {
+        issues.push('The presidential timeline does not yet match the current USAGov reference.');
+      }
+
+      const leapReference = currentLiveData?.reference?.leapSeconds;
+      const leapEvents = Array.isArray(leapReference?.events) ? leapReference.events : [];
+      const latestLeap = LEAP_SECOND_DATES.at(-1);
+      if (!leapEvents.length || !latestLeap || formatSlashDate(latestLeap) !== formatSlashDate(new Date(`${leapReference.lastEvent}T12:00:00Z`))) {
+        issues.push('The leap-second timeline does not match the latest IERS history.');
+      }
+
+      const sports = currentLiveData?.reference?.sportsCoverage;
+      const schedules = sports?.scheduleCoverage || {};
+      ['summerOlympics', 'winterOlympics', 'worldCup'].forEach(key => {
+        const coverageDate = new Date(`${schedules[key] || ''}T12:00:00`);
+        if (Number.isNaN(coverageDate.getTime()) || coverageDate <= now) {
+          issues.push(`${key.replace(/([A-Z])/g, ' $1')} schedule coverage needs an update.`);
+        }
+      });
+
+      const results = sports?.resultCoverage || {};
+      const coverageYear = key => new Date(`${results[key] || ''}T12:00:00`).getFullYear();
+      if (now.getMonth() >= 2 && coverageYear('nfl') < now.getFullYear()) issues.push('NFL result coverage needs the latest Super Bowl.');
+      if (now.getMonth() >= 6 && coverageYear('nba') < now.getFullYear()) issues.push('NBA result coverage needs the latest Finals champion.');
+      if (now.getMonth() >= 11 && coverageYear('mlb') < now.getFullYear()) issues.push('MLB result coverage needs the latest World Series champion.');
+
+      return {
+        passed: issues.length === 0,
+        issues,
+        detail: issues.length
+          ? issues.join(' ')
+          : 'Presidents, leap seconds, sports results, and major-event schedules match their registered coverage.'
+      };
+    }
     function getSelfCheckItems() {
       const env = getRuntimeEnvironment();
       const cardAudit = auditAllCardDiagnostics();
+      const finiteDataAudit = auditFiniteDatasetCoverage();
       const launchReady = !!birthMomentGlobal && !!currentZodiac && !els.resultView.classList.contains('hidden');
       const storageOkay = (() => {
         try {
@@ -3460,6 +3502,7 @@
         { label: 'Source routing', state: sourceRoutingOkay ? 'live' : 'fallback', detail: sourceRoutingOkay ? 'Weather, history, and horoscope each have a usable live or fallback route.' : 'One or more source routes have not initialized.' },
         { label: 'Card Diagnostic Isolation', state: cardAudit.passed ? 'live' : 'error', detail: cardAudit.passed ? `${cardAudit.diagnosticCount} diagnostic elements across ${cardAudit.cardCount} cards are hidden normally and visible only in Diagnostics.` : 'One or more card diagnostic elements are leaking into normal view or unavailable in Diagnostics.' },
         { label: 'Source Drawer Routing', state: cardAudit.sourceRoutingOkay ? 'live' : 'error', detail: cardAudit.sourceRoutingOkay ? `${cardAudit.sourceButtonCount} Source buttons connect to their matching relatable-information drawers.` : 'One or more Source buttons do not connect to a matching drawer.' },
+        { label: 'Finite Dataset Coverage', state: finiteDataAudit.passed ? 'live' : 'fallback', detail: finiteDataAudit.detail },
         { label: 'Published daily feed', state: selfCheckFeedResult.state, detail: selfCheckFeedResult.detail },
         { label: 'Astronomy calculator', state: astronomyReady ? 'live' : 'error', detail: astronomyReady ? 'Moon, eclipse, and local-visibility calculations are available.' : 'The astronomy library did not load.' },
         { label: 'Layout anchors', state: layoutOkay ? 'live' : 'error', detail: layoutOkay ? 'Primary dashboard and Current Sky elements are present.' : 'A required interface element is missing.' },
@@ -3578,7 +3621,7 @@
     function toggleDiagnosticsPanel() {
       const hidden = els.diagnosticsPanel.classList.toggle('hidden');
       diagnosticsOpen = !hidden;
-      if (birthMomentGlobal) refreshSourceDrawers();
+      if (birthMomentGlobal) updateLiveStats(true);
       if (els.diagnosticsToggle) {
         els.diagnosticsToggle.setAttribute('aria-expanded', String(!hidden));
         els.diagnosticsToggle.textContent = hidden ? 'DIAGNOSTICS' : 'HIDE DIAGNOSTICS';
@@ -5607,6 +5650,46 @@
       { name: 'Donald Trump', ordinal: '47th', start: new Date('2025-01-20T12:00:00') }
     ];
 
+    function presidentIdentityKey(name) {
+      const words = String(name || '').toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
+      while (words.length > 1 && ['jr', 'sr', 'ii', 'iii', 'iv'].includes(words.at(-1))) words.pop();
+      return words.length ? `${words[0][0]}|${words.at(-1)}` : '';
+    }
+
+    function presidentNamesMatch(first, second) {
+      const firstKey = presidentIdentityKey(first);
+      return Boolean(firstKey && firstKey === presidentIdentityKey(second));
+    }
+
+    function reconcileCivicTimeline(civic) {
+      const liveName = String(civic?.currentPresident || '').trim();
+      const liveStart = civic?.termStarted ? new Date(`${civic.termStarted}T12:00:00`) : null;
+      if (!liveName || !liveStart || Number.isNaN(liveStart.getTime())) {
+        return { status: 'unavailable', changed: false };
+      }
+
+      const sameStart = PRESIDENT_TERM_STARTS.find(term => term.start.getTime() === liveStart.getTime());
+      if (sameStart) {
+        return { status: presidentNamesMatch(sameStart.name, liveName) ? 'verified' : 'mismatch', changed: false, term: sameStart };
+      }
+
+      const latest = PRESIDENT_TERM_STARTS.at(-1);
+      if (latest && liveStart <= latest.start) {
+        return { status: 'older', changed: false, term: latest };
+      }
+
+      const ordinal = formatOrdinal(PRESIDENT_TERM_STARTS.length + 1);
+      const newTerm = { name: liveName, ordinal, start: liveStart };
+      PRESIDENT_TERM_STARTS.push(newTerm);
+
+      const existingPresident = PRESIDENT_TERMS.slice().reverse().find(term => presidentNamesMatch(term.name, liveName));
+      if (existingPresident) {
+        if (!existingPresident.ordinals.includes(ordinal)) existingPresident.ordinals.push(ordinal);
+      } else {
+        PRESIDENT_TERMS.push({ name: liveName, ordinals: [ordinal], start: liveStart });
+      }
+      return { status: 'extended', changed: true, term: newTerm };
+    }
     function countDatedEventsExperienced(start, end, events) {
       let count = 0;
       for (const eventDate of events) {
@@ -6348,7 +6431,7 @@ ${shareUrl}`);
 
       const presidentEntries = getPresidentsExperiencedDetailed(birthMomentGlobal, now);
       setSourceDrawer('presidents', {
-        diagnosticMeta: 'Source: curated list of U.S. presidential terms.',
+        diagnosticMeta: 'Source: historical presidential baseline reconciled with the scheduled USAGov current-president reference.',
         lines: presidentEntries.length
           ? presidentEntries.map(entry => `${entry.name} (${entry.ordinals.join(' / ')})`)
           : ['No presidential transitions from the current list overlap your lifetime yet.']
@@ -6855,14 +6938,20 @@ ${shareUrl}`);
 
       const civic = payload?.reference?.civic;
       if (civic?.currentPresident) {
+        const timeline = reconcileCivicTimeline(civic);
+        const timelineDetail = timeline.status === 'extended'
+          ? `The presidential timeline was automatically extended through ${civic.currentPresident}.`
+          : timeline.status === 'mismatch'
+            ? `USAGov reports ${civic.currentPresident}, which does not match the embedded term beginning ${civic.termStarted}.`
+            : `Current president and term timeline verified through ${civic.termStarted}.`;
         setLiveDiagnostic('civic', {
-          state: payload?.components?.civic?.fallbackUsed ? 'cached' : 'live',
-          detail: `Current president reference verified as ${civic.currentPresident}.`,
+          state: timeline.status === 'mismatch' ? 'error' : payload?.components?.civic?.fallbackUsed ? 'cached' : 'live',
+          detail: timelineDetail,
           source: civic.source || 'USAGov'
         });
       }
 
-      if (birthMomentGlobal) refreshSourceDrawers();
+      if (birthMomentGlobal) updateLiveStats(true);
     }
 
     async function checkForDashboardUpdate() {
@@ -7524,6 +7613,11 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
 
 
 
