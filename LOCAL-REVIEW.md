@@ -1,17 +1,40 @@
-﻿# Reviewing Life Pulse on this computer
+﻿# LifePulse local review package
 
-Nothing in this folder is published automatically from your computer.
+This folder mirrors the files that should be uploaded to GitHub after local review. Nothing in this folder has been published automatically.
 
-## Open the local preview
+## Review locally
 
-1. Double-click `index.html`.
-2. Enter a sample profile and choose a birthplace from the suggestion list.
-3. Select **Launch Tracker**.
-4. Review **Current Sky**, the eclipse cards, population, gas, and **Today's Life Pulse**.
-5. Use **View Daily Horoscope** and **View Zodiac Profile** to compare the two views.
+Open `index.html` in a browser. Launch a saved or test profile and review the card layout, line breaks, zodiac icon, Current Sky copy, and hidden Diagnostics (click the build label five times). Local `file:///` security can block JSON/web requests; that is expected and does not indicate a Pages failure.
 
-The local page includes the astronomy calculator, but a browser may block scheduled JSON and outside web feeds when the address starts with `file:///`. In that case, the layout and built-in fallbacks can still be reviewed here; the final scheduled values are verified after GitHub Actions publishes the site.
+## What changed
 
-## Publishing
+- Schema-v4 data registry with freshness, fallback, source, and coverage metadata
+- IERS leap-second announcements, World Bank population history, NASA climate history, and USAGov civic reference
+- Optional EIA gas feed with automatic AAA fallback
+- Calculated Moon/eclipses and future election dates; accurate Chinese-calendar zodiac; birthplace-timezone DST counting
+- Smooth age clock with heavy cards throttled to once per minute
+- Expanded Self-Check and hidden per-component diagnostics
+- Automatic presidential and leap-second timeline reconciliation, plus finite sports/schedule coverage warnings
+- Eastern and Western Conference NBA title cards, including the verified 2026 Knicks result and corrected 2025 Thunder clinching date
+- Date-gated annual NFL, NBA, and MLB champion refreshes that make no request until a result could be final
+- Automatic visible release numbers through generated `version.json`, with acknowledged cache-busting mobile updates
+- Pre-deploy data validation and weekly dependency monitoring
 
-The GitHub Pages source remains **GitHub Actions**. The workflow refreshes the feed every day at 7:17 UTC and also runs whenever files are committed to `main` or **Run workflow** is selected manually.
+## GitHub upload set
+
+Upload/replace these paths while preserving their folders:
+
+- `index.html`
+- `README.md`
+- `package.json`
+- `sports-data-v4.json`
+- `scripts/update-sports-data.mjs`
+- `scripts/update-live-data.mjs`
+- `scripts/validate-live-data.mjs`
+- `.github/workflows/pages.yml`
+- `.github/dependabot.yml`
+
+After committing, GitHub Actions will generate `live-data.json` and `version.json`, validate them, and only then deploy GitHub Pages.
+
+`EIA_API_KEY` is optional. Without it, the app keeps using AAA. Sports result automation still requires a future choice of a trusted/licensed provider; coverage monitoring is already active.
+

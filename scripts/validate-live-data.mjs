@@ -38,6 +38,21 @@ const futureSchedule = [
   ...(sports.worldCupDates || [])
 ].some(value => Date.parse(value) > now);
 if (!futureSchedule) errors.push('Sports schedules contain no future event.');
+const championshipChecks = sports?.championshipRefresh?.checkAfter || {};
+for (const league of ['nfl', 'nba', 'mlb']) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(championshipChecks[league] || ''))) errors.push(`Sports championship check date is missing for ${league.toUpperCase()}.`);
+}
+const latestNFLYear = Math.max(...(sports.superBowls || []).map(entry => new Date(`${entry.date}T12:00:00Z`).getUTCFullYear()));
+const latestNBAYear = Math.max(...(sports.nbaFinals || []).map(entry => Number(entry.year)));
+const latestMLBYear = Math.max(...(sports.worldSeries || []).map(entry => Number(entry.year)));
+const expectedChampionshipChecks = {
+  nfl: `${latestNFLYear + 1}-02-15`,
+  nba: `${latestNBAYear + 1}-06-24`,
+  mlb: `${latestMLBYear + 1}-11-06`
+};
+for (const league of ['nfl', 'nba', 'mlb']) {
+  if (championshipChecks[league] !== expectedChampionshipChecks[league]) errors.push(`${league.toUpperCase()} next championship check should be ${expectedChampionshipChecks[league]}, received ${championshipChecks[league] || 'missing'}.`);
+}
 if (!version?.contentHash || Number(version?.dataSchemaVersion) !== Number(data.schemaVersion)) errors.push('version.json does not match live-data.json.');
 const releasePattern = new RegExp(`^${Number(data.schemaVersion)}\\.(?:\\d+\\.\\d+|local\\.\\d{8})$`);
 if (!releasePattern.test(String(version?.releaseVersion || ''))) errors.push(`version.json has an invalid release version: ${version?.releaseVersion || 'missing'}.`);

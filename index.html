@@ -1980,6 +1980,21 @@
           <div class="source-drawer" id="source-drawer-nl-worldseries" hidden></div>
 </div>
 
+        <div class="insight-card compact-card source-card source-card--show-copy">
+          <span class="insight-value" id="nba-east-titles-value">0</span>
+          <span class="micro-label">Eastern Conference NBA Titles</span>
+          <p class="insight-copy" id="nba-east-titles-copy"></p>
+          <button class="source-toggle" type="button" data-source-target="nba-east-titles" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-nba-east-titles" hidden></div>
+</div>
+        <div class="insight-card compact-card source-card source-card--show-copy">
+          <span class="insight-value" id="nba-west-titles-value">0</span>
+          <span class="micro-label">Western Conference NBA Titles</span>
+          <p class="insight-copy" id="nba-west-titles-copy"></p>
+          <button class="source-toggle" type="button" data-source-target="nba-west-titles" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-nba-west-titles" hidden></div>
+</div>
+
         <div class="insight-card compact-card"><span class="insight-value" id="winter-olympics-value">0</span><span class="micro-label">Winter Olympics</span><p class="insight-copy" id="winter-olympics-copy"></p></div>
         <div class="insight-card compact-card"><span class="insight-value" id="summer-olympics-value">0</span><span class="micro-label">Summer Olympics</span><p class="insight-copy" id="summer-olympics-copy"></p></div>
 
@@ -2564,6 +2579,10 @@
       alWorldSeriesCopy:    document.getElementById('al-worldseries-copy'),
       nlWorldSeriesValue:   document.getElementById('nl-worldseries-value'),
       nlWorldSeriesCopy:    document.getElementById('nl-worldseries-copy'),
+      nbaEastTitlesValue:   document.getElementById('nba-east-titles-value'),
+      nbaEastTitlesCopy:    document.getElementById('nba-east-titles-copy'),
+      nbaWestTitlesValue:   document.getElementById('nba-west-titles-value'),
+      nbaWestTitlesCopy:    document.getElementById('nba-west-titles-copy'),
       summerOlympicsValue:   document.getElementById('summer-olympics-value'),
       summerOlympicsCopy:    document.getElementById('summer-olympics-copy'),
       winterOlympicsValue:   document.getElementById('winter-olympics-value'),
@@ -3480,9 +3499,18 @@
 
       const results = sports?.resultCoverage || {};
       const coverageYear = key => new Date(`${results[key] || ''}T12:00:00`).getFullYear();
-      if (now.getMonth() >= 2 && coverageYear('nfl') < now.getFullYear()) issues.push('NFL result coverage needs the latest Super Bowl.');
-      if (now.getMonth() >= 6 && coverageYear('nba') < now.getFullYear()) issues.push('NBA result coverage needs the latest Finals champion.');
-      if (now.getMonth() >= 11 && coverageYear('mlb') < now.getFullYear()) issues.push('MLB result coverage needs the latest World Series champion.');
+      const championshipChecks = sports?.championshipRefresh?.checkAfter || {};
+      const championshipLabels = { nfl: 'Super Bowl', nba: 'NBA Finals', mlb: 'World Series' };
+      ['nfl', 'nba', 'mlb'].forEach(key => {
+        const checkDate = new Date(`${championshipChecks[key] || ''}T12:00:00`);
+        if (Number.isNaN(checkDate.getTime())) {
+          issues.push(`${championshipLabels[key]} automatic check date is missing.`);
+        } else if (now >= checkDate && coverageYear(key) < checkDate.getFullYear()) {
+          issues.push(`${championshipLabels[key]} result is due for its automatic annual refresh.`);
+        }
+      });
+      const unclassifiedNBAChampions = NBA_FINALS_RESULTS.filter(result => !getNBAChampionConference(result));
+      if (unclassifiedNBAChampions.length) issues.push(`NBA conference classification is missing for ${unclassifiedNBAChampions.map(result => result.team).join(', ')}.`);
 
       return {
         passed: issues.length === 0,
@@ -5413,8 +5441,33 @@
       { year: 2022, team: "Golden State Warriors" },
       { year: 2023, team: "Denver Nuggets" },
       { year: 2024, team: "Boston Celtics" },
-      { year: 2025, team: "Oklahoma City Thunder" }
-    ].map(entry => ({ ...entry, date: new Date(`${entry.year}-06-15T12:00:00`) }));
+      { year: 2025, team: "Oklahoma City Thunder", date: "2025-06-22" },
+      { year: 2026, team: "New York Knicks", date: "2026-06-13" }
+    ].map(entry => ({ ...entry, date: new Date(`${entry.date || `${entry.year}-06-15`}T12:00:00`) }));
+
+    const NBA_EASTERN_CHAMPION_TEAMS = new Set([
+      'Philadelphia Warriors', 'Syracuse Nationals', 'Boston Celtics', 'Philadelphia 76ers',
+      'New York Knicks', 'Washington Bullets', 'Detroit Pistons', 'Chicago Bulls',
+      'Miami Heat', 'Cleveland Cavaliers', 'Toronto Raptors', 'Milwaukee Bucks'
+    ]);
+    const NBA_WESTERN_CHAMPION_TEAMS = new Set([
+      'Baltimore Bullets', 'Minneapolis Lakers', 'Rochester Royals', 'St. Louis Hawks',
+      'Los Angeles Lakers', 'Golden State Warriors', 'Portland Trail Blazers',
+      'Seattle SuperSonics', 'Houston Rockets', 'San Antonio Spurs', 'Dallas Mavericks',
+      'Denver Nuggets', 'Oklahoma City Thunder'
+    ]);
+
+    function getNBAChampionConference(entry) {
+      if (entry?.conference === 'East' || entry?.conference === 'West') return entry.conference;
+      if (entry?.team === 'Milwaukee Bucks' && Number(entry.year) === 1971) return 'West';
+      if (NBA_EASTERN_CHAMPION_TEAMS.has(entry?.team)) return 'East';
+      if (NBA_WESTERN_CHAMPION_TEAMS.has(entry?.team)) return 'West';
+      return '';
+    }
+
+    function getNBAConferenceTitleEntriesSinceBirth(start, end, conference) {
+      return NBA_FINALS_RESULTS.filter(result => result.date >= start && result.date <= end && getNBAChampionConference(result) === conference);
+    }
 
     function getSuperBowlConferenceWinsSinceBirth(start, end) {
       let afc = 0;
@@ -5438,6 +5491,13 @@
         if (series.league === 'NL') nl++;
       }
       return { al, nl };
+    }
+
+    function getNBAConferenceTitlesSinceBirth(start, end) {
+      return {
+        east: getNBAConferenceTitleEntriesSinceBirth(start, end, 'East').length,
+        west: getNBAConferenceTitleEntriesSinceBirth(start, end, 'West').length
+      };
     }
 
     function getFirstMajorSportsEventSinceBirth(start, end) {
@@ -5499,6 +5559,7 @@
         replaceArrayContents(NBA_FINALS_RESULTS, payload.nbaFinals.map(entry => ({
           year: Number(entry.year),
           team: String(entry.team || ''),
+          conference: String(entry.conference || ''),
           date: new Date(`${entry.date || `${entry.year}-06-15`}T12:00:00`)
         })));
       }
@@ -6406,29 +6467,46 @@ ${shareUrl}`);
     }
     function refreshSourceDrawers(now = new Date()) {
       if (!birthMomentGlobal) return;
+      const sportsCheckDates = currentLiveData?.reference?.sportsCoverage?.championshipRefresh?.checkAfter || {};
+      const sportsCheckLabel = key => {
+        const date = new Date(`${sportsCheckDates[key] || ''}T12:00:00`);
+        return Number.isNaN(date.getTime()) ? 'Not Scheduled' : formatSourceDate(date);
+      };
 
       const afcEntries = getConferenceWinEntriesSinceBirth(birthMomentGlobal, now, 'AFC');
       setSourceDrawer('afc-superbowls', {
-        diagnosticMeta: 'Source: embedded sports dataset + sports-data-v4.json when available.',
+        diagnosticMeta: `Source: embedded sports dataset + sports-data-v4.json when available. Next NFL Check: ${sportsCheckLabel('nfl')}.`,
         lines: afcEntries.length ? afcEntries.map(entry => `${entry.date.getFullYear()} - ${entry.team}`) : ['No AFC Super Bowl wins landed in your lifetime yet.']
       });
 
       const nfcEntries = getConferenceWinEntriesSinceBirth(birthMomentGlobal, now, 'NFC');
       setSourceDrawer('nfc-superbowls', {
-        diagnosticMeta: 'Source: embedded sports dataset + sports-data-v4.json when available.',
+        diagnosticMeta: `Source: embedded sports dataset + sports-data-v4.json when available. Next NFL Check: ${sportsCheckLabel('nfl')}.`,
         lines: nfcEntries.length ? nfcEntries.map(entry => `${entry.date.getFullYear()} - ${entry.team}`) : ['No NFC Super Bowl wins landed in your lifetime yet.']
       });
 
       const alEntries = getWorldSeriesLeagueEntriesSinceBirth(birthMomentGlobal, now, 'AL');
       setSourceDrawer('al-worldseries', {
-        diagnosticMeta: 'Source: World Series result list bundled in the app.',
+        diagnosticMeta: `Source: World Series result list bundled in the app. Next MLB Check: ${sportsCheckLabel('mlb')}.`,
         lines: alEntries.length ? alEntries.map(entry => `${entry.year} - ${entry.team || 'AL Champion'}`) : ['No AL World Series titles landed in your lifetime yet.']
       });
 
       const nlEntries = getWorldSeriesLeagueEntriesSinceBirth(birthMomentGlobal, now, 'NL');
       setSourceDrawer('nl-worldseries', {
-        diagnosticMeta: 'Source: World Series result list bundled in the app.',
+        diagnosticMeta: `Source: World Series result list bundled in the app. Next MLB Check: ${sportsCheckLabel('mlb')}.`,
         lines: nlEntries.length ? nlEntries.map(entry => `${entry.year} - ${entry.team || 'NL Champion'}`) : ['No NL World Series titles landed in your lifetime yet.']
+      });
+
+      const nbaEastEntries = getNBAConferenceTitleEntriesSinceBirth(birthMomentGlobal, now, 'East');
+      setSourceDrawer('nba-east-titles', {
+        diagnosticMeta: `Source: NBA Finals champions bundled in sports-data-v4.json; historical champion teams are classified by conference for their title season. Next NBA Check: ${sportsCheckLabel('nba')}.`,
+        lines: nbaEastEntries.length ? nbaEastEntries.map(entry => `${entry.year} - ${entry.team}`) : ['No Eastern Conference NBA titles landed in your lifetime yet.']
+      });
+
+      const nbaWestEntries = getNBAConferenceTitleEntriesSinceBirth(birthMomentGlobal, now, 'West');
+      setSourceDrawer('nba-west-titles', {
+        diagnosticMeta: `Source: NBA Finals champions bundled in sports-data-v4.json; historical champion teams are classified by conference for their title season. Next NBA Check: ${sportsCheckLabel('nba')}.`,
+        lines: nbaWestEntries.length ? nbaWestEntries.map(entry => `${entry.year} - ${entry.team}`) : ['No Western Conference NBA titles landed in your lifetime yet.']
       });
 
       const leapSecondEntries = getLeapSecondEntriesSinceBirth(birthMomentGlobal, now);
@@ -6486,7 +6564,7 @@ ${shareUrl}`);
 
       const firstSportsEvent = getFirstMajorSportsEventSinceBirth(birthMomentGlobal, now);
       setSourceDrawer('first-sports-event', {
-        diagnosticMeta: 'Source set compared: Super Bowl, Winter Olympics, Summer Olympics, FIFA World Cup, World Series.',
+        diagnosticMeta: 'Source set compared: Super Bowl, Winter Olympics, Summer Olympics, FIFA World Cup, World Series, and NBA Finals.',
         lines: firstSportsEvent
           ? [
               `Event: ${firstSportsEvent.label}`,
@@ -6671,6 +6749,14 @@ ${shareUrl}`);
       if (els.alWorldSeriesCopy) els.alWorldSeriesCopy.textContent = `${totalAlWins.toLocaleString()} all time`;
       els.nlWorldSeriesValue.textContent = worldSeriesLeagueWins.nl.toLocaleString();
       if (els.nlWorldSeriesCopy) els.nlWorldSeriesCopy.textContent = `${totalNlWins.toLocaleString()} all time`;
+
+      const totalNbaEastTitles = NBA_FINALS_RESULTS.filter(result => getNBAChampionConference(result) === 'East').length;
+      const totalNbaWestTitles = NBA_FINALS_RESULTS.filter(result => getNBAChampionConference(result) === 'West').length;
+      const nbaConferenceTitles = getNBAConferenceTitlesSinceBirth(birthMomentGlobal, now);
+      els.nbaEastTitlesValue.textContent = nbaConferenceTitles.east.toLocaleString();
+      if (els.nbaEastTitlesCopy) els.nbaEastTitlesCopy.textContent = `${totalNbaEastTitles.toLocaleString()} all time`;
+      els.nbaWestTitlesValue.textContent = nbaConferenceTitles.west.toLocaleString();
+      if (els.nbaWestTitlesCopy) els.nbaWestTitlesCopy.textContent = `${totalNbaWestTitles.toLocaleString()} all time`;
 
       els.summerOlympicsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, SUMMER_OLYMPICS_DATES).toLocaleString();
       els.winterOlympicsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WINTER_OLYMPICS_DATES).toLocaleString();

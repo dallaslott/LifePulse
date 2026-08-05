@@ -77,6 +77,8 @@ The scheduled feed uses schema 4. Every updateable component has a registry entr
 
 Finite timelines use a baseline-plus-reconciliation pattern so they cannot silently age out. IERS replaces the leap-second event history, USAGov verifies and can extend the presidential term timeline, and `sports-data-v4.json` replaces sports results and major-event schedules. Self-Check separately reports expired schedule coverage or a completed sports season whose champion has not yet been added. Intentionally editorial eras remain labeled curated rather than being mistaken for live facts.
 
+NFL, NBA, and MLB champion checks are date-gated. The daily workflow makes no sports-result request until a league's projected completion date and skips that league entirely once the year's champion is present. The current gates are February 15 for the Super Bowl, June 24 for the NBA Finals, and November 6 for the World Series. A confirmed winner is validated, written to `sports-data-v4.json`, committed by GitHub Actions with `[skip ci]`, and included in the same Pages deployment. If a championship is delayed or the source is temporarily unavailable, the next scheduled run retries it.
+
 Authoritative or calculation-first routes now include:
 
 - IERS Bulletin C for current leap-second announcements, while the full historical event list remains available offline
@@ -87,7 +89,7 @@ Authoritative or calculation-first routes now include:
 - Worldometer for the current population estimate
 - U.S. EIA weekly gasoline data when `EIA_API_KEY` is configured, with AAA as the automatic fallback
 - Open-Meteo for matched birthplace timezone and historical weather
-- A validated local sports dataset with explicit result and schedule coverage dates
+- A validated local sports dataset with explicit result and schedule coverage dates, including lifetime NFL, MLB, and NBA championship splits by conference or league
 
 `version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; local-file previews show `v4.local`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
 
@@ -103,6 +105,6 @@ Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. 
 
 Live age counters update four times per second, while the heavier lifetime, calendar, source-drawer, and card calculations run once per minute or on an explicit profile/control change. This keeps the dashboard responsive on phones without making the displayed age feel less live.
 
-Editorial concepts—generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals—remain clearly curated rather than presented as live facts. Sports results are coverage-monitored but still editorially validated; connecting a licensed or chosen sports-results provider is the one remaining product decision before those records can be fully automatic.
+Editorial concepts, generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals remain clearly curated rather than presented as live facts. Annual NFL, NBA, and MLB champions are automatically checked through Wikimedia after their date gates; the remaining sports records stay coverage-monitored and editorially validated.
 
 

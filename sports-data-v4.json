@@ -1,5 +1,15 @@
 ﻿{
-  "version": "2026-03-25",
+  "version": "2026-08-05",
+  "championshipRefresh": {
+    "source": "Wikimedia championship pages",
+    "sourceUrl": "https://en.wikipedia.org/w/api.php",
+    "strategy": "One request per missing league champion after its projected completion date.",
+    "checkAfter": {
+      "nfl": "2027-02-15",
+      "nba": "2027-06-24",
+      "mlb": "2026-11-06"
+    }
+  },
   "summerOlympicsDates": [
     "1896-04-06",
     "1900-05-14",
@@ -1541,7 +1551,12 @@
     {
       "year": 2025,
       "team": "Oklahoma City Thunder",
-      "date": "2025-06-15"
+      "date": "2025-06-22"
+    },
+    {
+      "year": 2026,
+      "team": "New York Knicks",
+      "date": "2026-06-13"
     }
   ]
 }
