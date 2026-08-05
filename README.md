@@ -79,6 +79,8 @@ Finite timelines use a baseline-plus-reconciliation pattern so they cannot silen
 
 NFL, NBA, and MLB champion checks are date-gated. The daily workflow makes no sports-result request until a league's projected completion date and skips that league entirely once the year's champion is present. The current gates are February 15 for the Super Bowl, June 24 for the NBA Finals, and November 6 for the World Series. A confirmed winner is validated, written to `sports-data-v4.json`, committed by GitHub Actions with `[skip ci]`, and included in the same Pages deployment. If a championship is delayed or the source is temporarily unavailable, the next scheduled run retries it.
 
+Historical Source drawers use a reusable Since Your Birth / All Time view. Championship lists identify consecutive defenses as Back-to-Back, Three-Peat, or longer streaks; the same range control is used for Presidents, leap seconds, palindrome dates, curated technology eras, Olympics, World Cups, Blue Moons, and calculated eclipse histories. Long histories scroll inside the drawer, and provider or backend metadata remains visible only in Diagnostics.
+
 Authoritative or calculation-first routes now include:
 
 - IERS Bulletin C for current leap-second announcements, while the full historical event list remains available offline

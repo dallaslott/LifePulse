@@ -929,6 +929,40 @@
     .source-drawer li + li {
       margin-top: 4px;
     }
+    .source-view-toggle {
+      display: flex;
+      gap: 3px;
+      width: 100%;
+      max-width: 230px;
+      margin: 2px 0 8px;
+      padding: 3px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(3,10,24,0.38);
+    }
+    .source-view-option {
+      border: 0;
+      border-radius: 999px;
+      flex: 1 1 0;
+      padding: 5px 6px;
+      background: transparent;
+      color: #a9bedc;
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .source-view-option[aria-pressed="true"] {
+      color: #07101f;
+      background: #bfe8ff;
+    }
+    .source-history-list {
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+    }
 .source-card .insight-copy {
       display: none;
     }
@@ -1006,7 +1040,7 @@
     }
 
     .daily-pulse-badge {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 6px;
       padding: 6px 9px;
@@ -1199,7 +1233,7 @@
     }
 
     .song-genre-line {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 6px;
       margin-top: 10px;
@@ -1215,7 +1249,7 @@
     }
 
     .birth-meta-tag {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       padding: 10px 12px;
@@ -1234,7 +1268,7 @@
     }
 
     .song-link-btn {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
@@ -1436,7 +1470,7 @@
     }
 
     .build-chip {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
@@ -1458,7 +1492,7 @@
 
     
     .build-identity {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
@@ -1547,7 +1581,7 @@
 
     .source-line .state-pill,
     .diagnostic-state {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 6px;
       padding: 3px 8px;
@@ -1995,10 +2029,19 @@
           <div class="source-drawer" id="source-drawer-nba-west-titles" hidden></div>
 </div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="winter-olympics-value">0</span><span class="micro-label">Winter Olympics</span><p class="insight-copy" id="winter-olympics-copy"></p></div>
-        <div class="insight-card compact-card"><span class="insight-value" id="summer-olympics-value">0</span><span class="micro-label">Summer Olympics</span><p class="insight-copy" id="summer-olympics-copy"></p></div>
+        <div class="insight-card compact-card source-card source-card--show-copy"><span class="insight-value" id="winter-olympics-value">0</span><span class="micro-label">Winter Olympics</span><p class="insight-copy" id="winter-olympics-copy"></p>
+          <button class="source-toggle" type="button" data-source-target="winter-olympics" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-winter-olympics" hidden></div>
+</div>
+        <div class="insight-card compact-card source-card source-card--show-copy"><span class="insight-value" id="summer-olympics-value">0</span><span class="micro-label">Summer Olympics</span><p class="insight-copy" id="summer-olympics-copy"></p>
+          <button class="source-toggle" type="button" data-source-target="summer-olympics" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-summer-olympics" hidden></div>
+</div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="worldcups-value">0</span><span class="micro-label">World Cups</span><p class="insight-copy" id="worldcups-copy"></p></div>
+        <div class="insight-card compact-card source-card source-card--show-copy"><span class="insight-value" id="worldcups-value">0</span><span class="micro-label">World Cups</span><p class="insight-copy" id="worldcups-copy"></p>
+          <button class="source-toggle" type="button" data-source-target="world-cups" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-world-cups" hidden></div>
+</div>
         <div class="insight-card compact-card"><span class="insight-value" id="repeat-champions-value">0</span><span class="micro-label">Repeat Title Defenses</span>
           <button class="source-toggle" type="button" data-source-target="repeat-champions" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-repeat-champions" hidden></div>
@@ -2062,21 +2105,27 @@
           <span class="micro-label">Mercury Birthdays</span>
           <p class="insight-copy" id="mercury-birthdays-copy">Your next date will appear here.</p>
         </div>
-        <div class="insight-card compact-card">
+        <div class="insight-card compact-card source-card source-card--show-copy">
           <span class="insight-value" id="blue-moons-value">0</span>
           <span class="micro-label">Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
+          <button class="source-toggle" type="button" data-source-target="blue-moons" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-blue-moons" hidden></div>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="fullmoons-value">0</span>
           <span class="micro-label">Full Moon Cycles</span><p class="insight-copy" id="fullmoons-copy">Previous and next dates will appear here.</p>
         </div>
-        <div class="insight-card compact-card">
+        <div class="insight-card compact-card source-card source-card--show-copy">
           <span class="insight-value" id="eclipses-value">0</span>
           <span class="micro-label">Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
+          <button class="source-toggle" type="button" data-source-target="solar-eclipses" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-solar-eclipses" hidden></div>
         </div>
-        <div class="insight-card compact-card">
+        <div class="insight-card compact-card source-card source-card--show-copy">
           <span class="insight-value" id="total-lunar-eclipses-value">0</span>
           <span class="micro-label">Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
+          <button class="source-toggle" type="button" data-source-target="lunar-eclipses" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-lunar-eclipses" hidden></div>
         </div>
       </div>
     </div>
@@ -3454,6 +3503,11 @@
         const drawer = document.getElementById(`source-drawer-${target}`);
         return drawer && button.getAttribute('aria-controls') === drawer.id;
       });
+      const historyGroups = Array.from(document.querySelectorAll('.source-view-toggle'));
+      const historyRoutingOkay = historyGroups.length > 0 && historyGroups.every(group => {
+        const options = Array.from(group.querySelectorAll('.source-view-option[data-source-key][data-source-view]'));
+        return options.length === 2 && options.filter(option => option.getAttribute('aria-pressed') === 'true').length === 1;
+      });
       const originallyOpen = document.body.classList.contains('diagnostics-open');
       document.body.classList.remove('diagnostics-open');
       const hiddenOutsideDiagnostics = diagnosticElements.every(element => getComputedStyle(element).display === 'none');
@@ -3465,9 +3519,11 @@
         diagnosticCount: diagnosticElements.length,
         sourceButtonCount: sourceButtons.length,
         sourceRoutingOkay,
+        historyToggleCount: historyGroups.length,
+        historyRoutingOkay,
         hiddenOutsideDiagnostics,
         visibleInsideDiagnostics,
-        passed: sourceRoutingOkay && hiddenOutsideDiagnostics && visibleInsideDiagnostics
+        passed: sourceRoutingOkay && historyRoutingOkay && hiddenOutsideDiagnostics && visibleInsideDiagnostics
       };
     }
     function auditFiniteDatasetCoverage(now = new Date()) {
@@ -6384,17 +6440,37 @@ ${shareUrl}`);
       return new Date(date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
     }
 
-    function setSourceDrawer(key, options = {}) {
+    const sourceDrawerViewModes = new Map();
+    const sourceDrawerConfigs = new Map();
+
+    function renderSourceDrawer(key) {
       const drawer = document.getElementById(`source-drawer-${key}`);
+      const options = sourceDrawerConfigs.get(key) || {};
       if (!drawer) return;
       const diagnosticMeta = diagnosticsOpen && options.diagnosticMeta
         ? `<span class="source-meta">${escapeSourceHtml(options.diagnosticMeta)}</span>`
         : '';
-      const lines = Array.isArray(options.lines) ? options.lines.filter(Boolean) : [];
-      const listHtml = lines.length
-        ? `<ul>${lines.map(line => `<li>${escapeSourceHtml(line)}</li>`).join('')}</ul>`
-        : `<div>No extra source detail for this card yet.</div>`;
-      drawer.innerHTML = `${diagnosticMeta}${listHtml}`;
+      const intro = options.intro ? `<div>${escapeSourceHtml(options.intro)}</div>` : '';
+      const views = options.views && typeof options.views === 'object' ? options.views : null;
+      const availableViews = views ? Object.keys(views).filter(view => Array.isArray(views[view]?.lines)) : [];
+      const requestedView = sourceDrawerViewModes.get(key);
+      const activeView = availableViews.includes(requestedView) ? requestedView : availableViews[0];
+      const activeLines = activeView ? views[activeView].lines.filter(Boolean) : (Array.isArray(options.lines) ? options.lines.filter(Boolean) : []);
+      const controls = availableViews.length > 1
+        ? `<div class="source-view-toggle" role="group" aria-label="History range">${availableViews.map(view => {
+            const label = views[view].label || view;
+            return `<button class="source-view-option" type="button" data-source-key="${escapeSourceHtml(key)}" data-source-view="${escapeSourceHtml(view)}" aria-pressed="${String(view === activeView)}">${escapeSourceHtml(label)}</button>`;
+          }).join('')}</div>`
+        : '';
+      const listHtml = activeLines.length
+        ? `<div class="source-history-list"><ul>${activeLines.map(line => `<li>${escapeSourceHtml(line)}</li>`).join('')}</ul></div>`
+        : `<div>No history is available for this range yet.</div>`;
+      drawer.innerHTML = `${diagnosticMeta}${intro}${controls}${listHtml}`;
+    }
+
+    function setSourceDrawer(key, options = {}) {
+      sourceDrawerConfigs.set(key, options);
+      renderSourceDrawer(key);
     }
 
     function toggleSourceDrawer(key) {
@@ -6422,6 +6498,14 @@ ${shareUrl}`);
           const key = card.getAttribute('data-source-target');
           if (key) toggleSourceDrawer(key);
         });
+      });
+      document.addEventListener('click', (event) => {
+        const option = event.target.closest('.source-view-option[data-source-key][data-source-view]');
+        if (!option) return;
+        event.preventDefault();
+        event.stopPropagation();
+        sourceDrawerViewModes.set(option.dataset.sourceKey, option.dataset.sourceView);
+        renderSourceDrawer(option.dataset.sourceKey);
       });
     }
 
@@ -6465,6 +6549,79 @@ ${shareUrl}`);
     function getAllPalindromeDatesExperienced(start, end) {
       return calculatePalindromeDates(start, end);
     }
+    const sourceAstronomyHistoryCache = new Map();
+
+    function historyViews(sinceBirthLines, allTimeLines) {
+      return {
+        sinceBirth: { label: 'Since Birth', lines: sinceBirthLines },
+        allTime: { label: 'All Time', lines: allTimeLines }
+      };
+    }
+
+    function formatChampionHistory(entries) {
+      let previousTeam = '';
+      let previousYear = 0;
+      let streak = 1;
+      return [...entries].sort((a, b) => a.year - b.year).map(entry => {
+        if (entry.team === previousTeam && entry.year === previousYear + 1) streak += 1;
+        else streak = 1;
+        previousTeam = entry.team;
+        previousYear = entry.year;
+        const repeat = streak === 2 ? ' - Back-to-Back' : streak === 3 ? ' - Three-Peat' : streak > 3 ? ` - ${streak}-Peat` : '';
+        return `${entry.year} - ${entry.team}${repeat}`;
+      });
+    }
+
+    function formatRepeatChampionHistory(entries) {
+      const streaks = new Map();
+      return [...entries].sort((a, b) => a.date - b.date).map(entry => {
+        const key = `${entry.sport}|${entry.team}`;
+        const previous = streaks.get(key);
+        const streak = previous && previous.endYear === entry.startYear ? previous.streak + 1 : 2;
+        streaks.set(key, { endYear: entry.endYear, streak });
+        const label = streak === 2 ? 'Back-to-Back' : streak === 3 ? 'Three-Peat' : `${streak}-Peat`;
+        return `${entry.endYear} - ${entry.team} - ${entry.sport} ${label}`;
+      });
+    }
+
+    function getCalculatedEclipseHistory(start, end, type) {
+      const engine = window.Astronomy;
+      const method = type === 'solar' ? 'SearchGlobalSolarEclipse' : 'SearchLunarEclipse';
+      if (!engine?.[method]) return [];
+      const cacheKey = `${method}|${start.toISOString().slice(0, 10)}|${end.toISOString().slice(0, 10)}`;
+      if (sourceAstronomyHistoryCache.has(cacheKey)) return sourceAstronomyHistoryCache.get(cacheKey);
+      const entries = [];
+      let cursor = new Date(start);
+      for (let guard = 0; guard < 1000; guard += 1) {
+        const event = engine[method](cursor);
+        const date = event?.peak?.date || event?.peak?.time?.date;
+        if (!(date instanceof Date) || Number.isNaN(date.getTime()) || date > end) break;
+        if (date >= start) entries.push({ date, type: browserEclipseKind(event?.kind) });
+        cursor = new Date(date.getTime() + 36 * 3600000);
+      }
+      sourceAstronomyHistoryCache.set(cacheKey, entries);
+      return entries;
+    }
+
+    function getCalculatedBlueMoonHistory(start, end) {
+      const engine = window.Astronomy;
+      if (!engine?.SearchMoonPhase) return [];
+      const cacheKey = `blue|${start.toISOString().slice(0, 10)}|${end.toISOString().slice(0, 10)}`;
+      if (sourceAstronomyHistoryCache.has(cacheKey)) return sourceAstronomyHistoryCache.get(cacheKey);
+      const entries = [];
+      let cursor = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1) - 40 * 86400000);
+      let previous = null;
+      for (let guard = 0; guard < 2000; guard += 1) {
+        const result = engine.SearchMoonPhase(180, cursor, 40);
+        const date = result?.date || result?.time?.date;
+        if (!(date instanceof Date) || Number.isNaN(date.getTime()) || date > end) break;
+        if (previous && date >= start && previous.getUTCFullYear() === date.getUTCFullYear() && previous.getUTCMonth() === date.getUTCMonth()) entries.push({ date, type: 'Monthly' });
+        previous = date;
+        cursor = new Date(date.getTime() + 36 * 3600000);
+      }
+      sourceAstronomyHistoryCache.set(cacheKey, entries);
+      return entries;
+    }
     function refreshSourceDrawers(now = new Date()) {
       if (!birthMomentGlobal) return;
       const sportsCheckDates = currentLiveData?.reference?.sportsCoverage?.championshipRefresh?.checkAfter || {};
@@ -6473,95 +6630,123 @@ ${shareUrl}`);
         return Number.isNaN(date.getTime()) ? 'Not Scheduled' : formatSourceDate(date);
       };
 
-      const afcEntries = getConferenceWinEntriesSinceBirth(birthMomentGlobal, now, 'AFC');
-      setSourceDrawer('afc-superbowls', {
-        diagnosticMeta: `Source: embedded sports dataset + sports-data-v4.json when available. Next NFL Check: ${sportsCheckLabel('nfl')}.`,
-        lines: afcEntries.length ? afcEntries.map(entry => `${entry.date.getFullYear()} - ${entry.team}`) : ['No AFC Super Bowl wins landed in your lifetime yet.']
-      });
+      const historyStart = new Date('1900-01-01T12:00:00');
+      const formatDates = dates => dates.map(formatSourceDate);
+      const allSuperBowlEntries = SUPER_BOWL_DATES.map((date, index) => ({
+        date, year: date.getFullYear(), conference: SUPER_BOWL_WINNER_CONFERENCES[index], team: SUPER_BOWL_WINNER_TEAMS[index] || `${SUPER_BOWL_WINNER_CONFERENCES[index]} Champion`
+      }));
 
-      const nfcEntries = getConferenceWinEntriesSinceBirth(birthMomentGlobal, now, 'NFC');
-      setSourceDrawer('nfc-superbowls', {
-        diagnosticMeta: `Source: embedded sports dataset + sports-data-v4.json when available. Next NFL Check: ${sportsCheckLabel('nfl')}.`,
-        lines: nfcEntries.length ? nfcEntries.map(entry => `${entry.date.getFullYear()} - ${entry.team}`) : ['No NFC Super Bowl wins landed in your lifetime yet.']
-      });
+      for (const conference of ['AFC', 'NFC']) {
+        const key = `${conference.toLowerCase()}-superbowls`;
+        const allEntries = allSuperBowlEntries.filter(entry => entry.conference === conference && entry.date <= now);
+        const sinceEntries = allEntries.filter(entry => entry.date >= birthMomentGlobal);
+        setSourceDrawer(key, {
+          intro: `${conference} Super Bowl champions, with consecutive wins labeled as title defenses.`,
+          diagnosticMeta: `Source: embedded sports dataset + sports-data-v4.json when available. Next NFL Check: ${sportsCheckLabel('nfl')}.`,
+          views: historyViews(sinceEntries.length ? formatChampionHistory(sinceEntries) : [`No ${conference} Super Bowl wins landed in your lifetime yet.`], formatChampionHistory(allEntries))
+        });
+      }
 
-      const alEntries = getWorldSeriesLeagueEntriesSinceBirth(birthMomentGlobal, now, 'AL');
-      setSourceDrawer('al-worldseries', {
-        diagnosticMeta: `Source: World Series result list bundled in the app. Next MLB Check: ${sportsCheckLabel('mlb')}.`,
-        lines: alEntries.length ? alEntries.map(entry => `${entry.year} - ${entry.team || 'AL Champion'}`) : ['No AL World Series titles landed in your lifetime yet.']
-      });
+      for (const league of ['AL', 'NL']) {
+        const key = `${league.toLowerCase()}-worldseries`;
+        const allEntries = sortedWorldSeriesResults().filter(entry => entry.league === league && entry.date <= now);
+        const sinceEntries = allEntries.filter(entry => entry.date >= birthMomentGlobal);
+        setSourceDrawer(key, {
+          intro: `${league} World Series champions, with consecutive wins labeled as title defenses.`,
+          diagnosticMeta: `Source: World Series result list bundled in the app. Next MLB Check: ${sportsCheckLabel('mlb')}.`,
+          views: historyViews(sinceEntries.length ? formatChampionHistory(sinceEntries) : [`No ${league} World Series titles landed in your lifetime yet.`], formatChampionHistory(allEntries))
+        });
+      }
 
-      const nlEntries = getWorldSeriesLeagueEntriesSinceBirth(birthMomentGlobal, now, 'NL');
-      setSourceDrawer('nl-worldseries', {
-        diagnosticMeta: `Source: World Series result list bundled in the app. Next MLB Check: ${sportsCheckLabel('mlb')}.`,
-        lines: nlEntries.length ? nlEntries.map(entry => `${entry.year} - ${entry.team || 'NL Champion'}`) : ['No NL World Series titles landed in your lifetime yet.']
-      });
-
-      const nbaEastEntries = getNBAConferenceTitleEntriesSinceBirth(birthMomentGlobal, now, 'East');
-      setSourceDrawer('nba-east-titles', {
-        diagnosticMeta: `Source: NBA Finals champions bundled in sports-data-v4.json; historical champion teams are classified by conference for their title season. Next NBA Check: ${sportsCheckLabel('nba')}.`,
-        lines: nbaEastEntries.length ? nbaEastEntries.map(entry => `${entry.year} - ${entry.team}`) : ['No Eastern Conference NBA titles landed in your lifetime yet.']
-      });
-
-      const nbaWestEntries = getNBAConferenceTitleEntriesSinceBirth(birthMomentGlobal, now, 'West');
-      setSourceDrawer('nba-west-titles', {
-        diagnosticMeta: `Source: NBA Finals champions bundled in sports-data-v4.json; historical champion teams are classified by conference for their title season. Next NBA Check: ${sportsCheckLabel('nba')}.`,
-        lines: nbaWestEntries.length ? nbaWestEntries.map(entry => `${entry.year} - ${entry.team}`) : ['No Western Conference NBA titles landed in your lifetime yet.']
-      });
-
+      for (const conference of ['East', 'West']) {
+        const key = `nba-${conference.toLowerCase()}-titles`;
+        const allEntries = sortedNBAFinalsResults().filter(entry => getNBAChampionConference(entry) === conference && entry.date <= now);
+        const sinceEntries = allEntries.filter(entry => entry.date >= birthMomentGlobal);
+        setSourceDrawer(key, {
+          intro: `${conference} NBA champions, with consecutive wins labeled as title defenses.`,
+          diagnosticMeta: `Source: NBA Finals champions bundled in sports-data-v4.json; teams are classified by conference for their title season. Next NBA Check: ${sportsCheckLabel('nba')}.`,
+          views: historyViews(sinceEntries.length ? formatChampionHistory(sinceEntries) : [`No ${conference} NBA titles landed in your lifetime yet.`], formatChampionHistory(allEntries))
+        });
+      }
       const leapSecondEntries = getLeapSecondEntriesSinceBirth(birthMomentGlobal, now);
       const leapReference = currentLiveData?.reference?.leapSeconds;
       setSourceDrawer('leapseconds', {
-        diagnosticMeta: `${leapReference?.source || 'IERS Bulletin C fallback'}${leapReference?.bulletinNumber ? ` • Bulletin ${leapReference.bulletinNumber}` : ''}${leapReference?.bulletinDate ? ` • Checked ${formatSourceDate(new Date(leapReference.bulletinDate))}` : ''}.`,
-        lines: [
-          'Meaning: UTC occasionally receives one extra second to remain close to Earth’s measured rotation.',
-          `Since Your Birth: ${leapSecondEntries.length}`,
-          leapSecondEntries.length ? `Added On: ${leapSecondEntries.map(formatSourceDate).join(', ')}` : 'Added On: None since your birth.',
-          leapReference?.announcement || 'No new leap second is currently announced.'
-        ]
+        intro: `UTC occasionally receives one extra second to remain close to Earth's measured rotation.`,
+        diagnosticMeta: `${leapReference?.source || 'IERS Bulletin C fallback'}${leapReference?.bulletinNumber ? ` - Bulletin ${leapReference.bulletinNumber}` : ''}${leapReference?.bulletinDate ? ` - Checked ${formatSourceDate(new Date(leapReference.bulletinDate))}` : ''}.`,
+        views: historyViews(leapSecondEntries.length ? formatDates(leapSecondEntries) : ['No leap seconds have been added since your birth.'], formatDates(LEAP_SECOND_DATES))
       });
-
 
       const internetEntries = INTERNET_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now);
       setSourceDrawer('internet-eras', {
+        intro: 'Major internet eras that overlap your life or the full curated timeline.',
         diagnosticMeta: 'Source: curated in-app internet era milestones.',
-        lines: internetEntries.length
-          ? internetEntries.map(era => `${era.label} — ${formatSourceDate(era.date)}`)
-          : ['You were already here when the current curated internet eras begin.']
+        views: historyViews(internetEntries.length ? internetEntries.map(era => `${era.label} - ${formatSourceDate(era.date)}`) : ['No curated internet-era transition landed in your lifetime yet.'], INTERNET_ERAS.map(era => `${era.label} - ${formatSourceDate(era.date)}`))
       });
 
       const presidentEntries = getPresidentsExperiencedDetailed(birthMomentGlobal, now);
       setSourceDrawer('presidents', {
+        intro: 'Presidents whose terms overlap your lifetime or the complete supported U.S. presidential timeline.',
         diagnosticMeta: 'Source: historical presidential baseline reconciled with the scheduled USAGov current-president reference.',
-        lines: presidentEntries.length
-          ? presidentEntries.map(entry => `${entry.name} (${entry.ordinals.join(' / ')})`)
-          : ['No presidential transitions from the current list overlap your lifetime yet.']
+        views: historyViews(presidentEntries.length ? presidentEntries.map(entry => `${entry.name} (${entry.ordinals.join(' / ')})`) : ['No presidential term overlaps your lifetime yet.'], PRESIDENT_TERMS.map(entry => `${entry.name} (${entry.ordinals.join(' / ')})`))
       });
 
       const phoneEntries = PHONE_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now);
       setSourceDrawer('phone-eras', {
+        intro: 'Phone-era milestones across your lifetime or the full curated technology timeline.',
         diagnosticMeta: 'Source: curated in-app phone era milestones.',
-        lines: phoneEntries.length
-          ? phoneEntries.map(entry => `${entry.label} — ${formatSourceDate(entry.date)}`)
-          : ['You were already here when the current curated phone eras begin.']
+        views: historyViews(phoneEntries.length ? phoneEntries.map(entry => `${entry.label} - ${formatSourceDate(entry.date)}`) : ['No curated phone-era transition landed in your lifetime yet.'], PHONE_ERAS.map(entry => `${entry.label} - ${formatSourceDate(entry.date)}`))
       });
 
       const allPalindromeDates = getAllPalindromeDatesExperienced(birthMomentGlobal, now);
+      const allTimelinePalindromes = getAllPalindromeDatesExperienced(historyStart, now);
       setSourceDrawer('palindrome-dates', {
-        diagnosticMeta: 'Source: computed from your birth date through today using MM/DD/YYYY palindromes.',
-        lines: allPalindromeDates.length
-          ? allPalindromeDates.map(formatSourceDate)
-          : ['No palindrome dates have landed during your lifetime yet.']
+        intro: 'Dates whose MM/DD/YYYY digits read the same forward and backward.',
+        diagnosticMeta: 'Source: calculated in the browser; All Time covers 01/01/1900 through today.',
+        views: historyViews(allPalindromeDates.length ? formatDates(allPalindromeDates) : ['No palindrome dates have landed during your lifetime yet.'], allTimelinePalindromes.length ? formatDates(allTimelinePalindromes) : ['No supported palindrome dates were found.'])
       });
 
       const repeatChampionEntries = getRepeatChampionEntriesSinceBirth(birthMomentGlobal, now);
+      const allRepeatChampionEntries = getRepeatChampionEntriesSinceBirth(historyStart, now);
       setSourceDrawer('repeat-champions', {
+        intro: 'A defense is counted when the same NFL, MLB, or NBA team wins consecutive championships.',
         diagnosticMeta: 'Source: consecutive title winners from NFL, MLB, and NBA championship results.',
-        lines: repeatChampionEntries.length
-          ? repeatChampionEntries.map(entry => `${entry.team} (${entry.startYear}/${entry.endYear}) - ${entry.sport}`)
-          : ['No repeat title defenses have landed in the included NFL, MLB, or NBA title results since your birth.']
+        views: historyViews(repeatChampionEntries.length ? formatRepeatChampionHistory(repeatChampionEntries) : ['No repeat title defenses landed in your lifetime.'], formatRepeatChampionHistory(allRepeatChampionEntries))
       });
 
+      const eventDrawers = [
+        ['winter-olympics', 'Winter Olympics', WINTER_OLYMPICS_DATES],
+        ['summer-olympics', 'Summer Olympics', SUMMER_OLYMPICS_DATES],
+        ['world-cups', 'FIFA World Cup', WORLD_CUP_DATES]
+      ];
+      eventDrawers.forEach(([key, label, dates]) => {
+        const completed = dates.filter(date => date <= now);
+        const sinceBirth = completed.filter(date => date >= birthMomentGlobal);
+        setSourceDrawer(key, {
+          intro: `${label} opening dates during your life or across the full supported timeline.`,
+          diagnosticMeta: `Source: sports-data-v4.json ${label} schedule coverage.`,
+          views: historyViews(sinceBirth.length ? formatDates(sinceBirth) : [`No completed ${label} occurred during your lifetime yet.`], formatDates(completed))
+        });
+      });
+
+      const blueSinceBirth = getCalculatedBlueMoonHistory(birthMomentGlobal, now);
+      const blueAllTime = getCalculatedBlueMoonHistory(historyStart, now);
+      setSourceDrawer('blue-moons', {
+        intro: 'Monthly Blue Moons are the second Full Moon within one calendar month.',
+        diagnosticMeta: 'Source: Astronomy Engine Full Moon calculations; All Time covers 01/01/1900 through today.',
+        views: historyViews(blueSinceBirth.length ? blueSinceBirth.map(entry => `${formatSourceDate(entry.date)} - ${entry.type}`) : ['No calculated Blue Moon has landed during your lifetime yet.'], blueAllTime.map(entry => `${formatSourceDate(entry.date)} - ${entry.type}`))
+      });
+
+      for (const type of ['solar', 'lunar']) {
+        const key = `${type}-eclipses`;
+        const sinceBirth = getCalculatedEclipseHistory(birthMomentGlobal, now, type);
+        const allTime = getCalculatedEclipseHistory(historyStart, now, type);
+        const label = type === 'solar' ? 'Solar Eclipse' : 'Lunar Eclipse';
+        setSourceDrawer(key, {
+          intro: `${label} dates during your lifetime or across the complete 1900-present calculated timeline.`,
+          diagnosticMeta: 'Source: Astronomy Engine global eclipse calculations.',
+          views: historyViews(sinceBirth.length ? sinceBirth.map(entry => `${formatSourceDate(entry.date)} - ${entry.type}`) : [`No ${label.toLowerCase()} has landed during your lifetime yet.`], allTime.map(entry => `${formatSourceDate(entry.date)} - ${entry.type}`))
+        });
+      }
       const firstSportsEvent = getFirstMajorSportsEventSinceBirth(birthMomentGlobal, now);
       setSourceDrawer('first-sports-event', {
         diagnosticMeta: 'Source set compared: Super Bowl, Winter Olympics, Summer Olympics, FIFA World Cup, World Series, and NBA Finals.',
@@ -7745,6 +7930,15 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
 
 
 
