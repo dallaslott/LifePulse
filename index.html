@@ -713,6 +713,193 @@
       margin-top: 12px;
     }
 
+    .whats-next-panel {
+      border-color: rgba(0,210,255,0.18);
+      background: linear-gradient(145deg, rgba(0,210,255,0.08), rgba(124,77,255,0.07));
+    }
+
+    .whats-next-intro,
+    .timeline-summary {
+      margin: 7px 0 0;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .whats-next-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 13px;
+    }
+
+    .upcoming-event {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(4,8,20,0.38);
+    }
+
+    .upcoming-event-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .upcoming-event-title,
+    .life-event-title {
+      font-size: 0.9rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .upcoming-event-detail,
+    .life-event-detail {
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      line-height: 1.4;
+    }
+
+    .upcoming-event-date {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .upcoming-event-date strong {
+      display: block;
+      color: var(--accent);
+      font-size: 0.78rem;
+    }
+
+    .upcoming-event-date span {
+      color: var(--text-dim);
+      font-size: 0.64rem;
+    }
+
+    .timeline-filter-bar {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 4px 0 7px;
+      margin-top: 14px;
+      scrollbar-width: thin;
+    }
+
+    .timeline-filter {
+      flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .timeline-filter[aria-pressed="true"] {
+      color: #05111a;
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .life-event-timeline {
+      position: relative;
+      display: grid;
+      gap: 0;
+      max-height: 540px;
+      overflow-y: auto;
+      margin-top: 12px;
+      padding-left: 16px;
+    }
+
+    .life-event-timeline::before {
+      content: '';
+      position: absolute;
+      top: 7px;
+      bottom: 7px;
+      left: 6px;
+      width: 2px;
+      background: linear-gradient(var(--accent), rgba(124,77,255,0.2));
+    }
+
+    .life-event {
+      position: relative;
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 11px;
+      padding: 0 4px 15px 13px;
+    }
+
+    .life-event::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: -14px;
+      width: 9px;
+      height: 9px;
+      border: 2px solid #081222;
+      border-radius: 50%;
+      background: var(--event-color, var(--accent));
+    }
+
+    .life-event-date {
+      color: var(--event-color, var(--accent));
+      font-size: 0.69rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .life-event-category {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.56rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .life-event--personal { --event-color: #76ffb4; }
+    .life-event--world { --event-color: #ffcc66; }
+    .life-event--sky { --event-color: #8cdcff; }
+    .life-event--sports { --event-color: #ff8ca8; }
+    .life-event--tech { --event-color: #bf9cff; }
+
+    .timeline-empty {
+      padding: 16px;
+      color: var(--text-dim);
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 520px) {
+      .upcoming-event {
+        grid-template-columns: 30px minmax(0, 1fr);
+      }
+
+      .upcoming-event-date {
+        grid-column: 2;
+        text-align: left;
+      }
+
+      .upcoming-event-date strong,
+      .upcoming-event-date span {
+        display: inline;
+        margin-right: 7px;
+      }
+
+      .life-event {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 8px;
+      }
+    }
+
     .milestone-pill {
       display: flex;
       justify-content: space-between;
@@ -1884,6 +2071,15 @@
       <p class="birthday-hero-copy" id="next-birthday-copy">...</p>
     </div>
 
+    <section class="panel whats-next-panel" aria-labelledby="whats-next-title">
+      <div class="section-head">
+        <div class="section-title" id="whats-next-title">What&#39;s Next</div>
+        <span class="panel-note">Your upcoming dates</span>
+      </div>
+      <p class="whats-next-intro" id="whats-next-summary">The closest personal, sky, world, and sports moments are being prepared.</p>
+      <div class="whats-next-list" id="whats-next-list" aria-live="polite"></div>
+    </section>
+
     <div class="panel">
       <div class="section-title">Life in Percentages</div>
       <div class="insight-grid">
@@ -2336,7 +2532,7 @@
     </div>
 
     <div class="slate-card slate-card--timeline">
-      <span class="slate-header slate-header--timeline">Timeline + Milestones</span>
+      <span class="slate-header slate-header--timeline">Your Life Timeline</span>
       <p class="slate-body" id="timeline-copy">...</p>
       <div class="timeline-subgrid">
         <div class="info-card">
@@ -2351,6 +2547,16 @@
         </div>
       </div>
       <div class="timeline-list" id="milestone-list"></div>
+      <div class="timeline-filter-bar" id="timeline-filter-bar" role="group" aria-label="Filter life timeline">
+        <button class="timeline-filter" type="button" data-timeline-filter="highlights" aria-pressed="true">Highlights</button>
+        <button class="timeline-filter" type="button" data-timeline-filter="personal" aria-pressed="false">Personal</button>
+        <button class="timeline-filter" type="button" data-timeline-filter="world" aria-pressed="false">World</button>
+        <button class="timeline-filter" type="button" data-timeline-filter="sky" aria-pressed="false">Sky</button>
+        <button class="timeline-filter" type="button" data-timeline-filter="sports" aria-pressed="false">Sports</button>
+        <button class="timeline-filter" type="button" data-timeline-filter="tech" aria-pressed="false">Tech</button>
+      </div>
+      <p class="timeline-summary" id="timeline-event-summary">Building your timeline...</p>
+      <div class="life-event-timeline" id="life-event-timeline" aria-live="polite"></div>
     </div>
 
     <div class="slate-card slate-card--share">
@@ -2472,6 +2678,8 @@
     let currentDNA            = null;
     let currentGeneration     = null;
     let birthMomentGlobal     = null;
+    let activeTimelineFilter  = 'highlights';
+    let lifeTimelineEvents    = [];
     let currentProfile          = null;
     let currentAstronomy        = null;
     let userGender            = 'male';
@@ -2577,6 +2785,8 @@
       nextBirthdayDays:      document.getElementById('next-birthday-days'),
       nextBirthdayAge:       document.getElementById('next-birthday-age'),
       nextBirthdayCopy:      document.getElementById('next-birthday-copy'),
+      whatsNextSummary:       document.getElementById('whats-next-summary'),
+      whatsNextList:          document.getElementById('whats-next-list'),
       life80Percent:         document.getElementById('life80-percent'),
       life80Label:           document.getElementById('life80-label'),
       life80Copy:            document.getElementById('life80-copy'),
@@ -2729,6 +2939,9 @@
       nextDayMilestoneValue: document.getElementById('next-day-milestone-value'),
       nextDayMilestoneCopy:  document.getElementById('next-day-milestone-copy'),
       milestoneList:         document.getElementById('milestone-list'),
+      timelineFilterBar:      document.getElementById('timeline-filter-bar'),
+      timelineEventSummary:   document.getElementById('timeline-event-summary'),
+      lifeEventTimeline:      document.getElementById('life-event-timeline'),
       planetChoice:          document.getElementById('planetChoice'),
       planetAge:             document.getElementById('planet-age'),
       tripsAroundSunValue:   document.getElementById('trips-around-sun-value'),
@@ -5806,7 +6019,10 @@
         if (!response.ok) throw new Error(`Sports data feed returned ${response.status}`);
         const payload = await response.json();
         applySportsData(payload);
-        if (birthMomentGlobal) updateLiveStats();
+        if (birthMomentGlobal) {
+          updateLiveStats();
+          renderLifeEventTimeline(new Date());
+        }
       } catch (error) {
         console.info('Using embedded sports fallback data.', error);
       }
@@ -7207,6 +7423,152 @@ ${shareUrl}`);
       ];
     }
 
+    function daysAwayLabel(date, now = new Date()) {
+      const days = Math.max(0, Math.ceil((date - now) / 86400000));
+      if (days === 0) return 'Today';
+      if (days === 1) return 'Tomorrow';
+      if (days < 730) return `${days.toLocaleString()} Days Away`;
+      const years = days / 365.2425;
+      return `${years.toFixed(years < 10 ? 1 : 0)} Years Away`;
+    }
+
+    function nextDatedItem(dates, now) {
+      return dates.find(date => date > now) || null;
+    }
+
+    function buildUpcomingEvents(now = new Date()) {
+      if (!birthMomentGlobal) return [];
+      const birthday = getNextBirthdayInfo(now);
+      const fullMoonDate = currentAstronomy?.moon?.nextFullMoon
+        ? new Date(currentAstronomy.moon.nextFullMoon)
+        : getFullMoonWindow(now).next;
+      const solarLive = currentAstronomy?.eclipses?.nextSolar;
+      const lunarLive = currentAstronomy?.eclipses?.nextLunar;
+      const solar = solarLive?.date ? { date: new Date(solarLive.date), type: solarLive.type } : calculateNextSolarEclipse(now) || getEventWindow(SOLAR_ECLIPSE_EVENTS, now).next;
+      const lunar = lunarLive?.date ? { date: new Date(lunarLive.date), type: lunarLive.type } : calculateNextLunarEclipse(now) || getEventWindow(LUNAR_ECLIPSE_EVENTS, now).next;
+      const blueMoon = getNextMonthlyBlueMoon(now);
+      const summer = nextDatedItem(SUMMER_OLYMPICS_DATES, now);
+      const winter = nextDatedItem(WINTER_OLYMPICS_DATES, now);
+      const worldCup = nextDatedItem(WORLD_CUP_DATES, now);
+      const election = nextDatedItem(PRESIDENTIAL_ELECTION_DATES, now);
+      const halley = nextDatedItem(HALLEY_COMET_DATES, now);
+      const events = [
+        { date: birthday.nextBirthday, category: 'personal', icon: '🎂', title: `Birthday #${birthday.nextAge}`, detail: 'Your next trip around the Sun' },
+        { date: getNextMercuryBirthday(birthMomentGlobal, now), category: 'sky', icon: '☿', title: 'Mercury Birthday', detail: 'Another 87.97 Earth-day Mercury year' },
+        { date: fullMoonDate, category: 'sky', icon: '🌕', title: 'Full Moon', detail: 'The next lunar peak' },
+        solar && { date: solar.date, category: 'sky', icon: '☀️', title: 'Solar Eclipse', detail: `${solar.type || 'Global'} eclipse` },
+        lunar && { date: lunar.date, category: 'sky', icon: '🌑', title: 'Lunar Eclipse', detail: `${lunar.type || 'Global'} eclipse` },
+        blueMoon && { date: blueMoon.date, category: 'sky', icon: '🔵', title: 'Blue Moon', detail: `${blueMoon.type || 'Monthly'} Blue Moon` },
+        { date: getNextFriday13th(now), category: 'world', icon: '📅', title: 'Friday The 13th', detail: 'The next calendar occurrence' },
+        { date: getNextLeapDay(now), category: 'world', icon: '➕', title: 'Leap Day', detail: 'The next February 29' },
+        election && { date: election, category: 'world', icon: '🗳️', title: 'U.S. Presidential Election', detail: 'The next scheduled election day' },
+        summer && { date: summer, category: 'sports', icon: '🏅', title: 'Summer Olympics', detail: SUMMER_OLYMPICS_LOCATIONS[eventDateKey(summer)] || 'Host location pending' },
+        winter && { date: winter, category: 'sports', icon: '❄️', title: 'Winter Olympics', detail: WINTER_OLYMPICS_LOCATIONS[eventDateKey(winter)] || 'Host location pending' },
+        worldCup && { date: worldCup, category: 'sports', icon: '⚽', title: 'FIFA World Cup', detail: WORLD_CUP_LOCATIONS[eventDateKey(worldCup)] || 'Host location pending' },
+        halley && { date: halley, category: 'sky', icon: '☄️', title: `Halley's Comet`, detail: 'Long-range perihelion forecast', longRange: true }
+      ].filter(event => event?.date instanceof Date && !Number.isNaN(event.date.getTime()) && event.date > now);
+      return events.sort((a, b) => a.date - b.date);
+    }
+
+    function renderWhatsNext(now = new Date()) {
+      if (!els.whatsNextList || !els.whatsNextSummary) return;
+      const events = buildUpcomingEvents(now);
+      const nearest = events.filter(event => !event.longRange).slice(0, 7);
+      const longRange = events.find(event => event.longRange);
+      const visible = longRange && !nearest.includes(longRange) ? [...nearest, longRange] : nearest;
+      els.whatsNextSummary.textContent = visible.length
+        ? `${visible.length} upcoming moments, ordered by date. The final item is a long-range sky marker when available.`
+        : 'Upcoming dates are temporarily unavailable.';
+      els.whatsNextList.innerHTML = visible.map(event => `<article class="upcoming-event upcoming-event--${event.category}">
+        <span class="upcoming-event-icon" aria-hidden="true">${event.icon}</span>
+        <div>
+          <div class="upcoming-event-title">${escapeSourceHtml(event.title)}</div>
+          <div class="upcoming-event-detail">${escapeSourceHtml(event.detail)}</div>
+        </div>
+        <div class="upcoming-event-date">
+          <strong>${formatEventDate(event.date)}</strong>
+          <span>${escapeSourceHtml(daysAwayLabel(event.date, now))}</span>
+        </div>
+      </article>`).join('');
+    }
+
+    function collectLifeTimelineEvents(now = new Date()) {
+      if (!birthMomentGlobal) return [];
+      const events = [{
+        date: new Date(birthMomentGlobal), category: 'personal', icon: '✨',
+        title: 'You Arrived', detail: `Born in ${normalizeName(els.birthPlace.value || 'your birthplace')}.`, featured: true
+      }];
+      const add = event => {
+        if (event?.date instanceof Date && !Number.isNaN(event.date.getTime()) && event.date >= birthMomentGlobal && event.date <= now) events.push(event);
+      };
+
+      const currentAge = Math.floor(getCurrentAgeYears(now));
+      const ageMarks = [1, 5, 10, 13, 16, 18, 21];
+      for (let age = 30; age <= currentAge; age += 10) ageMarks.push(age);
+      ageMarks.filter(age => age <= currentAge).forEach(age => add({
+        date: createAnniversaryDate(birthMomentGlobal.getFullYear() + age, birthMomentGlobal.getMonth(), birthMomentGlobal.getDate(), birthMomentGlobal.getHours(), birthMomentGlobal.getMinutes()),
+        category: 'personal', icon: '🎂', title: `Turned ${age}`, detail: `${age} completed trips around the Sun.`, featured: true
+      }));
+
+      PRESIDENT_TERM_STARTS.filter(term => term.start >= birthMomentGlobal && term.start <= now).forEach(term => add({
+        date: term.start, category: 'world', icon: '🇺🇸', title: `${term.name} Took Office`, detail: `${term.ordinal} U.S. President.`, featured: true
+      }));
+
+      INTERNET_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now).forEach(era => add({
+        date: era.date, category: 'tech', icon: '🌐', title: era.label, detail: 'A new internet era began.', featured: true
+      }));
+      CONSOLE_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now).forEach(era => add({
+        date: era.date, category: 'tech', icon: '🎮', title: `${era.label} Gaming`, detail: era.examples, featured: false
+      }));
+      PHONE_ERAS.filter(era => era.date >= birthMomentGlobal && era.date <= now).forEach(era => add({
+        date: era.date, category: 'tech', icon: '📱', title: `${era.label} Era`, detail: 'A new phone era entered the timeline.', featured: false
+      }));
+
+      SUMMER_OLYMPICS_DATES.filter(date => date >= birthMomentGlobal && date <= now).forEach(date => add({
+        date, category: 'sports', icon: '🏅', title: 'Summer Olympics', detail: SUMMER_OLYMPICS_LOCATIONS[eventDateKey(date)] || 'Host location unavailable.', featured: true
+      }));
+      WINTER_OLYMPICS_DATES.filter(date => date >= birthMomentGlobal && date <= now).forEach(date => add({
+        date, category: 'sports', icon: '❄️', title: 'Winter Olympics', detail: WINTER_OLYMPICS_LOCATIONS[eventDateKey(date)] || 'Host location unavailable.', featured: false
+      }));
+      WORLD_CUP_DATES.filter(date => date >= birthMomentGlobal && date <= now).forEach(date => add({
+        date, category: 'sports', icon: '⚽', title: 'FIFA World Cup', detail: WORLD_CUP_LOCATIONS[eventDateKey(date)] || 'Host location unavailable.', featured: true
+      }));
+      SUPER_BOWL_DATES.forEach((date, index) => {
+        if (date >= birthMomentGlobal && date <= now) add({ date, category: 'sports', icon: '🏈', title: 'Super Bowl Champion', detail: SUPER_BOWL_WINNER_TEAMS[index] || 'Champion unavailable.', featured: false });
+      });
+      WORLD_SERIES_RESULTS.forEach(result => add({ date: result.date, category: 'sports', icon: '⚾', title: 'World Series Champion', detail: result.team || `${result.league} champion`, featured: false }));
+      NBA_FINALS_RESULTS.forEach(result => add({ date: result.date, category: 'sports', icon: '🏀', title: 'NBA Champion', detail: result.team || 'Champion unavailable.', featured: false }));
+
+      getCalculatedEclipseHistory(birthMomentGlobal, now, 'solar').forEach(entry => add({
+        date: entry.date, category: 'sky', icon: '☀️', title: 'Solar Eclipse', detail: `${entry.type || 'Global'} eclipse.`, featured: false
+      }));
+      getCalculatedEclipseHistory(birthMomentGlobal, now, 'lunar').forEach(entry => add({
+        date: entry.date, category: 'sky', icon: '🌑', title: 'Lunar Eclipse', detail: `${entry.type || 'Global'} eclipse.`, featured: false
+      }));
+      getCalculatedBlueMoonHistory(birthMomentGlobal, now).forEach(entry => add({
+        date: entry.date, category: 'sky', icon: '🔵', title: 'Blue Moon', detail: `${entry.type || 'Monthly'} Blue Moon.`, featured: true
+      }));
+      HALLEY_COMET_DATES.forEach(date => add({ date, category: 'sky', icon: '☄️', title: `Halley's Comet`, detail: 'Perihelion passage.', featured: true }));
+
+      return events.sort((a, b) => b.date - a.date);
+    }
+
+    function renderLifeEventTimeline(now = new Date(), rebuild = true) {
+      if (!els.lifeEventTimeline || !els.timelineEventSummary) return;
+      if (rebuild || !lifeTimelineEvents.length) lifeTimelineEvents = collectLifeTimelineEvents(now);
+      const matching = activeTimelineFilter === 'highlights'
+        ? lifeTimelineEvents.filter(event => event.featured)
+        : lifeTimelineEvents.filter(event => event.category === activeTimelineFilter);
+      const limit = activeTimelineFilter === 'highlights' ? 28 : 60;
+      const visible = matching.slice(0, limit);
+      els.timelineEventSummary.textContent = matching.length > visible.length
+        ? `Showing the ${visible.length} most recent of ${matching.length} ${activeTimelineFilter} events.`
+        : `${matching.length} ${activeTimelineFilter} event${matching.length === 1 ? '' : 's'} on your life timeline.`;
+      els.lifeEventTimeline.innerHTML = visible.length ? visible.map(event => `<article class="life-event life-event--${event.category}">
+        <div class="life-event-date">${formatEventDate(event.date)}<span class="life-event-category">${escapeSourceHtml(event.category)}</span></div>
+        <div><div class="life-event-title"><span aria-hidden="true">${event.icon}</span> ${escapeSourceHtml(event.title)}</div><div class="life-event-detail">${escapeSourceHtml(event.detail)}</div></div>
+      </article>`).join('') : '<div class="timeline-empty">No events are available for this filter yet.</div>';
+    }
     function renderMilestones() {
       const now   = new Date();
       const items = buildMilestones(now);
@@ -7247,6 +7609,8 @@ ${shareUrl}`);
       els.nextDayMilestoneValue.textContent = `${nextDayMark.toLocaleString()} Days`;
       els.nextDayMilestoneCopy.textContent = `${Math.max(0, Math.ceil((nextDayDate - now) / 86400000)).toLocaleString()} days away on ${nextDayDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}.`;
       renderMilestones();
+      renderWhatsNext(now);
+      renderLifeEventTimeline(now);
 
       els.generationIdentity.textContent = identity.title;
       els.generationIdentityCopy.textContent = identity.copy;
@@ -7516,6 +7880,10 @@ ${shareUrl}`);
         detail: `Moon phases, eclipses, and planetary motion calculated ${calculated}.`,
         source: astronomy.source || 'Astronomy Engine'
       });
+      if (birthMomentGlobal) {
+        renderWhatsNext(new Date());
+        renderLifeEventTimeline(new Date());
+      }
     }
 
     async function refreshScheduledAstronomy(force = false) {
@@ -7951,6 +8319,15 @@ ${shareUrl}`);
 
       els.mockToggleBtn.addEventListener('click', toggleMockMode);
       els.clearCacheBtn.addEventListener('click', clearLiveCaches);
+      els.timelineFilterBar?.addEventListener('click', event => {
+        const button = event.target.closest('[data-timeline-filter]');
+        if (!button) return;
+        activeTimelineFilter = button.dataset.timelineFilter || 'highlights';
+        els.timelineFilterBar.querySelectorAll('[data-timeline-filter]').forEach(filter => {
+          filter.setAttribute('aria-pressed', String(filter === button));
+        });
+        renderLifeEventTimeline(new Date(), false);
+      });
       els.planetChoice.addEventListener('change', () => updateLiveStats(true));
       els.saveCardBtn.addEventListener('click',     () => exportElementAsImage(els.shareCard,   'LifePulse-Card.png'));
       els.saveDashboardBtn.addEventListener('click',() => exportElementAsImage(els.resultView,  'LifePulse-Dashboard.png'));

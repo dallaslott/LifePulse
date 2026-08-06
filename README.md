@@ -71,6 +71,12 @@ Diagnostics is a developer-only panel. After a profile launches, tap or click th
 Leap-second history is refreshed against the latest IERS Bulletin C. December 31, 2016 remains the last actual insertion date because IERS has not introduced another leap second; the feed also carries the latest no-change or future announcement.
 
 
+## Current local-review features
+
+The next dashboard phase adds a unified **What's Next** panel below the birthday card. It orders the nearest personal, sky, civic, calendar, and major sports dates, while retaining Halley's Comet as a long-range marker. The existing milestone card is now **Your Life Timeline**, with Highlights, Personal, World, Sky, Sports, and Tech filters. It reuses the datasets already maintained by Life Pulse and makes no additional web request.
+
+Future phases and their data/caching approach are documented in `ROADMAP.md`.
+
 ## Data longevity and freshness
 
 The scheduled feed uses schema 4. Every updateable component has a registry entry with its status, source, retrieval time, expiration time, fallback state, and—where relevant—coverage end. The hidden Self-Check reads that registry and reports missing, unavailable, or expired components.
