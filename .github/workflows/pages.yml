@@ -32,7 +32,7 @@ jobs:
       - name: Install astronomy calculations
         run: npm install --no-audit --no-fund
 
-      - name: Refresh annual sports champions when due
+      - name: Refresh sports champions and future schedules when due
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: node scripts/update-sports-data.mjs
 
@@ -45,16 +45,16 @@ jobs:
       - name: Validate refreshed data
         run: node scripts/validate-live-data.mjs
 
-      - name: Commit a newly confirmed sports champion
+      - name: Commit refreshed sports data
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
           if git diff --quiet -- sports-data-v4.json; then
-            echo "No annual sports result to commit."
+            echo "No sports data change to commit."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add sports-data-v4.json
-            git commit -m "Update annual sports champions [skip ci]"
+            git commit -m "Refresh sports schedules and champions [skip ci]"
             git push origin HEAD:main
           fi
 
@@ -83,4 +83,5 @@ jobs:
       - name: Publish GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 
