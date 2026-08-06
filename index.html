@@ -507,6 +507,82 @@
       box-shadow: 0 0 20px rgba(0,210,255,0.12);
     }
 
+    .celebration-panel {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      margin-top: 10px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 209, 102, 0.45);
+      background: linear-gradient(135deg, rgba(255,209,102,0.12), rgba(255,255,255,0.035));
+      box-shadow: 0 0 28px rgba(255, 209, 102, 0.16);
+      border: 1px solid color-mix(in srgb, var(--celebration-color, #ffd166) 55%, transparent);
+      background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--celebration-color, #ffd166) 24%, transparent), transparent 48%),
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.035));
+      box-shadow: 0 0 28px color-mix(in srgb, var(--celebration-color, #ffd166) 22%, transparent);
+      animation: celebrationGlow 2.8s ease-in-out infinite;
+    }
+
+    .celebration-panel::after {
+      content: '';
+      position: absolute;
+      inset: -70% -25%;
+      pointer-events: none;
+      background: linear-gradient(110deg, transparent 38%, rgba(255,255,255,0.17) 50%, transparent 62%);
+      transform: translateX(-55%);
+      animation: celebrationSweep 4.8s ease-in-out infinite;
+    }
+
+    .celebration-icon {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.10);
+      font-size: 2rem;
+    }
+
+    .celebration-content { position: relative; z-index: 1; min-width: 0; }
+    .celebration-kicker {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--celebration-color, #ffd166);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+    .celebration-title {
+      display: block;
+      color: #fff;
+      font-size: clamp(1.35rem, 5vw, 2rem);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+    .celebration-copy { margin-top: 7px; color: #eef6ff; font-size: 0.9rem; line-height: 1.5; }
+
+    @keyframes celebrationGlow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+    @keyframes celebrationSweep {
+      0%, 38% { transform: translateX(-55%); }
+      68%, 100% { transform: translateX(55%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .celebration-panel,
+      .celebration-panel::after { animation: none; }
+    }
+
     .birthday-hero-main {
       display: block;
       font-size: clamp(2.05rem, 7vw, 2.95rem);
@@ -900,6 +976,180 @@
       }
     }
 
+    .section-view-controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin: 14px 0 4px;
+    }
+
+    .local-celebration-tools {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      z-index: 40;
+      width: min(680px, calc(100% - 24px));
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: minmax(150px, 1fr) auto auto;
+      gap: 8px;
+      align-items: end;
+      padding: 12px;
+      border: 1px solid rgba(255, 209, 102, 0.45);
+      border-radius: 16px;
+      background: rgba(8, 11, 20, 0.96);
+      box-shadow: 0 14px 38px rgba(0,0,0,0.45);
+      backdrop-filter: blur(14px);
+    }
+
+    .local-celebration-field { display: grid; gap: 5px; min-width: 0; }
+    .local-celebration-field label {
+      color: #ffd166;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+    .local-celebration-field select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #fff;
+      background: #111827;
+      font: inherit;
+    }
+
+    @media (max-width: 540px) {
+      .local-celebration-tools { grid-template-columns: 1fr 1fr; }
+      .local-celebration-field { grid-column: 1 / -1; }
+    }
+
+    .section-view-btn {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      font: inherit;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+    }
+
+    .section-view-btn:hover,
+    .section-view-btn:focus-visible {
+      color: var(--accent);
+      border-color: rgba(0,210,255,0.35);
+      outline: none;
+    }
+
+    .dashboard-groups {
+      display: grid;
+      gap: 13px;
+      margin-top: 12px;
+    }
+
+    .dashboard-group {
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 20px;
+      background: rgba(5,10,24,0.46);
+      box-shadow: 0 14px 34px rgba(0,0,0,0.14);
+    }
+
+    .dashboard-group[open] {
+      border-color: rgba(0,210,255,0.18);
+      background: rgba(5,10,24,0.62);
+    }
+
+    .dashboard-group-summary {
+      display: grid;
+      grid-template-columns: 38px minmax(0,1fr) auto;
+      gap: 11px;
+      align-items: center;
+      padding: 15px 16px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .dashboard-group-summary::-webkit-details-marker { display: none; }
+
+    .dashboard-group-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: rgba(0,210,255,0.09);
+      font-size: 1.12rem;
+    }
+
+    .dashboard-group-title {
+      display: block;
+      font-size: 0.96rem;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+    }
+
+    .dashboard-group-copy {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      line-height: 1.35;
+    }
+
+    .dashboard-group-chevron {
+      color: var(--accent);
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .dashboard-group[open] .dashboard-group-chevron { transform: rotate(180deg); }
+
+    .dashboard-group-content { padding: 0 12px 14px; }
+    .dashboard-group-content > :first-child { margin-top: 0; }
+    .dashboard-group-content > :last-child { margin-bottom: 0; }
+
+    .born-then-now-panel {
+      border-color: rgba(255,159,67,0.2);
+      background: linear-gradient(145deg, rgba(255,159,67,0.07), rgba(124,77,255,0.06));
+    }
+
+    .comparison-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 13px;
+    }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0,1fr) minmax(0,1fr);
+      gap: 10px;
+      align-items: stretch;
+      padding: 11px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 15px;
+      background: rgba(4,8,20,0.34);
+    }
+
+    .comparison-icon { display: grid; place-items: center; font-size: 1.25rem; }
+    .comparison-side { min-width: 0; padding-left: 9px; border-left: 1px solid rgba(255,255,255,0.07); }
+    .comparison-era { display: block; color: var(--text-dim); font-size: 0.58rem; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; }
+    .comparison-value { display: block; margin-top: 4px; font-size: 0.86rem; font-weight: 900; line-height: 1.3; overflow-wrap: anywhere; }
+    .comparison-label { grid-column: 2 / -1; color: var(--accent); font-size: 0.69rem; font-weight: 900; }
+    .comparison-change { grid-column: 2 / -1; margin: -3px 0 0; color: var(--text-dim); font-size: 0.7rem; line-height: 1.4; }
+
+    @media (max-width: 520px) {
+      .dashboard-group-summary { grid-template-columns: 34px minmax(0,1fr) auto; padding: 13px; }
+      .dashboard-group-content { padding: 0 8px 10px; }
+      .comparison-row { grid-template-columns: 28px minmax(0,1fr) minmax(0,1fr); gap: 7px; }
+      .comparison-value { font-size: 0.78rem; }
+    }
     .milestone-pill {
       display: flex;
       justify-content: space-between;
@@ -1895,6 +2145,32 @@
 
   <canvas id="star-canvas"></canvas>
 
+  <div class="local-celebration-tools hidden" id="local-celebration-tools" aria-label="Local celebration preview">
+    <div class="local-celebration-field">
+      <label for="local-celebration-choice">Celebration Preview</label>
+      <select id="local-celebration-choice">
+        <option value="christmas">Christmas</option>
+        <option value="birthday">Birthday</option>
+        <option value="new-year">New Year&rsquo;s Day</option>
+        <option value="valentines">Valentine&rsquo;s Day</option>
+        <option value="st-patricks">St. Patrick&rsquo;s Day</option>
+        <option value="easter">Easter</option>
+        <option value="mothers-day">Mother&rsquo;s Day</option>
+        <option value="memorial-day">Memorial Day</option>
+        <option value="juneteenth">Juneteenth</option>
+        <option value="fathers-day">Father&rsquo;s Day</option>
+        <option value="independence-day">Independence Day</option>
+        <option value="labor-day">Labor Day</option>
+        <option value="halloween">Halloween</option>
+        <option value="thanksgiving">Thanksgiving</option>
+        <option value="christmas-eve">Christmas Eve</option>
+        <option value="new-years-eve">New Year&rsquo;s Eve</option>
+      </select>
+    </div>
+    <button class="section-view-btn" id="show-celebration-preview" type="button">Show Preview</button>
+    <button class="section-view-btn" id="clear-celebration-preview" type="button">Use Actual Date</button>
+  </div>
+
   <div class="container" id="form-view">
     <h1 class="hero-title">INITIALIZE LIFE PULSE</h1>
     <p class="hero-subtitle">Real-time legacy • cosmic identity • premium birth snapshot</p>
@@ -1984,7 +2260,12 @@
       </div>
     </div>
 
-    <section class="daily-pulse" aria-labelledby="daily-pulse-title">
+    <div class="section-view-controls" aria-label="Dashboard section controls">
+      <button class="section-view-btn" id="expand-sections-btn" type="button">Expand All</button>
+      <button class="section-view-btn" id="collapse-sections-btn" type="button">Collapse All</button>
+    </div>
+
+    <section class="daily-pulse" id="daily-pulse-section" aria-labelledby="daily-pulse-title">
       <div class="daily-pulse-head">
         <span class="daily-pulse-kicker">Today&#39;s Life Pulse</span>
         <span class="daily-pulse-badge" id="daily-pulse-badge">Preparing Live Reading</span>
@@ -1999,18 +2280,18 @@
       </div>
     </section>
 
-    <div class="progress-label">
+    <div class="progress-label" id="age-progress-label">
       <span>CENTURY PROGRESS (100Y)</span>
       <span id="percent-label">0.00000%</span>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-track" id="age-progress-track"><div class="progress-fill" id="progress-fill"></div></div>
 
-    <div class="chrono-box">
+    <div class="chrono-box" id="chrono-age-card">
       <span class="chrono-num" id="chrono-years">0.000000000</span>
       <span class="chrono-label">Chrono-Years</span>
     </div>
 
-    <div class="panel time-breakdown-shell">
+    <div class="panel time-breakdown-shell" id="time-breakdown-panel">
       <div class="time-breakdown-row time-breakdown-row--3">
         <div class="stat-card"><span class="stat-value" id="weeks-value">0</span><span class="stat-label">Weeks</span></div>
         <div class="stat-card"><span class="stat-value" id="days-value">0</span><span class="stat-label">Days</span></div>
@@ -2023,7 +2304,7 @@
     </div>
 
     <!-- Lifetime stats panel -->
-    <div class="lifetime-shell">
+    <div class="lifetime-shell" id="lifetime-estimates-panel">
       <div class="section-head">
         <span class="lifetime-kicker">Lifetime Estimates</span>
         <span class="panel-note">Based on your live age</span>
@@ -2064,14 +2345,23 @@
       </div>
     </div>
 
-    <div class="birthday-hero-card">
+    <section class="celebration-panel hidden" id="today-celebration-panel" aria-live="polite" aria-labelledby="today-celebration-title">
+      <span class="celebration-icon" id="today-celebration-icon" aria-hidden="true">&#127881;</span>
+      <div class="celebration-content">
+        <span class="celebration-kicker" id="today-celebration-kicker">Today Is Special</span>
+        <strong class="celebration-title" id="today-celebration-title">A LifePulse Celebration</strong>
+        <p class="celebration-copy" id="today-celebration-copy"></p>
+      </div>
+    </section>
+
+    <div class="birthday-hero-card" id="birthday-hero-panel">
       <span class="birthday-hero-label">Next Birthday</span>
       <span class="birthday-hero-main" id="next-birthday-days">...</span>
       <span class="birthday-hero-sub" id="next-birthday-age">...</span>
       <p class="birthday-hero-copy" id="next-birthday-copy">...</p>
     </div>
 
-    <section class="panel whats-next-panel" aria-labelledby="whats-next-title">
+    <section class="panel whats-next-panel" id="whats-next-panel" aria-labelledby="whats-next-title">
       <div class="section-head">
         <div class="section-title" id="whats-next-title">What&#39;s Next</div>
         <span class="panel-note">Your upcoming dates</span>
@@ -2080,7 +2370,7 @@
       <div class="whats-next-list" id="whats-next-list" aria-live="polite"></div>
     </section>
 
-    <div class="panel">
+    <div class="panel" id="life-percentages-panel">
       <div class="section-title">Life in Percentages</div>
       <div class="insight-grid">
         <div class="insight-card">
@@ -2106,7 +2396,7 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="on-this-date-panel">
       <div class="section-title">On This Date</div>
       <div class="insight-grid compact-grid-2">
         <div class="insight-card">
@@ -2122,7 +2412,7 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="lived-through-panel">
       <div class="section-title">You&#39;ve Lived Through</div>
       <div class="insight-grid compact-grid-2">
         <div class="insight-card compact-card"><span class="insight-value" id="sunrises-value">0</span><span class="micro-label">Sunrises</span></div>
@@ -2177,7 +2467,7 @@
 </div>
       </div>
     </div>
-    <div class="panel">
+    <div class="panel" id="sports-history-panel">
       <div class="section-title">Sports Facts Since Your Birth</div>
       <div class="insight-grid compact-grid-2">
         <div class="insight-card compact-card source-card source-card--show-copy">
@@ -2255,7 +2545,7 @@
     </div>
 
 
-    <div class="panel panel-planet">
+    <div class="panel panel-planet" id="planetary-cosmic-panel">
       <div class="section-title">Planetary + Cosmic Mode</div>
       <div class="planet-row">
         <select id="planetChoice">
@@ -2330,7 +2620,7 @@
       </div>
     </div>
 
-    <div class="panel life-scale-panel">
+    <div class="panel life-scale-panel" id="life-compressed-panel">
       <div class="section-title">Your Life, Compressed</div>
       <p class="life-scale-copy" id="life-scale-copy">If an 80-year life were compressed into one day and one calendar year, here’s where you’d be right now.</p>
       <div class="life-map-grid life-map-grid--split">
@@ -2349,7 +2639,15 @@
       </div>
     </div>
 
-    <div class="slate-card slate-card--snapshot">
+    <div class="panel born-then-now-panel" id="born-then-now-panel">
+      <div class="section-head">
+        <div class="section-title">Born Then / Living Now</div>
+        <span class="panel-note" id="born-then-now-years">Then → Now</span>
+      </div>
+      <p class="whats-next-intro" id="born-then-now-summary">A compact look at how your starting world compares with today.</p>
+      <div class="comparison-list" id="born-then-now-list" aria-live="polite"></div>
+    </div>
+    <div class="slate-card slate-card--snapshot" id="birth-snapshot-panel">
       <span class="slate-header slate-header--snapshot">Born Into This World</span>
 
       <div class="birth-grid">
@@ -2486,7 +2784,7 @@
       </div>
     </div>
 
-    <div class="slate-card slate-card--dna">
+    <div class="slate-card slate-card--dna" id="life-dna-panel">
       <span class="slate-header slate-header--dna">Life Pulse DNA</span>
       <div class="dna-grid">
         <div class="dna-card">
@@ -2513,7 +2811,7 @@
       <p class="slate-body" id="dna-summary" style="margin-top:12px;">...</p>
     </div>
 
-    <div class="slate-card slate-card--gen">
+    <div class="slate-card slate-card--gen" id="generation-panel">
       <span class="slate-header slate-header--gen">Generation + Era Identity</span>
       <div class="slate-title-main" style="margin-bottom:6px;">
         <div class="slate-title" id="generation-title">...</div>
@@ -2531,7 +2829,7 @@
       </div>
     </div>
 
-    <div class="slate-card slate-card--timeline">
+    <div class="slate-card slate-card--timeline" id="life-timeline-panel">
       <span class="slate-header slate-header--timeline">Your Life Timeline</span>
       <p class="slate-body" id="timeline-copy">...</p>
       <div class="timeline-subgrid">
@@ -2559,7 +2857,7 @@
       <div class="life-event-timeline" id="life-event-timeline" aria-live="polite"></div>
     </div>
 
-    <div class="slate-card slate-card--share">
+    <div class="slate-card slate-card--share" id="share-panel">
       <span class="slate-header slate-header--share">Share Card Preview</span>
       <div class="share-card" id="share-card">
         <div class="share-topline">
@@ -2596,6 +2894,8 @@
         </div>
       </div>
     </div>
+
+    <div class="dashboard-groups" id="dashboard-groups"></div>
 
     <div id="diagnostics-panel" class="panel diagnostics-panel hidden">
       <div class="section-head">
@@ -2636,6 +2936,7 @@
     const STORAGE_KEY     = 'lifePulseProfile';
     const STORAGE_VERSION = 4;
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
+    const SECTION_STORAGE_KEY = 'lifePulseSectionPreferences';
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
@@ -2701,6 +3002,10 @@
     let selfCheckRunning       = false;
     let lastSelfCheckAt        = null;
     let lastSlowStatsKey      = '';
+    let lastCelebrationKey    = '';
+    let activeLocalCelebrationPreview = null;
+    let symphonyRunId         = 0;
+    let birthdayIntroPending  = false;
     let updateCheckTimer      = null;
     let currentReleaseVersion = LOCAL_RELEASE_VERSION;
     let pendingVersionHash    = '';
@@ -2741,6 +3046,10 @@
       launchBtn:             document.getElementById('launch-btn'),
       clearFormBtn:          document.getElementById('clear-form-btn'),
       muteToggle:            document.getElementById('mute-toggle'),
+      localCelebrationTools: document.getElementById('local-celebration-tools'),
+      localCelebrationChoice:document.getElementById('local-celebration-choice'),
+      showCelebrationPreview:document.getElementById('show-celebration-preview'),
+      clearCelebrationPreview:document.getElementById('clear-celebration-preview'),
       buildChip:             document.getElementById('build-chip'),
       versionChip:           document.getElementById('version-chip'),
       updateAvailableBtn:    document.getElementById('update-available-btn'),
@@ -2782,9 +3091,17 @@
       mealsValue:            document.getElementById('meals-value'),
       wordsValue:            document.getElementById('words-value'),
       laughsValue:           document.getElementById('laughs-value'),
+      todayCelebrationPanel: document.getElementById('today-celebration-panel'),
+      todayCelebrationIcon:  document.getElementById('today-celebration-icon'),
+      todayCelebrationKicker:document.getElementById('today-celebration-kicker'),
+      todayCelebrationTitle: document.getElementById('today-celebration-title'),
+      todayCelebrationCopy:  document.getElementById('today-celebration-copy'),
       nextBirthdayDays:      document.getElementById('next-birthday-days'),
       nextBirthdayAge:       document.getElementById('next-birthday-age'),
       nextBirthdayCopy:      document.getElementById('next-birthday-copy'),
+      bornThenNowYears:       document.getElementById('born-then-now-years'),
+      bornThenNowSummary:     document.getElementById('born-then-now-summary'),
+      bornThenNowList:        document.getElementById('born-then-now-list'),
       whatsNextSummary:       document.getElementById('whats-next-summary'),
       whatsNextList:          document.getElementById('whats-next-list'),
       life80Percent:         document.getElementById('life80-percent'),
@@ -4428,6 +4745,63 @@
       });
     }
 
+    function playBirthdayNote(midi, startTime, duration, accent = false) {
+      const bus = soundtrackBus || soundtrackMaster;
+      const noteGain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+      const lead = audioCtx.createOscillator();
+      const warmth = audioCtx.createOscillator();
+      const sparkle = audioCtx.createOscillator();
+      const peak = accent ? 0.105 : 0.078;
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2100, startTime);
+      filter.frequency.exponentialRampToValueAtTime(1050, startTime + duration);
+      filter.Q.value = 0.75;
+      noteGain.gain.setValueAtTime(0.0001, startTime);
+      noteGain.gain.linearRampToValueAtTime(peak, startTime + 0.045);
+      noteGain.gain.exponentialRampToValueAtTime(Math.max(0.018, peak * 0.38), startTime + Math.max(0.12, duration * 0.7));
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      lead.type = 'triangle';
+      warmth.type = 'sine';
+      sparkle.type = 'sine';
+      lead.frequency.setValueAtTime(midiToFreq(midi), startTime);
+      warmth.frequency.setValueAtTime(midiToFreq(midi - 12), startTime);
+      sparkle.frequency.setValueAtTime(midiToFreq(midi + 12), startTime);
+      lead.detune.setValueAtTime(-2, startTime);
+      sparkle.detune.setValueAtTime(3, startTime);
+
+      lead.connect(filter);
+      warmth.connect(filter);
+      sparkle.connect(filter);
+      filter.connect(noteGain);
+      noteGain.connect(bus);
+      [lead, warmth, sparkle].forEach(osc => {
+        osc.start(startTime);
+        osc.stop(startTime + duration + 0.04);
+      });
+    }
+
+    function scheduleHappyBirthdayMelody() {
+      if (!audioCtx || isMuted) return 0;
+      const melody = [
+        [67, 0.34], [67, 0.24], [69, 0.58], [67, 0.58], [72, 0.58], [71, 1.02],
+        [67, 0.34], [67, 0.24], [69, 0.58], [67, 0.58], [74, 0.58], [72, 1.02],
+        [67, 0.34], [67, 0.24], [79, 0.58], [76, 0.58], [72, 0.58], [71, 0.58], [69, 1.02],
+        [77, 0.34], [77, 0.24], [76, 0.58], [72, 0.58], [74, 0.58], [72, 1.2]
+      ];
+      const start = audioCtx.currentTime + 0.14;
+      let cursor = 0;
+      melody.forEach(([midi, beat], index) => {
+        const phraseEnding = [5, 11, 18, 24].includes(index);
+        playBirthdayNote(midi, start + cursor, Math.max(0.25, beat * 0.92), phraseEnding);
+        cursor += beat;
+        if (phraseEnding) cursor += 0.18;
+      });
+      return cursor + 0.28;
+    }
+
     function playOrganChord(notes, startTime, duration = 9.6) {
       const bus = soundtrackBus || soundtrackMaster;
       const chordGain = audioCtx.createGain();
@@ -4627,12 +5001,27 @@
     }
 
     async function playSymphony() {
+      const runId = ++symphonyRunId;
+      birthdayIntroPending = false;
       try {
         const ok = await unlockAudio();
         if (!ok || isMuted) return;
+        const celebration = getTodayCelebration(new Date());
+        if (celebration?.isBirthday) {
+          birthdayIntroPending = true;
+          stopSoundtrack();
+          const birthdayDuration = scheduleHappyBirthdayMelody();
+          await new Promise(resolve => setTimeout(resolve, birthdayDuration * 1000));
+          if (runId !== symphonyRunId) return;
+          birthdayIntroPending = false;
+          if (isMuted) return;
+        }
         playLaunchSwell();
         startSoundtrack();
-      } catch (err) { console.error('playSymphony failed:', err); }
+      } catch (err) {
+        if (runId === symphonyRunId) birthdayIntroPending = false;
+        console.error('playSymphony failed:', err);
+      }
     }
 
     async function toggleMute() {
@@ -4648,6 +5037,7 @@
           await unlockAudio();
           soundtrackMaster?.gain.cancelScheduledValues(audioCtx.currentTime);
           soundtrackMaster?.gain.setTargetAtTime(0.18, audioCtx.currentTime, 0.25);
+          if (birthdayIntroPending) return;
           playLaunchSwell();
           startSoundtrack();
         }
@@ -4655,15 +5045,191 @@
     }
 
     // ─── Confetti ─────────────────────────────────────────────────────────────
-    function triggerConfetti(color) {
-      if (typeof confetti !== 'function') return;
-      const duration = 2200;
+    function triggerConfetti(color, options = {}) {
+      if (typeof confetti !== 'function' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+      const colors = Array.isArray(color) ? color : [color];
+      const duration = options.duration || 2200;
+      const particleCount = options.particleCount || 5;
       const end = Date.now() + duration;
+      if (options.centerBurst) {
+        confetti({ particleCount: 90, spread: 78, startVelocity: 38, origin: { x: 0.5, y: 0.58 }, colors });
+      }
       (function frame() {
-        confetti({ particleCount: 5, angle: 60,  spread: 55, origin: { x: 0 }, colors: [color] });
-        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: [color] });
+        confetti({ particleCount, angle: 60,  spread: 55, origin: { x: 0 }, colors });
+        confetti({ particleCount, angle: 120, spread: 55, origin: { x: 1 }, colors });
         if (Date.now() < end) requestAnimationFrame(frame);
       })();
+    }
+
+    function getNthWeekdayOfMonth(year, month, weekday, occurrence) {
+      const first = new Date(year, month, 1, 12);
+      const day = 1 + ((7 + weekday - first.getDay()) % 7) + ((occurrence - 1) * 7);
+      return new Date(year, month, day, 12);
+    }
+
+    function getLastWeekdayOfMonth(year, month, weekday) {
+      const last = new Date(year, month + 1, 0, 12);
+      last.setDate(last.getDate() - ((7 + last.getDay() - weekday) % 7));
+      return last;
+    }
+
+    function getEasterDate(year) {
+      const a = year % 19;
+      const b = Math.floor(year / 100);
+      const c = year % 100;
+      const d = Math.floor(b / 4);
+      const e = b % 4;
+      const f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3);
+      const h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4);
+      const k = c % 4;
+      const l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+      const day = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(year, month, day, 12);
+    }
+
+    function isSameCalendarDate(left, right) {
+      return left.getFullYear() === right.getFullYear()
+        && left.getMonth() === right.getMonth()
+        && left.getDate() === right.getDate();
+    }
+
+    function getLocalCelebrationPreview() {
+      if (window.location.protocol !== 'file:') return '';
+      if (activeLocalCelebrationPreview !== null) return activeLocalCelebrationPreview;
+      const requested = new URLSearchParams(window.location.search).get('celebrate') || '';
+      return requested.trim().toLowerCase();
+    }
+
+    function getHolidayForDate(now) {
+      const year = now.getFullYear();
+      const holidays = [
+        { id: 'new-year', date: new Date(year, 0, 1, 12), name: "New Year's Day", title: 'Happy New Year!', icon: '🎆', color: '#ffd166', colors: ['#ffd166','#00d2ff','#ffffff'], copy: 'A new calendar begins—another year of moments, milestones, and possibilities is now in motion.' },
+        { id: 'mlk-day', date: getNthWeekdayOfMonth(year, 0, 1, 3), name: 'Martin Luther King Jr. Day', title: 'A Day of Service and Reflection', icon: '🕊️', color: '#9ad5ff', colors: ['#9ad5ff','#ffffff','#7c4dff'], copy: 'Today honors Dr. King’s legacy and the continuing work of service, courage, and equality.' },
+        { id: 'valentines', date: new Date(year, 1, 14, 12), name: "Valentine's Day", title: "Happy Valentine's Day!", icon: '💝', color: '#ff75c3', colors: ['#ff75c3','#ff4d6d','#ffffff'], copy: 'A day for celebrating love, friendship, and the people who make a life feel fuller.' },
+        { id: 'st-patricks', date: new Date(year, 2, 17, 12), name: "St. Patrick's Day", title: "Happy St. Patrick's Day!", icon: '☘️', color: '#65d46e', colors: ['#65d46e','#ffd166','#ffffff'], copy: 'A little luck, a lot of green, and a bright reason to celebrate today.' },
+        { id: 'easter', date: getEasterDate(year), name: 'Easter', title: 'Happy Easter!', icon: '🐣', color: '#f7c8ff', colors: ['#f7c8ff','#ffe58a','#9ad5ff'], copy: 'A spring celebration of renewal, hope, and new beginnings.' },
+        { id: 'mothers-day', date: getNthWeekdayOfMonth(year, 4, 0, 2), name: "Mother's Day", title: "Happy Mother's Day!", icon: '💐', color: '#ff9fcf', colors: ['#ff9fcf','#f7c8ff','#ffffff'], copy: 'Today celebrates mothers, caregivers, and the people whose care helped shape our lives.' },
+        { id: 'memorial-day', date: getLastWeekdayOfMonth(year, 4, 1), name: 'Memorial Day', title: 'Remembering on Memorial Day', icon: '🇺🇸', color: '#9ad5ff', colors: ['#d7263d','#ffffff','#3a7bd5'], copy: 'A day to remember and honor those who died while serving in the United States Armed Forces.' },
+        { id: 'juneteenth', date: new Date(year, 5, 19, 12), name: 'Juneteenth', title: 'Honoring Juneteenth', icon: '⭐', color: '#ffcf5c', colors: ['#d7263d','#3a7bd5','#ffcf5c'], copy: 'Today commemorates freedom, resilience, and the continuing story of Black American history.' },
+        { id: 'fathers-day', date: getNthWeekdayOfMonth(year, 5, 0, 3), name: "Father's Day", title: "Happy Father's Day!", icon: '🧢', color: '#72c7ff', colors: ['#72c7ff','#7c4dff','#ffffff'], copy: 'Today celebrates fathers, mentors, and the people whose guidance helped shape our paths.' },
+        { id: 'independence-day', date: new Date(year, 6, 4, 12), name: 'Independence Day', title: 'Happy Independence Day!', icon: '🎇', color: '#ff6b6b', colors: ['#d7263d','#ffffff','#3a7bd5'], copy: 'A summer day of American history, community gatherings, and fireworks after dark.' },
+        { id: 'labor-day', date: getNthWeekdayOfMonth(year, 8, 1, 1), name: 'Labor Day', title: 'Happy Labor Day!', icon: '🛠️', color: '#ffd166', colors: ['#ffd166','#ff8c42','#ffffff'], copy: 'Today recognizes the work, effort, and contributions that keep communities moving.' },
+        { id: 'halloween', date: new Date(year, 9, 31, 12), name: 'Halloween', title: 'Happy Halloween!', icon: '🎃', color: '#ff8c42', colors: ['#ff8c42','#7c4dff','#101018'], copy: 'A delightfully strange day for costumes, candy, stories, and a little harmless mystery.' },
+        { id: 'thanksgiving', date: getNthWeekdayOfMonth(year, 10, 4, 4), name: 'Thanksgiving', title: 'Happy Thanksgiving!', icon: '🍂', color: '#e9a23b', colors: ['#e9a23b','#b85c38','#ffd166'], copy: 'A day to pause for gratitude, connection, and the people and moments worth appreciating.' },
+        { id: 'christmas-eve', date: new Date(year, 11, 24, 12), name: 'Christmas Eve', title: 'Merry Christmas Eve!', icon: '✨', color: '#ffd166', colors: ['#ffd166','#d7263d','#2fbf71'], copy: 'The lights are glowing and the anticipation is part of the celebration.' },
+        { id: 'christmas', date: new Date(year, 11, 25, 12), name: 'Christmas Day', title: 'Merry Christmas!', icon: '🎄', color: '#54d17a', colors: ['#54d17a','#d7263d','#ffd166'], copy: 'Wishing you a day filled with warmth, wonder, and time with the people who matter.' },
+        { id: 'new-years-eve', date: new Date(year, 11, 31, 12), name: "New Year's Eve", title: "Happy New Year's Eve!", icon: '🥂', color: '#ffd166', colors: ['#ffd166','#00d2ff','#ffffff'], copy: 'The final page of this calendar year is here—one more moment to remember before the next begins.' }
+      ];
+      const previewId = getLocalCelebrationPreview();
+      if (previewId && previewId !== 'birthday') {
+        return holidays.find(holiday => holiday.id === previewId) || null;
+      }
+      return holidays.find(holiday => isSameCalendarDate(now, holiday.date)) || null;
+    }
+
+    function getTodayCelebration(now = new Date()) {
+      const previewId = getLocalCelebrationPreview();
+      const holiday = previewId === 'birthday' ? null : getHolidayForDate(now);
+      const isBirthday = previewId === 'birthday' || (Boolean(birthMomentGlobal)
+        && now.getMonth() === birthMomentGlobal.getMonth()
+        && now.getDate() === birthMomentGlobal.getDate());
+      if (!isBirthday && !holiday) return null;
+
+      if (isBirthday) {
+        const age = Math.max(0, now.getFullYear() - birthMomentGlobal.getFullYear());
+        const name = normalizeName(currentProfile?.name || els.userName.value || 'Birthday Star');
+        return {
+          key: `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-birthday-${holiday?.id || 'none'}`,
+          icon: '🎂',
+          kicker: previewId === 'birthday' ? 'Local Birthday Preview' : (holiday ? `Birthday • ${holiday.name}` : 'Birthday Celebration'),
+          title: `Happy Birthday, ${name}!`,
+          copy: `Today begins your ${formatOrdinal(age)} trip around the Sun. Your LifePulse is celebrating every mile, memory, and moment that brought you here.${holiday ? ` ${holiday.copy}` : ''}`,
+          color: currentZodiac?.c || '#ffd166',
+          colors: [currentZodiac?.c || '#ffd166', '#ff75c3', '#00d2ff', '#ffffff'],
+          isBirthday: true
+        };
+      }
+
+      return {
+        ...holiday,
+        key: `${yearKey(now)}-${holiday.id}`,
+        kicker: previewId ? `Local Preview • ${holiday.name}` : 'Today’s Celebration',
+        isBirthday: false
+      };
+    }
+
+    function yearKey(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    function renderTodayCelebration(now = new Date(), animate = false) {
+      const celebration = getTodayCelebration(now);
+      if (!els.todayCelebrationPanel) return celebration;
+      els.todayCelebrationPanel.classList.toggle('hidden', !celebration);
+      if (!celebration) return null;
+
+      els.todayCelebrationPanel.style.setProperty('--celebration-color', celebration.color);
+      els.todayCelebrationIcon.textContent = celebration.icon;
+      els.todayCelebrationKicker.textContent = celebration.kicker;
+      els.todayCelebrationTitle.textContent = celebration.title;
+      els.todayCelebrationCopy.textContent = celebration.copy;
+
+      if (animate && lastCelebrationKey !== celebration.key) {
+        lastCelebrationKey = celebration.key;
+        const rightNowGroup = document.querySelector('.dashboard-group[data-group-id="right-now"]');
+        if (rightNowGroup) rightNowGroup.open = true;
+        triggerConfetti(celebration.colors, {
+          duration: celebration.isBirthday ? 4800 : 3000,
+          particleCount: celebration.isBirthday ? 8 : 5,
+          centerBurst: celebration.isBirthday
+        });
+      }
+      return celebration;
+    }
+
+    function resetAudioForCelebrationPreview() {
+      symphonyRunId += 1;
+      birthdayIntroPending = false;
+      stopSoundtrack();
+      if (audioCtx && audioCtx.state !== 'closed') audioCtx.close().catch(() => {});
+      audioCtx = null;
+      soundtrackMaster = null;
+      soundtrackBus = null;
+      soundtrackReverb = null;
+      soundtrackReverbGain = null;
+      soundtrackDelay = null;
+      soundtrackFeedback = null;
+      soundtrackToneFilter = null;
+      audioUnlocked = false;
+    }
+
+    async function showSelectedCelebrationPreview() {
+      if (window.location.protocol !== 'file:') return;
+      activeLocalCelebrationPreview = els.localCelebrationChoice?.value || 'christmas';
+      lastCelebrationKey = '';
+
+      if (!birthMomentGlobal) {
+        await unlockAudio();
+        await igniteTracker();
+        return;
+      }
+
+      const celebration = renderTodayCelebration(new Date(), true);
+      if (celebration?.isBirthday && !isMuted) {
+        resetAudioForCelebrationPreview();
+        await playSymphony();
+      }
+      els.todayCelebrationPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function clearSelectedCelebrationPreview() {
+      activeLocalCelebrationPreview = '';
+      lastCelebrationKey = '';
+      if (birthMomentGlobal) renderTodayCelebration(new Date(), true);
     }
 
     // ─── Cosmic data helpers ──────────────────────────────────────────────────
@@ -5457,6 +6023,7 @@
         if (els.birthGasStatus) els.birthGasStatus.innerHTML = formatStatusLine('fallback', 'Estimate', 'Life Pulse anchors', 'Both the scheduled feed and browser fallback were unavailable.');
         setLiveDiagnostic('gas', { state: 'fallback', detail: 'Both live gas routes were unavailable.', source: 'Life Pulse anchors' });
       }
+      renderBornThenNow(new Date());
     }
     function populateZodiacExtras(date) {
       const moon    = getMoonPhase(date);
@@ -7492,6 +8059,73 @@ ${shareUrl}`);
       </article>`).join('');
     }
 
+    function getPresidentAtDate(date) {
+      let match = null;
+      for (const term of PRESIDENT_TERM_STARTS) {
+        if (term.start <= date) match = term;
+        else break;
+      }
+      return match;
+    }
+
+    function formatSignedNumber(value, digits = 1, suffix = '') {
+      if (!Number.isFinite(value)) return '';
+      const sign = value > 0 ? '+' : value < 0 ? '−' : '';
+      return `${sign}${Math.abs(value).toFixed(digits)}${suffix}`;
+    }
+
+    function renderBornThenNow(now = new Date()) {
+      if (!birthMomentGlobal || !els.bornThenNowList) return;
+      const birthYear = birthMomentGlobal.getFullYear();
+      const currentYear = now.getFullYear();
+      const populationHistory = currentLiveData?.reference?.populationHistory?.series || {};
+      const authoritativeBirthPopulation = Number(populationHistory[birthYear]);
+      const birthPopulation = Number.isFinite(authoritativeBirthPopulation)
+        ? authoritativeBirthPopulation / 1_000_000_000
+        : interpolateFromAnchors(birthYear, WORLD_POPULATION_ANCHORS);
+      const cachedPopulation = liveCompareCache.get('world-pop-live');
+      const feedPopulation = Number(currentLiveData?.current?.worldPopulation?.value ?? cachedPopulation?.population);
+      const currentPopulation = Number.isFinite(feedPopulation)
+        ? feedPopulation / 1_000_000_000
+        : interpolateFromAnchors(currentYear, WORLD_POPULATION_ANCHORS);
+      const birthGas = interpolateFromAnchors(birthYear, GAS_ANCHORS);
+      const cachedGas = liveCompareCache.get('aaa-gas-live');
+      const feedGas = Number(currentLiveData?.current?.gasPrice?.value ?? cachedGas?.price);
+      const currentGas = Number.isFinite(feedGas) ? feedGas : interpolateFromAnchors(currentYear, GAS_ANCHORS);
+      const climate = currentLiveData?.reference?.climate;
+      const birthClimateRecord = climate?.series?.[birthYear];
+      const birthTempC = Number.isFinite(Number(birthClimateRecord?.estimatedAbsoluteC))
+        ? Number(birthClimateRecord.estimatedAbsoluteC)
+        : interpolateFromAnchors(birthYear, TEMP_ANCHORS_C);
+      const currentTempC = Number.isFinite(Number(climate?.latestEstimatedAbsoluteC))
+        ? Number(climate.latestEstimatedAbsoluteC)
+        : interpolateFromAnchors(currentYear, TEMP_ANCHORS_C);
+      const birthPresident = getPresidentAtDate(birthMomentGlobal);
+      const currentPresident = currentLiveData?.reference?.civic?.currentPresident || getPresidentAtDate(now)?.name || 'Current President';
+      const birthTech = getTechSnapshot(birthYear);
+      const currentTech = getTechSnapshot(currentYear);
+      const populationDelta = currentPopulation - birthPopulation;
+      const populationPct = birthPopulation ? (populationDelta / birthPopulation) * 100 : 0;
+      const gasDelta = currentGas - birthGas;
+      const tempDeltaF = celsiusToFahrenheit(currentTempC) - celsiusToFahrenheit(birthTempC);
+      const presidentsLived = countPresidentsExperienced(birthMomentGlobal, now);
+      const comparisons = [
+        { icon: '🌍', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).` },
+        { icon: '⛽', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: `${formatSignedNumber(gasDelta, 2, '/gal')} in nominal dollars since your birth year.` },
+        { icon: '🌡️', label: 'Estimated Global Temperature', then: formatTempF(birthTempC), now: formatTempF(currentTempC), change: `${formatSignedNumber(tempDeltaF, 2, '°F')} in the estimated global annual average.` },
+        { icon: '🇺🇸', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.` },
+        { icon: '📱', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.` }
+      ].filter(item => item.then && item.now && !String(item.then).includes('N/A') && !String(item.now).includes('N/A'));
+      if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} → ${currentYear}`;
+      if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} clear comparisons between your starting world and today. Current maintained values replace estimates as they become available.`;
+      els.bornThenNowList.innerHTML = comparisons.map(item => `<article class="comparison-row">
+        <div class="comparison-icon" aria-hidden="true">${item.icon}</div>
+        <div class="comparison-side"><span class="comparison-era">Then · ${birthYear}</span><span class="comparison-value">${escapeHtml(item.then)}</span></div>
+        <div class="comparison-side"><span class="comparison-era">Now · ${currentYear}</span><span class="comparison-value">${escapeHtml(item.now)}</span></div>
+        <div class="comparison-label">${escapeHtml(item.label)}</div>
+        <p class="comparison-change">${escapeHtml(item.change)}</p>
+      </article>`).join('');
+    }
     function collectLifeTimelineEvents(now = new Date()) {
       if (!birthMomentGlobal) return [];
       const events = [{
@@ -7590,6 +8224,7 @@ ${shareUrl}`);
       if (!birthMomentGlobal || !currentZodiac || !currentDNA || !currentGeneration) return;
       const now = new Date();
       currentForecast = buildForecast(currentZodiac, currentDNA, now);
+      renderTodayCelebration(now, true);
       els.forecastEnergyScore.textContent = currentForecast.energyScore;
       els.forecastFocusScore.textContent  = currentForecast.focusScore;
       els.forecastSocialScore.textContent = currentForecast.socialScore;
@@ -7611,6 +8246,7 @@ ${shareUrl}`);
       renderMilestones();
       renderWhatsNext(now);
       renderLifeEventTimeline(now);
+      renderBornThenNow(now);
 
       els.generationIdentity.textContent = identity.title;
       els.generationIdentityCopy.textContent = identity.copy;
@@ -7744,7 +8380,10 @@ ${shareUrl}`);
         });
       }
 
-      if (birthMomentGlobal) updateLiveStats(true);
+      if (birthMomentGlobal) {
+        updateLiveStats(true);
+        renderBornThenNow(new Date());
+      }
     }
 
     async function checkForDashboardUpdate() {
@@ -8166,7 +8805,7 @@ ${shareUrl}`);
           if (!document.hidden) refreshInsightPanels();
         }, 60000);
 
-        triggerConfetti(currentZodiac.c);
+        if (!getTodayCelebration(new Date())) triggerConfetti(currentZodiac.c);
         playSymphony();
 
         setLiveDiagnostic('share', { state: 'live', detail: 'This profile can be encoded into a pre-filled share URL at any time.', source: 'URL hash' });
@@ -8206,6 +8845,8 @@ ${shareUrl}`);
     }
 
     async function resetApp() {
+      symphonyRunId += 1;
+      birthdayIntroPending = false;
       clearTimers();
       stopSoundtrack();
       if (audioCtx && audioCtx.state !== 'closed') audioCtx.close().catch(() => {});
@@ -8292,6 +8933,60 @@ ${shareUrl}`);
     }
 
     // ─── Event binding ────────────────────────────────────────────────────────
+    const DASHBOARD_SECTION_GROUPS = [
+      { id: 'right-now', icon: '◉', title: 'Right Now', copy: 'Live age, today’s pulse, celebrations, your next birthday, and upcoming moments.', defaultOpen: true, nodes: ['daily-pulse-section','age-progress-label','age-progress-track','chrono-age-card','time-breakdown-panel','today-celebration-panel','birthday-hero-panel','whats-next-panel'] },
+      { id: 'lifetime-glance', icon: '⌛', title: 'Lifetime at a Glance', copy: 'Your estimated totals, life percentages, and compressed-life view.', nodes: ['lifetime-estimates-panel','life-percentages-panel','life-compressed-panel'] },
+      { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, major eras, and a filterable personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','life-timeline-panel'] },
+      { id: 'starting-world', icon: '🌅', title: 'Your Starting World', copy: 'Then-versus-now comparisons and the culture surrounding your birth.', nodes: ['born-then-now-panel','birth-snapshot-panel'] },
+      { id: 'sports-history', icon: '🏆', title: 'Sports History', copy: 'Championships, Olympic Games, World Cups, and repeat-title eras.', nodes: ['sports-history-panel'] },
+      { id: 'cosmic-astrology', icon: '🌌', title: 'Cosmic & Astrology', copy: 'Planetary motion, sky cycles, zodiac alignment, and archetype details.', nodes: ['planetary-cosmic-panel','zodiac-card'] },
+      { id: 'identity-numerology', icon: '✦', title: 'Identity & Numerology', copy: 'Life Pulse DNA, generation context, and era identity.', nodes: ['life-dna-panel','generation-panel'] },
+      { id: 'share-pulse', icon: '↗', title: 'Share Your Pulse', copy: 'Preview, save, and share your personalized LifePulse card.', nodes: ['share-panel'] }
+    ];
+
+    function readSectionPreferences() {
+      try { return JSON.parse(localStorage.getItem(SECTION_STORAGE_KEY) || '{}') || {}; }
+      catch { return {}; }
+    }
+
+    function saveSectionPreferences() {
+      try {
+        const state = {};
+        document.querySelectorAll('.dashboard-group').forEach(group => { state[group.dataset.groupId] = group.open; });
+        localStorage.setItem(SECTION_STORAGE_KEY, JSON.stringify(state));
+      } catch {}
+    }
+
+    function setAllDashboardGroups(open) {
+      document.querySelectorAll('.dashboard-group').forEach(group => { group.open = open; });
+      saveSectionPreferences();
+    }
+
+    function organizeDashboardSections() {
+      const container = document.getElementById('dashboard-groups');
+      if (!container || container.dataset.ready === 'true') return;
+      const preferences = readSectionPreferences();
+      DASHBOARD_SECTION_GROUPS.forEach(config => {
+        const nodes = config.nodes.map(id => document.getElementById(id)).filter(Boolean);
+        if (!nodes.length) return;
+        const group = document.createElement('details');
+        group.className = 'dashboard-group';
+        group.dataset.groupId = config.id;
+        group.open = Object.prototype.hasOwnProperty.call(preferences, config.id) ? Boolean(preferences[config.id]) : Boolean(config.defaultOpen);
+        const summary = document.createElement('summary');
+        summary.className = 'dashboard-group-summary';
+        summary.innerHTML = `<span class="dashboard-group-icon" aria-hidden="true">${config.icon}</span><span><span class="dashboard-group-title">${escapeHtml(config.title)}</span><span class="dashboard-group-copy">${escapeHtml(config.copy)}</span></span><span class="dashboard-group-chevron" aria-hidden="true">⌄</span>`;
+        const content = document.createElement('div');
+        content.className = 'dashboard-group-content';
+        nodes.forEach(node => content.appendChild(node));
+        group.append(summary, content);
+        group.addEventListener('toggle', saveSectionPreferences);
+        container.appendChild(group);
+      });
+      container.dataset.ready = 'true';
+      document.getElementById('expand-sections-btn')?.addEventListener('click', () => setAllDashboardGroups(true));
+      document.getElementById('collapse-sections-btn')?.addEventListener('click', () => setAllDashboardGroups(false));
+    }
     function bindEvents() {
       els.btnMale.addEventListener('click',   () => setGender('male'));
       els.btnFemale.addEventListener('click', () => setGender('female'));
@@ -8311,6 +9006,8 @@ ${shareUrl}`);
         refreshLiveHoroscope();
       });
       els.muteToggle.addEventListener('click',      toggleMute);
+      els.showCelebrationPreview?.addEventListener('click', showSelectedCelebrationPreview);
+      els.clearCelebrationPreview?.addEventListener('click', clearSelectedCelebrationPreview);
       els.diagnosticsToggle.addEventListener('click', toggleDiagnosticsPanel);
       els.buildChip.addEventListener('click', registerSecretDiagnosticsTap);
       els.buildChip.addEventListener('touchstart', registerSecretDiagnosticsTap, { passive: true });
@@ -8396,7 +9093,15 @@ ${shareUrl}`);
     function boot() {
       populateYears();
       populateDays();
+      organizeDashboardSections();
       bindEvents();
+      if (window.location.protocol === 'file:') {
+        els.localCelebrationTools?.classList.remove('hidden');
+        const requestedPreview = getLocalCelebrationPreview();
+        if (requestedPreview && els.localCelebrationChoice?.querySelector(`option[value="${requestedPreview}"]`)) {
+          els.localCelebrationChoice.value = requestedPreview;
+        }
+      }
       initStars();
       starRafId = requestAnimationFrame(drawStars);
 
@@ -8426,6 +9131,12 @@ ${shareUrl}`);
         }
       }
 
+      const celebrationPreview = getLocalCelebrationPreview();
+      if (celebrationPreview) {
+        const previewName = celebrationPreview.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        setStatus(`Local ${previewName} preview ready. Select Launch Tracker to view it.`, 'success');
+      }
+
       renderDiagnostics();
     }
 
@@ -8442,25 +9153,6 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

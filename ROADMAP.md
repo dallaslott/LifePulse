@@ -6,10 +6,13 @@ This roadmap starts from the v4 dashboard architecture: a single GitHub Pages ap
 
 - **What's Next**: one ordered view of upcoming personal, sky, calendar, civic, and major sports dates. It uses the existing astronomy calculations and schedule datasets, so it does not add API usage.
 - **Your Life Timeline**: the existing milestone card now includes a filterable history for Highlights, Personal, World, Sky, Sports, and Tech. Detailed sports and sky histories remain scrollable and user-facing source drawers stay separate from developer metadata.
+- **Collapsible dashboard hierarchy**: eight ordered content groups reduce scrolling, remember each device's open/closed choices, and include Expand All and Collapse All controls.
+- **Born Then / Living Now**: a compact comparison of population, gasoline, temperature, the U.S. president, and everyday technology using already-maintained data routes and local reference anchors.
+- **Birthday and holiday celebrations**: personalized birthday recognition plus themed messages and motion for major U.S. holidays, calculated locally with reduced-motion support and no additional feed usage.
 
-## Phase 3 - Born Then / Living Now
+## Phase 3 - Born Then / Living Now - Implemented for local review
 
-Add a two-column comparison of the birth year and today. Reuse the current World Bank population, NASA climate, EIA/AAA gasoline, president, technology-era, and birthplace weather routes. Each comparison should show a compact value, the difference, and a plain-language explanation. Missing historical values should disappear gracefully rather than show technical errors.
+The two-column comparison is implemented with compact values, changes, and plain-language labels. It reuses the current population, climate, gasoline, president, and technology-era data already maintained by Life Pulse. Missing historical values disappear gracefully rather than show technical errors.
 
 ## Phase 4 - Shareable Life Pulse Card
 
@@ -29,12 +32,11 @@ Add a web app manifest, purpose-built icons, and a conservative service worker. 
 
 ## Suggested order
 
-1. Review and publish the current What's Next + Life Timeline release.
-2. Build Born Then / Living Now because it can reuse live routes already maintained.
-3. Improve the existing share card.
-4. Expand Data Health before adding another scheduled dataset.
-5. Add sky events.
-6. Add installable-app support last, after the caching rules are tested on both iPhone and Android.
+1. Review and publish the collapsible hierarchy + Born Then / Living Now release.
+2. Improve the existing share card.
+3. Expand Data Health before adding another scheduled dataset.
+4. Add sky events.
+5. Add installable-app support last, after the caching rules are tested on both iPhone and Android.
 
 ## Architecture hooks already available
 

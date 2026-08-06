@@ -73,7 +73,13 @@ Leap-second history is refreshed against the latest IERS Bulletin C. December 31
 
 ## Current local-review features
 
-The next dashboard phase adds a unified **What's Next** panel below the birthday card. It orders the nearest personal, sky, civic, calendar, and major sports dates, while retaining Halley's Comet as a long-range marker. The existing milestone card is now **Your Life Timeline**, with Highlights, Personal, World, Sky, Sports, and Tech filters. It reuses the datasets already maintained by Life Pulse and makes no additional web request.
+The dashboard now follows a clearer reading order: **Right Now**, **Lifetime at a Glance**, **Your Life Story**, **Your Starting World**, **Sports History**, **Cosmic & Astrology**, **Identity & Numerology**, and **Share Your Pulse**. Each section is collapsible, open/closed choices are remembered on that device, and **Expand All** / **Collapse All** controls make long-page navigation faster. Only **Right Now** opens by default for a first-time visitor.
+
+The new **Born Then / Living Now** panel compares population, gasoline, temperature, the U.S. president, and everyday technology at birth with current values. It reuses data already maintained by Life Pulse and adds no new web request.
+
+The **Right Now** section also recognizes a profile's birthday and major U.S. holidays. Birthdays receive a personalized message, extended celebration animation, and a synthesized Happy Birthday melody before the normal LifePulse background track begins. Holidays use their own message, icon, and color theme. The calendar and birthday melody are produced in the browser, so this feature adds no API usage.
+
+The unified **What's Next** panel orders the nearest personal, sky, civic, calendar, and major sports dates, while retaining Halley's Comet as a long-range marker. **Your Life Timeline** includes Highlights, Personal, World, Sky, Sports, and Tech filters.
 
 Future phases and their data/caching approach are documented in `ROADMAP.md`.
 
@@ -116,9 +122,6 @@ Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. 
 Live age counters update four times per second, while the heavier lifetime, calendar, source-drawer, and card calculations run once per minute or on an explicit profile/control change. This keeps the dashboard responsive on phones without making the displayed age feel less live.
 
 Editorial concepts, generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals remain clearly curated rather than presented as live facts. Annual NFL, NBA, and MLB champions and the next missing Olympics or FIFA World Cup edition are automatically checked after their date gates; Gaming Console Eras remains coverage-monitored and editorially reviewed.
-
-
-
 
 
 
