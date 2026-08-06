@@ -14,18 +14,21 @@ This roadmap starts from the v4 dashboard architecture: a single GitHub Pages ap
 
 The two-column comparison is implemented with compact values, changes, and plain-language labels. It reuses the current population, climate, gasoline, president, and technology-era data already maintained by Life Pulse. Missing historical values disappear gracefully rather than show technical errors.
 
-## Phase 4 - Shareable Life Pulse Card
+## Phase 4 - Shareable Life Pulse Card - Implemented for local review
 
-Extend the existing share card instead of building a second card. Add a compact template selector, privacy switches for name and birthplace, and an optional timeline highlight. Keep all generation in the browser; no profile data should be uploaded to a rendering service.
+The existing share card now has Cosmic, Milestone, and Minimal templates, privacy switches for name and birthplace, and an optional highlight selected from the life timeline. Privacy choices carry through the preview, PNG export, copied summary, and generated share link. All rendering remains in the browser; no profile data is uploaded to a rendering service.
 
 ## Phase 5 - Data Health Dashboard
 
 Expand hidden Diagnostics with a readable component table: source, last success, age, next scheduled check, coverage end, and fallback status. Add a single overall state of Healthy, Attention, or Stale. This remains developer-only; normal Source drawers continue to explain the card rather than the backend.
 
-## Phase 6 - Meteor Showers and Visible Sky Events
+## Phase 6 - Meteor Showers and Visible Sky Events - Implemented for local review
 
-Add a versioned `sky-events.json` calendar for major annual meteor showers, conjunctions, and visibility windows. Prefer annual schedule reconciliation over daily API calls. A future location-aware layer can estimate local viewing time, Moon interference, and horizon visibility using the existing matched birthplace coordinates.
+A versioned sky-events.json calendar now covers major meteor showers, planetary conjunctions, oppositions, greatest elongations, and season markers. **Meteor Shower** and **Sky Highlight** cards feed the Cosmic section, What's Next, Source drawers, and supported recent timeline events. NASA GSFC decade data supplies calculated dates through 2100, while International Meteor Organization guidance supplements annual shower visibility. The GitHub workflow checks the calendar on an annual review date and commits only changed data, requiring no API key or daily credits.
 
+A later location-aware refinement can estimate Moon interference, local horizon visibility, and best viewing hours using the matched birthplace coordinates.
+
+The mobile density pass keeps text-heavy cosmic summaries in a readable single column on phones, shortens event headlines, and leaves routine sports detail behind Source so numbers and dates remain easy to scan.
 ## Phase 7 - Better Mobile Installation
 
 Add a web app manifest, purpose-built icons, and a conservative service worker. Cache the interface shell, but always request `version.json` and live data with freshness checks. The existing Update Available control remains the authority for deploying a new dashboard version and prevents stale mobile installs.
@@ -48,3 +51,4 @@ Add a web app manifest, purpose-built icons, and a conservative service worker. 
 - Astronomy Engine calculations and cached historical searches
 - Existing share-card image export
 - Hidden Diagnostics and Self-Check
+

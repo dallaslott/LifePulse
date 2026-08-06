@@ -79,6 +79,10 @@ The new **Born Then / Living Now** panel compares population, gasoline, temperat
 
 The **Right Now** section also recognizes a profile's birthday and major U.S. holidays. Birthdays receive a personalized message, extended celebration animation, and a synthesized Happy Birthday melody before the normal LifePulse background track begins. Holidays use their own message, icon, and color theme. The calendar and birthday melody are produced in the browser, so this feature adds no API usage.
 
+The **Share Your Pulse** section now includes Cosmic, Milestone, and Minimal card styles, privacy switches for name and birthplace, and an optional event from the life timeline. The same privacy choices apply to image exports, copied summaries, and generated share links; the card is still created entirely in the browser.
+
+The **Cosmic & Astrology** section now includes **Next Meteor Shower** and **Next Visible Sky Event** cards. A versioned sky-events.json calendar supplies meteor peaks, conjunctions, oppositions, greatest elongations, and season markers. Dates come from NASA GSFC's decade calendar data, with International Meteor Organization guidance for annual shower visibility. The scheduled workflow checks the calendar on its annual review date and commits a changed file automatically, without an API key or daily usage credits.
+
 The unified **What's Next** panel orders the nearest personal, sky, civic, calendar, and major sports dates, while retaining Halley's Comet as a long-range marker. **Your Life Timeline** includes Highlights, Personal, World, Sky, Sports, and Tech filters.
 
 Future phases and their data/caching approach are documented in `ROADMAP.md`.

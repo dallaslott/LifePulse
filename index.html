@@ -185,6 +185,26 @@
     .dna-grid { grid-template-columns: repeat(2, 1fr); }
     .forecast-grid { grid-template-columns: repeat(3, 1fr); }
     .birth-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .birth-grid--organized { grid-template-columns: 1fr; gap: 18px; }
+    .birth-snapshot-group {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      min-width: 0;
+    }
+    .birth-snapshot-group + .birth-snapshot-group {
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .birth-snapshot-group-title {
+      grid-column: 1 / -1;
+      margin: 0 2px 2px;
+      color: var(--accent);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
     .zodiac-mini-grid { grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
     .lifetime-grid { grid-template-columns: repeat(2, 1fr); }
 
@@ -1208,6 +1228,30 @@
       border: 1px solid rgba(255,255,255,0.08);
     }
 
+    .sky-event-copy { white-space: pre-line; }
+    .sky-event-card .insight-value { font-size: clamp(1rem, 3.8vw, 1.35rem); }
+
+    .share-customizer { margin-top: 12px; padding: 14px; border-radius: 18px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); display: grid; gap: 13px; }
+    .share-customizer-row { display: grid; gap: 8px; }
+    .share-customizer-label { font-size: 0.65rem; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-dim); }
+    .share-template-options, .share-privacy-options { display: flex; flex-wrap: wrap; gap: 8px; }
+    .share-template-btn, .share-privacy-toggle { min-height: 40px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.13); background: rgba(255,255,255,0.04); color: var(--text-dim); font: inherit; font-size: 0.72rem; font-weight: 900; }
+    .share-template-btn { padding: 9px 14px; cursor: pointer; }
+    .share-template-btn[aria-pressed="true"] { color: #fff; border-color: var(--primary); background: rgba(255, 92, 135, 0.15); box-shadow: 0 0 18px rgba(255, 92, 135, 0.12); }
+    .share-privacy-toggle { padding: 9px 13px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .share-privacy-toggle input { accent-color: var(--primary); }
+    .share-highlight-select { width: 100%; min-height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.13); background: #111722; color: #fff; padding: 10px 12px; font: inherit; font-size: 0.78rem; }
+    .share-privacy-note { margin: 0; color: var(--text-dim); font-size: 0.72rem; line-height: 1.5; }
+    .share-card--milestone { background: radial-gradient(circle at 88% 8%, rgba(255, 199, 95, 0.23), transparent 35%), linear-gradient(145deg, #211521, #101722 72%); border-color: rgba(255, 199, 95, 0.3); }
+    .share-card--milestone .share-kicker, .share-card--milestone .share-zodiac { color: #ffd27a; }
+    .share-card--minimal { background: linear-gradient(145deg, #151a22, #0d1118); border-color: rgba(255,255,255,0.18); border-radius: 14px; }
+    .share-card--minimal .share-story, .share-card--minimal .share-footer { display: none; }
+    .share-card--minimal .info-card, .share-card--minimal .share-metric { background: transparent; border-color: rgba(255,255,255,0.11); }
+    .share-timeline-highlight { margin: 14px 0 2px; padding: 13px 14px; border-left: 3px solid var(--accent); border-radius: 4px 14px 14px 4px; background: rgba(255,255,255,0.055); }
+    .share-timeline-meta { display: flex; justify-content: space-between; gap: 8px; color: var(--text-dim); font-size: 0.61rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+    .share-timeline-title { margin-top: 6px; font-size: 0.94rem; font-weight: 900; color: #fff; }
+    .share-timeline-detail { margin-top: 3px; font-size: 0.72rem; line-height: 1.4; color: #e7ebf2; }
+
     .share-topline {
       display: flex;
       justify-content: space-between;
@@ -1569,6 +1613,11 @@
       grid-column: 1 / -1;
     }
 
+    .birth-weather-card {
+      border-color: rgba(0, 210, 255, 0.26);
+      background: linear-gradient(145deg, rgba(0, 210, 255, 0.1), rgba(124, 77, 255, 0.06));
+    }
+
     .life-map-grid--split {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1891,6 +1940,65 @@
       }
     }
 
+    /* Mobile density pass: keep the information, reduce the visual pressure. */
+    @media (max-width: 640px) {
+      .lifetime-grid,
+      .insight-grid,
+      .cosmic-grid,
+      .life-map-grid { gap: 8px; }
+
+      .panel,
+      .slate-card,
+      .birthday-hero-card,
+      .share-card { padding-left: 12px; padding-right: 12px; }
+
+      .insight-card { min-height: 92px; padding: 11px; }
+
+      .stat-value,
+      .dna-value,
+      .zodiac-info-value,
+      .lifetime-value,
+      .insight-value,
+      .share-metric-value {
+        font-size: clamp(1.08rem, 4.5vw, 1.42rem);
+        line-height: 1.14;
+      }
+
+      .stat-label,
+      .dna-label,
+      .micro-label,
+      .zodiac-info-label,
+      .lifetime-label {
+        font-size: 0.64rem;
+        line-height: 1.28;
+        letter-spacing: 0.65px;
+      }
+
+      .source-card--show-copy:not(.celestial-preview-card) .insight-copy { display: none; }
+      .celestial-preview-card { grid-column: 1 / -1; min-height: 0 !important; padding: 12px 13px !important; }
+      .celestial-preview-card .insight-copy { margin-top: 6px; font-size: 0.76rem; line-height: 1.38; }
+      .sky-event-card .insight-value { max-width: calc(100% - 58px); font-size: 1.02rem; font-weight: 800; line-height: 1.24; overflow-wrap: normal; word-break: normal; }
+      .source-toggle { top: 8px; right: 8px; min-height: 30px; padding: 4px 8px; }
+      .upcoming-event { gap: 7px 9px; padding: 9px 10px; }
+      .upcoming-event-title { font-size: 0.82rem; font-weight: 800; }
+      .upcoming-event-detail { font-size: 0.68rem; line-height: 1.35; }
+      .comparison-row { padding: 9px 8px; }
+      .comparison-value { overflow-wrap: normal; word-break: normal; }
+      .dashboard-group-summary { padding: 11px; }
+      .dashboard-group-icon { width: 32px; height: 32px; border-radius: 10px; font-size: 1rem; }
+      .dashboard-group-title { font-size: 0.9rem; }
+      .birth-snapshot-group { grid-template-columns: 1fr; gap: 10px; }
+      .birth-snapshot-group + .birth-snapshot-group { padding-top: 13px; }
+      .birth-snapshot-group-title { font-size: 0.64rem; letter-spacing: 1.25px; }
+    }
+
+    @media (max-width: 520px) {
+      .cosmic-grid { grid-template-columns: 1fr; }
+      .cosmic-grid .insight-card { min-height: 0; }
+      .dashboard-group-copy { display: none; }
+      .dashboard-group-summary { grid-template-columns: 32px minmax(0, 1fr) auto; }
+      .dashboard-group-content { padding: 0 6px 9px; }
+    }
     @media (max-width: 400px) {
       .compact-grid-3 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2506,14 +2614,14 @@
 
         <div class="insight-card compact-card source-card source-card--show-copy">
           <span class="insight-value" id="nba-east-titles-value">0</span>
-          <span class="micro-label">Eastern Conference NBA Titles</span>
+          <span class="micro-label">NBA East Titles</span>
           <p class="insight-copy" id="nba-east-titles-copy"></p>
           <button class="source-toggle" type="button" data-source-target="nba-east-titles" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-nba-east-titles" hidden></div>
 </div>
         <div class="insight-card compact-card source-card source-card--show-copy">
           <span class="insight-value" id="nba-west-titles-value">0</span>
-          <span class="micro-label">Western Conference NBA Titles</span>
+          <span class="micro-label">NBA West Titles</span>
           <p class="insight-copy" id="nba-west-titles-copy"></p>
           <button class="source-toggle" type="button" data-source-target="nba-west-titles" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-nba-west-titles" hidden></div>
@@ -2595,23 +2703,37 @@
           <span class="micro-label">Mercury Birthdays</span>
           <p class="insight-copy" id="mercury-birthdays-copy">Your next date will appear here.</p>
         </div>
-        <div class="insight-card compact-card source-card source-card--show-copy">
+        <div class="insight-card compact-card source-card source-card--show-copy celestial-preview-card">
           <span class="insight-value" id="blue-moons-value">0</span>
           <span class="micro-label">Blue Moons</span><p class="insight-copy" id="blue-moons-copy">The next date will appear here.</p>
           <button class="source-toggle" type="button" data-source-target="blue-moons" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-blue-moons" hidden></div>
         </div>
-        <div class="insight-card compact-card">
+        <div class="insight-card compact-card celestial-preview-card">
           <span class="insight-value" id="fullmoons-value">0</span>
           <span class="micro-label">Full Moon Cycles</span><p class="insight-copy" id="fullmoons-copy">Previous and next dates will appear here.</p>
         </div>
-        <div class="insight-card compact-card source-card source-card--show-copy">
+        <div class="insight-card compact-card source-card source-card--show-copy celestial-preview-card">
           <span class="insight-value" id="eclipses-value">0</span>
           <span class="micro-label">Solar Eclipses</span><p class="insight-copy" id="eclipses-copy">The next date will appear here.</p>
           <button class="source-toggle" type="button" data-source-target="solar-eclipses" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-solar-eclipses" hidden></div>
         </div>
-        <div class="insight-card compact-card source-card source-card--show-copy">
+        <div class="insight-card compact-card source-card source-card--show-copy sky-event-card celestial-preview-card">
+          <span class="insight-value" id="meteor-shower-value">Loading...</span>
+          <span class="micro-label">Meteor Shower</span>
+          <p class="insight-copy sky-event-copy" id="meteor-shower-copy">The next peak and viewing window will appear here.</p>
+          <button class="source-toggle" type="button" data-source-target="meteor-showers" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-meteor-showers" hidden></div>
+        </div>
+        <div class="insight-card compact-card source-card source-card--show-copy sky-event-card celestial-preview-card">
+          <span class="insight-value" id="visible-sky-event-value">Loading...</span>
+          <span class="micro-label">Sky Highlight</span>
+          <p class="insight-copy sky-event-copy" id="visible-sky-event-copy">The next conjunction, opposition, or visibility window will appear here.</p>
+          <button class="source-toggle" type="button" data-source-target="visible-sky-events" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-visible-sky-events" hidden></div>
+        </div>
+        <div class="insight-card compact-card source-card source-card--show-copy celestial-preview-card">
           <span class="insight-value" id="total-lunar-eclipses-value">0</span>
           <span class="micro-label">Lunar Eclipses</span><p class="insight-copy" id="total-lunar-eclipses-copy">The next date will appear here.</p>
           <button class="source-toggle" type="button" data-source-target="lunar-eclipses" aria-expanded="false">Source</button>
@@ -2650,7 +2772,7 @@
     <div class="slate-card slate-card--snapshot" id="birth-snapshot-panel">
       <span class="slate-header slate-header--snapshot">Born Into This World</span>
 
-      <div class="birth-grid">
+      <div class="birth-grid" id="birth-snapshot-grid">
         <div class="birth-feature">
           <div class="birth-feature-top">
             <div>
@@ -2663,6 +2785,13 @@
           <a id="birth-song-link" class="song-link-btn" href="#" target="_blank" rel="noopener noreferrer">OPEN SONG INFO →</a>
         </div>
 
+
+        <div class="birth-card birth-card--wide birth-weather-card">
+          <span class="birth-card-title" id="birth-weather-title">...</span>
+          <span class="dna-label">Weather at Your Birth</span>
+          <p id="birth-weather-copy" class="slate-body">...</p>
+          <span id="birth-weather-status" class="source-line"><span class="state-pill state-static">IDLE</span>Waiting for historical weather lookup.</span>
+        </div>
         <div class="birth-card">
           <span class="birth-card-title" id="birth-era-value">...</span>
           <span class="dna-label">Life Era</span>
@@ -2702,12 +2831,6 @@
           <p id="birth-temp-copy" class="slate-body">...</p>
         </div>
 
-        <div class="birth-card">
-          <span class="birth-card-title" id="birth-weather-title">...</span>
-          <span class="dna-label">Historical Weather at Birthplace</span>
-          <p id="birth-weather-copy" class="slate-body">...</p>
-          <span id="birth-weather-status" class="source-line"><span class="state-pill state-static">IDLE</span>Waiting for historical weather lookup.</span>
-        </div>
 
         <div class="birth-card">
           <span class="birth-card-title" id="birth-celeb-title">...</span>
@@ -2859,7 +2982,29 @@
 
     <div class="slate-card slate-card--share" id="share-panel">
       <span class="slate-header slate-header--share">Share Card Preview</span>
-      <div class="share-card" id="share-card">
+      <div class="share-customizer" aria-label="Customize share card">
+        <div class="share-customizer-row">
+          <span class="share-customizer-label">Card Style</span>
+          <div class="share-template-options" id="share-template-options" role="group" aria-label="Card style">
+            <button class="share-template-btn" type="button" data-share-template="cosmic" aria-pressed="true">Cosmic</button>
+            <button class="share-template-btn" type="button" data-share-template="milestone" aria-pressed="false">Milestone</button>
+            <button class="share-template-btn" type="button" data-share-template="minimal" aria-pressed="false">Minimal</button>
+          </div>
+        </div>
+        <div class="share-customizer-row">
+          <span class="share-customizer-label">Privacy</span>
+          <div class="share-privacy-options">
+            <label class="share-privacy-toggle"><input id="share-show-name" type="checkbox" checked> Show Name</label>
+            <label class="share-privacy-toggle"><input id="share-show-birthplace" type="checkbox" checked> Show Birthplace</label>
+          </div>
+        </div>
+        <label class="share-customizer-row" for="share-highlight-select">
+          <span class="share-customizer-label">Timeline Highlight</span>
+          <select class="share-highlight-select" id="share-highlight-select"><option value="">No Timeline Highlight</option></select>
+        </label>
+        <p class="share-privacy-note">Your card is created in this browser. Hidden details are also removed from copied summaries and shared links.</p>
+      </div>
+      <div class="share-card share-card--cosmic" id="share-card">
         <div class="share-topline">
           <div class="share-kicker-stack">
             <div class="share-kicker">Life Pulse</div>
@@ -2887,6 +3032,11 @@
         </div>
         <p class="share-story" id="share-story">...</p>
         <div class="share-signature" id="share-signature">...</div>
+        <div class="share-timeline-highlight hidden" id="share-timeline-highlight">
+          <div class="share-timeline-meta"><span id="share-timeline-category">Highlight</span><span id="share-timeline-date">...</span></div>
+          <div class="share-timeline-title" id="share-timeline-title">...</div>
+          <div class="share-timeline-detail" id="share-timeline-detail">...</div>
+        </div>
         <div class="share-footer">
           <span class="share-tag" id="share-tag-zodiac">...</span>
           <span class="share-tag" id="share-tag-birthday">...</span>
@@ -2937,6 +3087,7 @@
     const STORAGE_VERSION = 4;
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
     const SECTION_STORAGE_KEY = 'lifePulseSectionPreferences';
+    const SHARE_CARD_STORAGE_KEY = 'lifePulseShareCardPreferences';
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
@@ -2961,6 +3112,7 @@
     let liveDataPromise   = null;
     let currentLiveData   = null;
     let currentSportsData = null;
+    let currentSkyData    = null;
 
     // ─── State ────────────────────────────────────────────────────────────────
     let isMuted               = false;
@@ -2981,6 +3133,10 @@
     let birthMomentGlobal     = null;
     let activeTimelineFilter  = 'highlights';
     let lifeTimelineEvents    = [];
+    let activeShareTemplate  = 'cosmic';
+    let shareShowName        = true;
+    let shareShowBirthplace  = true;
+    let selectedShareHighlight = '';
     let currentProfile          = null;
     let currentAstronomy        = null;
     let userGender            = 'male';
@@ -3021,7 +3177,8 @@
       gas:         { state: 'idle', label: 'Live gas compare', detail: 'Waiting for birth snapshot…', source: 'AAA via proxy' },
       song:        { state: 'idle', label: 'Birth-date soundtrack', detail: 'Waiting for birth snapshot…', source: 'Wikipedia chart history' },
       movie:       { state: 'idle', label: 'Birth-date movie', detail: 'Waiting for birth snapshot…', source: 'Wikipedia box-office history' },
-      civic:       { state: 'idle', label: 'Civic reference', detail: 'Waiting for the scheduled USAGov reference…', source: 'USAGov' }
+      civic:       { state: 'idle', label: 'Civic reference', detail: 'Waiting for the scheduled USAGov reference…', source: 'USAGov' },
+      skyEvents:   { state: 'idle', label: 'Sky event calendar', detail: 'Waiting for the maintained annual sky calendar.', source: 'NASA GSFC + IMO' }
     };
 
 
@@ -3144,6 +3301,10 @@
       eclipsesCopy:          document.getElementById('eclipses-copy'),
       totalLunarEclipsesValue: document.getElementById('total-lunar-eclipses-value'),
       totalLunarEclipsesCopy: document.getElementById('total-lunar-eclipses-copy'),
+      meteorShowerValue:     document.getElementById('meteor-shower-value'),
+      meteorShowerCopy:      document.getElementById('meteor-shower-copy'),
+      visibleSkyEventValue:  document.getElementById('visible-sky-event-value'),
+      visibleSkyEventCopy:   document.getElementById('visible-sky-event-copy'),
       presidentsValue:       document.getElementById('presidents-value'),
       presidentialElectionsValue: document.getElementById('presidential-elections-value'),
       presidentialElectionsCopy: document.getElementById('presidential-elections-copy'),
@@ -3289,6 +3450,15 @@
       shareTagBirthday:      document.getElementById('share-tag-birthday'),
       shareTagNext:          document.getElementById('share-tag-next'),
       shareCard:             document.getElementById('share-card'),
+      shareTemplateOptions:  document.getElementById('share-template-options'),
+      shareShowName:         document.getElementById('share-show-name'),
+      shareShowBirthplace:   document.getElementById('share-show-birthplace'),
+      shareHighlightSelect:  document.getElementById('share-highlight-select'),
+      shareTimelineHighlight:document.getElementById('share-timeline-highlight'),
+      shareTimelineCategory: document.getElementById('share-timeline-category'),
+      shareTimelineDate:     document.getElementById('share-timeline-date'),
+      shareTimelineTitle:    document.getElementById('share-timeline-title'),
+      shareTimelineDetail:   document.getElementById('share-timeline-detail'),
       saveCardBtn:           document.getElementById('save-card-btn'),
       saveDashboardBtn:      document.getElementById('save-dashboard-btn'),
       shareBtn:              document.getElementById('share-btn'),
@@ -6458,6 +6628,8 @@
     }
 
     const SPORTS_DATA_FEED_URL = 'sports-data-v4.json';
+    const SKY_EVENTS_FEED_URL = 'sky-events.json';
+    const SKY_EVENT_FALLBACK = [{"id":"2026-120-2026-01-03","code":120,"type":"meteor-shower","title":"Quadrantids","icon":"☄️","date":"2026-01-03T21:33:41.760Z","detail":"Peak rate up to 120 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn; the sharp peak can last only a few hours.","idealRate":120,"parent":"Asteroid 2003 EH1","hemisphere":"Northern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-42-2026-01-10","code":42,"type":"planetary-opposition","title":"Jupiter At Opposition","icon":"♃","date":"2026-01-10T08:21:41.760Z","detail":"Visible most of the night and near its brightest.","viewing":"Visible most of the night and near its brightest.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-35-2026-02-19","code":35,"type":"planet-visibility","title":"Mercury Greatest Eastern Elongation","icon":"☿","date":"2026-02-19T17:58:42.240Z","detail":"Look low in the western sky shortly after sunset.","viewing":"Look low in the western sky shortly after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-104-2026-03-15","code":104,"type":"planetary-conjunction","title":"Mercury And Mars Conjunction","icon":"✨","date":"2026-03-15T18:13:00.480Z","detail":"Look near the horizon in twilight.","viewing":"Look near the horizon in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-1-2026-03-20","code":1,"type":"season","title":"March Equinox","icon":"🌱","date":"2026-03-20T13:45:44.640Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-36-2026-04-03","code":36,"type":"planet-visibility","title":"Mercury Greatest Western Elongation","icon":"☿","date":"2026-04-03T21:58:48.000Z","detail":"Look low in the eastern sky shortly before sunrise.","viewing":"Look low in the eastern sky shortly before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-111-2026-04-19","code":111,"type":"planetary-conjunction","title":"Mars And Saturn Conjunction","icon":"✨","date":"2026-04-19T18:03:56.160Z","detail":"Look for the pair before dawn or after dusk.","viewing":"Look for the pair before dawn or after dusk.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-106-2026-04-20","code":106,"type":"planetary-conjunction","title":"Mercury And Saturn Conjunction","icon":"✨","date":"2026-04-20T08:41:28.320Z","detail":"Look near the horizon in twilight.","viewing":"Look near the horizon in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-104-2026-04-20","code":104,"type":"planetary-conjunction","title":"Mercury And Mars Conjunction","icon":"✨","date":"2026-04-20T21:15:18.720Z","detail":"Look near the horizon in twilight.","viewing":"Look near the horizon in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-121-2026-04-22","code":121,"type":"meteor-shower","title":"Lyrids","icon":"☄️","date":"2026-04-22T18:02:12.480Z","detail":"Peak rate up to 20 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn under a dark sky.","idealRate":20,"parent":"Comet C/1861 G1 Thatcher","hemisphere":"Both hemispheres; northern favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-122-2026-05-05","code":122,"type":"meteor-shower","title":"Eta Aquariids","icon":"☄️","date":"2026-05-05T07:16:13.440Z","detail":"Peak rate up to 60 meteors per hour under ideal dark skies.","viewing":"Best in the hours before dawn.","idealRate":60,"parent":"Halley\u0027s Comet","hemisphere":"Southern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-108-2026-06-09","code":108,"type":"planetary-conjunction","title":"Venus And Jupiter Conjunction","icon":"✨","date":"2026-06-09T19:11:28.320Z","detail":"Look for the two bright planets together in twilight.","viewing":"Look for the two bright planets together in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-35-2026-06-15","code":35,"type":"planet-visibility","title":"Mercury Greatest Eastern Elongation","icon":"☿","date":"2026-06-15T18:58:48.000Z","detail":"Look low in the western sky shortly after sunset.","viewing":"Look low in the western sky shortly after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-2-2026-06-21","code":2,"type":"season","title":"June Solstice","icon":"☀️","date":"2026-06-21T07:25:09.120Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-105-2026-06-25","code":105,"type":"planetary-conjunction","title":"Mercury And Jupiter Conjunction","icon":"✨","date":"2026-06-25T10:54:14.400Z","detail":"Look near the horizon in twilight.","viewing":"Look near the horizon in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-123-2026-07-28","code":123,"type":"meteor-shower","title":"Southern Delta Aquariids","icon":"☄️","date":"2026-07-28T09:01:46.560Z","detail":"Peak rate up to 20 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":20,"parent":"Comet 96P/Machholz complex","hemisphere":"Southern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-imo-alpha-capricornids","code":"IMO-alphaCapricornids","type":"meteor-shower","title":"Alpha Capricornids","icon":"☄️","date":"2026-07-31T12:00:00.000Z","detail":"Peak rate near 5 meteors per hour under ideal dark skies; exact timing can vary.","viewing":"Best from late evening through dawn; known for occasional bright fireballs.","idealRate":5,"parent":"Comet 169P/NEAT","hemisphere":"Both hemispheres","datePrecision":"annual-window","source":"International Meteor Organization","sourceUrl":"https://www.imo.net/resources/calendar/meteor-shower-calendar-archive/"},{"id":"2026-36-2026-08-02","code":36,"type":"planet-visibility","title":"Mercury Greatest Western Elongation","icon":"☿","date":"2026-08-02T06:58:48.000Z","detail":"Look low in the eastern sky shortly before sunrise.","viewing":"Look low in the eastern sky shortly before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-124-2026-08-13","code":124,"type":"meteor-shower","title":"Perseids","icon":"☄️","date":"2026-08-13T00:56:12.480Z","detail":"Peak rate up to 90 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn from a dark location.","idealRate":90,"parent":"Comet 109P/Swift-Tuttle","hemisphere":"Northern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-37-2026-08-15","code":37,"type":"planet-visibility","title":"Venus Greatest Eastern Elongation","icon":"♀","date":"2026-08-15T04:58:42.240Z","detail":"Look west after sunset.","viewing":"Look west after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-3-2026-09-22","code":3,"type":"season","title":"September Equinox","icon":"🍂","date":"2026-09-22T23:05:36.960Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-45-2026-09-25","code":45,"type":"planetary-opposition","title":"Neptune At Opposition","icon":"♆","date":"2026-09-25T23:12:57.600Z","detail":"A telescope and a finder chart are recommended.","viewing":"A telescope and a finder chart are recommended.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-43-2026-10-04","code":43,"type":"planetary-opposition","title":"Saturn At Opposition","icon":"♄","date":"2026-10-04T10:52:22.080Z","detail":"Visible most of the night and near its brightest.","viewing":"Visible most of the night and near its brightest.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-103-2026-10-07","code":103,"type":"planetary-conjunction","title":"Mercury And Venus Conjunction","icon":"✨","date":"2026-10-07T02:59:28.320Z","detail":"Look near the horizon in twilight.","viewing":"Look near the horizon in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-imo-draconids","code":"IMO-draconids","type":"meteor-shower","title":"Draconids","icon":"☄️","date":"2026-10-07T12:00:00.000Z","detail":"Peak rate near 10 meteors per hour under ideal dark skies; exact timing can vary.","viewing":"Best in the evening from a dark northern location; the exact peak can vary.","idealRate":10,"parent":"Comet 21P/Giacobini-Zinner","hemisphere":"Northern Hemisphere favored","datePrecision":"annual-window","source":"International Meteor Organization","sourceUrl":"https://www.imo.net/resources/calendar/meteor-shower-calendar-archive/"},{"id":"2026-35-2026-10-12","code":35,"type":"planet-visibility","title":"Mercury Greatest Eastern Elongation","icon":"☿","date":"2026-10-12T08:58:45.120Z","detail":"Look low in the western sky shortly after sunset.","viewing":"Look low in the western sky shortly after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-125-2026-10-21","code":125,"type":"meteor-shower","title":"Orionids","icon":"☄️","date":"2026-10-21T17:15:59.040Z","detail":"Peak rate up to 20 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":20,"parent":"Halley\u0027s Comet","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-126-2026-11-05","code":126,"type":"meteor-shower","title":"Southern Taurids","icon":"☄️","date":"2026-11-05T18:44:47.040Z","detail":"Peak rate up to 10 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn; watch for bright fireballs.","idealRate":10,"parent":"Comet 2P/Encke complex","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-127-2026-11-12","code":127,"type":"meteor-shower","title":"Northern Taurids","icon":"☄️","date":"2026-11-12T18:01:35.040Z","detail":"Peak rate up to 15 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn; watch for bright fireballs.","idealRate":15,"parent":"Comet 2P/Encke complex","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-110-2026-11-16","code":110,"type":"planetary-conjunction","title":"Mars And Jupiter Conjunction","icon":"✨","date":"2026-11-16T04:21:56.160Z","detail":"Look for the pair before dawn or after dusk.","viewing":"Look for the pair before dawn or after dusk.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-128-2026-11-18","code":128,"type":"meteor-shower","title":"Leonids","icon":"☄️","date":"2026-11-18T00:19:09.120Z","detail":"Peak rate up to 15 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":15,"parent":"Comet 55P/Tempel-Tuttle","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-36-2026-11-20","code":36,"type":"planet-visibility","title":"Mercury Greatest Western Elongation","icon":"☿","date":"2026-11-20T22:58:48.000Z","detail":"Look low in the eastern sky shortly before sunrise.","viewing":"Look low in the eastern sky shortly before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-44-2026-11-25","code":44,"type":"planetary-opposition","title":"Uranus At Opposition","icon":"⛢","date":"2026-11-25T22:46:42.240Z","detail":"Best viewed with binoculars or a telescope.","viewing":"Best viewed with binoculars or a telescope.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-129-2026-12-14","code":129,"type":"meteor-shower","title":"Geminids","icon":"☄️","date":"2026-12-14T13:30:17.280Z","detail":"Peak rate up to 120 meteors per hour under ideal dark skies.","viewing":"Visible from evening through dawn; a dark site gives the best rates.","idealRate":120,"parent":"Asteroid 3200 Phaethon","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-4-2026-12-21","code":4,"type":"season","title":"December Solstice","icon":"❄️","date":"2026-12-21T20:50:21.120Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2026-130-2026-12-22","code":130,"type":"meteor-shower","title":"Ursids","icon":"☄️","date":"2026-12-22T22:00:02.880Z","detail":"Peak rate up to 10 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":10,"parent":"Comet 8P/Tuttle","hemisphere":"Northern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2026"},{"id":"2027-38-2027-01-03","code":38,"type":"planet-visibility","title":"Venus Greatest Western Elongation","icon":"♀","date":"2027-01-03T18:58:45.120Z","detail":"Look east before sunrise.","viewing":"Look east before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-120-2027-01-04","code":120,"type":"meteor-shower","title":"Quadrantids","icon":"☄️","date":"2027-01-04T03:42:54.720Z","detail":"Peak rate up to 120 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn; the sharp peak can last only a few hours.","idealRate":120,"parent":"Asteroid 2003 EH1","hemisphere":"Northern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-35-2027-02-03","code":35,"type":"planet-visibility","title":"Mercury Greatest Eastern Elongation","icon":"☿","date":"2027-02-03T05:58:42.240Z","detail":"Look low in the western sky shortly after sunset.","viewing":"Look low in the western sky shortly after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-42-2027-02-11","code":42,"type":"planetary-opposition","title":"Jupiter At Opposition","icon":"♃","date":"2027-02-11T00:23:11.040Z","detail":"Visible most of the night and near its brightest.","viewing":"Visible most of the night and near its brightest.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-41-2027-02-19","code":41,"type":"planetary-opposition","title":"Mars At Opposition","icon":"♂","date":"2027-02-19T15:11:57.120Z","detail":"Visible most of the night and near its brightest.","viewing":"Visible most of the night and near its brightest.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-36-2027-03-17","code":36,"type":"planet-visibility","title":"Mercury Greatest Western Elongation","icon":"☿","date":"2027-03-17T05:58:45.120Z","detail":"Look low in the eastern sky shortly before sunrise.","viewing":"Look low in the eastern sky shortly before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-1-2027-03-20","code":1,"type":"season","title":"March Equinox","icon":"🌱","date":"2027-03-20T19:25:09.120Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-110-2027-03-31","code":110,"type":"planetary-conjunction","title":"Mars And Jupiter Conjunction","icon":"✨","date":"2027-03-31T04:22:42.240Z","detail":"Look for the pair before dawn or after dusk.","viewing":"Look for the pair before dawn or after dusk.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-121-2027-04-23","code":121,"type":"meteor-shower","title":"Lyrids","icon":"☄️","date":"2027-04-23T00:11:16.800Z","detail":"Peak rate up to 20 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn under a dark sky.","idealRate":20,"parent":"Comet C/1861 G1 Thatcher","hemisphere":"Both hemispheres; northern favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-122-2027-05-05","code":122,"type":"meteor-shower","title":"Eta Aquariids","icon":"☄️","date":"2027-05-05T13:25:17.760Z","detail":"Peak rate up to 60 meteors per hour under ideal dark skies.","viewing":"Best in the hours before dawn.","idealRate":60,"parent":"Halley\u0027s Comet","hemisphere":"Southern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-109-2027-05-07","code":109,"type":"planetary-conjunction","title":"Venus And Saturn Conjunction","icon":"✨","date":"2027-05-07T15:03:56.160Z","detail":"Look for the pair in morning or evening twilight.","viewing":"Look for the pair in morning or evening twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-35-2027-05-28","code":35,"type":"planet-visibility","title":"Mercury Greatest Eastern Elongation","icon":"☿","date":"2027-05-28T08:58:45.120Z","detail":"Look low in the western sky shortly after sunset.","viewing":"Look low in the western sky shortly after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-2-2027-06-21","code":2,"type":"season","title":"June Solstice","icon":"☀️","date":"2027-06-21T13:10:53.760Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-36-2027-07-15","code":36,"type":"planet-visibility","title":"Mercury Greatest Western Elongation","icon":"☿","date":"2027-07-15T17:58:45.120Z","detail":"Look low in the eastern sky shortly before sunrise.","viewing":"Look low in the eastern sky shortly before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-123-2027-07-28","code":123,"type":"meteor-shower","title":"Southern Delta Aquariids","icon":"☄️","date":"2027-07-28T15:10:50.880Z","detail":"Peak rate up to 20 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":20,"parent":"Comet 96P/Machholz complex","hemisphere":"Southern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-imo-alpha-capricornids","code":"IMO-alphaCapricornids","type":"meteor-shower","title":"Alpha Capricornids","icon":"☄️","date":"2027-07-29T12:00:00.000Z","detail":"Peak rate near 5 meteors per hour under ideal dark skies; exact timing can vary.","viewing":"Best from late evening through dawn; known for occasional bright fireballs.","idealRate":5,"parent":"Comet 169P/NEAT","hemisphere":"Both hemispheres","datePrecision":"annual-window","source":"International Meteor Organization","sourceUrl":"https://www.imo.net/resources/calendar/meteor-shower-calendar-archive/"},{"id":"2027-124-2027-08-13","code":124,"type":"meteor-shower","title":"Perseids","icon":"☄️","date":"2027-08-13T07:05:16.800Z","detail":"Peak rate up to 90 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn from a dark location.","idealRate":90,"parent":"Comet 109P/Swift-Tuttle","hemisphere":"Northern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-3-2027-09-23","code":3,"type":"season","title":"September Equinox","icon":"🍂","date":"2027-09-23T05:01:35.040Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-35-2027-09-24","code":35,"type":"planet-visibility","title":"Mercury Greatest Eastern Elongation","icon":"☿","date":"2027-09-24T20:58:45.120Z","detail":"Look low in the western sky shortly after sunset.","viewing":"Look low in the western sky shortly after sunset.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-45-2027-09-28","code":45,"type":"planetary-opposition","title":"Neptune At Opposition","icon":"♆","date":"2027-09-28T11:54:25.920Z","detail":"A telescope and a finder chart are recommended.","viewing":"A telescope and a finder chart are recommended.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-imo-draconids","code":"IMO-draconids","type":"meteor-shower","title":"Draconids","icon":"☄️","date":"2027-10-07T12:00:00.000Z","detail":"Peak rate near 10 meteors per hour under ideal dark skies; exact timing can vary.","viewing":"Best in the evening from a dark northern location; the exact peak can vary.","idealRate":10,"parent":"Comet 21P/Giacobini-Zinner","hemisphere":"Northern Hemisphere favored","datePrecision":"annual-window","source":"International Meteor Organization","sourceUrl":"https://www.imo.net/resources/calendar/meteor-shower-calendar-archive/"},{"id":"2027-103-2027-10-11","code":103,"type":"planetary-conjunction","title":"Mercury And Venus Conjunction","icon":"✨","date":"2027-10-11T13:04:42.240Z","detail":"Look near the horizon in twilight.","viewing":"Look near the horizon in twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-43-2027-10-17","code":43,"type":"planetary-opposition","title":"Saturn At Opposition","icon":"♄","date":"2027-10-17T23:00:51.840Z","detail":"Visible most of the night and near its brightest.","viewing":"Visible most of the night and near its brightest.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-125-2027-10-21","code":125,"type":"meteor-shower","title":"Orionids","icon":"☄️","date":"2027-10-21T23:25:03.360Z","detail":"Peak rate up to 20 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":20,"parent":"Halley\u0027s Comet","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-36-2027-11-04","code":36,"type":"planet-visibility","title":"Mercury Greatest Western Elongation","icon":"☿","date":"2027-11-04T07:58:42.240Z","detail":"Look low in the eastern sky shortly before sunrise.","viewing":"Look low in the eastern sky shortly before sunrise.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-126-2027-11-05","code":126,"type":"meteor-shower","title":"Southern Taurids","icon":"☄️","date":"2027-11-05T23:54:00.000Z","detail":"Peak rate up to 10 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn; watch for bright fireballs.","idealRate":10,"parent":"Comet 2P/Encke complex","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-127-2027-11-13","code":127,"type":"meteor-shower","title":"Northern Taurids","icon":"☄️","date":"2027-11-13T00:10:39.360Z","detail":"Peak rate up to 15 meteors per hour under ideal dark skies.","viewing":"Best from late evening through dawn; watch for bright fireballs.","idealRate":15,"parent":"Comet 2P/Encke complex","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-128-2027-11-18","code":128,"type":"meteor-shower","title":"Leonids","icon":"☄️","date":"2027-11-18T06:28:22.080Z","detail":"Peak rate up to 15 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":15,"parent":"Comet 55P/Tempel-Tuttle","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-107-2027-11-25","code":107,"type":"planetary-conjunction","title":"Venus And Mars Conjunction","icon":"✨","date":"2027-11-25T00:30:14.400Z","detail":"Look for the bright pair in morning or evening twilight.","viewing":"Look for the bright pair in morning or evening twilight.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-44-2027-11-30","code":44,"type":"planetary-opposition","title":"Uranus At Opposition","icon":"⛢","date":"2027-11-30T09:32:49.920Z","detail":"Best viewed with binoculars or a telescope.","viewing":"Best viewed with binoculars or a telescope.","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-129-2027-12-14","code":129,"type":"meteor-shower","title":"Geminids","icon":"☄️","date":"2027-12-14T19:39:30.240Z","detail":"Peak rate up to 120 meteors per hour under ideal dark skies.","viewing":"Visible from evening through dawn; a dark site gives the best rates.","idealRate":120,"parent":"Asteroid 3200 Phaethon","hemisphere":"Both hemispheres","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-4-2027-12-22","code":4,"type":"season","title":"December Solstice","icon":"❄️","date":"2027-12-22T02:42:34.560Z","detail":"Season marker","viewing":"Season marker","idealRate":null,"parent":null,"hemisphere":"Global","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"},{"id":"2027-130-2027-12-23","code":130,"type":"meteor-shower","title":"Ursids","icon":"☄️","date":"2027-12-23T04:00:02.880Z","detail":"Peak rate up to 10 meteors per hour under ideal dark skies.","viewing":"Best after midnight through dawn.","idealRate":10,"parent":"Comet 8P/Tuttle","hemisphere":"Northern Hemisphere favored","source":"NASA GSFC Sky Events Calendar","sourceUrl":"https://eclipse.gsfc.nasa.gov/SKYCAL/SKYCAL.html?cal=2027"}];
 
     function replaceArrayContents(target, values) {
       target.length = 0;
@@ -6592,6 +6764,89 @@
         }
       } catch (error) {
         console.info('Using embedded sports fallback data.', error);
+      }
+    }
+
+    function normalizeSkyEvent(event) {
+      if (!event || !event.date) return null;
+      const date = new Date(event.date);
+      if (Number.isNaN(date.getTime())) return null;
+      return { ...event, date };
+    }
+
+    function getMaintainedSkyEvents() {
+      const source = Array.isArray(currentSkyData?.events) ? currentSkyData.events : SKY_EVENT_FALLBACK;
+      return source.map(normalizeSkyEvent).filter(Boolean).sort((a, b) => a.date - b.date);
+    }
+
+    function getNextMaintainedSkyEvent(now, predicate) {
+      return getMaintainedSkyEvents().find(event => event.date > now && predicate(event)) || null;
+    }
+
+    function compactSkyEventTitle(event) {
+      const title = String(event?.title || '').trim();
+      if (!title) return 'Schedule Unavailable';
+      const eastern = title.match(/^(.+?) Greatest Eastern Elongation$/i);
+      if (eastern) return `${eastern[1]} Evening View`;
+      const western = title.match(/^(.+?) Greatest Western Elongation$/i);
+      if (western) return `${western[1]} Morning View`;
+      return title
+        .replace(/ Planetary Conjunction$/i, ' Pairing')
+        .replace(/ Conjunction$/i, ' Pairing');
+    }
+
+    function compactSkyViewing(viewing) {
+      return String(viewing || '')
+        .replace(/^Best from\s+/i, '')
+        .replace(/^Viewing:\s*/i, '')
+        .trim();
+    }
+    function renderSkyEventCards(now = new Date()) {
+      const meteor = getNextMaintainedSkyEvent(now, event => event.type === 'meteor-shower');
+      const visible = getNextMaintainedSkyEvent(now, event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type));
+      if (els.meteorShowerValue) els.meteorShowerValue.textContent = compactSkyEventTitle(meteor);
+      if (els.meteorShowerCopy) {
+        els.meteorShowerCopy.textContent = meteor
+          ? formatEventDate(meteor.date) + ' • Up To ' + Number(meteor.idealRate || 0).toLocaleString() + '/Hr\n' + compactSkyViewing(meteor.viewing)
+          : 'The maintained meteor calendar does not contain another supported peak yet.';
+      }
+      if (els.visibleSkyEventValue) els.visibleSkyEventValue.textContent = compactSkyEventTitle(visible);
+      if (els.visibleSkyEventCopy) {
+        els.visibleSkyEventCopy.textContent = visible
+          ? formatEventDate(visible.date) + '\n' + compactSkyViewing(visible.viewing)
+          : 'The maintained calendar does not contain another visible planetary event yet.';
+      }
+      const upcomingMeteors = getMaintainedSkyEvents().filter(event => event.type === 'meteor-shower' && event.date > now).slice(0, 14);
+      const upcomingVisible = getMaintainedSkyEvents().filter(event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type) && event.date > now).slice(0, 18);
+      setSourceDrawer('meteor-showers', {
+        intro: 'Upcoming major meteor-shower peaks, ideal-sky rates, and practical viewing guidance.',
+        diagnosticMeta: 'Source: NASA GSFC Sky Events Calendar dates with International Meteor Organization annual observing guidance. Coverage: ' + (currentSkyData?.coverage?.startYear || 2026) + '-' + (currentSkyData?.coverage?.endYear || 2027) + '.',
+        lines: upcomingMeteors.map(event => formatSourceDate(event.date) + ' - ' + event.title + ' - Up To ' + Number(event.idealRate || 0).toLocaleString() + '/Hr - ' + event.viewing)
+      });
+      setSourceDrawer('visible-sky-events', {
+        intro: 'Upcoming planetary conjunctions, oppositions, and greatest-elongation viewing opportunities.',
+        diagnosticMeta: 'Source: NASA GSFC Sky Events Calendar calculated event dates. Times are converted from the maintained UTC calendar.',
+        lines: upcomingVisible.map(event => formatSourceDate(event.date) + ' - ' + event.title + ' - ' + event.viewing)
+      });
+    }
+
+    async function loadSkyEventsFeed() {
+      try {
+        const response = await fetch(SKY_EVENTS_FEED_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error('Sky events feed returned ' + response.status);
+        const payload = await response.json();
+        if (!Array.isArray(payload.events) || !payload.events.length) throw new Error('Sky events feed is empty');
+        currentSkyData = payload;
+        setLiveDiagnostic('skyEvents', { state: 'live', detail: 'Maintained sky calendar loaded through ' + payload.coverage.endYear + '.', source: 'NASA GSFC + IMO' });
+      } catch (error) {
+        currentSkyData = { schemaVersion: 1, coverage: { startYear: 2026, endYear: 2027 }, events: SKY_EVENT_FALLBACK };
+        setLiveDiagnostic('skyEvents', { state: 'local', detail: 'The browser used the embedded 2026-2027 sky calendar because the JSON file was unavailable in this context.', source: 'Embedded annual fallback' });
+        console.info('Using embedded sky-event fallback data.', error);
+      }
+      renderSkyEventCards(new Date());
+      if (birthMomentGlobal) {
+        renderWhatsNext(new Date());
+        renderLifeEventTimeline(new Date());
       }
     }
 
@@ -7257,53 +7512,113 @@ function countPresidentialElectionsExperienced(start, end) {
       } catch { alert('Could not save the image.'); }
     }
 
+    function getShareEventKey(event) {
+      return event ? [event.date.getTime(), event.category, event.title].join('|') : '';
+    }
+
+    function getSelectedShareEvent() {
+      return lifeTimelineEvents.find(event => getShareEventKey(event) === selectedShareHighlight) || null;
+    }
+
+    function saveShareCardPreferences() {
+      try {
+        localStorage.setItem(SHARE_CARD_STORAGE_KEY, JSON.stringify({ template: activeShareTemplate, showName: shareShowName, showBirthplace: shareShowBirthplace, highlight: selectedShareHighlight }));
+      } catch {}
+    }
+
+    function applyShareCardPreferences() {
+      const templates = ['cosmic', 'milestone', 'minimal'];
+      if (!templates.includes(activeShareTemplate)) activeShareTemplate = 'cosmic';
+      els.shareCard?.classList.remove('share-card--cosmic', 'share-card--milestone', 'share-card--minimal');
+      els.shareCard?.classList.add('share-card--' + activeShareTemplate);
+      els.shareTemplateOptions?.querySelectorAll('[data-share-template]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.shareTemplate === activeShareTemplate)));
+      if (els.shareShowName) els.shareShowName.checked = shareShowName;
+      if (els.shareShowBirthplace) els.shareShowBirthplace.checked = shareShowBirthplace;
+    }
+
+    function loadShareCardPreferences() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(SHARE_CARD_STORAGE_KEY) || '{}');
+        if (['cosmic', 'milestone', 'minimal'].includes(saved.template)) activeShareTemplate = saved.template;
+        if (typeof saved.showName === 'boolean') shareShowName = saved.showName;
+        if (typeof saved.showBirthplace === 'boolean') shareShowBirthplace = saved.showBirthplace;
+        if (typeof saved.highlight === 'string') selectedShareHighlight = saved.highlight;
+      } catch {}
+      applyShareCardPreferences();
+    }
+
+    function populateShareHighlightOptions() {
+      if (!els.shareHighlightSelect || !lifeTimelineEvents.length) return;
+      const candidates = [...lifeTimelineEvents.filter(event => event.featured), ...lifeTimelineEvents.filter(event => !event.featured)]
+        .filter((event, index, list) => list.findIndex(item => getShareEventKey(item) === getShareEventKey(event)) === index).slice(0, 30);
+      const availableKeys = new Set(candidates.map(getShareEventKey));
+      if (selectedShareHighlight && !availableKeys.has(selectedShareHighlight)) selectedShareHighlight = '';
+      els.shareHighlightSelect.innerHTML = '';
+      const empty = document.createElement('option');
+      empty.value = '';
+      empty.textContent = 'No Timeline Highlight';
+      els.shareHighlightSelect.appendChild(empty);
+      candidates.forEach(event => {
+        const option = document.createElement('option');
+        option.value = getShareEventKey(event);
+        option.textContent = formatEventDate(event.date) + ' - ' + event.title;
+        els.shareHighlightSelect.appendChild(option);
+      });
+      els.shareHighlightSelect.value = selectedShareHighlight;
+    }
+
+    function renderShareTimelineHighlight() {
+      const event = getSelectedShareEvent();
+      if (!event) { els.shareTimelineHighlight?.classList.add('hidden'); return; }
+      els.shareTimelineCategory.textContent = event.category;
+      els.shareTimelineDate.textContent = formatEventDate(event.date);
+      els.shareTimelineTitle.textContent = event.title;
+      els.shareTimelineDetail.textContent = event.detail;
+      els.shareTimelineHighlight.classList.remove('hidden');
+    }
+
     function buildSummaryText() {
       const nextBirthday = getNextBirthdayInfo(new Date());
       const identity = getEraIdentity(birthMomentGlobal.getFullYear());
-      return `${normalizeName(els.userName.value)} | ${currentZodiac.n} ${currentZodiac.sym} | Life Path ${currentDNA.lifePath} | ${identity.title} | ${els.heartbeatsValue.textContent} heartbeats | ${nextBirthday.daysUntil} days until age ${nextBirthday.nextAge}. ${currentForecast ? currentForecast.copy : ''}`;
+      const highlight = getSelectedShareEvent();
+      const parts = [];
+      if (shareShowName) parts.push(normalizeName(els.userName.value));
+      parts.push(currentZodiac.n + ' ' + currentZodiac.sym, 'Life Path ' + currentDNA.lifePath, identity.title, els.heartbeatsValue.textContent + ' heartbeats', nextBirthday.daysUntil + ' days until age ' + nextBirthday.nextAge);
+      if (highlight) parts.push('Timeline highlight: ' + formatEventDate(highlight.date) + ' - ' + highlight.title + ': ' + highlight.detail);
+      return parts.join(' | ') + '. ' + (currentForecast ? currentForecast.copy : '');
     }
-
     async function sharePulse() {
-      const confirmed = window.confirm(
-        'This share link will include your name, birth date, birthplace, gender selection, and birth time. Anyone with the link can read those details. Continue?'
-      );
+      const exposed = ['birth date', 'gender selection', 'birth time'];
+      if (shareShowName) exposed.unshift('name');
+      if (shareShowBirthplace) exposed.push('birthplace');
+      const confirmed = window.confirm('This share link will include: ' + exposed.join(', ') + '. Hidden name or birthplace details will not be added to the link. Anyone with the link can read the included details. Continue?');
       if (!confirmed) return;
-
       const profile = {
-        name:       normalizeName(els.userName.value),
-        birthPlace: normalizeName(els.birthPlace.value),
-        gender:     userGender,
-        month:      els.dobMonth.value,
-        day:        els.dobDay.value,
-        year:       els.dobYear.value,
-        time:       els.birthTime.value
+        name: shareShowName ? normalizeName(els.userName.value) : 'Private Life Pulse',
+        birthPlace: shareShowBirthplace ? normalizeName(els.birthPlace.value) : '',
+        gender: userGender, month: els.dobMonth.value, day: els.dobDay.value, year: els.dobYear.value, time: els.birthTime.value
       };
-      const shareBase = (window.location.origin && window.location.origin !== 'null')
-        ? `${window.location.origin}${window.location.pathname}`
-        : window.location.href.split('#')[0];
+      const shareBase = (window.location.origin && window.location.origin !== 'null') ? window.location.origin + window.location.pathname : window.location.href.split('#')[0];
       const shareUrl = shareBase + encodeProfileToHash(profile);
-      const text     = buildSummaryText();
+      const text = buildSummaryText();
       try {
         if (navigator.share) {
           await navigator.share({ title: 'Life Pulse', url: shareUrl, text });
-          setLiveDiagnostic('share', { state: 'live', detail: 'Native share sheet opened with a pre-filled Life Pulse URL hash.', source: 'URL hash' });
+          setLiveDiagnostic('share', { state: 'live', detail: 'Native share sheet opened with the selected privacy settings.', source: 'URL hash' });
           return;
         }
         if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(shareUrl);
-          alert('Share link copied. Opening it pre-fills the Life Pulse form.');
-          setLiveDiagnostic('share', { state: 'live', detail: 'A pre-filled share URL was copied to the clipboard.', source: 'URL hash' });
+          alert('Share link copied with the selected privacy settings.');
+          setLiveDiagnostic('share', { state: 'live', detail: 'A privacy-aware share URL was copied to the clipboard.', source: 'URL hash' });
           return;
         }
-        alert(`${text}
-
-${shareUrl}`);
+        alert(text + String.fromCharCode(10) + String.fromCharCode(10) + shareUrl);
         setLiveDiagnostic('share', { state: 'fallback', detail: 'The share URL was displayed manually because direct share APIs were unavailable.', source: 'URL hash' });
       } catch {
         setLiveDiagnostic('share', { state: 'error', detail: 'The share flow was interrupted before the URL could be shared.', source: 'URL hash' });
       }
     }
-
     async function copySummary() {
       try {
         const text = buildSummaryText();
@@ -7951,6 +8266,7 @@ ${shareUrl}`);
       els.shareAge.textContent         = years.toFixed(3);
       els.shareHeartbeats.textContent  = formatCompact(heartbeats, 2);
       els.shareTagNext.textContent     = `${nextBirthday.daysUntil}d to ${nextBirthday.nextAge}`;
+      renderSkyEventCards(now);
     }
 
     // ─── Insight panels ───────────────────────────────────────────────────────
@@ -8019,6 +8335,8 @@ ${shareUrl}`);
       const worldCup = nextDatedItem(WORLD_CUP_DATES, now);
       const election = nextDatedItem(PRESIDENTIAL_ELECTION_DATES, now);
       const halley = nextDatedItem(HALLEY_COMET_DATES, now);
+      const nextMeteor = getNextMaintainedSkyEvent(now, event => event.type === 'meteor-shower');
+      const nextVisibleSky = getNextMaintainedSkyEvent(now, event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type));
       const events = [
         { date: birthday.nextBirthday, category: 'personal', icon: '🎂', title: `Birthday #${birthday.nextAge}`, detail: 'Your next trip around the Sun' },
         { date: getNextMercuryBirthday(birthMomentGlobal, now), category: 'sky', icon: '☿', title: 'Mercury Birthday', detail: 'Another 87.97 Earth-day Mercury year' },
@@ -8032,7 +8350,9 @@ ${shareUrl}`);
         summer && { date: summer, category: 'sports', icon: '🏅', title: 'Summer Olympics', detail: SUMMER_OLYMPICS_LOCATIONS[eventDateKey(summer)] || 'Host location pending' },
         winter && { date: winter, category: 'sports', icon: '❄️', title: 'Winter Olympics', detail: WINTER_OLYMPICS_LOCATIONS[eventDateKey(winter)] || 'Host location pending' },
         worldCup && { date: worldCup, category: 'sports', icon: '⚽', title: 'FIFA World Cup', detail: WORLD_CUP_LOCATIONS[eventDateKey(worldCup)] || 'Host location pending' },
-        halley && { date: halley, category: 'sky', icon: '☄️', title: `Halley's Comet`, detail: 'Long-range perihelion forecast', longRange: true }
+        nextMeteor && { date: nextMeteor.date, category: 'sky', icon: nextMeteor.icon || '☄️', title: nextMeteor.title + ' Meteor Shower', detail: 'Up to ' + Number(nextMeteor.idealRate || 0).toLocaleString() + '/hr under ideal skies' },
+        nextVisibleSky && { date: nextVisibleSky.date, category: 'sky', icon: nextVisibleSky.icon || '✨', title: compactSkyEventTitle(nextVisibleSky), detail: compactSkyViewing(nextVisibleSky.viewing) },
+        halley && { date: halley, category: 'sky', icon: '☄️', title: "Halley's Comet", detail: 'Long-range perihelion forecast', longRange: true }
       ].filter(event => event?.date instanceof Date && !Number.isNaN(event.date.getTime()) && event.date > now);
       return events.sort((a, b) => a.date - b.date);
     }
@@ -8182,7 +8502,10 @@ ${shareUrl}`);
       getCalculatedBlueMoonHistory(birthMomentGlobal, now).forEach(entry => add({
         date: entry.date, category: 'sky', icon: '🔵', title: 'Blue Moon', detail: `${entry.type || 'Monthly'} Blue Moon.`, featured: true
       }));
-      HALLEY_COMET_DATES.forEach(date => add({ date, category: 'sky', icon: '☄️', title: `Halley's Comet`, detail: 'Perihelion passage.', featured: true }));
+      HALLEY_COMET_DATES.forEach(date => add({ date, category: 'sky', icon: '☄️', title: "Halley's Comet", detail: 'Perihelion passage.', featured: true }));
+      getMaintainedSkyEvents()
+        .filter(event => event.date >= birthMomentGlobal && event.date <= now && ['meteor-shower', 'planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type))
+        .forEach(event => add({ date: event.date, category: 'sky', icon: event.icon || '✨', title: event.type === 'meteor-shower' ? event.title + ' Meteor Shower' : event.title, detail: event.detail, featured: event.type === 'meteor-shower' }));
 
       return events.sort((a, b) => b.date - a.date);
     }
@@ -8190,6 +8513,7 @@ ${shareUrl}`);
     function renderLifeEventTimeline(now = new Date(), rebuild = true) {
       if (!els.lifeEventTimeline || !els.timelineEventSummary) return;
       if (rebuild || !lifeTimelineEvents.length) lifeTimelineEvents = collectLifeTimelineEvents(now);
+      populateShareHighlightOptions();
       const matching = activeTimelineFilter === 'highlights'
         ? lifeTimelineEvents.filter(event => event.featured)
         : lifeTimelineEvents.filter(event => event.category === activeTimelineFilter);
@@ -8257,19 +8581,23 @@ ${shareUrl}`);
       const nextBirthday = getNextBirthdayInfo(new Date());
       const identity = getEraIdentity(birthMomentGlobal.getFullYear());
       const nextAge = getNextAgeCheckpoint(getCurrentAgeYears(new Date()));
-      els.shareName.textContent      = normalizeName(els.userName.value || 'Life Pulse');
-      els.shareBirthplace.textContent= normalizeName(els.birthPlace.value || 'Birthplace not provided');
-      els.shareZodiac.textContent    = `${currentZodiac.sym} ${currentZodiac.n}`;
-      els.shareLifePath.textContent  = currentDNA.lifePath;
-      els.shareEra.textContent       = currentGeneration.era;
-      els.shareIdentity.textContent  = identity.title;
-      els.shareNextMilestone.textContent = `Age ${nextAge}`;
-      els.shareTagZodiac.textContent = `${currentZodiac.n} / ${currentZodiac.element}`;
-      els.shareTagBirthday.textContent = `Birthday #${currentDNA.birthdayNumber}`;
-      els.shareStory.textContent     = `${els.userName.value || 'This pulse'} carries ${currentZodiac.n} energy with a life path of ${currentDNA.lifePath}. ${identity.copy}`;
-      els.shareSignature.textContent = `${formatCompact(Number((els.heartbeatsValue.textContent || '0').replace(/,/g, '')), 2)} heartbeats so far • ${nextBirthday.daysUntil} days until the next birthday • ${currentGeneration.title}.`;
+      applyShareCardPreferences();
+      els.shareName.textContent = shareShowName ? normalizeName(els.userName.value || 'Life Pulse') : 'A Life Pulse';
+      els.shareName.classList.toggle('hidden', !shareShowName);
+      els.shareBirthplace.textContent = normalizeName(els.birthPlace.value || 'Birthplace not provided');
+      els.shareBirthplace.classList.toggle('hidden', !shareShowBirthplace);
+      els.shareZodiac.textContent = currentZodiac.sym + ' ' + currentZodiac.n;
+      els.shareLifePath.textContent = currentDNA.lifePath;
+      els.shareEra.textContent = currentGeneration.era;
+      els.shareIdentity.textContent = identity.title;
+      els.shareNextMilestone.textContent = 'Age ' + nextAge;
+      els.shareTagZodiac.textContent = currentZodiac.n + ' / ' + currentZodiac.element;
+      els.shareTagBirthday.textContent = 'Birthday #' + currentDNA.birthdayNumber;
+      const subject = shareShowName ? (els.userName.value || 'This pulse') : 'This pulse';
+      els.shareStory.textContent = subject + ' carries ' + currentZodiac.n + ' energy with a life path of ' + currentDNA.lifePath + '. ' + identity.copy;
+      els.shareSignature.textContent = formatCompact(Number((els.heartbeatsValue.textContent || '0').replace(/,/g, '')), 2) + ' heartbeats so far | ' + nextBirthday.daysUntil + ' days until the next birthday | ' + currentGeneration.title + '.';
+      renderShareTimelineHighlight();
     }
-
 
     function formatLiveHoroscopeDate(value) {
       if (!value) return 'today';
@@ -8962,6 +9290,32 @@ ${shareUrl}`);
       saveSectionPreferences();
     }
 
+    function organizeBirthSnapshot() {
+      const grid = document.getElementById('birth-snapshot-grid');
+      if (!grid || grid.dataset.organized === 'true') return;
+      const groups = [
+        { id: 'birth-moment', title: 'Your Birth Moment', cards: ['birth-weather-title', 'birth-celeb-title', 'birth-history-title'] },
+        { id: 'world-snapshot', title: 'World Snapshot', cards: ['birth-era-value', 'birth-population', 'birth-temp', 'birth-gas-price'] },
+        { id: 'culture-tech', title: 'Culture & Technology', cards: ['birth-song-title', 'birth-movie-title', 'birth-tech-title'] }
+      ];
+      groups.forEach(config => {
+        const section = document.createElement('section');
+        section.className = 'birth-snapshot-group';
+        section.setAttribute('aria-labelledby', `${config.id}-title`);
+        const heading = document.createElement('h3');
+        heading.className = 'birth-snapshot-group-title';
+        heading.id = `${config.id}-title`;
+        heading.textContent = config.title;
+        section.appendChild(heading);
+        config.cards.forEach(id => {
+          const card = document.getElementById(id)?.closest('.birth-card, .birth-feature');
+          if (card) section.appendChild(card);
+        });
+        grid.appendChild(section);
+      });
+      grid.classList.add('birth-grid--organized');
+      grid.dataset.organized = 'true';
+    }
     function organizeDashboardSections() {
       const container = document.getElementById('dashboard-groups');
       if (!container || container.dataset.ready === 'true') return;
@@ -9026,7 +9380,29 @@ ${shareUrl}`);
         renderLifeEventTimeline(new Date(), false);
       });
       els.planetChoice.addEventListener('change', () => updateLiveStats(true));
-      els.saveCardBtn.addEventListener('click',     () => exportElementAsImage(els.shareCard,   'LifePulse-Card.png'));
+      els.shareTemplateOptions?.addEventListener('click', event => {
+        const button = event.target.closest('[data-share-template]');
+        if (!button) return;
+        activeShareTemplate = button.dataset.shareTemplate || 'cosmic';
+        applyShareCardPreferences();
+        saveShareCardPreferences();
+      });
+      els.shareShowName?.addEventListener('change', () => {
+        shareShowName = els.shareShowName.checked;
+        saveShareCardPreferences();
+        if (birthMomentGlobal) updateShareCard();
+      });
+      els.shareShowBirthplace?.addEventListener('change', () => {
+        shareShowBirthplace = els.shareShowBirthplace.checked;
+        saveShareCardPreferences();
+        if (birthMomentGlobal) updateShareCard();
+      });
+      els.shareHighlightSelect?.addEventListener('change', () => {
+        selectedShareHighlight = els.shareHighlightSelect.value;
+        saveShareCardPreferences();
+        if (birthMomentGlobal) updateShareCard();
+      });
+      els.saveCardBtn.addEventListener('click',     () => exportElementAsImage(els.shareCard, 'LifePulse-' + activeShareTemplate + '-Card.png'));
       els.saveDashboardBtn.addEventListener('click',() => exportElementAsImage(els.resultView,  'LifePulse-Dashboard.png'));
       els.shareBtn.addEventListener('click',        sharePulse);
       els.copySummaryBtn.addEventListener('click',  copySummary);
@@ -9093,7 +9469,9 @@ ${shareUrl}`);
     function boot() {
       populateYears();
       populateDays();
+      organizeBirthSnapshot();
       organizeDashboardSections();
+      loadShareCardPreferences();
       bindEvents();
       if (window.location.protocol === 'file:') {
         els.localCelebrationTools?.classList.remove('hidden');
@@ -9116,6 +9494,7 @@ ${shareUrl}`);
       updateCheckTimer = setInterval(checkForDashboardUpdate, 15 * 60 * 1000);
       loadSportsDataFeed();
       initSourceDrawers();
+      loadSkyEventsFeed();
 
       // Priority order: URL hash → localStorage → nothing
       const hashProfile = decodeProfileFromHash();
@@ -9153,6 +9532,12 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 

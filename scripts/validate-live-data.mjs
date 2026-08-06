@@ -8,6 +8,7 @@ async function readJson(url) {
 const data = await readJson(new URL('../live-data.json', import.meta.url));
 const version = await readJson(new URL('../version.json', import.meta.url));
 const sports = await readJson(new URL('../sports-data-v4.json', import.meta.url));
+const sky = await readJson(new URL('../sky-events.json', import.meta.url));
 const errors = [];
 const now = Date.now();
 const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'populationHistory', 'civic', 'sports'];
@@ -68,6 +69,21 @@ const expectedChampionshipChecks = {
 for (const league of ['nfl', 'nba', 'mlb']) {
   if (championshipChecks[league] !== expectedChampionshipChecks[league]) errors.push(`${league.toUpperCase()} next championship check should be ${expectedChampionshipChecks[league]}, received ${championshipChecks[league] || 'missing'}.`);
 }
+const skyEvents = Array.isArray(sky?.events) ? sky.events : [];
+const skyCoverageEnd = Number(sky?.coverage?.endYear || 0);
+const requiredSkyCoverage = new Date().getUTCFullYear() + 1;
+if (Number(sky?.schemaVersion) < 1) errors.push('Sky-event schema is missing.');
+if (skyCoverageEnd < requiredSkyCoverage) errors.push('Sky-event coverage must extend through at least ' + requiredSkyCoverage + '.');
+if (skyEvents.filter(event => event.type === 'meteor-shower').length < 10) errors.push('Sky calendar does not contain enough meteor-shower peaks.');
+if (!skyEvents.some(event => event.type === 'meteor-shower' && Date.parse(event.date) > now)) errors.push('Sky calendar contains no future meteor shower.');
+if (!skyEvents.some(event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type) && Date.parse(event.date) > now)) errors.push('Sky calendar contains no future visible planetary event.');
+if (new Set(skyEvents.map(event => event.id)).size !== skyEvents.length) errors.push('Sky calendar contains duplicate event identifiers.');
+if (!/^d{4}-d{2}-d{2}$/.test(String(sky?.updatePolicy?.nextReview || ''))) errors.push('Sky calendar next-review date is missing.');
+for (let index = 0; index < skyEvents.length; index += 1) {
+  if (!Number.isFinite(Date.parse(skyEvents[index].date))) errors.push('Sky event has an invalid date: ' + (skyEvents[index].id || index) + '.');
+  if (index && Date.parse(skyEvents[index - 1].date) > Date.parse(skyEvents[index].date)) errors.push('Sky events are not sorted chronologically.');
+}
+
 if (!version?.contentHash || Number(version?.dataSchemaVersion) !== Number(data.schemaVersion)) errors.push('version.json does not match live-data.json.');
 const releasePattern = new RegExp(`^${Number(data.schemaVersion)}\\.(?:\\d+\\.\\d+|local\\.\\d{8})$`);
 if (!releasePattern.test(String(version?.releaseVersion || ''))) errors.push(`version.json has an invalid release version: ${version?.releaseVersion || 'missing'}.`);
@@ -76,7 +92,7 @@ if (errors.length) {
   console.error(errors.map(error => `- ${error}`).join('\n'));
   process.exit(1);
 }
-console.log(`Validated release v${version.releaseVersion}: schema ${data.schemaVersion}, ${requiredComponents.length} registered components, 12 horoscope signs, reference histories, and future sports coverage.`);
+console.log('Validated release v' + version.releaseVersion + ': schema ' + data.schemaVersion + ', ' + requiredComponents.length + ' registered components, 12 horoscope signs, reference histories, future sports coverage, and ' + skyEvents.length + ' maintained sky events.');
 
 
 
