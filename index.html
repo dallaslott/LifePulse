@@ -1953,7 +1953,11 @@
         </div>
         <div class="insight-card compact-card"><span class="insight-value" id="presidential-elections-value">0</span><span class="micro-label">Presidential Elections</span><p class="insight-copy" id="presidential-elections-copy"></p></div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="console-eras-value">0</span><span class="micro-label">Gaming Console Eras</span></div>
+        <div class="insight-card compact-card source-card">
+          <span class="insight-value" id="console-eras-value">0</span><span class="micro-label">Gaming Console Eras</span>
+          <button class="source-toggle" type="button" data-source-target="console-eras" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-console-eras" hidden></div>
+        </div>
         <div class="insight-card compact-card source-card">
           <span class="insight-value" id="phone-eras-value">0</span><span class="micro-label">Phone Eras Crossed</span>
           <button class="source-toggle" type="button" data-source-target="phone-eras" aria-expanded="false">Source</button>
@@ -2449,6 +2453,7 @@
     const liveCompareCache = new Map();
     let liveDataPromise   = null;
     let currentLiveData   = null;
+    let currentSportsData = null;
 
     // ─── State ────────────────────────────────────────────────────────────────
     let isMuted               = false;
@@ -5321,16 +5326,81 @@
       '1948-07-29','1952-07-19','1956-11-22','1960-08-25','1964-10-10',
       '1968-10-12','1972-08-26','1976-07-17','1980-07-19','1984-07-28',
       '1988-09-17','1992-07-25','1996-07-19','2000-09-15','2004-08-13',
-      '2008-08-08','2012-07-27','2016-08-05','2021-07-23','2024-07-26','2028-07-14'
+      '2008-08-08','2012-07-27','2016-08-05','2021-07-23','2024-07-26','2028-07-14','2032-07-23'
     ].map(d => new Date(`${d}T12:00:00`));
+
+    const SUMMER_OLYMPICS_LOCATIONS = {
+    "1896-04-06":  "Athens, Greece",
+    "1900-05-14":  "Paris, France",
+    "1904-07-01":  "St. Louis, United States",
+    "1908-04-27":  "London, United Kingdom",
+    "1912-05-05":  "Stockholm, Sweden",
+    "1920-04-20":  "Antwerp, Belgium",
+    "1924-05-04":  "Paris, France",
+    "1928-05-17":  "Amsterdam, Netherlands",
+    "1932-07-30":  "Los Angeles, United States",
+    "1936-08-01":  "Berlin, Germany",
+    "1948-07-29":  "London, United Kingdom",
+    "1952-07-19":  "Helsinki, Finland",
+    "1956-11-22":  "Melbourne, Australia",
+    "1960-08-25":  "Rome, Italy",
+    "1964-10-10":  "Tokyo, Japan",
+    "1968-10-12":  "Mexico City, Mexico",
+    "1972-08-26":  "Munich, West Germany",
+    "1976-07-17":  "Montreal, Canada",
+    "1980-07-19":  "Moscow, Soviet Union",
+    "1984-07-28":  "Los Angeles, United States",
+    "1988-09-17":  "Seoul, South Korea",
+    "1992-07-25":  "Barcelona, Spain",
+    "1996-07-19":  "Atlanta, United States",
+    "2000-09-15":  "Sydney, Australia",
+    "2004-08-13":  "Athens, Greece",
+    "2008-08-08":  "Beijing, China",
+    "2012-07-27":  "London, United Kingdom",
+    "2016-08-05":  "Rio de Janeiro, Brazil",
+    "2021-07-23":  "Tokyo, Japan",
+    "2024-07-26":  "Paris, France",
+    "2028-07-14":  "Los Angeles, United States",
+    "2032-07-23":  "Brisbane, Australia"
+};
 
     const WINTER_OLYMPICS_DATES = [
       '1924-01-25','1928-02-11','1932-02-04','1936-02-06','1948-01-30',
       '1952-02-14','1956-01-26','1960-02-18','1964-01-29','1968-02-06',
       '1972-02-03','1976-02-04','1980-02-13','1984-02-08','1988-02-13',
       '1992-02-08','1994-02-12','1998-02-07','2002-02-08','2006-02-10',
-      '2010-02-12','2014-02-07','2018-02-09','2022-02-04','2026-02-06','2030-02-01'
+      '2010-02-12','2014-02-07','2018-02-09','2022-02-04','2026-02-06','2030-02-01','2034-02-10'
     ].map(d => new Date(`${d}T12:00:00`));
+
+    const WINTER_OLYMPICS_LOCATIONS = {
+    "1924-01-25":  "Chamonix, France",
+    "1928-02-11":  "St. Moritz, Switzerland",
+    "1932-02-04":  "Lake Placid, United States",
+    "1936-02-06":  "Garmisch-Partenkirchen, Germany",
+    "1948-01-30":  "St. Moritz, Switzerland",
+    "1952-02-14":  "Oslo, Norway",
+    "1956-01-26":  "Cortina d\u0027Ampezzo, Italy",
+    "1960-02-18":  "Olympic Valley, United States",
+    "1964-01-29":  "Innsbruck, Austria",
+    "1968-02-06":  "Grenoble, France",
+    "1972-02-03":  "Sapporo, Japan",
+    "1976-02-04":  "Innsbruck, Austria",
+    "1980-02-13":  "Lake Placid, United States",
+    "1984-02-08":  "Sarajevo, Yugoslavia",
+    "1988-02-13":  "Calgary, Canada",
+    "1992-02-08":  "Albertville, France",
+    "1994-02-12":  "Lillehammer, Norway",
+    "1998-02-07":  "Nagano, Japan",
+    "2002-02-08":  "Salt Lake City, United States",
+    "2006-02-10":  "Turin, Italy",
+    "2010-02-12":  "Vancouver, Canada",
+    "2014-02-07":  "Sochi, Russia",
+    "2018-02-09":  "Pyeongchang, South Korea",
+    "2022-02-04":  "Beijing, China",
+    "2026-02-06":  "Milan-Cortina, Italy",
+    "2030-02-01":  "French Alps, France",
+    "2034-02-10":  "Salt Lake City-Utah, United States"
+};
 
     const WORLD_CUP_DATES = [
       '1930-07-13','1934-05-27','1938-06-04','1950-06-24','1954-06-16',
@@ -5339,6 +5409,33 @@
       '1998-06-10','2002-05-31','2006-06-09','2010-06-11','2014-06-12',
       '2018-06-14','2022-11-20','2026-06-11','2030-06-08'
     ].map(d => new Date(`${d}T12:00:00`));
+
+    const WORLD_CUP_LOCATIONS = {
+    "1930-07-13":  "Uruguay",
+    "1934-05-27":  "Italy",
+    "1938-06-04":  "France",
+    "1950-06-24":  "Brazil",
+    "1954-06-16":  "Switzerland",
+    "1958-06-08":  "Sweden",
+    "1962-05-30":  "Chile",
+    "1966-07-11":  "England",
+    "1970-05-31":  "Mexico",
+    "1974-06-13":  "West Germany",
+    "1978-06-01":  "Argentina",
+    "1982-06-13":  "Spain",
+    "1986-05-31":  "Mexico",
+    "1990-06-08":  "Italy",
+    "1994-06-17":  "United States",
+    "1998-06-10":  "France",
+    "2002-05-31":  "South Korea and Japan",
+    "2006-06-09":  "Germany",
+    "2010-06-11":  "South Africa",
+    "2014-06-12":  "Brazil",
+    "2018-06-14":  "Russia",
+    "2022-11-20":  "Qatar",
+    "2026-06-11":  "Canada, Mexico, and United States",
+    "2030-06-08":  "Morocco, Portugal, and Spain; centenary matches in Argentina, Paraguay, and Uruguay"
+};
 
     const SUPER_BOWL_DATES = [
       '1967-01-15','1968-01-14','1969-01-12','1970-01-11','1971-01-17',
@@ -5587,16 +5684,39 @@
       target.push(...values);
     }
 
+    function replaceObjectContents(target, values) {
+      Object.keys(target).forEach(key => delete target[key]);
+      Object.assign(target, values);
+    }
+
+    function eventDateKey(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatEventLocationHistory(dates, locations) {
+      return dates.map(date => `${formatSourceDate(date)} - ${locations[eventDateKey(date)] || 'Location To Be Confirmed'}`);
+    }
+
     function applySportsData(payload) {
       if (!payload || typeof payload !== 'object') return;
+      currentSportsData = payload;
       if (Array.isArray(payload.summerOlympicsDates)) {
         replaceArrayContents(SUMMER_OLYMPICS_DATES, payload.summerOlympicsDates.map(d => new Date(`${d}T12:00:00`)));
+      }
+      if (payload.summerOlympicsLocations && typeof payload.summerOlympicsLocations === 'object') {
+        replaceObjectContents(SUMMER_OLYMPICS_LOCATIONS, payload.summerOlympicsLocations);
       }
       if (Array.isArray(payload.winterOlympicsDates)) {
         replaceArrayContents(WINTER_OLYMPICS_DATES, payload.winterOlympicsDates.map(d => new Date(`${d}T12:00:00`)));
       }
+      if (payload.winterOlympicsLocations && typeof payload.winterOlympicsLocations === 'object') {
+        replaceObjectContents(WINTER_OLYMPICS_LOCATIONS, payload.winterOlympicsLocations);
+      }
       if (Array.isArray(payload.worldCupDates)) {
         replaceArrayContents(WORLD_CUP_DATES, payload.worldCupDates.map(d => new Date(`${d}T12:00:00`)));
+      }
+      if (payload.worldCupLocations && typeof payload.worldCupLocations === 'object') {
+        replaceObjectContents(WORLD_CUP_LOCATIONS, payload.worldCupLocations);
       }
       if (Array.isArray(payload.superBowls)) {
         replaceArrayContents(SUPER_BOWL_DATES, payload.superBowls.map(item => new Date(`${item.date}T12:00:00`)));
@@ -6086,27 +6206,31 @@ function countPresidentialElectionsExperienced(start, end) {
     }
 
     const CONSOLE_ERAS = [
-      { date: new Date('1972-09-01T12:00:00'), label: '1st Gen' },
-      { date: new Date('1976-11-01T12:00:00'), label: '2nd Gen' },
-      { date: new Date('1983-07-15T12:00:00'), label: '3rd Gen' },
-      { date: new Date('1987-10-30T12:00:00'), label: '4th Gen' },
-      { date: new Date('1993-09-09T12:00:00'), label: '5th Gen' },
-      { date: new Date('1998-11-27T12:00:00'), label: '6th Gen' },
-      { date: new Date('2005-11-22T12:00:00'), label: '7th Gen' },
-      { date: new Date('2012-11-18T12:00:00'), label: '8th Gen' },
-      { date: new Date('2020-11-10T12:00:00'), label: '9th Gen' }
+      { date: new Date('1972-09-01T12:00:00'), label: '1st Gen', examples: 'Magnavox Odyssey and Pong home consoles' },
+      { date: new Date('1976-11-01T12:00:00'), label: '2nd Gen', examples: 'Atari 2600, Intellivision, and ColecoVision' },
+      { date: new Date('1983-07-15T12:00:00'), label: '3rd Gen', examples: 'Nintendo Entertainment System and Sega Master System' },
+      { date: new Date('1987-10-30T12:00:00'), label: '4th Gen', examples: 'Sega Genesis, Super Nintendo, and TurboGrafx-16' },
+      { date: new Date('1993-09-09T12:00:00'), label: '5th Gen', examples: 'PlayStation, Nintendo 64, and Sega Saturn' },
+      { date: new Date('1998-11-27T12:00:00'), label: '6th Gen', examples: 'Dreamcast, PlayStation 2, GameCube, and Xbox' },
+      { date: new Date('2005-11-22T12:00:00'), label: '7th Gen', examples: 'Xbox 360, PlayStation 3, and Wii' },
+      { date: new Date('2012-11-18T12:00:00'), label: '8th Gen', examples: 'Wii U, PlayStation 4, Xbox One, and Nintendo Switch' },
+      { date: new Date('2020-11-10T12:00:00'), label: '9th Gen', examples: 'Xbox Series X|S and PlayStation 5' }
     ];
 
+    function getConsoleEraEntriesExperienced(start, end) {
+      return CONSOLE_ERAS.filter((era, index) => {
+        const eraEnd = index + 1 < CONSOLE_ERAS.length ? CONSOLE_ERAS[index + 1].date : new Date('2100-01-01T12:00:00');
+        return eraEnd > start && era.date <= end;
+      });
+    }
+
     function getConsoleErasExperienced(start, end) {
-      const eras = [];
-      for (let i = 0; i < CONSOLE_ERAS.length; i++) {
-        const eraStart = CONSOLE_ERAS[i].date;
-        const eraEnd = i + 1 < CONSOLE_ERAS.length ? CONSOLE_ERAS[i + 1].date : new Date('2100-01-01T12:00:00');
-        if (eraEnd > start && eraStart <= end) {
-          eras.push(CONSOLE_ERAS[i].label);
-        }
-      }
-      return { count: eras.length, eras };
+      const eras = getConsoleEraEntriesExperienced(start, end);
+      return { count: eras.length, eras: eras.map(era => era.label) };
+    }
+
+    function formatConsoleEraHistory(entries) {
+      return entries.map(era => `${era.label} - Started ${formatSourceDate(era.date)} - ${era.examples}`);
     }
 
     const LEAP_SECOND_DATES = [
@@ -6697,6 +6821,16 @@ ${shareUrl}`);
         views: historyViews(phoneEntries.length ? phoneEntries.map(entry => `${entry.label} - ${formatSourceDate(entry.date)}`) : ['No curated phone-era transition landed in your lifetime yet.'], PHONE_ERAS.map(entry => `${entry.label} - ${formatSourceDate(entry.date)}`))
       });
 
+      const consoleEntries = getConsoleEraEntriesExperienced(birthMomentGlobal, now);
+      const allConsoleEntries = CONSOLE_ERAS.filter(era => era.date <= now);
+      const consoleReviewDate = currentSportsData?.technologyReview?.consoleEras?.nextReview || '2027-01-15';
+      const consoleReviewDue = new Date(`${consoleReviewDate}T12:00:00`) <= now;
+      setSourceDrawer('console-eras', {
+        intro: 'Home gaming generations that overlap your lifetime, with representative consoles from each era.',
+        diagnosticMeta: `Source: curated in-app console-generation timeline; generation boundaries are approximate because platforms overlap. ${consoleReviewDue ? 'Curated Review Due Since' : 'Next Curated Review'}: ${formatSourceDate(new Date(`${consoleReviewDate}T12:00:00`))}.`,
+        views: historyViews(consoleEntries.length ? formatConsoleEraHistory(consoleEntries) : ['No supported gaming-console era overlaps your lifetime yet.'], formatConsoleEraHistory(allConsoleEntries))
+      });
+
       const allPalindromeDates = getAllPalindromeDatesExperienced(birthMomentGlobal, now);
       const allTimelinePalindromes = getAllPalindromeDatesExperienced(historyStart, now);
       setSourceDrawer('palindrome-dates', {
@@ -6714,17 +6848,18 @@ ${shareUrl}`);
       });
 
       const eventDrawers = [
-        ['winter-olympics', 'Winter Olympics', WINTER_OLYMPICS_DATES],
-        ['summer-olympics', 'Summer Olympics', SUMMER_OLYMPICS_DATES],
-        ['world-cups', 'FIFA World Cup', WORLD_CUP_DATES]
+        ['winter-olympics', 'Winter Olympics', WINTER_OLYMPICS_DATES, WINTER_OLYMPICS_LOCATIONS],
+        ['summer-olympics', 'Summer Olympics', SUMMER_OLYMPICS_DATES, SUMMER_OLYMPICS_LOCATIONS],
+        ['world-cups', 'FIFA World Cup', WORLD_CUP_DATES, WORLD_CUP_LOCATIONS]
       ];
-      eventDrawers.forEach(([key, label, dates]) => {
+      eventDrawers.forEach(([key, label, dates, locations]) => {
         const completed = dates.filter(date => date <= now);
         const sinceBirth = completed.filter(date => date >= birthMomentGlobal);
+        const formatHistory = entries => locations ? formatEventLocationHistory(entries, locations) : formatDates(entries);
         setSourceDrawer(key, {
-          intro: `${label} opening dates during your life or across the full supported timeline.`,
+          intro: locations ? `${label} opening dates and host locations during your life or across the full supported timeline.` : `${label} opening dates during your life or across the full supported timeline.`,
           diagnosticMeta: `Source: sports-data-v4.json ${label} schedule coverage.`,
-          views: historyViews(sinceBirth.length ? formatDates(sinceBirth) : [`No completed ${label} occurred during your lifetime yet.`], formatDates(completed))
+          views: historyViews(sinceBirth.length ? formatHistory(sinceBirth) : [`No completed ${label} occurred during your lifetime yet.`], formatHistory(completed))
         });
       });
 
@@ -6948,15 +7083,15 @@ ${shareUrl}`);
       els.worldcupsValue.textContent = countDatedEventsExperienced(birthMomentGlobal, now, WORLD_CUP_DATES).toLocaleString();
       if (els.summerOlympicsCopy) {
         const nextSummerGames = SUMMER_OLYMPICS_DATES.find(date => date > now);
-        els.summerOlympicsCopy.textContent = nextSummerGames ? `Next: ${formatEventDate(nextSummerGames)} \u2022 Los Angeles` : 'Next: Awaiting Official Date';
+        els.summerOlympicsCopy.textContent = nextSummerGames ? `Next: ${formatEventDate(nextSummerGames)} \u2022 ${SUMMER_OLYMPICS_LOCATIONS[eventDateKey(nextSummerGames)] || 'Location To Be Confirmed'}` : 'Next: Awaiting Official Date';
       }
       if (els.winterOlympicsCopy) {
         const nextWinterGames = WINTER_OLYMPICS_DATES.find(date => date > now);
-        els.winterOlympicsCopy.textContent = nextWinterGames ? `Next: ${formatEventDate(nextWinterGames)} \u2022 French Alps` : 'Next: Awaiting Official Date';
+        els.winterOlympicsCopy.textContent = nextWinterGames ? `Next: ${formatEventDate(nextWinterGames)} \u2022 ${WINTER_OLYMPICS_LOCATIONS[eventDateKey(nextWinterGames)] || 'Location To Be Confirmed'}` : 'Next: Awaiting Official Date';
       }
       if (els.worldcupsCopy) {
         const nextWorldCup = WORLD_CUP_DATES.find(date => date > now);
-        els.worldcupsCopy.textContent = nextWorldCup ? `Next: ${formatEventDate(nextWorldCup)} \u2022 2030 Hosts` : 'Next: Awaiting Official Date';
+        els.worldcupsCopy.textContent = nextWorldCup ? `Next: ${formatEventDate(nextWorldCup)} \u2022 ${WORLD_CUP_LOCATIONS[eventDateKey(nextWorldCup)] || 'Location To Be Confirmed'}` : 'Next: Awaiting Official Date';
       }
 
       if (els.repeatChampionsValue) {
@@ -7930,6 +8065,13 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 

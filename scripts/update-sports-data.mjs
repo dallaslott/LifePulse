@@ -57,6 +57,50 @@ async function fetchWikitext(title) {
   return payload.parse.wikitext;
 }
 
+function addDays(date, days) {
+  const result = new Date(`${date}T12:00:00Z`);
+  result.setUTCDate(result.getUTCDate() + days);
+  return result.toISOString().slice(0, 10);
+}
+
+function cleanScheduleLocation(value) {
+  return String(value || '')
+    .replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, '')
+    .replace(/<br\s*\/?>/gi, ', ')
+    .replace(/\[\[(?:[^|\]]*\|)?([^\]]+)\]\]/g, '$1')
+    .replace(/\{\{(?:flagicon|flagcountry|flag)\|([^}|]+)[^}]*\}\}/gi, '$1')
+    .replace(/\{\{[^|{}]+\|/g, '')
+    .replace(/[{}]/g, '')
+    .replace(/\|/g, ', ')
+    .replace(/\s*,\s*,+/g, ', ')
+    .replace(/\s+/g, ' ')
+    .replace(/^[-*;\s,]+|[-*;\s,]+$/g, '')
+    .trim();
+}
+
+function parseScheduledStart(value, year) {
+  const source = String(value || '').replace(/<!--[\s\S]*?-->/g, '').trim();
+  const template = source.match(/\{\{(?:start date|start-date)\|(\d{4})\|(\d{1,2})\|(\d{1,2})/i);
+  if (template) {
+    const date = new Date(Date.UTC(Number(template[1]), Number(template[2]) - 1, Number(template[3]), 12));
+    return date.toISOString().slice(0, 10);
+  }
+  const written = source.replace(/<[^>]+>/g, '').match(/([A-Za-z]+)\s+(\d{1,2})(?:,|\s)+(\d{4})/);
+  if (written) {
+    const date = new Date(`${written[1]} ${written[2]}, ${written[3]} 12:00:00 UTC`);
+    if (!Number.isNaN(date.getTime())) return date.toISOString().slice(0, 10);
+  }
+  throw new Error(`No confirmed opening date is available for ${year}.`);
+}
+
+async function fetchScheduledEdition(title, year) {
+  const wikitext = await fetchWikitext(title);
+  const date = parseScheduledStart(readField(wikitext, 'dates') || readField(wikitext, 'date'), year);
+  const location = cleanScheduleLocation(readField(wikitext, 'host_city') || readField(wikitext, 'host'));
+  if (!location) throw new Error(`${title} does not yet identify a confirmed host.`);
+  return { date, location };
+}
+
 function sumScoreFields(wikitext, side) {
   const matcher = new RegExp(`^\\|\\s*${side}_(?:qtr\\d+|ot\\d*)\\s*=\\s*(\\d+)\\s*$`, 'gmi');
   return [...wikitext.matchAll(matcher)].reduce((total, match) => total + Number(match[1]), 0);
@@ -106,6 +150,12 @@ const definitions = [
   { key: 'mlb', array: 'worldSeries', checkAfter: year => `${year}-11-06`, yearOf: entry => Number(entry.year), fetchChampion: fetchMLBChampion }
 ];
 
+const scheduleDefinitions = [
+  { key: 'summerOlympics', dates: 'summerOlympicsDates', locations: 'summerOlympicsLocations', title: year => `${year} Summer Olympics` },
+  { key: 'winterOlympics', dates: 'winterOlympicsDates', locations: 'winterOlympicsLocations', title: year => `${year} Winter Olympics` },
+  { key: 'worldCup', dates: 'worldCupDates', locations: 'worldCupLocations', title: year => `${year} FIFA World Cup` }
+];
+
 const original = (await readFile(SPORTS_PATH, 'utf8')).replace(/^\uFEFF/, '');
 const sports = JSON.parse(original);
 const initialSnapshot = JSON.stringify(sports);
@@ -129,6 +179,53 @@ for (const definition of definitions) {
   console.log(`Added ${definition.key.toUpperCase()} ${targetYear} champion: ${champion.team}.`);
 }
 
+const existingScheduleRefresh = sports.scheduleRefresh || {};
+const scheduleNextCheck = { ...(existingScheduleRefresh.nextCheck || {}) };
+let scheduleChanged = false;
+
+for (const definition of scheduleDefinitions) {
+  const due = scheduleNextCheck[definition.key] || TARGET_DATE;
+  if (TARGET_DATE < due) {
+    console.log(`${definition.key} schedule is current; next check ${due}.`);
+    continue;
+  }
+
+  const dates = Array.isArray(sports[definition.dates]) ? sports[definition.dates] : [];
+  const latestYear = dates.reduce((latest, value) => Math.max(latest, Number(String(value).slice(0, 4)) || 0), 0);
+  const targetYear = latestYear + 4;
+
+  try {
+    const edition = await fetchScheduledEdition(definition.title(targetYear), targetYear);
+    if (!dates.includes(edition.date)) dates.push(edition.date);
+    dates.sort();
+    sports[definition.dates] = dates;
+    sports[definition.locations] = { ...(sports[definition.locations] || {}), [edition.date]: edition.location };
+    scheduleNextCheck[definition.key] = addDays(TARGET_DATE, 365);
+    scheduleChanged = true;
+    console.log(`Added ${definition.key} ${targetYear}: ${edition.date} - ${edition.location}.`);
+  } catch (error) {
+    scheduleNextCheck[definition.key] = addDays(TARGET_DATE, 30);
+    scheduleChanged = true;
+    console.warn(`${definition.key} ${targetYear} is not ready: ${error.message} Next check ${scheduleNextCheck[definition.key]}.`);
+  }
+}
+
+const consoleReviewDate = sports?.technologyReview?.consoleEras?.nextReview;
+if (consoleReviewDate && TARGET_DATE >= consoleReviewDate) {
+  console.warn(`Gaming Console Eras curated review is due (scheduled ${consoleReviewDate}).`);
+}
+
+sports.scheduleRefresh = {
+  source: 'Wikimedia structured tournament pages with official organizer references',
+  sourceUrl: WIKIMEDIA_API,
+  strategy: 'Check only the next missing edition; retry incomplete schedules after 30 days and completed checks annually.',
+  officialSources: {
+    olympics: 'https://olympics.com/ioc/olympic-games',
+    fifa: 'https://www.fifa.com/en/tournaments/mens/worldcup'
+  },
+  nextCheck: scheduleNextCheck
+};
+
 const checkAfter = {};
 for (const definition of definitions) {
   const records = sports[definition.array] || [];
@@ -142,7 +239,7 @@ sports.championshipRefresh = {
   strategy: 'One request per missing league champion after its projected completion date.',
   checkAfter
 };
-if (championAdded) sports.version = TARGET_DATE;
+if (championAdded || scheduleChanged) sports.version = TARGET_DATE;
 
 const serialized = `${JSON.stringify(sports, null, 2)}\n`;
 if (JSON.stringify(sports) !== initialSnapshot) {
@@ -151,3 +248,5 @@ if (JSON.stringify(sports) !== initialSnapshot) {
 } else {
   console.log('No sports-data changes were needed.');
 }
+
+

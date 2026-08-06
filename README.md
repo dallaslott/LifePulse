@@ -79,7 +79,9 @@ Finite timelines use a baseline-plus-reconciliation pattern so they cannot silen
 
 NFL, NBA, and MLB champion checks are date-gated. The daily workflow makes no sports-result request until a league's projected completion date and skips that league entirely once the year's champion is present. The current gates are February 15 for the Super Bowl, June 24 for the NBA Finals, and November 6 for the World Series. A confirmed winner is validated, written to `sports-data-v4.json`, committed by GitHub Actions with `[skip ci]`, and included in the same Pages deployment. If a championship is delayed or the source is temporarily unavailable, the next scheduled run retries it.
 
-Historical Source drawers use a reusable Since Your Birth / All Time view. Championship lists identify consecutive defenses as B2B, 3-Peat, or longer streaks; the same range control is used for Presidents, leap seconds, palindrome dates, curated technology eras, Olympics, World Cups, Blue Moons, and calculated eclipse histories. Long histories scroll inside the drawer, and provider or backend metadata remains visible only in Diagnostics.
+Olympics and FIFA World Cup schedules use a similarly gated refresh. The workflow requests only the next missing edition, requires both an opening date and host, retries incomplete editions after 30 days, and waits a year after a successful addition. Structured Wikimedia tournament data supplies the machine-readable fields, while official Olympics and FIFA references are recorded alongside the refresh policy. Gaming Console Eras remains curated because generations overlap; its next review date is tracked in the sports data and shown in Diagnostics.
+
+Historical Source drawers use a reusable Since Your Birth / All Time view. Summer and Winter Olympics and FIFA World Cup histories pair every opening date with its host location. Gaming Console Eras also provides a Since Your Birth / All Time history with representative systems for each generation. Championship lists identify consecutive defenses as B2B, 3-Peat, or longer streaks; the same range control is used for Presidents, leap seconds, palindrome dates, curated technology eras, Olympics, World Cups, Blue Moons, and calculated eclipse histories. Long histories scroll inside the drawer, and provider or backend metadata remains visible only in Diagnostics.
 
 Authoritative or calculation-first routes now include:
 
@@ -107,7 +109,10 @@ Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. 
 
 Live age counters update four times per second, while the heavier lifetime, calendar, source-drawer, and card calculations run once per minute or on an explicit profile/control change. This keeps the dashboard responsive on phones without making the displayed age feel less live.
 
-Editorial concepts, generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals remain clearly curated rather than presented as live facts. Annual NFL, NBA, and MLB champions are automatically checked through Wikimedia after their date gates; the remaining sports records stay coverage-monitored and editorially validated.
+Editorial concepts, generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals remain clearly curated rather than presented as live facts. Annual NFL, NBA, and MLB champions and the next missing Olympics or FIFA World Cup edition are automatically checked after their date gates; Gaming Console Eras remains coverage-monitored and editorially reviewed.
+
+
+
 
 
 

@@ -38,6 +38,21 @@ const futureSchedule = [
   ...(sports.worldCupDates || [])
 ].some(value => Date.parse(value) > now);
 if (!futureSchedule) errors.push('Sports schedules contain no future event.');
+for (const [eventLabel, dates, locations] of [
+  ['Summer Olympics', sports.summerOlympicsDates || [], sports.summerOlympicsLocations || {}],
+  ['Winter Olympics', sports.winterOlympicsDates || [], sports.winterOlympicsLocations || {}],
+  ['FIFA World Cup', sports.worldCupDates || [], sports.worldCupLocations || {}]
+]) {
+  for (const date of dates) {
+    if (!String(locations[date] || '').trim()) errors.push(`${eventLabel} location is missing for ${date}.`);
+  }
+}
+const scheduleChecks = sports?.scheduleRefresh?.nextCheck || {};
+for (const eventKey of ['summerOlympics', 'winterOlympics', 'worldCup']) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(scheduleChecks[eventKey] || ''))) errors.push(`${eventKey} future schedule check date is missing.`);
+}
+if (!/^\d{4}-\d{2}-\d{2}$/.test(String(sports?.technologyReview?.consoleEras?.nextReview || ''))) errors.push('Gaming Console Eras next-review date is missing.');
+
 const championshipChecks = sports?.championshipRefresh?.checkAfter || {};
 for (const league of ['nfl', 'nba', 'mlb']) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(championshipChecks[league] || ''))) errors.push(`Sports championship check date is missing for ${league.toUpperCase()}.`);
@@ -62,3 +77,6 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(`Validated release v${version.releaseVersion}: schema ${data.schemaVersion}, ${requiredComponents.length} registered components, 12 horoscope signs, reference histories, and future sports coverage.`);
+
+
+
