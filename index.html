@@ -6567,7 +6567,7 @@ ${shareUrl}`);
         else streak = 1;
         previousTeam = entry.team;
         previousYear = entry.year;
-        const repeat = streak === 2 ? ' - Back-to-Back' : streak === 3 ? ' - Three-Peat' : streak > 3 ? ` - ${streak}-Peat` : '';
+        const repeat = streak === 2 ? ' - B2B' : streak === 3 ? ' - 3-Peat' : streak > 3 ? ` - ${streak}-Peat` : '';
         return `${entry.year} - ${entry.team}${repeat}`;
       });
     }
@@ -6579,7 +6579,7 @@ ${shareUrl}`);
         const previous = streaks.get(key);
         const streak = previous && previous.endYear === entry.startYear ? previous.streak + 1 : 2;
         streaks.set(key, { endYear: entry.endYear, streak });
-        const label = streak === 2 ? 'Back-to-Back' : streak === 3 ? 'Three-Peat' : `${streak}-Peat`;
+        const label = streak === 2 ? 'B2B' : streak === 3 ? '3-Peat' : `${streak}-Peat`;
         return `${entry.endYear} - ${entry.team} - ${entry.sport} ${label}`;
       });
     }
@@ -7930,6 +7930,7 @@ ${shareUrl}`);
   </script>
 </body>
 </html>
+
 
 
 
