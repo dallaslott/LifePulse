@@ -2242,6 +2242,87 @@
       }
     }
 
+    .diagnostics-active-banner {
+      display: none;
+      position: fixed;
+      top: max(10px, env(safe-area-inset-top));
+      left: 50%;
+      z-index: 1200;
+      width: min(92vw, 560px);
+      transform: translateX(-50%);
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px 10px 14px;
+      border: 1px solid rgba(251, 191, 36, 0.52);
+      border-radius: 14px;
+      background: rgba(34, 25, 10, 0.96);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
+      color: #fff3c4;
+      backdrop-filter: blur(14px);
+    }
+
+    body.diagnostics-open .diagnostics-active-banner { display: flex; }
+
+    .diagnostics-active-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .diagnostics-active-label::before {
+      content: '';
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.14);
+    }
+
+    .diagnostics-exit-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 5px 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    @media (max-width: 420px) {
+      .diagnostics-active-banner { width: calc(100vw - 20px); padding-left: 12px; }
+      .diagnostics-active-label { font-size: 0.66rem; letter-spacing: 0.06em; }
+      .diagnostics-exit-btn { min-height: 30px; padding: 4px 9px; }
+    }
+
+    @media (max-width: 640px) {
+      .lifetime-grid,
+      .insight-grid,
+      .cosmic-grid,
+      .life-map-grid,
+      .life-map-grid--split,
+      .compact-grid-2,
+      .compact-grid-3,
+      .time-breakdown-row--2,
+      .time-breakdown-row--3 {
+        grid-template-columns: 1fr !important;
+      }
+    }
   </style>
 </head>
 <body id="mainBody">
@@ -2346,6 +2427,10 @@
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
     </div>
 
+    <div id="diagnostics-active-banner" class="diagnostics-active-banner" role="status" aria-live="polite" aria-hidden="true">
+      <span class="diagnostics-active-label">Diagnostic Mode Active</span>
+      <button id="diagnostics-exit-btn" class="diagnostics-exit-btn" type="button">Exit</button>
+    </div>
     <h1 class="hero-title" id="greeting">...</h1>
     <div id="environment-note" class="environment-note hidden"></div>
 
@@ -3211,6 +3296,8 @@
       versionChip:           document.getElementById('version-chip'),
       updateAvailableBtn:    document.getElementById('update-available-btn'),
       diagnosticsToggle:     document.getElementById('diagnostics-toggle'),
+      diagnosticsActiveBanner: document.getElementById('diagnostics-active-banner'),
+      diagnosticsExitBtn:    document.getElementById('diagnostics-exit-btn'),
       diagnosticsPanel:      document.getElementById('diagnostics-panel'),
       diagnosticsSummary:    document.getElementById('diagnostics-summary'),
       diagnosticsEnvironment:document.getElementById('diagnostics-environment'),
@@ -4323,6 +4410,9 @@
     function renderDiagnostics() {
       const env = getRuntimeEnvironment();
       document.body.classList.toggle('diagnostics-open', !!diagnosticsOpen);
+      if (els.diagnosticsActiveBanner) {
+        els.diagnosticsActiveBanner.setAttribute('aria-hidden', String(!diagnosticsOpen));
+      }
 
       if (els.buildChip) els.buildChip.textContent = BUILD_LABEL;
       if (els.versionChip) els.versionChip.textContent = `v${currentReleaseVersion}`;
@@ -9363,6 +9453,9 @@ function countPresidentialElectionsExperienced(start, end) {
       els.showCelebrationPreview?.addEventListener('click', showSelectedCelebrationPreview);
       els.clearCelebrationPreview?.addEventListener('click', clearSelectedCelebrationPreview);
       els.diagnosticsToggle.addEventListener('click', toggleDiagnosticsPanel);
+      els.diagnosticsExitBtn?.addEventListener('click', () => {
+        if (diagnosticsOpen) toggleDiagnosticsPanel();
+      });
       els.buildChip.addEventListener('click', registerSecretDiagnosticsTap);
       els.buildChip.addEventListener('touchstart', registerSecretDiagnosticsTap, { passive: true });
       els.updateAvailableBtn?.addEventListener('click', applyDashboardUpdate);
@@ -9532,6 +9625,8 @@ function countPresidentialElectionsExperienced(start, end) {
   </script>
 </body>
 </html>
+
+
 
 
 
