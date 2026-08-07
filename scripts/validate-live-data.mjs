@@ -78,7 +78,7 @@ if (skyEvents.filter(event => event.type === 'meteor-shower').length < 10) error
 if (!skyEvents.some(event => event.type === 'meteor-shower' && Date.parse(event.date) > now)) errors.push('Sky calendar contains no future meteor shower.');
 if (!skyEvents.some(event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type) && Date.parse(event.date) > now)) errors.push('Sky calendar contains no future visible planetary event.');
 if (new Set(skyEvents.map(event => event.id)).size !== skyEvents.length) errors.push('Sky calendar contains duplicate event identifiers.');
-if (!/^d{4}-d{2}-d{2}$/.test(String(sky?.updatePolicy?.nextReview || ''))) errors.push('Sky calendar next-review date is missing.');
+if (!/^\d{4}-\d{2}-\d{2}$/.test(String(sky?.updatePolicy?.nextReview || ''))) errors.push('Sky calendar next-review date is missing.');
 for (let index = 0; index < skyEvents.length; index += 1) {
   if (!Number.isFinite(Date.parse(skyEvents[index].date))) errors.push('Sky event has an invalid date: ' + (skyEvents[index].id || index) + '.');
   if (index && Date.parse(skyEvents[index - 1].date) > Date.parse(skyEvents[index].date)) errors.push('Sky events are not sorted chronologically.');
@@ -93,6 +93,7 @@ if (errors.length) {
   process.exit(1);
 }
 console.log('Validated release v' + version.releaseVersion + ': schema ' + data.schemaVersion + ', ' + requiredComponents.length + ' registered components, 12 horoscope signs, reference histories, future sports coverage, and ' + skyEvents.length + ' maintained sky events.');
+
 
 
 
