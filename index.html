@@ -603,6 +603,49 @@
       .celebration-panel::after { animation: none; }
     }
 
+    .celebration-panel {
+      margin: 16px 0 18px;
+      padding: 20px;
+      border-width: 2px;
+    }
+
+    .celebration-effects-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1100;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .celebration-floater {
+      position: absolute;
+      left: var(--effect-x, 50vw);
+      bottom: -12vh;
+      font-size: var(--effect-size, 1.6rem);
+      line-height: 1;
+      opacity: 0;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.28));
+      animation: celebrationFloat var(--effect-duration, 6s) ease-out var(--effect-delay, 0s) both;
+      will-change: transform, opacity;
+    }
+
+    @keyframes celebrationFloat {
+      0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg) scale(0.7); }
+      14% { opacity: 1; }
+      72% { opacity: 0.96; }
+      100% { opacity: 0; transform: translate3d(var(--effect-sway, 0px), -118vh, 0) rotate(var(--effect-rotate, 160deg)) scale(1.18); }
+    }
+
+    @media (max-width: 640px) {
+      .celebration-panel {
+        grid-template-columns: 46px minmax(0, 1fr);
+        gap: 11px;
+        padding: 16px 14px;
+      }
+      .celebration-icon { width: 46px; height: 46px; border-radius: 14px; font-size: 1.55rem; }
+      .celebration-title { font-size: clamp(1.22rem, 6vw, 1.55rem); }
+      .celebration-copy { font-size: 0.82rem; line-height: 1.42; }
+    }
     .birthday-hero-main {
       display: block;
       font-size: clamp(2.05rem, 7vw, 2.95rem);
@@ -2453,6 +2496,15 @@
       </div>
     </div>
 
+    <section class="celebration-panel hidden" id="today-celebration-panel" aria-live="polite" aria-labelledby="today-celebration-title">
+      <span class="celebration-icon" id="today-celebration-icon" aria-hidden="true">&#127881;</span>
+      <div class="celebration-content">
+        <span class="celebration-kicker" id="today-celebration-kicker">Today Is Special</span>
+        <strong class="celebration-title" id="today-celebration-title">A LifePulse Celebration</strong>
+        <p class="celebration-copy" id="today-celebration-copy"></p>
+      </div>
+    </section>
+
     <div class="section-view-controls" aria-label="Dashboard section controls">
       <button class="section-view-btn" id="expand-sections-btn" type="button">Expand All</button>
       <button class="section-view-btn" id="collapse-sections-btn" type="button">Collapse All</button>
@@ -2538,14 +2590,7 @@
       </div>
     </div>
 
-    <section class="celebration-panel hidden" id="today-celebration-panel" aria-live="polite" aria-labelledby="today-celebration-title">
-      <span class="celebration-icon" id="today-celebration-icon" aria-hidden="true">&#127881;</span>
-      <div class="celebration-content">
-        <span class="celebration-kicker" id="today-celebration-kicker">Today Is Special</span>
-        <strong class="celebration-title" id="today-celebration-title">A LifePulse Celebration</strong>
-        <p class="celebration-copy" id="today-celebration-copy"></p>
-      </div>
-    </section>
+
 
     <div class="birthday-hero-card" id="birthday-hero-panel">
       <span class="birthday-hero-label">Next Birthday</span>
@@ -5321,6 +5366,58 @@
       })();
     }
 
+    function getCelebrationSymbols(celebration = {}) {
+      const symbolSets = {
+        birthday: ['🎈', '🎉', '🎂', '✨', '🎆', '🥳'],
+        'new-year': ['🎆', '🎇', '✨', '🥂', '🎉'],
+        'new-years-eve': ['🎆', '🎇', '✨', '🥂', '🎉'],
+        valentines: ['❤️', '💗', '💕', '💖', '🌹'],
+        'st-patricks': ['☘️', '🍀', '🌈', '✨', '🪙'],
+        easter: ['🐰', '🐣', '🥚', '🌷', '✨'],
+        'mothers-day': ['🌷', '🌸', '💐', '💗', '✨'],
+        'fathers-day': ['⭐', '💙', '🏆', '✨'],
+        'memorial-day': ['🇺🇸', '⭐', '🕊️'],
+        juneteenth: ['⭐', '✨', '❤️', '💛', '💚'],
+        'independence-day': ['🎆', '🎇', '🇺🇸', '⭐', '✨'],
+        'labor-day': ['⭐', '🛠️', '✨'],
+        halloween: ['🎃', '👻', '🦇', '🍬', '✨'],
+        thanksgiving: ['🍂', '🍁', '🦃', '🥧', '✨'],
+        'christmas-eve': ['🎄', '⭐', '❄️', '🎁', '✨'],
+        christmas: ['🎄', '⭐', '❄️', '🎁', '🔔'],
+        default: ['✨', '🎉', '⭐']
+      };
+      if (celebration.isBirthday) return symbolSets.birthday;
+      return symbolSets[celebration.id] || symbolSets.default;
+    }
+
+    function triggerCelebrationSymbols(celebration) {
+      if (!celebration || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+      let layer = document.getElementById('celebration-effects-layer');
+      if (!layer) {
+        layer = document.createElement('div');
+        layer.id = 'celebration-effects-layer';
+        layer.className = 'celebration-effects-layer';
+        layer.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(layer);
+      }
+      layer.replaceChildren();
+      const symbols = getCelebrationSymbols(celebration);
+      const count = celebration.isBirthday ? 32 : 24;
+      for (let index = 0; index < count; index += 1) {
+        const particle = document.createElement('span');
+        particle.className = 'celebration-floater';
+        particle.textContent = symbols[index % symbols.length];
+        particle.style.setProperty('--effect-x', (3 + Math.random() * 94).toFixed(1) + 'vw');
+        particle.style.setProperty('--effect-size', (1.15 + Math.random() * 1.25).toFixed(2) + 'rem');
+        particle.style.setProperty('--effect-delay', (Math.random() * 1.8).toFixed(2) + 's');
+        particle.style.setProperty('--effect-duration', (4.8 + Math.random() * 2.8).toFixed(2) + 's');
+        particle.style.setProperty('--effect-sway', (-80 + Math.random() * 160).toFixed(0) + 'px');
+        particle.style.setProperty('--effect-rotate', (-220 + Math.random() * 440).toFixed(0) + 'deg');
+        particle.addEventListener('animationend', () => particle.remove(), { once: true });
+        layer.appendChild(particle);
+      }
+      setTimeout(() => layer.replaceChildren(), 9000);
+    }
     function getNthWeekdayOfMonth(year, month, weekday, occurrence) {
       const first = new Date(year, month, 1, 12);
       const day = 1 + ((7 + weekday - first.getDay()) % 7) + ((occurrence - 1) * 7);
@@ -5440,8 +5537,7 @@
 
       if (animate && lastCelebrationKey !== celebration.key) {
         lastCelebrationKey = celebration.key;
-        const rightNowGroup = document.querySelector('.dashboard-group[data-group-id="right-now"]');
-        if (rightNowGroup) rightNowGroup.open = true;
+        triggerCelebrationSymbols(celebration);
         triggerConfetti(celebration.colors, {
           duration: celebration.isBirthday ? 4800 : 3000,
           particleCount: celebration.isBirthday ? 8 : 5,
@@ -9352,7 +9448,7 @@ function countPresidentialElectionsExperienced(start, end) {
 
     // ─── Event binding ────────────────────────────────────────────────────────
     const DASHBOARD_SECTION_GROUPS = [
-      { id: 'right-now', icon: '◉', title: 'Right Now', copy: 'Live age, today’s pulse, celebrations, your next birthday, and upcoming moments.', defaultOpen: true, nodes: ['daily-pulse-section','age-progress-label','age-progress-track','chrono-age-card','time-breakdown-panel','today-celebration-panel','birthday-hero-panel','whats-next-panel'] },
+      { id: 'right-now', icon: '◉', title: 'Right Now', copy: 'Live age, today’s pulse, celebrations, your next birthday, and upcoming moments.', defaultOpen: true, nodes: ['daily-pulse-section','age-progress-label','age-progress-track','chrono-age-card','time-breakdown-panel','birthday-hero-panel','whats-next-panel'] },
       { id: 'lifetime-glance', icon: '⌛', title: 'Lifetime at a Glance', copy: 'Your estimated totals, life percentages, and compressed-life view.', nodes: ['lifetime-estimates-panel','life-percentages-panel','life-compressed-panel'] },
       { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, major eras, and a filterable personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','life-timeline-panel'] },
       { id: 'starting-world', icon: '🌅', title: 'Your Starting World', copy: 'Then-versus-now comparisons and the culture surrounding your birth.', nodes: ['born-then-now-panel','birth-snapshot-panel'] },
@@ -9625,6 +9721,7 @@ function countPresidentialElectionsExperienced(start, end) {
   </script>
 </body>
 </html>
+
 
 
 
