@@ -89,6 +89,120 @@
       margin-bottom: 6px;
     }
 
+    /* Animated LifePulse electrocardiogram accents */
+    #form-view { overflow: hidden; }
+
+    #form-view > :not(.entry-title) {
+      position: relative;
+      z-index: 2;
+    }
+
+    .entry-title {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      white-space: nowrap;
+      font-size: clamp(1.15rem, 5vw, 2rem);
+    }
+
+    .entry-title__text {
+      position: relative;
+      z-index: 2;
+      flex: 0 0 auto;
+    }
+
+    .pulse-word {
+      position: relative;
+      display: inline-block;
+      isolation: isolate;
+    }
+
+    .pulse-word__label {
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 0 14px rgba(0, 229, 255, 0.42);
+    }
+
+    .ecg-trace {
+      fill: none;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .ecg-trace path {
+      vector-effect: non-scaling-stroke;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ecg-trace__base {
+      stroke: rgba(0, 229, 255, 0.22);
+      stroke-width: 2;
+    }
+
+    .ecg-trace__pulse {
+      stroke: var(--primary);
+      stroke-width: 2.4;
+      stroke-dasharray: 18 82;
+      filter: drop-shadow(0 0 5px var(--primary));
+      animation: ecgSweep 3.2s linear infinite;
+    }
+
+    .entry-ecg {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 auto;
+      min-width: 56px;
+      width: auto;
+      height: 48px;
+      margin-left: -0.32em;
+      margin-right: -1.3rem;
+      opacity: 0.9;
+    }
+
+    .dashboard-name-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      margin-bottom: 6px;
+    }
+
+    .dashboard-name-row .hero-title {
+      flex: 0 1 auto;
+      min-width: 0;
+      margin-bottom: 0;
+    }
+
+    .dashboard-ecg {
+      flex: 1 1 150px;
+      min-width: 72px;
+      height: 42px;
+      opacity: 0.88;
+    }
+
+    @keyframes ecgSweep {
+      to { stroke-dashoffset: -100; }
+    }
+
+    @media (max-width: 520px) {
+      .entry-title { font-size: clamp(1.05rem, 5.15vw, 1.45rem); }
+      .entry-ecg { min-width: 40px; height: 38px; margin-left: -0.22em; }
+      .dashboard-name-row { gap: 8px; }
+      .dashboard-ecg { flex-basis: 90px; min-width: 58px; height: 34px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ecg-trace__pulse {
+        stroke-dasharray: none;
+        animation: none;
+        opacity: 0.72;
+      }
+    }
+
     .hero-subtitle,
     .tiny-copy {
       color: var(--text-dim);
@@ -131,7 +245,7 @@
 
     input, select {
       width: 100%;
-      background: rgba(255,255,255,0.08);
+      background: #111722;
       border: 1px solid #3b4355;
       color: #fff;
       padding: 12px;
@@ -143,6 +257,22 @@
     select option {
       background: #121521;
       color: #fff;
+    }
+
+    .entry-field { margin-bottom: 13px; }
+    .entry-field input,
+    .entry-field select,
+    .entry-field .date-row { margin-bottom: 0; }
+
+    .entry-field-label {
+      display: block;
+      margin: 0 2px 7px;
+      color: #dce8f7;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 1.25px;
+      line-height: 1.2;
+      text-transform: uppercase;
     }
 
     /* Date row layout */
@@ -1899,30 +2029,45 @@
     .place-wrap { position: relative; }
 
     .place-suggestions {
-      position: absolute;
-      top: calc(100% - 8px);
-      left: 0;
-      right: 0;
-      background: #111520;
-      border: 1px solid #344055;
+      position: relative;
+      width: 100%;
+      z-index: auto;
+      isolation: isolate;
+      opacity: 1;
+      margin-top: 6px;
+      background: #080d16;
+      border: 1px solid #52617a;
       border-radius: 12px;
       overflow: hidden;
-      z-index: 30;
-      box-shadow: 0 18px 32px rgba(0,0,0,0.38);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.62), 0 0 0 1px rgba(0,229,255,0.12);
       max-height: 260px;
       overflow-y: auto;
+      backdrop-filter: none;
     }
 
     .place-suggestion {
-      padding: 10px 12px;
+      position: relative;
+      z-index: 1;
+      padding: 11px 12px;
+      background: #080d16;
+      color: #f7fbff;
+      opacity: 1;
       font-size: 0.9rem;
       cursor: pointer;
       border-top: 1px solid rgba(255,255,255,0.05);
     }
 
     .place-suggestion:first-child { border-top: none; }
+    .place-suggestion-empty {
+      color: var(--text-dim);
+      cursor: default;
+      font-style: italic;
+    }
     .place-suggestion:hover,
-    .place-suggestion.highlighted { background: rgba(255,255,255,0.09); }
+    .place-suggestion.highlighted {
+      background: #17314a;
+      color: #fff;
+    }
 
     .place-hint {
       font-size: 0.7rem;
@@ -2414,6 +2559,691 @@
         grid-template-columns: 1fr !important;
       }
     }
+
+    .birthday-hero-layout {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .atlas-orbit.birthday-cycle-orbit {
+      width: 108px;
+      box-shadow: 0 0 30px rgba(0,229,255,0.2);
+    }
+
+    .birthday-cycle-orbit .atlas-orbit-age { font-size: 1.35rem; }
+    .birthday-cycle-orbit .atlas-orbit-label { max-width: 68px; line-height: 1.2; }
+
+    @media (max-width: 520px) {
+      .birthday-hero-layout { grid-template-columns: 88px minmax(0, 1fr); gap: 12px; }
+      .atlas-orbit.birthday-cycle-orbit { width: 84px; }
+      .birthday-cycle-orbit .atlas-orbit-age { font-size: 1.05rem; }
+      .birthday-cycle-orbit .atlas-orbit-label { font-size: 0.48rem; }
+    }
+/* Life Atlas visual storytelling */
+    .life-atlas-panel {
+      overflow: hidden;
+      border-color: rgba(0, 229, 255, 0.34);
+      background:
+        radial-gradient(circle at 88% 4%, rgba(0, 229, 255, 0.12), transparent 34%),
+        radial-gradient(circle at 8% 92%, rgba(179, 136, 255, 0.10), transparent 38%),
+        rgba(12, 16, 28, 0.78);
+    }
+
+    .atlas-intro {
+      margin-bottom: 14px;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .atlas-summary-card {
+      display: grid;
+      grid-template-columns: 132px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(0,229,255,0.11), rgba(124,58,237,0.12) 55%, rgba(255,255,255,0.035));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .atlas-orbit {
+      --atlas-progress: 0deg;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 124px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: conic-gradient(var(--primary) var(--atlas-progress), rgba(255,255,255,0.08) 0);
+      box-shadow: 0 0 28px rgba(0,229,255,0.14);
+    }
+
+    .atlas-orbit::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: inherit;
+      background: #101522;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .atlas-orbit::after {
+      content: '';
+      position: absolute;
+      inset: 19px;
+      border: 1px dashed rgba(255,255,255,0.13);
+      border-radius: inherit;
+      animation: atlasOrbitSpin 18s linear infinite;
+    }
+
+    .atlas-orbit-core {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .atlas-orbit-age {
+      color: #fff;
+      font-size: 1.65rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .atlas-orbit-label {
+      margin-top: 4px;
+      color: var(--text-dim);
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .atlas-summary-kicker,
+    .atlas-module-kicker {
+      color: var(--primary);
+      font-size: 0.62rem;
+      font-weight: 950;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .atlas-summary-title {
+      margin-top: 4px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .atlas-summary-copy {
+      margin-top: 6px;
+      color: var(--text-dim);
+      font-size: 0.73rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .atlas-summary-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .atlas-summary-stat {
+      min-width: 0;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 11px;
+      background: rgba(255,255,255,0.045);
+    }
+
+    .atlas-summary-stat strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: #fff;
+      font-size: 0.78rem;
+      line-height: 1.2;
+    }
+
+    .atlas-summary-stat span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.52rem;
+      font-weight: 850;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .atlas-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 10px 0 14px;
+    }
+
+    .atlas-save-btn {
+      width: auto;
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 1px solid rgba(0,229,255,0.34);
+      border-radius: 999px;
+      background: rgba(0,229,255,0.08);
+      color: var(--primary);
+      font-size: 0.65rem;
+      font-weight: 950;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .atlas-module {
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.032);
+      overflow: hidden;
+    }
+
+    .atlas-module > summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 14px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 950;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .atlas-module > summary::-webkit-details-marker { display: none; }
+    .atlas-module > summary::after {
+      content: '+';
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    .atlas-module[open] > summary::after { content: '-'; }
+
+    .atlas-module-subtitle {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.62rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .atlas-module-body {
+      padding: 0 14px 14px;
+    }
+
+    .atlas-ribbon,
+    .atlas-tech-ribbon,
+    .atlas-upcoming-strip {
+      overflow-x: auto;
+      padding: 3px 2px 10px;
+      scrollbar-width: thin;
+      scroll-snap-type: x proximity;
+    }
+
+    .atlas-ribbon-track,
+    .atlas-tech-track,
+    .atlas-upcoming-track {
+      display: flex;
+      gap: 9px;
+      min-width: max-content;
+    }
+
+    .atlas-ribbon-event {
+      width: 142px;
+      min-height: 92px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top: 3px solid var(--event-color, var(--primary));
+      border-radius: 12px;
+      background: rgba(10,13,23,0.82);
+      color: #fff;
+      text-align: left;
+      scroll-snap-align: start;
+      cursor: pointer;
+    }
+
+    .atlas-ribbon-event[aria-pressed="true"] {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,229,255,0.1);
+    }
+
+    .atlas-ribbon-year {
+      color: var(--primary);
+      font-size: 0.62rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+    }
+
+    .atlas-ribbon-title {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .atlas-ribbon-age {
+      display: block;
+      margin-top: 6px;
+      color: var(--text-dim);
+      font-size: 0.6rem;
+      font-weight: 750;
+    }
+
+    .atlas-event-detail {
+      min-height: 57px;
+      margin-top: 8px;
+      padding: 10px 11px;
+      border-left: 3px solid var(--primary);
+      border-radius: 8px;
+      background: rgba(0,229,255,0.055);
+      color: var(--text-dim);
+      font-size: 0.71rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .atlas-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .atlas-subpanel {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.085);
+      border-radius: 14px;
+      background: rgba(6,9,17,0.48);
+    }
+
+    .atlas-subtitle {
+      margin-bottom: 9px;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 950;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .birth-sky-dial {
+      --sun-angle: 0deg;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(180px, 72vw);
+      aspect-ratio: 1;
+      margin: 4px auto 11px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, rgba(0,229,255,0.12) 0 28%, transparent 29%),
+        conic-gradient(from 180deg, #07111f, #14375a 28%, #8a5b56 50%, #14375a 72%, #07111f);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.4), 0 0 25px rgba(0,229,255,0.08);
+    }
+
+    .birth-sky-dial::before,
+    .birth-sky-dial::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .birth-sky-dial::before { inset: 14px; }
+    .birth-sky-dial::after { inset: 34px; border-style: dashed; }
+
+    .birth-sky-core {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .birth-sky-moon {
+      display: block;
+      font-size: 2rem;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.28));
+    }
+
+    .birth-sky-phase {
+      display: block;
+      margin-top: 4px;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 900;
+    }
+
+    .birth-sky-sun {
+      position: absolute;
+      inset: 8px;
+      transform: rotate(var(--sun-angle));
+      z-index: 3;
+    }
+
+    .birth-sky-sun::before {
+      content: '☀';
+      position: absolute;
+      left: 50%;
+      top: -7px;
+      transform: translateX(-50%) rotate(calc(-1 * var(--sun-angle)));
+      color: #ffd66b;
+      font-size: 1rem;
+      filter: drop-shadow(0 0 6px rgba(255,214,107,0.65));
+    }
+
+    .atlas-caption {
+      color: var(--text-dim);
+      font-size: 0.66rem;
+      font-weight: 700;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .atlas-pattern-grid,
+    .atlas-record-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .atlas-pattern,
+    .atlas-record {
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 11px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .atlas-pattern strong,
+    .atlas-record strong {
+      display: block;
+      color: #fff;
+      font-size: 0.78rem;
+      overflow-wrap: anywhere;
+    }
+
+    .atlas-pattern span,
+    .atlas-record span {
+      display: block;
+      margin-top: 4px;
+      color: var(--text-dim);
+      font-size: 0.58rem;
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .atlas-tech-stop {
+      width: 122px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(124,58,237,0.13), rgba(255,255,255,0.025));
+      scroll-snap-align: start;
+    }
+
+    .atlas-tech-stop strong {
+      display: block;
+      color: #fff;
+      font-size: 0.72rem;
+      line-height: 1.25;
+    }
+
+    .atlas-tech-stop span {
+      display: block;
+      margin-top: 5px;
+      color: #cdb9ff;
+      font-size: 0.61rem;
+      font-weight: 850;
+    }
+
+    .atlas-generation-row + .atlas-generation-row { margin-top: 9px; }
+
+    .atlas-generation-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+      color: var(--text-dim);
+      font-size: 0.6rem;
+      font-weight: 800;
+    }
+
+    .atlas-generation-meta strong { color: #fff; }
+
+    .atlas-generation-bar {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .atlas-generation-fill {
+      width: var(--overlap, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), #b388ff);
+    }
+
+    .atlas-population-bar {
+      display: flex;
+      height: 18px;
+      margin: 10px 0 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .atlas-population-younger {
+      width: var(--younger, 50%);
+      background: linear-gradient(90deg, #00b8d4, var(--primary));
+    }
+
+    .atlas-population-older {
+      flex: 1;
+      background: linear-gradient(90deg, #7650c7, #b388ff);
+    }
+
+    .atlas-population-labels {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-dim);
+      font-size: 0.62rem;
+      font-weight: 800;
+    }
+
+    .atlas-population-labels strong {
+      display: block;
+      color: #fff;
+      font-size: 0.76rem;
+    }
+
+    .atlas-life-map { display: grid; gap: 9px; }
+    .atlas-decade-row {
+      display: grid;
+      grid-template-columns: 62px minmax(0, 1fr) 92px;
+      gap: 9px;
+      align-items: center;
+    }
+    .atlas-decade-label { color: #fff; font-size: 0.66rem; font-weight: 900; }
+    .atlas-decade-track {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(5px, 1fr));
+      gap: 3px;
+    }
+    .atlas-year-segment {
+      height: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.055);
+    }
+    .atlas-year-segment.is-lived {
+      background: rgba(0,229,255,0.32);
+      border-color: rgba(0,229,255,0.22);
+    }
+    .atlas-year-segment.has-events {
+      background: linear-gradient(90deg, rgba(0,229,255,0.58), rgba(191,156,255,0.85));
+      box-shadow: 0 0 8px rgba(0,229,255,0.2);
+    }
+    .atlas-year-segment.is-current { outline: 2px solid #fff; outline-offset: 1px; }
+    .atlas-decade-total {
+      color: var(--text-dim);
+      font-size: 0.58rem;
+      font-weight: 800;
+      text-align: right;
+    }
+    .atlas-life-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 10px;
+      color: var(--text-dim);
+      font-size: 0.58rem;
+      font-weight: 800;
+    }
+    .atlas-life-legend span::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      border-radius: 3px;
+      vertical-align: -1px;
+      background: rgba(0,229,255,0.32);
+    }
+    .atlas-life-legend .events::before { background: linear-gradient(90deg, #00e5ff, #bf9cff); }
+    .atlas-life-legend .current::before { background: transparent; border: 2px solid #fff; }
+    @media (max-width: 520px) {
+      .atlas-decade-row { grid-template-columns: 54px minmax(0, 1fr); gap: 7px; }
+      .atlas-decade-total { grid-column: 2; text-align: left; }
+    }
+
+    .atlas-upcoming-item {
+      width: 156px;
+      min-height: 92px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.035);
+      scroll-snap-align: start;
+    }
+
+    .atlas-upcoming-item strong {
+      display: block;
+      color: #fff;
+      font-size: 0.7rem;
+      line-height: 1.25;
+    }
+
+    .atlas-upcoming-item span {
+      display: block;
+      margin-top: 5px;
+      color: var(--text-dim);
+      font-size: 0.6rem;
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .cost-visual {
+      margin: 12px 0 14px;
+    }
+
+    .cost-visual-list {
+      display: grid;
+      gap: 8px;
+      padding-top: 2px;
+    }
+
+    .cost-visual-row {
+      display: grid;
+      grid-template-columns: minmax(105px, 0.8fr) minmax(150px, 1.2fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 9px;
+      border: 1px solid rgba(255,255,255,0.075);
+      border-radius: 11px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .cost-visual-label {
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 850;
+      line-height: 1.25;
+    }
+
+    .cost-visual-label span {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.85rem;
+    }
+
+    .cost-slope {
+      width: 100%;
+      height: 28px;
+      overflow: visible;
+    }
+
+    .cost-slope-line { stroke: rgba(0,229,255,0.55); stroke-width: 2; }
+    .cost-slope-then { fill: #7a8499; }
+    .cost-slope-now { fill: var(--primary); filter: drop-shadow(0 0 4px var(--primary)); }
+
+    .cost-visual-values {
+      min-width: 82px;
+      color: var(--text-dim);
+      font-size: 0.57rem;
+      font-weight: 800;
+      line-height: 1.35;
+      text-align: right;
+    }
+
+    .cost-visual-values strong {
+      color: #fff;
+      font-size: 0.65rem;
+    }
+
+    @keyframes atlasOrbitSpin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .atlas-summary-card { grid-template-columns: 96px minmax(0,1fr); gap: 12px; padding: 14px; }
+      .atlas-orbit { width: 92px; }
+      .atlas-orbit-age { font-size: 1.28rem; }
+      .atlas-summary-stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .atlas-grid-2 { grid-template-columns: 1fr; }
+      .atlas-ribbon-event { width: 126px; }
+      .cost-visual-row { grid-template-columns: minmax(92px,0.8fr) minmax(100px,1.2fr); gap: 7px; }
+      .cost-visual-values { grid-column: 1 / -1; display: flex; justify-content: space-between; text-align: left; }
+    }
+
+    @media (max-width: 390px) {
+      .atlas-summary-card { grid-template-columns: 1fr; text-align: center; }
+      .atlas-orbit { margin: auto; }
+      .atlas-summary-copy { text-align: left; }
+      .atlas-summary-stats { text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .atlas-orbit::after { animation: none; }
+    }
+
+    .cost-earn-time { color: #a7f3d0; }
+    @media (max-width: 640px) { .cost-visual-values { flex-wrap: wrap; gap: 4px 10px; } }
+
   </style>
 </head>
 <body id="mainBody">
@@ -2428,7 +3258,7 @@
 
 
   <div class="container" id="form-view">
-    <h1 class="hero-title">INITIALIZE LIFE PULSE</h1>
+    <h1 class="hero-title entry-title"><span class="entry-title__text">INITIALIZE LIFE <span class="pulse-word"><span class="pulse-word__label">PULSE</span></span></span><svg class="ecg-trace entry-ecg" viewBox="0 0 460 48" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="ecg-trace__base" pathLength="100" d="M0 24 H42 L52 24 L63 13 L73 35 L84 5 L96 43 L109 24 H190 L200 24 L211 15 L220 33 L231 8 L243 40 L255 24 H460"/><path class="ecg-trace__pulse" pathLength="100" d="M0 24 H42 L52 24 L63 13 L73 35 L84 5 L96 43 L109 24 H190 L200 24 L211 15 L220 33 L231 8 L243 40 L255 24 H460"/></svg></h1>
     <p class="hero-subtitle">Real-time legacy • cosmic identity • premium birth snapshot</p>
 
     <div class="gender-btns" role="radiogroup" aria-label="Gender">
@@ -2436,15 +3266,17 @@
       <button class="gender-btn" id="btn-female" role="radio" aria-checked="false" type="button">FEMALE</button>
     </div>
 
-    <label for="userName" class="visually-hidden">Your name</label>
-    <input type="text" id="userName" placeholder="ENTER NAME" maxlength="50" autocomplete="name" />
+    <div class="entry-field">
+      <label for="userName" class="entry-field-label">Your Name</label>
+      <input type="text" id="userName" placeholder="Enter name" maxlength="50" autocomplete="name" />
+    </div>
 
-    <div class="place-wrap">
-      <label for="birthPlace" class="visually-hidden">Birthplace (optional)</label>
+    <div class="place-wrap entry-field">
+      <label for="birthPlace" class="entry-field-label">Birthplace <span aria-hidden="true">(Optional)</span></label>
       <input
         type="text"
         id="birthPlace"
-        placeholder="ENTER BIRTHPLACE (OPTIONAL)"
+        placeholder="City, State or Country"
         maxlength="120"
         autocomplete="off"
         aria-autocomplete="list"
@@ -2452,25 +3284,45 @@
       />
       <div id="placeSuggestions" class="place-suggestions hidden" role="listbox" aria-label="Birthplace suggestions"></div>
     </div>
-    <div class="place-hint">Birthplace optional for detailed results.</div>
+    <div class="place-hint">Adds historical weather and more precise sky details.</div>
 
-    <div class="date-row">
-      <label for="dobMonth" class="visually-hidden">Birth month</label>
-      <select id="dobMonth" class="month-sel" autocomplete="bday-month">
-        <option value="">Month</option>
-        <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
-        <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
-        <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
-        <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
-      </select>
-      <label for="dobDay" class="visually-hidden">Birth day</label>
-      <select id="dobDay" class="day-sel" autocomplete="bday-day"><option value="">Day</option></select>
-      <label for="dobYear" class="visually-hidden">Birth year</label>
-      <select id="dobYear" class="year-sel" autocomplete="bday-year"><option value="">Year</option></select>
+    <div class="place-wrap entry-field">
+      <label for="currentResidence" class="entry-field-label">Hometown / Current Residence <span aria-hidden="true">(Optional)</span></label>
+      <input
+        type="text"
+        id="currentResidence"
+        placeholder="City, State or Country"
+        maxlength="120"
+        autocomplete="off"
+        aria-autocomplete="list"
+        aria-controls="residenceSuggestions"
+      />
+      <div id="residenceSuggestions" class="place-suggestions hidden" role="listbox" aria-label="Current residence suggestions"></div>
+    </div>
+    <div class="place-hint">Adds a present-day city population comparison.</div>
+
+    <div class="entry-field">
+      <span class="entry-field-label" id="birth-date-label">Birth Date</span>
+      <div class="date-row" role="group" aria-labelledby="birth-date-label">
+        <label for="dobMonth" class="visually-hidden">Birth month</label>
+        <select id="dobMonth" class="month-sel" autocomplete="bday-month">
+          <option value="">Month</option>
+          <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+          <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+          <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+          <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+        </select>
+        <label for="dobDay" class="visually-hidden">Birth day</label>
+        <select id="dobDay" class="day-sel" autocomplete="bday-day"><option value="">Day</option></select>
+        <label for="dobYear" class="visually-hidden">Birth year</label>
+        <select id="dobYear" class="year-sel" autocomplete="bday-year"><option value="">Year</option></select>
+      </div>
     </div>
 
-    <label for="birthTime" class="visually-hidden">Birth time</label>
-    <input type="time" id="birthTime" value="12:00" autocomplete="off" />
+    <div class="entry-field">
+      <label for="birthTime" class="entry-field-label">Birth Time</label>
+      <input type="time" id="birthTime" value="12:00" autocomplete="off" />
+    </div>
     <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
 
     <div class="form-action-row">
@@ -2488,7 +3340,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260809.11</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -2506,7 +3358,13 @@
         <p class="celebration-copy" id="today-celebration-copy"></p>
       </div>
     </section>
-    <h1 class="hero-title" id="greeting">...</h1>
+    <div class="dashboard-name-row">
+      <h1 class="hero-title" id="greeting">...</h1>
+      <svg class="ecg-trace dashboard-ecg" viewBox="0 0 720 48" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path class="ecg-trace__base" pathLength="100" d="M0 24 H62 L72 24 L84 13 L95 35 L107 5 L120 43 L134 24 H252 L264 24 L276 14 L287 34 L299 7 L312 41 L326 24 H444 L456 24 L468 13 L479 35 L491 5 L504 43 L518 24 H720"/>
+        <path class="ecg-trace__pulse" pathLength="100" d="M0 24 H62 L72 24 L84 13 L95 35 L107 5 L120 43 L134 24 H252 L264 24 L276 14 L287 34 L299 7 L312 41 L326 24 H444 L456 24 L468 13 L479 35 L491 5 L504 43 L518 24 H720"/>
+      </svg>
+    </div>
     <div id="environment-note" class="environment-note hidden"></div>
 
     <div class="born-shell">
@@ -2616,10 +3474,20 @@
 
 
     <div class="birthday-hero-card" id="birthday-hero-panel">
-      <span class="birthday-hero-label">Next Birthday</span>
-      <span class="birthday-hero-main" id="next-birthday-days">...</span>
-      <span class="birthday-hero-sub" id="next-birthday-age">...</span>
-      <p class="birthday-hero-copy" id="next-birthday-copy">...</p>
+      <div class="birthday-hero-layout">
+        <div class="atlas-orbit birthday-cycle-orbit" id="next-birthday-orbit" aria-label="Birthday year progress">
+          <div class="atlas-orbit-core">
+            <strong class="atlas-orbit-age" id="next-birthday-percent">0%</strong>
+            <span class="atlas-orbit-label">Birthday Year</span>
+          </div>
+        </div>
+        <div class="birthday-hero-details">
+          <span class="birthday-hero-label">Next Birthday</span>
+          <span class="birthday-hero-main" id="next-birthday-days">...</span>
+          <span class="birthday-hero-sub" id="next-birthday-age">...</span>
+          <p class="birthday-hero-copy" id="next-birthday-copy">...</p>
+        </div>
+      </div>
     </div>
 
     <section class="panel whats-next-panel" id="whats-next-panel" aria-labelledby="whats-next-title">
@@ -2923,13 +3791,14 @@
       <div class="comparison-list" id="born-then-now-list" aria-live="polite"></div>
       <details class="comparison-methods">
         <summary>About These Numbers</summary>
-        <p>These comparisons show nominal U.S. dollar amounts from your birth year beside the latest maintained value. They are not adjusted for inflation. Labels identify whether a figure is a median, an average, or an estimate.</p>
+        <p>These comparisons show nominal U.S. dollar amounts from your birth year beside the latest maintained value. They are not adjusted for inflation. Labels identify whether a figure is a median, an average, or an estimate. Birthplace and hometown birth-year populations are broad estimates scaled from the latest available city record using world-population change; they are not official historical municipal census counts.</p>
         <div class="comparison-method-links">
           <a href="https://fred.stlouisfed.org/series/MSPUS" target="_blank" rel="noopener noreferrer">Housing &amp; Income</a>
           <a href="https://www.census.gov/data/tables/time-series/dec/coh-grossrents.html" target="_blank" rel="noopener noreferrer">Rent</a>
           <a href="https://www.bls.gov/cpi/factsheets/average-prices.htm" target="_blank" rel="noopener noreferrer">Everyday Prices</a>
           <a href="https://nces.ed.gov/fastfacts/display.asp?id=76" target="_blank" rel="noopener noreferrer">College Tuition</a>
           <a href="https://www.dol.gov/agencies/whd/minimum-wage/history/chart" target="_blank" rel="noopener noreferrer">Minimum Wage</a>
+          <a href="https://nominatim.org/release-docs/latest/api/Search/" target="_blank" rel="noopener noreferrer">City Locations</a>
         </div>
         <p class="source-line">Dataset review dates and technical refresh details are available in Diagnostic Mode.</p>
       </details>
@@ -3117,6 +3986,56 @@
       </div>
     </div>
 
+
+<section class="panel life-atlas-panel" id="life-atlas-panel" aria-labelledby="life-atlas-title">
+      <div class="section-head">
+        <div class="section-title" id="life-atlas-title">Your Life Atlas</div>
+        <span class="panel-note">Focused Visual Story</span>
+      </div>
+      <p class="atlas-intro">A concise visual look at your arrival sky, birthday patterns, place in the world, and technology eras.</p>
+
+      <details class="atlas-module" open>
+        <summary><span>Birth Sky &amp; Birthday Patterns<span class="atlas-module-subtitle">Your arrival sky plus the repeating calendar rhythm of your birthdays.</span></span></summary>
+        <div class="atlas-module-body atlas-grid-2">
+          <div class="atlas-subpanel">
+            <div class="atlas-subtitle">Birth Sky Dial</div>
+            <div class="birth-sky-dial" id="birth-sky-dial">
+              <span class="birth-sky-sun" aria-hidden="true"></span>
+              <div class="birth-sky-core">
+                <span class="birth-sky-moon" id="birth-sky-moon-icon" aria-hidden="true">&#127769;</span>
+                <strong class="birth-sky-phase" id="birth-sky-phase">...</strong>
+              </div>
+            </div>
+            <p class="atlas-caption" id="birth-sky-copy">Calculating your arrival sky...</p>
+          </div>
+          <div class="atlas-subpanel">
+            <div class="atlas-subtitle">Birthday Patterns</div>
+            <div class="atlas-pattern-grid" id="birthday-pattern-grid"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="atlas-module">
+        <summary><span>World, Generations &amp; Technology<span class="atlas-module-subtitle">Where your age sits in the world and which new eras entered during your lifetime.</span></span></summary>
+        <div class="atlas-module-body">
+          <div class="atlas-grid-2">
+            <div class="atlas-subpanel">
+              <div class="atlas-subtitle">World Age Comparison</div>
+              <div id="atlas-population-copy" class="atlas-caption" style="text-align:left;">Calculating your position...</div>
+              <div class="atlas-population-bar" id="atlas-population-bar"><span class="atlas-population-younger"></span><span class="atlas-population-older"></span></div>
+              <div class="atlas-population-labels"><span><strong id="atlas-younger-count">...</strong>Younger</span><span style="text-align:right;"><strong id="atlas-older-count">...</strong>Older</span></div>
+              <p class="source-line">Uses the maintained world-population value with a broad global age-distribution estimate.</p>
+            </div>
+            <div class="atlas-subpanel">
+              <div class="atlas-subtitle">Generational Overlap</div>
+              <div id="atlas-generation-overlap"></div>
+            </div>
+          </div>
+          <div class="atlas-subtitle" style="margin-top:14px;">Your Age When Technology Changed</div>
+          <div class="atlas-tech-ribbon"><div class="atlas-tech-track" id="atlas-tech-track"></div></div>
+        </div>
+      </details>
+    </section>
     <div class="slate-card slate-card--timeline" id="life-timeline-panel">
       <span class="slate-header slate-header--timeline">Your Life Timeline</span>
       <p class="slate-body" id="timeline-copy">...</p>
@@ -3287,9 +4206,9 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260809';
+    const LOCAL_RELEASE_VERSION = '4.local.20260809.5';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
-    const GEOCODE_BASE    = 'https://geocoding-api.open-meteo.com/v1/search';
+    const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
     const LIVE_DATA_URL   = 'live-data.json';
     const COST_DATA_URL   = 'cost-of-living-data.json';
@@ -3345,8 +4264,11 @@
     let ageTimerId            = null;
     let insightTimerId        = null;
     let placeSearchTimer      = null;
+    let lastGeoRequestAt      = 0;
+    let geoRequestQueue       = Promise.resolve();
     let resizeTimer           = null;
     let selectedPlaceSuggestion = null;
+    let selectedResidenceSuggestion = null;
     let currentLiveHoroscope  = null;
     let horoscopeRequestId    = 0;
     let debugMockMode         = false;
@@ -3392,6 +4314,8 @@
       userName:              document.getElementById('userName'),
       birthPlace:            document.getElementById('birthPlace'),
       placeSuggestions:      document.getElementById('placeSuggestions'),
+      currentResidence:      document.getElementById('currentResidence'),
+      residenceSuggestions:  document.getElementById('residenceSuggestions'),
       dobMonth:              document.getElementById('dobMonth'),
       dobDay:                document.getElementById('dobDay'),
       dobYear:               document.getElementById('dobYear'),
@@ -3456,6 +4380,8 @@
       nextBirthdayDays:      document.getElementById('next-birthday-days'),
       nextBirthdayAge:       document.getElementById('next-birthday-age'),
       nextBirthdayCopy:      document.getElementById('next-birthday-copy'),
+      nextBirthdayOrbit:     document.getElementById('next-birthday-orbit'),
+      nextBirthdayPercent:   document.getElementById('next-birthday-percent'),
       bornThenNowYears:       document.getElementById('born-then-now-years'),
       bornThenNowSummary:     document.getElementById('born-then-now-summary'),
       bornThenNowList:        document.getElementById('born-then-now-list'),
@@ -4774,14 +5700,18 @@
     function getProfileFromForm() {
       const name       = normalizeName(els.userName?.value || '');
       const birthPlace = normalizeName(els.birthPlace?.value || '');
+      const currentResidence = normalizeName(els.currentResidence?.value || '');
       const month      = String(els.dobMonth?.value ?? '').trim();
       const day        = String(els.dobDay?.value ?? '').trim();
       const year       = String(els.dobYear?.value ?? '').trim();
       let   time       = String(els.birthTime?.value ?? '').trim();
       if (!time) time  = '12:00';
-      const profile = { name, birthPlace, gender: userGender, month, day, year, time };
+      const profile = { name, birthPlace, currentResidence, gender: userGender, month, day, year, time };
       if (selectedPlaceSuggestion && placeLooksLikeMatch(birthPlace, selectedPlaceSuggestion)) {
         profile.birthPlaceGeo = serializePlaceSelection(selectedPlaceSuggestion);
+      }
+      if (selectedResidenceSuggestion && placeLooksLikeMatch(currentResidence, selectedResidenceSuggestion)) {
+        profile.currentResidenceGeo = serializePlaceSelection(selectedResidenceSuggestion);
       }
       return profile;
     }
@@ -4896,6 +5826,15 @@
           selectedPlaceSuggestion = null;
         }
         els.birthPlace.value = incomingPlace;
+      }
+      if (profile.currentResidence) {
+        const incomingResidence = normalizeName(profile.currentResidence);
+        if (profile.currentResidenceGeo && profile.currentResidenceGeo.latitude != null && profile.currentResidenceGeo.longitude != null) {
+          selectedResidenceSuggestion = { ...profile.currentResidenceGeo };
+        } else if (!selectedResidenceSuggestion || !placeLooksLikeMatch(incomingResidence, selectedResidenceSuggestion)) {
+          selectedResidenceSuggestion = null;
+        }
+        els.currentResidence.value = incomingResidence;
       }
       if (profile.month !== undefined) els.dobMonth.value = String(profile.month);
       if (profile.year  !== undefined) els.dobYear.value  = String(profile.year);
@@ -5856,49 +6795,112 @@
     }
 
     // ─── Place suggestions — DOM-safe, keyboard navigable ────────────────────
-    function showPlaceSuggestions(items) {
-      els.placeSuggestions.innerHTML = '';
+    function showLocationSuggestions(listElement, inputElement, items, selectItem) {
+      listElement.innerHTML = '';
       if (!items.length) {
-        els.placeSuggestions.classList.add('hidden');
+        const empty = document.createElement('div');
+        empty.className = 'place-suggestion place-suggestion-empty';
+        empty.textContent = 'No matching cities found. Try adding a state or country.';
+        listElement.appendChild(empty);
+        listElement.classList.remove('hidden');
+        inputElement.setAttribute('aria-expanded', 'true');
         return;
       }
-      items.forEach((item) => {
-        const div       = document.createElement('div');
-        div.className   = 'place-suggestion';
-        div.role        = 'option';
-        div.textContent = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
-        div.addEventListener('click', () => {
-          selectedPlaceSuggestion = { ...item };
-          els.birthPlace.value = div.textContent;
-          els.placeSuggestions.classList.add('hidden');
-        });
-        els.placeSuggestions.appendChild(div);
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'place-suggestion';
+        div.role = 'option';
+        const populationCopy = Number.isFinite(Number(item.population)) ? ` - Pop. ${Number(item.population).toLocaleString()}` : '';
+        div.textContent = [item.name, item.admin1, item.country].filter(Boolean).join(', ') + populationCopy;
+        const chooseLocation = event => {
+          if (event?.type === 'pointerdown') event.preventDefault();
+          selectItem({ ...item });
+          inputElement.value = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
+          listElement.classList.add('hidden');
+          inputElement.setAttribute('aria-expanded', 'false');
+        };
+        div.addEventListener('pointerdown', chooseLocation);
+        div.addEventListener('click', chooseLocation);
+        listElement.appendChild(div);
       });
-      els.placeSuggestions.classList.remove('hidden');
+      listElement.classList.remove('hidden');
+      inputElement.setAttribute('aria-expanded', 'true');
     }
 
-    function hidePlaceSuggestions() {
-      els.placeSuggestions.classList.add('hidden');
-      // Clear highlights
-      els.placeSuggestions.querySelectorAll('.highlighted').forEach(el => el.classList.remove('highlighted'));
+    function showPlaceSuggestions(items) {
+      showLocationSuggestions(els.placeSuggestions, els.birthPlace, items, item => { selectedPlaceSuggestion = item; });
     }
 
+    function showResidenceSuggestions(items) {
+      showLocationSuggestions(els.residenceSuggestions, els.currentResidence, items, item => { selectedResidenceSuggestion = item; });
+    }
+
+    function hideLocationSuggestions(listElement, inputElement) {
+      listElement.classList.add('hidden');
+      inputElement.setAttribute('aria-expanded', 'false');
+      listElement.querySelectorAll('.highlighted').forEach(el => el.classList.remove('highlighted'));
+    }
+
+    function hidePlaceSuggestions() { hideLocationSuggestions(els.placeSuggestions, els.birthPlace); }
+    function hideResidenceSuggestions() { hideLocationSuggestions(els.residenceSuggestions, els.currentResidence); }
     // Merged geocoding helper — used by both suggestion and resolve paths
+    function scheduleGeoRequest(request) {
+      const run = geoRequestQueue.then(async () => {
+        const waitMs = Math.max(0, 1050 - (Date.now() - lastGeoRequestAt));
+        if (waitMs) await new Promise(resolve => setTimeout(resolve, waitMs));
+        lastGeoRequestAt = Date.now();
+        return request();
+      });
+      geoRequestQueue = run.catch(() => {});
+      return run;
+    }
+
     async function fetchGeoResults(query, count = 8) {
       if (!query || query.length < 2) return [];
       const cacheKey = `geo|${query.toLowerCase()}|${count}`;
       if (geoCache.has(cacheKey)) return geoCache.get(cacheKey);
       try {
-        const url = `${GEOCODE_BASE}?name=${encodeURIComponent(query)}&count=${count}&language=en&format=json`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('geo fetch failed');
-        const data    = await res.json();
-        const results = (data?.results || []).filter(item => item.name);
+        const params = new URLSearchParams({
+          q: query,
+          format: 'jsonv2',
+          addressdetails: '1',
+          extratags: '1',
+          limit: String(Math.min(10, count)),
+          'accept-language': 'en'
+        });
+        const res = await scheduleGeoRequest(() => fetch(`${GEOCODE_BASE}?${params.toString()}`, {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'force-cache',
+          headers: { Accept: 'application/json' }
+        }));
+        if (!res.ok) throw new Error('location search failed');
+        const data = await res.json();
+        const results = (Array.isArray(data) ? data : []).filter(item => ['city', 'town', 'village', 'municipality', 'hamlet'].includes(item.addresstype) || ['city', 'town', 'village'].includes(item.type)).map(item => {
+          const address = item.address || {};
+          const population = Number(item.extratags?.population);
+          return {
+            id: item.place_id,
+            name: item.name || address.city || address.town || address.village || address.municipality || '',
+            admin1: address.state || address.region || '',
+            admin2: address.county || '',
+            country: address.country || '',
+            country_code: String(address.country_code || '').toUpperCase(),
+            latitude: Number(item.lat),
+            longitude: Number(item.lon),
+            timezone: '',
+            population: Number.isFinite(population) && population > 0 ? population : null,
+            populationDate: item.extratags?.['population:date'] || '',
+            source: 'OpenStreetMap Nominatim'
+          };
+        }).filter(item => item.name && Number.isFinite(item.latitude) && Number.isFinite(item.longitude));
         geoCache.set(cacheKey, results);
         return results;
-      } catch { return []; }
+      } catch (error) {
+        console.warn('Location search unavailable:', error);
+        return [];
+      }
     }
-
     async function fetchPlaceSuggestions(query) {
       const results = await fetchGeoResults(query, 8);
       return results.filter((item, i, arr) =>
@@ -5935,10 +6937,15 @@
       return {
         name: item.name || '',
         admin1: item.admin1 || '',
+        admin2: item.admin2 || '',
         country: item.country || '',
+        country_code: item.country_code || '',
         latitude: item.latitude,
         longitude: item.longitude,
-        timezone: item.timezone || ''
+        timezone: item.timezone || '',
+        population: Number.isFinite(Number(item.population)) ? Number(item.population) : null,
+        populationDate: item.populationDate || '',
+        source: item.source || 'Location search'
       };
     }
 
@@ -6018,7 +7025,15 @@
       selectedPlaceSuggestion = null;
       if (query.length < 2) { hidePlaceSuggestions(); return; }
       const items = await fetchPlaceSuggestions(query);
-      showPlaceSuggestions(items);
+      if (query === normalizeName(els.birthPlace.value)) showPlaceSuggestions(items);
+    }
+
+    async function handleResidenceTyping() {
+      const query = normalizeName(els.currentResidence.value);
+      selectedResidenceSuggestion = null;
+      if (query.length < 2) { hideResidenceSuggestions(); return; }
+      const items = await fetchPlaceSuggestions(query);
+      if (query === normalizeName(els.currentResidence.value)) showResidenceSuggestions(items);
     }
 
     // ─── Weather & history ────────────────────────────────────────────────────
@@ -8200,10 +9215,11 @@ function countPresidentialElectionsExperienced(start, end) {
       });
 
       const allPalindromeDates = getAllPalindromeDatesExperienced(birthMomentGlobal, now);
-      const allTimelinePalindromes = getAllPalindromeDatesExperienced(historyStart, now);
+      const palindromeHistoryStart = new Date('1000-01-01T12:00:00');
+      const allTimelinePalindromes = getAllPalindromeDatesExperienced(palindromeHistoryStart, now);
       setSourceDrawer('palindrome-dates', {
-        intro: 'Dates whose MM/DD/YYYY digits read the same forward and backward.',
-        diagnosticMeta: 'Source: calculated in the browser; All Time covers 01/01/1900 through today.',
+        intro: 'Dates whose MM/DD/YYYY digits read the same forward and backward. All Time includes the complete supported calendar history from 01/01/1000 through today.',
+        diagnosticMeta: 'Source: calculated in the browser using the modern MM/DD/YYYY format; All Time covers 01/01/1000 through today.',
         views: historyViews(allPalindromeDates.length ? formatDates(allPalindromeDates) : ['No palindrome dates have landed during your lifetime yet.'], allTimelinePalindromes.length ? formatDates(allTimelinePalindromes) : ['No supported palindrome dates were found.'])
       });
 
@@ -8325,6 +9341,8 @@ function countPresidentialElectionsExperienced(start, end) {
       const life80 = Math.max(0, Math.min(100, (years / 80) * 100));
       const birthdayCycle = birthdayCycleProgress * 100;
       const birthdayRemaining = 100 - birthdayCycle;
+      if (els.nextBirthdayOrbit) els.nextBirthdayOrbit.style.setProperty('--atlas-progress', (birthdayCycleProgress * 360) + 'deg');
+      if (els.nextBirthdayPercent) els.nextBirthdayPercent.textContent = birthdayCycle.toFixed(0) + '%';
       const yearPct = currentYearProgress * 100;
       const dayPct = currentDayProgress * 100;
       const lifePercentBenchmark = years > 80 ? 100 : 80;
@@ -8740,6 +9758,29 @@ function countPresidentialElectionsExperienced(start, end) {
         { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.` },
         { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.` }
       ].map(item => ({ ...item, group: 'world' }));
+
+      const cityScale = currentPopulation > 0 ? birthPopulation / currentPopulation : null;
+      const buildCityPopulationRow = (geo, label, emptyPrompt) => {
+        const latestPopulation = Number(geo?.population);
+        const estimatedThen = Number.isFinite(latestPopulation) && Number.isFinite(cityScale)
+          ? Math.round(latestPopulation * cityScale)
+          : null;
+        const cityName = geo?.name || '';
+        return {
+          icon: '&#127961;',
+          label,
+          then: Number.isFinite(estimatedThen) ? formatCompact(estimatedThen, 2) : emptyPrompt,
+          now: Number.isFinite(latestPopulation) ? formatCompact(latestPopulation, 2) : emptyPrompt,
+          change: geo
+            ? `${cityName}: the ${birthYear} value is a broad population-scaled estimate; the current value is the latest available location record${geo.populationDate ? ` (${geo.populationDate})` : ''}.`
+            : `Choose a matching ${label.toLowerCase().replace(' population', '')} on the Initialization page to populate this comparison.`,
+          group: 'world'
+        };
+      };
+      comparisons.splice(1, 0,
+        buildCityPopulationRow(currentProfile?.birthPlaceGeo, 'Birthplace Population', 'Select Birthplace'),
+        buildCityPopulationRow(currentProfile?.currentResidenceGeo, 'Hometown Population', 'Select Hometown')
+      );
       comparisons.push(...buildCostComparisons(birthYear, currentYear));
       if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} to ${currentYear}`;
       if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} clear comparisons between your starting world and today. Current maintained values replace estimates as they become available.`;
@@ -8837,6 +9878,187 @@ function countPresidentialElectionsExperienced(start, end) {
         <div><div class="life-event-title"><span aria-hidden="true">${event.icon}</span> ${escapeSourceHtml(event.title)}</div><div class="life-event-detail">${escapeSourceHtml(event.detail)}</div></div>
       </article>`).join('') : '<div class="timeline-empty">No events are available for this filter yet.</div>';
     }
+
+const ATLAS_TECH_MILESTONES = [
+      { date: '1981-08-12', title: 'IBM Personal Computer', icon: '&#128187;' },
+      { date: '1991-08-06', title: 'World Wide Web', icon: '&#127760;' },
+      { date: '1998-09-04', title: 'Google', icon: 'G' },
+      { date: '2001-01-15', title: 'Wikipedia', icon: 'W' },
+      { date: '2004-02-04', title: 'Facebook', icon: 'f' },
+      { date: '2005-02-14', title: 'YouTube', icon: '&#9654;' },
+      { date: '2007-01-09', title: 'iPhone Announced', icon: '&#128241;' },
+      { date: '2007-01-16', title: 'Streaming Era', icon: '&#127916;' },
+      { date: '2009-01-03', title: 'Bitcoin Network', icon: 'B' },
+      { date: '2010-10-06', title: 'Instagram', icon: '&#128247;' },
+      { date: '2022-11-30', title: 'Generative AI Era', icon: 'AI' }
+    ];
+    const ATLAS_GENERATION_RANGES = [
+      { label: 'Silent Generation', start: 1928, end: 1945 },
+      { label: 'Baby Boomers', start: 1946, end: 1964 },
+      { label: 'Generation X', start: 1965, end: 1980 },
+      { label: 'Millennials', start: 1981, end: 1996 },
+      { label: 'Generation Z', start: 1997, end: 2012 },
+      { label: 'Generation Alpha', start: 2013, end: 2024 },
+      { label: 'Generation Beta', start: 2025, end: 2039 }
+    ];
+    const GLOBAL_AGE_SHARE_ANCHORS = [
+      [0, 0], [5, 8.5], [15, 25], [25, 40], [35, 54], [45, 66],
+      [55, 76], [65, 84.5], [75, 91], [85, 96], [100, 99.5]
+    ];
+
+    function atlasClamp(value, minimum, maximum) {
+      return Math.max(minimum, Math.min(maximum, value));
+    }
+
+    function interpolateAtlasAgeShare(age) {
+      const safeAge = atlasClamp(Number(age) || 0, 0, 110);
+      for (let index = 1; index < GLOBAL_AGE_SHARE_ANCHORS.length; index += 1) {
+        const previous = GLOBAL_AGE_SHARE_ANCHORS[index - 1];
+        const current = GLOBAL_AGE_SHARE_ANCHORS[index];
+        if (safeAge <= current[0]) {
+          const ratio = (safeAge - previous[0]) / (current[0] - previous[0]);
+          return previous[1] + ((current[1] - previous[1]) * ratio);
+        }
+      }
+      return 99.8;
+    }
+
+    function getAtlasPopulationSnapshot(age, now) {
+      const currentYear = now.getFullYear();
+      const cachedPopulation = liveCompareCache.get('world-pop-live');
+      const feedPopulation = Number(currentLiveData?.current?.worldPopulation?.value ?? cachedPopulation?.population);
+      const population = Number.isFinite(feedPopulation) ? feedPopulation : interpolateFromAnchors(currentYear, WORLD_POPULATION_ANCHORS) * 1000000000;
+      const youngerPercent = atlasClamp(interpolateAtlasAgeShare(age), 0.2, 99.8);
+      return { population: population, youngerPercent: youngerPercent, olderPercent: 100 - youngerPercent, youngerCount: population * youngerPercent / 100, olderCount: population * (100 - youngerPercent) / 100 };
+    }
+
+    function getBirthdayPatternStats(now) {
+      const weekdays = Array(7).fill(0);
+      const birthdayDates = [];
+      const birthYear = birthMomentGlobal.getFullYear();
+      const month = birthMomentGlobal.getMonth();
+      const day = birthMomentGlobal.getDate();
+      for (let year = birthYear + 1; year <= now.getFullYear(); year += 1) {
+        const date = createAnniversaryDate(year, month, day, 12, 0);
+        if (date <= now) { weekdays[date.getDay()] += 1; birthdayDates.push(date); }
+      }
+      const weekdayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const highest = Math.max.apply(null, weekdays);
+      const mostCommon = weekdayNames[weekdays.indexOf(highest)] || 'Pending';
+      let nextWeekendBirthday = null;
+      for (let year = Math.max(now.getFullYear(), birthYear + 1); year <= now.getFullYear() + 14; year += 1) {
+        const date = createAnniversaryDate(year, month, day, 12, 0);
+        if (date > now && (date.getDay() === 0 || date.getDay() === 6)) { nextWeekendBirthday = date; break; }
+      }
+      const leapBirthdayCount = month === 1 && day === 29
+        ? birthdayDates.filter(function(date) { return new Date(date.getFullYear(), 1, 29).getMonth() === 1; }).length
+        : birthdayDates.filter(function(date) { const year = date.getFullYear(); return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0); }).length;
+      return { weekdays: weekdays, weekdayNames: weekdayNames, mostCommon: mostCommon, highest: highest, weekendCount: weekdays[0] + weekdays[6], originalWeekdayCount: weekdays[birthMomentGlobal.getDay()] || 0, nextWeekendBirthday: nextWeekendBirthday, leapBirthdayCount: leapBirthdayCount, birthdayCount: birthdayDates.length };
+    }
+
+function getBirthSkySnapshot() {
+      const moon = getMoonPhase(birthMomentGlobal);
+      const hour = birthMomentGlobal.getHours() + (birthMomentGlobal.getMinutes() / 60);
+      const sunAngle = ((hour / 24) * 360) - 90;
+      let lightLabel = hour < 5 ? 'Night Arrival' : hour < 8 ? 'Dawn Arrival' : hour < 17 ? 'Daylight Arrival' : hour < 20 ? 'Evening Arrival' : 'Night Arrival';
+      let altitudeCopy = 'Sun position estimated from your entered local birth time.';
+      let daylightCopy = 'Sunrise and sunset require a matched birthplace.';
+      const geo = currentProfile?.birthPlaceGeo;
+      const engine = window.Astronomy;
+      if (geo && engine?.Observer && engine?.Equator && engine?.Horizon) {
+        try {
+          const observer = new engine.Observer(Number(geo.latitude), Number(geo.longitude), 0);
+          const equator = engine.Equator('Sun', birthMomentGlobal, observer, true, true);
+          const horizon = engine.Horizon(birthMomentGlobal, observer, equator.ra, equator.dec, 'normal');
+          const altitude = Number(horizon?.altitude);
+          if (Number.isFinite(altitude)) {
+            lightLabel = altitude > 0 ? 'Sun Above Horizon' : 'Sun Below Horizon';
+            altitudeCopy = 'Estimated solar altitude: ' + altitude.toFixed(1) + ' degrees at your matched birthplace.';
+          }
+          if (engine?.SearchRiseSet) {
+            const calculateDaylight = function(date) {
+              const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+              const riseResult = engine.SearchRiseSet('Sun', observer, 1, start, 2);
+              const setResult = engine.SearchRiseSet('Sun', observer, -1, start, 2);
+              const rise = riseResult?.date || riseResult?.time?.date;
+              const set = setResult?.date || setResult?.time?.date;
+              if (!(rise instanceof Date) || !(set instanceof Date)) return null;
+              let daylightHours = (set - rise) / 3600000;
+              if (daylightHours < 0) daylightHours += 24;
+              return { rise: rise, set: set, hours: daylightHours };
+            };
+            const birthDaylight = calculateDaylight(birthMomentGlobal);
+            const currentSeasonDate = createAnniversaryDate(new Date().getFullYear(), birthMomentGlobal.getMonth(), birthMomentGlobal.getDate(), 12, 0);
+            const currentDaylight = calculateDaylight(currentSeasonDate);
+            if (birthDaylight) {
+              const timeOptions = { hour: 'numeric', minute: '2-digit' };
+              if (geo.timezone) timeOptions.timeZone = geo.timezone;
+              const riseText = birthDaylight.rise.toLocaleTimeString('en-US', timeOptions);
+              const setText = birthDaylight.set.toLocaleTimeString('en-US', timeOptions);
+              daylightCopy = 'Sunrise ' + riseText + ', sunset ' + setText + ', about ' + birthDaylight.hours.toFixed(1) + ' hours of daylight.';
+              if (currentDaylight) daylightCopy += ' The same calendar date now has about ' + currentDaylight.hours.toFixed(1) + ' daylight hours.';
+            }
+          }
+        } catch {}
+      }
+      return { moon: moon, sunAngle: sunAngle, lightLabel: lightLabel, altitudeCopy: altitudeCopy, daylightCopy: daylightCopy };
+    }
+
+    function atlasAgeAtDate(date) {
+      const years = Math.max(0, (date - birthMomentGlobal) / 86400000 / 365.2425);
+      return years < 1 ? Math.max(0, Math.floor(years * 12)) + ' months old' : 'Age ' + Math.floor(years);
+    }
+
+    function renderLifeAtlas(now) {
+      now = now || new Date();
+      const panel = document.getElementById('life-atlas-panel');
+      if (!panel || !birthMomentGlobal) return;
+      const age = getCurrentAgeYears(now);
+      const ageWhole = Math.floor(age);
+      const birthSky = getBirthSkySnapshot();
+      const population = getAtlasPopulationSnapshot(age, now);
+
+      const skyDial = document.getElementById('birth-sky-dial');
+      if (skyDial) skyDial.style.setProperty('--sun-angle', birthSky.sunAngle + 'deg');
+      document.getElementById('birth-sky-moon-icon').textContent = getMoonPhaseIcon(birthSky.moon.name);
+      document.getElementById('birth-sky-phase').textContent = birthSky.moon.name + ' - ' + birthSky.moon.illuminationPct.toFixed(0) + '%';
+      document.getElementById('birth-sky-copy').textContent = birthSky.lightLabel + '. ' + birthSky.altitudeCopy + ' ' + birthSky.daylightCopy + ' ' + currentZodiac.n + ' season framed the date.';
+
+      const birthdayStats = getBirthdayPatternStats(now);
+      const nextWeekend = birthdayStats.nextWeekendBirthday ? formatEventDate(birthdayStats.nextWeekendBirthday) : 'Beyond 14 Years';
+      const birthWeekday = birthdayStats.weekdayNames[birthMomentGlobal.getDay()];
+      const patterns = [
+        [birthdayStats.weekendCount.toLocaleString(), 'Weekend Birthdays'],
+        [birthdayStats.mostCommon + ' (' + birthdayStats.highest + ')', 'Most Common Weekday'],
+        [birthdayStats.originalWeekdayCount.toLocaleString(), 'Birthdays on ' + birthWeekday],
+        [nextWeekend, 'Next Weekend Birthday'],
+        [birthdayStats.leapBirthdayCount.toLocaleString(), 'Leap-Year Birthdays'],
+        [birthdayStats.birthdayCount.toLocaleString(), 'Completed Birthdays']
+      ];
+      document.getElementById('birthday-pattern-grid').innerHTML = patterns.map(item => '<div class="atlas-pattern"><strong>' + escapeSourceHtml(item[0]) + '</strong><span>' + escapeSourceHtml(item[1]) + '</span></div>').join('');
+
+      const milestones = ATLAS_TECH_MILESTONES.map(item => Object.assign({}, item, { parsedDate: new Date(item.date + 'T12:00:00') })).filter(item => item.parsedDate >= birthMomentGlobal && item.parsedDate <= now);
+      document.getElementById('atlas-tech-track').innerHTML = milestones.length
+        ? milestones.map(item => '<div class="atlas-tech-stop"><strong>' + escapeSourceHtml(item.title) + '</strong><span>' + item.parsedDate.getFullYear() + ' - ' + escapeSourceHtml(atlasAgeAtDate(item.parsedDate)) + '</span></div>').join('')
+        : '<div class="atlas-caption">These milestones were already part of the world when you arrived.</div>';
+
+      const birthYear = birthMomentGlobal.getFullYear();
+      const currentYear = now.getFullYear();
+      const livedSpan = Math.max(1, currentYear - birthYear + 1);
+      const overlaps = ATLAS_GENERATION_RANGES.map(range => {
+        const start = Math.max(birthYear, range.start);
+        const end = Math.min(currentYear, range.end);
+        const years = Math.max(0, end - start + 1);
+        return Object.assign({}, range, { years, percent: atlasClamp((years / livedSpan) * 100, 0, 100) });
+      }).filter(range => range.years > 0);
+      document.getElementById('atlas-generation-overlap').innerHTML = overlaps.map(range => '<div class="atlas-generation-row"><div class="atlas-generation-meta"><strong>' + escapeSourceHtml(range.label) + '</strong><span>' + range.years + ' shared birth-years</span></div><div class="atlas-generation-bar"><div class="atlas-generation-fill" style="--overlap:' + range.percent.toFixed(1) + '%"></div></div></div>').join('');
+
+      const populationBar = document.getElementById('atlas-population-bar');
+      if (populationBar) populationBar.style.setProperty('--younger', population.youngerPercent.toFixed(1) + '%');
+      document.getElementById('atlas-younger-count').textContent = formatCompact(population.youngerCount, 1);
+      document.getElementById('atlas-older-count').textContent = formatCompact(population.olderCount, 1);
+      document.getElementById('atlas-population-copy').textContent = 'At age ' + ageWhole + ', an estimated ' + population.youngerPercent.toFixed(0) + '% of the world is younger and ' + population.olderPercent.toFixed(0) + '% is older than you.';
+    }
     function renderMilestones() {
       const now   = new Date();
       const items = buildMilestones(now);
@@ -8881,6 +10103,7 @@ function countPresidentialElectionsExperienced(start, end) {
       renderWhatsNext(now);
       renderLifeEventTimeline(now);
       renderBornThenNow(now);
+      renderLifeAtlas(now);
 
       els.generationIdentity.textContent = identity.title;
       els.generationIdentityCopy.textContent = identity.copy;
@@ -9081,7 +10304,7 @@ function countPresidentialElectionsExperienced(start, end) {
         const payload = await response.json();
         if (!payload?.metrics || Object.keys(payload.metrics).length < 8) throw new Error('Cost data is incomplete.');
         currentCostData = payload;
-        if (birthMomentGlobal) renderBornThenNow(new Date());
+        if (birthMomentGlobal) { renderBornThenNow(new Date()); renderLifeAtlas(new Date()); }
         setLiveDiagnostic('costOfLiving', { label: 'Cost Comparison Dataset', state: 'live', detail: `Loaded ${Object.keys(payload.metrics).length} maintained comparisons; dataset updated ${formatSourceDate(payload.updatedAt)} and scheduled for review ${formatSourceDate(payload.nextReview)}.`, source: 'LifePulse cost dataset' });
       } catch (error) {
         currentCostData = DEFAULT_COST_DATA;
@@ -9442,10 +10665,22 @@ function countPresidentialElectionsExperienced(start, end) {
 
         profile.name       = normalizeName(profile.name);
         profile.birthPlace = normalizeName(profile.birthPlace);
-        currentProfile = profile;
+        profile.currentResidence = normalizeName(profile.currentResidence);
         if (selectedPlaceSuggestion && placeLooksLikeMatch(profile.birthPlace, selectedPlaceSuggestion)) {
           profile.birthPlaceGeo = serializePlaceSelection(selectedPlaceSuggestion);
         }
+        if (selectedResidenceSuggestion && placeLooksLikeMatch(profile.currentResidence, selectedResidenceSuggestion)) {
+          profile.currentResidenceGeo = serializePlaceSelection(selectedResidenceSuggestion);
+        }
+        if (profile.birthPlace && !profile.birthPlaceGeo) {
+          const resolvedBirthplace = await geocodePlace(profile.birthPlace);
+          if (resolvedBirthplace) profile.birthPlaceGeo = serializePlaceSelection(resolvedBirthplace);
+        }
+        if (profile.currentResidence && !profile.currentResidenceGeo) {
+          const resolvedResidence = await geocodePlace(profile.currentResidence);
+          if (resolvedResidence) profile.currentResidenceGeo = serializePlaceSelection(resolvedResidence);
+        }
+        currentProfile = profile;
 
         setStatus('');
         saveProfile(profile);
@@ -9494,12 +10729,15 @@ function countPresidentialElectionsExperienced(start, end) {
       setGender('male');
       els.userName.value   = '';
       els.birthPlace.value = '';
+      els.currentResidence.value = '';
       els.dobMonth.value   = '';
       els.dobDay.innerHTML = '<option value="">Day</option>';
       els.dobYear.value    = '';
       els.birthTime.value  = '12:00';
       selectedPlaceSuggestion = null;
+      selectedResidenceSuggestion = null;
       hidePlaceSuggestions();
+      hideResidenceSuggestions();
       // Clear URL hash
       history.replaceState(null, '', window.location.pathname);
       setLiveDiagnostic('share', { state: 'fallback', detail: 'The share hash was cleared along with the form.', source: 'URL hash' });
@@ -9530,7 +10768,9 @@ function countPresidentialElectionsExperienced(start, end) {
       showingHoroscope    = false;
       buildAlpha          = 0;
       selectedPlaceSuggestion = null;
+      selectedResidenceSuggestion = null;
       hidePlaceSuggestions();
+      hideResidenceSuggestions();
       els.resultView.classList.add('hidden');
       els.formView.classList.remove('hidden');
       setStatus('Profile reset. Form values kept until you clear them.', 'success');
@@ -9599,7 +10839,7 @@ function countPresidentialElectionsExperienced(start, end) {
     const DASHBOARD_SECTION_GROUPS = [
       { id: 'right-now', icon: '◉', title: 'Right Now', copy: 'Live age, today’s pulse, celebrations, your next birthday, and upcoming moments.', defaultOpen: true, nodes: ['daily-pulse-section','age-progress-label','age-progress-track','chrono-age-card','time-breakdown-panel','birthday-hero-panel','whats-next-panel'] },
       { id: 'lifetime-glance', icon: '⌛', title: 'Lifetime at a Glance', copy: 'Your estimated totals, life percentages, and compressed-life view.', nodes: ['lifetime-estimates-panel','life-percentages-panel','life-compressed-panel'] },
-      { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, major eras, and a filterable personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','life-timeline-panel'] },
+      { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, major eras, and a filterable personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','life-atlas-panel','life-timeline-panel'] },
       { id: 'starting-world', icon: '🌅', title: 'Your Starting World', copy: 'Then-versus-now comparisons and the culture surrounding your birth.', nodes: ['born-then-now-panel','birth-snapshot-panel'] },
       { id: 'sports-history', icon: '🏆', title: 'Sports History', copy: 'Championships, Olympic Games, World Cups, and repeat-title eras.', nodes: ['sports-history-panel'] },
       { id: 'cosmic-astrology', icon: '🌌', title: 'Cosmic & Astrology', copy: 'Planetary motion, sky cycles, zodiac alignment, and archetype details.', nodes: ['planetary-cosmic-panel','zodiac-card'] },
@@ -9741,52 +10981,57 @@ function countPresidentialElectionsExperienced(start, end) {
         saveShareCardPreferences();
         if (birthMomentGlobal) updateShareCard();
       });
+
       els.saveCardBtn.addEventListener('click',     () => exportElementAsImage(els.shareCard, 'LifePulse-' + activeShareTemplate + '-Card.png'));
       els.saveDashboardBtn.addEventListener('click',() => exportElementAsImage(els.resultView,  'LifePulse-Dashboard.png'));
       els.shareBtn.addEventListener('click',        sharePulse);
       els.copySummaryBtn.addEventListener('click',  copySummary);
       els.resetBtn.addEventListener('click',        resetApp);
 
-      // Birthplace: debounced input + focus re-trigger
-      els.birthPlace.addEventListener('input', () => {
-        clearTimeout(placeSearchTimer);
-        placeSearchTimer = setTimeout(handlePlaceTyping, 220);
-      });
+      // Browser-compatible city autocomplete for birthplace and current residence.
+      function bindLocationAutocomplete(input, list, handleTyping, hideList) {
+        input.addEventListener('input', () => {
+          clearTimeout(placeSearchTimer);
+          placeSearchTimer = setTimeout(handleTyping, 650);
+        });
+        input.addEventListener('focus', () => {
+          if (input.value.trim().length >= 2) handleTyping();
+        });
+        input.addEventListener('keydown', event => {
+          if (list.classList.contains('hidden')) return;
+          const suggestions = Array.from(list.querySelectorAll('.place-suggestion'));
+          const active = list.querySelector('.place-suggestion.highlighted');
+          const activeIdx = suggestions.indexOf(active);
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            active?.classList.remove('highlighted');
+            const next = suggestions[activeIdx + 1] || suggestions[0];
+            next?.classList.add('highlighted');
+            next?.scrollIntoView({ block: 'nearest' });
+          } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            active?.classList.remove('highlighted');
+            const previous = suggestions[activeIdx - 1] || suggestions[suggestions.length - 1];
+            previous?.classList.add('highlighted');
+            previous?.scrollIntoView({ block: 'nearest' });
+          } else if (event.key === 'Enter' && active) {
+            event.preventDefault();
+            active.click();
+          } else if (event.key === 'Escape') {
+            hideList();
+          }
+        });
+      }
 
-      els.birthPlace.addEventListener('focus', () => {
-        if (els.birthPlace.value.trim().length >= 2) handlePlaceTyping();
-      });
+      bindLocationAutocomplete(els.birthPlace, els.placeSuggestions, handlePlaceTyping, hidePlaceSuggestions);
+      bindLocationAutocomplete(els.currentResidence, els.residenceSuggestions, handleResidenceTyping, hideResidenceSuggestions);
 
-      // Keyboard navigation for place suggestions
-      els.birthPlace.addEventListener('keydown', (e) => {
-        if (els.placeSuggestions.classList.contains('hidden')) return;
-        const suggestions = Array.from(els.placeSuggestions.querySelectorAll('.place-suggestion'));
-        const active      = els.placeSuggestions.querySelector('.place-suggestion.highlighted');
-        const activeIdx   = suggestions.indexOf(active);
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          active?.classList.remove('highlighted');
-          const next = suggestions[activeIdx + 1] || suggestions[0];
-          next?.classList.add('highlighted');
-          next?.scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          active?.classList.remove('highlighted');
-          const prev = suggestions[activeIdx - 1] || suggestions[suggestions.length - 1];
-          prev?.classList.add('highlighted');
-          prev?.scrollIntoView({ block: 'nearest' });
-        } else if (e.key === 'Enter' && active) {
-          e.preventDefault();
-          active.click();
-        } else if (e.key === 'Escape') {
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.place-wrap')) {
           hidePlaceSuggestions();
+          hideResidenceSuggestions();
         }
       });
-
-      document.addEventListener('click', (event) => {
-        if (!event.target.closest('.place-wrap')) hidePlaceSuggestions();
-      });
-
       // Debounced resize — rebuild star positions without thrashing
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
@@ -9872,6 +11117,25 @@ function countPresidentialElectionsExperienced(start, end) {
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

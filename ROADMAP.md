@@ -8,6 +8,7 @@ This roadmap starts from the v4 dashboard architecture: a single GitHub Pages ap
 - **Your Life Timeline**: the existing milestone card now includes a filterable history for Highlights, Personal, World, Sky, Sports, and Tech. Detailed sports and sky histories remain scrollable and user-facing source drawers stay separate from developer metadata.
 - **Collapsible dashboard hierarchy**: eight ordered content groups reduce scrolling, remember each device's open/closed choices, and include Expand All and Collapse All controls.
 - **Born Then / Living Now**: grouped World & Society, Everyday Costs, and Major Life Costs comparisons, backed by a dedicated annually reviewed dataset with clear median, average, and estimate labels.
+- **Focused Life Atlas and location comparison**: birth-sky and daylight dial, clarified birthday patterns, technology-age milestones, generation overlap, world-age estimate, birthday-year progress ring, and optional Birthplace/Current Residence population comparisons using browser-compatible city search.
 - **Birthday and holiday celebrations**: personalized birthday recognition plus themed messages and motion for major U.S. holidays, calculated locally with reduced-motion support and no additional feed usage.
 
 ## Phase 3 - Born Then / Living Now - Implemented for local review
