@@ -7,12 +7,12 @@ This roadmap starts from the v4 dashboard architecture: a single GitHub Pages ap
 - **What's Next**: one ordered view of upcoming personal, sky, calendar, civic, and major sports dates. It uses the existing astronomy calculations and schedule datasets, so it does not add API usage.
 - **Your Life Timeline**: the existing milestone card now includes a filterable history for Highlights, Personal, World, Sky, Sports, and Tech. Detailed sports and sky histories remain scrollable and user-facing source drawers stay separate from developer metadata.
 - **Collapsible dashboard hierarchy**: eight ordered content groups reduce scrolling, remember each device's open/closed choices, and include Expand All and Collapse All controls.
-- **Born Then / Living Now**: a compact comparison of population, gasoline, temperature, the U.S. president, and everyday technology using already-maintained data routes and local reference anchors.
+- **Born Then / Living Now**: grouped World & Society, Everyday Costs, and Major Life Costs comparisons, backed by a dedicated annually reviewed dataset with clear median, average, and estimate labels.
 - **Birthday and holiday celebrations**: personalized birthday recognition plus themed messages and motion for major U.S. holidays, calculated locally with reduced-motion support and no additional feed usage.
 
 ## Phase 3 - Born Then / Living Now - Implemented for local review
 
-The two-column comparison is implemented with compact values, changes, and plain-language labels. It reuses the current population, climate, gasoline, president, and technology-era data already maintained by Life Pulse. Missing historical values disappear gracefully rather than show technical errors.
+The comparison is implemented with compact Then / Now values, plain-language changes, and three logical groups. World and civic facts reuse the existing scheduled feed; the dedicated cost-of-living dataset covers housing, rent, vehicles, a clearly labeled meal estimate, movies, household income, Disney admission, public four-year tuition, and federal minimum wage. Values before a source series begins say Not Tracked Yet (or Not Open Yet for Walt Disney World) instead of inventing a number.
 
 ## Phase 4 - Shareable Life Pulse Card - Implemented for local review
 
@@ -51,4 +51,6 @@ Add a web app manifest, purpose-built icons, and a conservative service worker. 
 - Astronomy Engine calculations and cached historical searches
 - Existing share-card image export
 - Hidden Diagnostics and Self-Check
+
+
 

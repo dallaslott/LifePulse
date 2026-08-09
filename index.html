@@ -1047,24 +1047,18 @@
     }
 
     .local-celebration-tools {
-      position: fixed;
-      left: 50%;
-      bottom: 14px;
-      z-index: 40;
-      width: min(680px, calc(100% - 24px));
-      transform: translateX(-50%);
+      position: static;
+      width: 100%;
       display: grid;
       grid-template-columns: minmax(150px, 1fr) auto auto;
       gap: 8px;
       align-items: end;
+      margin: 10px 0 16px;
       padding: 12px;
-      border: 1px solid rgba(255, 209, 102, 0.45);
+      border: 1px solid rgba(255, 209, 102, 0.32);
       border-radius: 16px;
-      background: rgba(8, 11, 20, 0.96);
-      box-shadow: 0 14px 38px rgba(0,0,0,0.45);
-      backdrop-filter: blur(14px);
+      background: rgba(8, 11, 20, 0.72);
     }
-
     .local-celebration-field { display: grid; gap: 5px; min-width: 0; }
     .local-celebration-field label {
       color: #ffd166;
@@ -1189,6 +1183,58 @@
       margin-top: 13px;
     }
 
+    .comparison-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .comparison-group + .comparison-group { margin-top: 8px; }
+
+    .comparison-group-title {
+      margin: 6px 2px 0;
+      color: var(--text-dim);
+      font-size: 0.64rem;
+      font-weight: 900;
+      letter-spacing: 1.15px;
+      text-transform: uppercase;
+    }
+
+    .comparison-methods {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 13px;
+      background: rgba(4,8,20,0.28);
+    }
+    .comparison-methods summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .comparison-methods p {
+      margin: 9px 0 0;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      line-height: 1.5;
+    }
+    .comparison-method-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .comparison-method-links a {
+      padding: 5px 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      color: #dce8ff;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
     .comparison-row {
       display: grid;
       grid-template-columns: 34px minmax(0,1fr) minmax(0,1fr);
@@ -2192,6 +2238,8 @@
     .state-static  { background: rgba(148, 163, 184, 0.16); border-color: rgba(148, 163, 184, 0.28); color: #e5edf8; }
     .state-local   { background: rgba(168, 85, 247, 0.16); border-color: rgba(168, 85, 247, 0.28); color: #edd7ff; }
 
+    .diagnostics-preview-head { margin-top: 14px; }
+
     .diagnostics-panel {
       margin-top: 16px;
     }
@@ -2377,31 +2425,7 @@
 
   <canvas id="star-canvas"></canvas>
 
-  <div class="local-celebration-tools hidden" id="local-celebration-tools" aria-label="Local celebration preview">
-    <div class="local-celebration-field">
-      <label for="local-celebration-choice">Celebration Preview</label>
-      <select id="local-celebration-choice">
-        <option value="christmas">Christmas</option>
-        <option value="birthday">Birthday</option>
-        <option value="new-year">New Year&rsquo;s Day</option>
-        <option value="valentines">Valentine&rsquo;s Day</option>
-        <option value="st-patricks">St. Patrick&rsquo;s Day</option>
-        <option value="easter">Easter</option>
-        <option value="mothers-day">Mother&rsquo;s Day</option>
-        <option value="memorial-day">Memorial Day</option>
-        <option value="juneteenth">Juneteenth</option>
-        <option value="fathers-day">Father&rsquo;s Day</option>
-        <option value="independence-day">Independence Day</option>
-        <option value="labor-day">Labor Day</option>
-        <option value="halloween">Halloween</option>
-        <option value="thanksgiving">Thanksgiving</option>
-        <option value="christmas-eve">Christmas Eve</option>
-        <option value="new-years-eve">New Year&rsquo;s Eve</option>
-      </select>
-    </div>
-    <button class="section-view-btn" id="show-celebration-preview" type="button">Show Preview</button>
-    <button class="section-view-btn" id="clear-celebration-preview" type="button">Use Actual Date</button>
-  </div>
+
 
   <div class="container" id="form-view">
     <h1 class="hero-title">INITIALIZE LIFE PULSE</h1>
@@ -2474,6 +2498,14 @@
       <span class="diagnostics-active-label">Diagnostic Mode Active</span>
       <button id="diagnostics-exit-btn" class="diagnostics-exit-btn" type="button">Exit</button>
     </div>
+    <section class="celebration-panel hidden" id="today-celebration-panel" aria-live="polite" aria-labelledby="today-celebration-title">
+      <span class="celebration-icon" id="today-celebration-icon" aria-hidden="true">&#127881;</span>
+      <div class="celebration-content">
+        <span class="celebration-kicker" id="today-celebration-kicker">Today Is Special</span>
+        <strong class="celebration-title" id="today-celebration-title">A LifePulse Celebration</strong>
+        <p class="celebration-copy" id="today-celebration-copy"></p>
+      </div>
+    </section>
     <h1 class="hero-title" id="greeting">...</h1>
     <div id="environment-note" class="environment-note hidden"></div>
 
@@ -2495,15 +2527,6 @@
         <span class="born-place-label">Birthplace</span>
       </div>
     </div>
-
-    <section class="celebration-panel hidden" id="today-celebration-panel" aria-live="polite" aria-labelledby="today-celebration-title">
-      <span class="celebration-icon" id="today-celebration-icon" aria-hidden="true">&#127881;</span>
-      <div class="celebration-content">
-        <span class="celebration-kicker" id="today-celebration-kicker">Today Is Special</span>
-        <strong class="celebration-title" id="today-celebration-title">A LifePulse Celebration</strong>
-        <p class="celebration-copy" id="today-celebration-copy"></p>
-      </div>
-    </section>
 
     <div class="section-view-controls" aria-label="Dashboard section controls">
       <button class="section-view-btn" id="expand-sections-btn" type="button">Expand All</button>
@@ -2636,7 +2659,7 @@
 
     <div class="panel" id="on-this-date-panel">
       <div class="section-title">On This Date</div>
-      <div class="insight-grid compact-grid-2">
+      <div class="insight-grid compact-grid-2" id="on-this-date-grid">
         <div class="insight-card">
           <span class="insight-value" id="ordinal-day-value">...</span>
           <span class="micro-label">Born on Day of the Year</span>
@@ -2898,9 +2921,21 @@
       </div>
       <p class="whats-next-intro" id="born-then-now-summary">A compact look at how your starting world compares with today.</p>
       <div class="comparison-list" id="born-then-now-list" aria-live="polite"></div>
+      <details class="comparison-methods">
+        <summary>About These Numbers</summary>
+        <p>These comparisons show nominal U.S. dollar amounts from your birth year beside the latest maintained value. They are not adjusted for inflation. Labels identify whether a figure is a median, an average, or an estimate.</p>
+        <div class="comparison-method-links">
+          <a href="https://fred.stlouisfed.org/series/MSPUS" target="_blank" rel="noopener noreferrer">Housing &amp; Income</a>
+          <a href="https://www.census.gov/data/tables/time-series/dec/coh-grossrents.html" target="_blank" rel="noopener noreferrer">Rent</a>
+          <a href="https://www.bls.gov/cpi/factsheets/average-prices.htm" target="_blank" rel="noopener noreferrer">Everyday Prices</a>
+          <a href="https://nces.ed.gov/fastfacts/display.asp?id=76" target="_blank" rel="noopener noreferrer">College Tuition</a>
+          <a href="https://www.dol.gov/agencies/whd/minimum-wage/history/chart" target="_blank" rel="noopener noreferrer">Minimum Wage</a>
+        </div>
+        <p class="source-line">Dataset review dates and technical refresh details are available in Diagnostic Mode.</p>
+      </details>
     </div>
     <div class="slate-card slate-card--snapshot" id="birth-snapshot-panel">
-      <span class="slate-header slate-header--snapshot">Born Into This World</span>
+      <span class="slate-header slate-header--snapshot">Culture &amp; Technology at Your Birth</span>
 
       <div class="birth-grid" id="birth-snapshot-grid">
         <div class="birth-feature">
@@ -2922,7 +2957,7 @@
           <p id="birth-weather-copy" class="slate-body">...</p>
           <span id="birth-weather-status" class="source-line"><span class="state-pill state-static">IDLE</span>Waiting for historical weather lookup.</span>
         </div>
-        <div class="birth-card">
+        <div class="birth-card birth-card--wide">
           <span class="birth-card-title" id="birth-era-value">...</span>
           <span class="dna-label">Life Era</span>
           <p id="birth-era-copy" class="slate-body">...</p>
@@ -2941,28 +2976,28 @@
           <p id="birth-tech-copy" class="slate-body">...</p>
         </div>
 
-        <div class="birth-card">
+        <div class="birth-card hidden" aria-hidden="true">
           <span class="birth-card-title" id="birth-population">...</span>
           <span class="dna-label">Estimated World Population</span>
           <p id="birth-population-copy" class="slate-body">...</p>
           <span id="birth-population-status" class="source-line"><span class="state-pill state-static">ESTIMATE</span>In-app estimate for your birth year. Live comparison loads after launch.</span>
         </div>
 
-        <div class="birth-card">
+        <div class="birth-card hidden" aria-hidden="true">
           <span class="birth-card-title" id="birth-gas-price">...</span>
           <span class="dna-label">Estimated U.S. Gas</span>
           <p id="birth-gas-copy" class="slate-body">...</p>
           <span id="birth-gas-status" class="source-line"><span class="state-pill state-static">ESTIMATE</span>In-app estimate for your birth year. Live comparison loads after launch.</span>
         </div>
 
-        <div class="birth-card">
+        <div class="birth-card hidden" aria-hidden="true">
           <span class="birth-card-title" id="birth-temp">...</span>
           <span class="dna-label">Estimated Global Temp (°F)</span>
           <p id="birth-temp-copy" class="slate-body">...</p>
         </div>
 
 
-        <div class="birth-card">
+        <div class="birth-card birth-card--wide">
           <span class="birth-card-title" id="birth-celeb-title">...</span>
           <span class="dna-label">Shared Celebrity Birthday</span>
           <p id="birth-celeb-copy" class="slate-body">...</p>
@@ -3187,6 +3222,37 @@
         <div class="diagnostics-meta-item"><span class="micro-label">Environment</span><strong id="diagnostics-environment">...</strong></div>
         <div class="diagnostics-meta-item"><span class="micro-label">Origin</span><strong id="diagnostics-origin">...</strong></div>
       </div>
+      <div class="section-head diagnostics-preview-head">
+        <span class="lifetime-kicker">Celebration Preview</span>
+        <span class="panel-note">Developer Tool</span>
+      </div>
+      <p class="diagnostics-summary">Temporarily display a birthday or holiday celebration without changing the saved birth date.</p>
+  <div class="local-celebration-tools" id="local-celebration-tools" aria-label="Local celebration preview">
+    <div class="local-celebration-field">
+      <label for="local-celebration-choice">Celebration Preview</label>
+      <select id="local-celebration-choice">
+        <option value="christmas">Christmas</option>
+        <option value="birthday">Birthday</option>
+        <option value="new-year">New Year&rsquo;s Day</option>
+        <option value="valentines">Valentine&rsquo;s Day</option>
+        <option value="st-patricks">St. Patrick&rsquo;s Day</option>
+        <option value="easter">Easter</option>
+        <option value="mothers-day">Mother&rsquo;s Day</option>
+        <option value="memorial-day">Memorial Day</option>
+        <option value="juneteenth">Juneteenth</option>
+        <option value="fathers-day">Father&rsquo;s Day</option>
+        <option value="independence-day">Independence Day</option>
+        <option value="labor-day">Labor Day</option>
+        <option value="halloween">Halloween</option>
+        <option value="thanksgiving">Thanksgiving</option>
+        <option value="christmas-eve">Christmas Eve</option>
+        <option value="new-years-eve">New Year&rsquo;s Eve</option>
+      </select>
+    </div>
+    <button class="section-view-btn" id="show-celebration-preview" type="button">Show Preview</button>
+    <button class="section-view-btn" id="clear-celebration-preview" type="button">Use Actual Date</button>
+  </div>
+
       <div id="diagnostics-status-list" class="diagnostics-list"></div>
       <div class="section-head" style="margin-top:14px;">
         <span class="lifetime-kicker">Self-Check</span>
@@ -3221,11 +3287,12 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local';
+    const LOCAL_RELEASE_VERSION = '4.local.20260809';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://geocoding-api.open-meteo.com/v1/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
     const LIVE_DATA_URL   = 'live-data.json';
+    const COST_DATA_URL   = 'cost-of-living-data.json';
     const VERSION_URL     = 'version.json';
     const HOROSCOPE_PROXY_ALLORIGINS = 'https://api.allorigins.win/get?url=';
     const HOROSCOPE_PROXY_WHATEVERORIGIN = 'https://whateverorigin.org/get?url=';
@@ -3243,6 +3310,7 @@
     let currentLiveData   = null;
     let currentSportsData = null;
     let currentSkyData    = null;
+    let currentCostData   = null;
 
     // ─── State ────────────────────────────────────────────────────────────────
     let isMuted               = false;
@@ -3865,6 +3933,23 @@
       2000: 14.41, 2010: 14.57, 2020: 14.92, 2021: 14.95, 2022: 14.96,
       2023: 15.04, 2024: 15.12, 2025: 15.02, 2026: 15.01
     };
+
+    const DEFAULT_COST_DATA = {
+      updatedAt: '2026-08-09T00:00:00.000Z', nextReview: '2026-09-01',
+      methodology: 'Values are nominal U.S. dollars. Birth-year values use the closest published annual observation or interpolation between published anchors. Labels distinguish medians, averages, and estimates.',
+      metrics: {
+        homePrice: { label: 'Median New Home Price', icon: '&#127968;', group: 'major', unit: 'currency0', coverageStart: 1963, source: 'U.S. Census Bureau and HUD via FRED', sourceUrl: 'https://fred.stlouisfed.org/series/MSPUS', series: {1963:18000,1970:23400,1980:64700,1990:122900,2000:169000,2010:221800,2020:336900,2024:420300,2025:414500,2026:403200} },
+        rent: { label: 'Median Monthly Gross Rent', icon: '&#128273;', group: 'everyday', unit: 'currency0', coverageStart: 1940, source: 'U.S. Census Bureau', sourceUrl: 'https://www.census.gov/data/tables/time-series/dec/coh-grossrents.html', series: {1940:27,1950:42,1960:71,1970:108,1980:243,1990:447,2000:602,2010:855,2020:1163,2023:1406,2024:1487} },
+        newCar: { label: 'Average New Vehicle Price', icon: '&#128663;', group: 'major', unit: 'currency0', coverageStart: 1935, source: 'BEA and industry historical estimates', sourceUrl: 'https://www.bls.gov/cpi/factsheets/new-vehicles.htm', series: {1935:625,1940:850,1950:1510,1960:2600,1970:3542,1980:7574,1990:15472,2000:22100,2010:29150,2020:38000,2024:48200,2025:49200,2026:49500} },
+        meal: { label: 'Estimated Casual Restaurant Meal', icon: '&#127869;', group: 'everyday', unit: 'currency2', coverageStart: 1953, source: 'BLS food-away-from-home index; LifePulse benchmark', sourceUrl: 'https://www.bls.gov/cpi/factsheets/average-prices.htm', series: {1953:1.05,1960:1.25,1970:1.75,1980:3.75,1990:6.25,2000:8.75,2010:11.75,2020:15.50,2024:19.00,2025:19.75,2026:20.25} },
+        movieTicket: { label: 'Average Movie Ticket', icon: '&#127915;', group: 'everyday', unit: 'currency2', coverageStart: 1948, source: 'Cinema United/MPAA; The Numbers estimates since 2020', sourceUrl: 'https://www.the-numbers.com/market/', series: {1948:.36,1950:.46,1960:.69,1970:1.55,1980:2.69,1990:4.22,2000:5.39,2010:7.89,2020:9.18,2024:11.31,2025:11.31,2026:11.31} },
+        income: { label: 'Median Household Income', icon: '&#128181;', group: 'major', unit: 'currency0', coverageStart: 1967, source: 'U.S. Census Bureau via FRED', sourceUrl: 'https://fred.stlouisfed.org/series/MEHOINUSA646N', series: {1967:7143,1970:8734,1980:17710,1990:29943,2000:41990,2010:49276,2020:68100,2023:80610,2024:83460} },
+        disneyTicket: { label: 'Walt Disney World One-Day Ticket', icon: '&#127984;', group: 'everyday', unit: 'currency2', coverageStart: 1971, beforeCoverage: 'Not Open Yet', source: 'Walt Disney World and AllEars historical ticket guide', sourceUrl: 'https://allears.net/walt-disney-world/wdw-planning/wdw-ticket-increase-guide/', series: {1971:3.50,1975:6,1980:8,1990:31,2000:46,2010:82,2020:109,2022:109,2025:119,2026:119} },
+        tuition: { label: 'Public 4-Year In-State Tuition & Fees', icon: '&#127891;', group: 'major', unit: 'currency0', coverageStart: 1963, source: 'National Center for Education Statistics', sourceUrl: 'https://nces.ed.gov/fastfacts/display.asp?id=76', series: {1963:243,1970:358,1980:804,1990:1888,2000:3501,2010:7132,2020:9349,2023:8939,2024:9233} },
+        minimumWage: { label: 'Federal Minimum Wage', icon: '&#9201;', group: 'everyday', unit: 'currencyPerHour', coverageStart: 1938, source: 'U.S. Department of Labor', sourceUrl: 'https://www.dol.gov/agencies/whd/minimum-wage/history/chart', stepSeries: {1938:.25,1939:.30,1945:.40,1950:.75,1956:1,1961:1.15,1963:1.25,1967:1.40,1968:1.60,1974:2,1975:2.10,1976:2.30,1978:2.65,1979:2.90,1980:3.10,1981:3.35,1990:3.80,1991:4.25,1996:4.75,1997:5.15,2007:5.85,2008:6.55,2009:7.25} }
+      }
+    };
+    currentCostData = DEFAULT_COST_DATA;
 
     const CHINESE_ZODIAC = [
       'Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake',
@@ -5455,8 +5540,8 @@
     }
 
     function getLocalCelebrationPreview() {
-      if (window.location.protocol !== 'file:') return '';
       if (activeLocalCelebrationPreview !== null) return activeLocalCelebrationPreview;
+      if (window.location.protocol !== 'file:') return '';
       const requested = new URLSearchParams(window.location.search).get('celebrate') || '';
       return requested.trim().toLowerCase();
     }
@@ -5564,7 +5649,6 @@
     }
 
     async function showSelectedCelebrationPreview() {
-      if (window.location.protocol !== 'file:') return;
       activeLocalCelebrationPreview = els.localCelebrationChoice?.value || 'christmas';
       lastCelebrationKey = '';
 
@@ -8580,6 +8664,40 @@ function countPresidentialElectionsExperienced(start, end) {
       return `${sign}${Math.abs(value).toFixed(digits)}${suffix}`;
     }
 
+    function readCostMetric(metric, year) {
+      if (!metric || year < Number(metric.coverageStart || 0)) return { value: null, label: metric?.beforeCoverage || 'Not Tracked Yet' };
+      if (metric.stepSeries) {
+        const years = Object.keys(metric.stepSeries).map(Number).filter(item => item <= year).sort((a, b) => a - b);
+        const match = years[years.length - 1];
+        return Number.isFinite(match) ? { value: Number(metric.stepSeries[match]), label: '' } : { value: null, label: 'Not Tracked Yet' };
+      }
+      const value = interpolateFromAnchors(year, metric.series || {});
+      return Number.isFinite(value) ? { value, label: '' } : { value: null, label: 'Unavailable' };
+    }
+
+    function formatCostMetric(metric, result) {
+      if (!Number.isFinite(result?.value)) return result?.label || 'Unavailable';
+      if (metric.unit === 'currency0') return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(result.value);
+      if (metric.unit === 'currencyPerHour') return `${formatCurrency(result.value)}/hr`;
+      return formatCurrency(result.value);
+    }
+
+    function buildCostComparisons(birthYear, currentYear) {
+      const metrics = currentCostData?.metrics || DEFAULT_COST_DATA.metrics;
+      return Object.values(metrics).map(metric => {
+        const birth = readCostMetric(metric, birthYear);
+        const current = readCostMetric(metric, currentYear);
+        const comparable = Number.isFinite(birth.value) && Number.isFinite(current.value) && birth.value !== 0;
+        const ratio = comparable ? current.value / birth.value : null;
+        const change = comparable
+          ? `${ratio.toFixed(ratio >= 10 ? 0 : 1)} times the birth-year amount in nominal dollars.`
+          : birth.label === 'Not Open Yet'
+            ? 'The resort had not opened yet in your birth year.'
+            : `Published comparison coverage begins in ${metric.coverageStart}.`;
+        return { icon: metric.icon, label: metric.label, then: formatCostMetric(metric, birth), now: formatCostMetric(metric, current), change, group: metric.group || 'everyday' };
+      });
+    }
+
     function renderBornThenNow(now = new Date()) {
       if (!birthMomentGlobal || !els.bornThenNowList) return;
       const birthYear = birthMomentGlobal.getFullYear();
@@ -8616,21 +8734,27 @@ function countPresidentialElectionsExperienced(start, end) {
       const tempDeltaF = celsiusToFahrenheit(currentTempC) - celsiusToFahrenheit(birthTempC);
       const presidentsLived = countPresidentsExperienced(birthMomentGlobal, now);
       const comparisons = [
-        { icon: '🌍', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).` },
-        { icon: '⛽', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: `${formatSignedNumber(gasDelta, 2, '/gal')} in nominal dollars since your birth year.` },
-        { icon: '🌡️', label: 'Estimated Global Temperature', then: formatTempF(birthTempC), now: formatTempF(currentTempC), change: `${formatSignedNumber(tempDeltaF, 2, '°F')} in the estimated global annual average.` },
-        { icon: '🇺🇸', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.` },
-        { icon: '📱', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.` }
-      ].filter(item => item.then && item.now && !String(item.then).includes('N/A') && !String(item.now).includes('N/A'));
-      if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} → ${currentYear}`;
+        { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).` },
+        { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: `${formatSignedNumber(gasDelta, 2, '/gal')} in nominal dollars since your birth year.` },
+        { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, ' F')} in the estimated global annual average.` },
+        { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.` },
+        { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.` }
+      ].map(item => ({ ...item, group: 'world' }));
+      comparisons.push(...buildCostComparisons(birthYear, currentYear));
+      if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} to ${currentYear}`;
       if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} clear comparisons between your starting world and today. Current maintained values replace estimates as they become available.`;
-      els.bornThenNowList.innerHTML = comparisons.map(item => `<article class="comparison-row">
-        <div class="comparison-icon" aria-hidden="true">${item.icon}</div>
-        <div class="comparison-side"><span class="comparison-era">Then · ${birthYear}</span><span class="comparison-value">${escapeHtml(item.then)}</span></div>
-        <div class="comparison-side"><span class="comparison-era">Now · ${currentYear}</span><span class="comparison-value">${escapeHtml(item.now)}</span></div>
-        <div class="comparison-label">${escapeHtml(item.label)}</div>
-        <p class="comparison-change">${escapeHtml(item.change)}</p>
-      </article>`).join('');
+      const groupLabels = { world: 'World & Society', everyday: 'Everyday Costs', major: 'Major Life Costs' };
+      els.bornThenNowList.innerHTML = Object.entries(groupLabels).map(([group, title]) => {
+        const rows = comparisons.filter(item => item.group === group);
+        if (!rows.length) return '';
+        return `<section class="comparison-group" aria-label="${escapeHtml(title)}"><h3 class="comparison-group-title">${escapeHtml(title)}</h3>${rows.map(item => `<article class="comparison-row">
+          <div class="comparison-icon" aria-hidden="true">${item.icon}</div>
+          <div class="comparison-side"><span class="comparison-era">Then: ${birthYear}</span><span class="comparison-value">${escapeHtml(item.then)}</span></div>
+          <div class="comparison-side"><span class="comparison-era">Now: ${currentYear}</span><span class="comparison-value">${escapeHtml(item.now)}</span></div>
+          <div class="comparison-label">${escapeHtml(item.label)}</div>
+          <p class="comparison-change">${escapeHtml(item.change)}</p>
+        </article>`).join('')}</section>`;
+      }).join('');
     }
     function collectLifeTimelineEvents(now = new Date()) {
       if (!birthMomentGlobal) return [];
@@ -8941,6 +9065,31 @@ function countPresidentialElectionsExperienced(start, end) {
       url.searchParams.set('v', currentReleaseVersion || String(Date.now()));
       location.replace(url.toString());
     }
+    async function loadCostOfLivingData() {
+      if (location.protocol === 'file:') {
+        setLiveDiagnostic('costOfLiving', {
+          label: 'Cost Comparison Dataset',
+          state: 'local',
+          detail: `Embedded comparison snapshot updated ${formatSourceDate(currentCostData?.updatedAt)}; next review ${formatSourceDate(currentCostData?.nextReview)}.`,
+          source: 'Embedded cost snapshot'
+        });
+        return currentCostData;
+      }
+      try {
+        const response = await fetch(`${COST_DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Cost data failed (${response.status}).`);
+        const payload = await response.json();
+        if (!payload?.metrics || Object.keys(payload.metrics).length < 8) throw new Error('Cost data is incomplete.');
+        currentCostData = payload;
+        if (birthMomentGlobal) renderBornThenNow(new Date());
+        setLiveDiagnostic('costOfLiving', { label: 'Cost Comparison Dataset', state: 'live', detail: `Loaded ${Object.keys(payload.metrics).length} maintained comparisons; dataset updated ${formatSourceDate(payload.updatedAt)} and scheduled for review ${formatSourceDate(payload.nextReview)}.`, source: 'LifePulse cost dataset' });
+      } catch (error) {
+        currentCostData = DEFAULT_COST_DATA;
+        setLiveDiagnostic('costOfLiving', { label: 'Cost Comparison Dataset', state: 'fallback', detail: error.message, source: 'Embedded cost snapshot' });
+      }
+      return currentCostData;
+    }
+
     async function loadScheduledLiveData(force = false) {
       if (force) liveDataPromise = null;
       if (!liveDataPromise) {
@@ -9479,10 +9628,11 @@ function countPresidentialElectionsExperienced(start, end) {
     function organizeBirthSnapshot() {
       const grid = document.getElementById('birth-snapshot-grid');
       if (!grid || grid.dataset.organized === 'true') return;
+      const onDateGrid = document.getElementById('on-this-date-grid');
+      const weatherCard = document.getElementById('birth-weather-title')?.closest('.birth-card');
+      if (onDateGrid && weatherCard) onDateGrid.appendChild(weatherCard);
       const groups = [
-        { id: 'birth-moment', title: 'Your Birth Moment', cards: ['birth-weather-title', 'birth-celeb-title', 'birth-history-title'] },
-        { id: 'world-snapshot', title: 'World Snapshot', cards: ['birth-era-value', 'birth-population', 'birth-temp', 'birth-gas-price'] },
-        { id: 'culture-tech', title: 'Culture & Technology', cards: ['birth-song-title', 'birth-movie-title', 'birth-tech-title'] }
+        { id: 'culture-tech', title: 'Culture, Media & Milestones', cards: ['birth-era-value', 'birth-song-title', 'birth-movie-title', 'birth-tech-title', 'birth-celeb-title', 'birth-history-title'] }
       ];
       groups.forEach(config => {
         const section = document.createElement('section');
@@ -9684,6 +9834,7 @@ function countPresidentialElectionsExperienced(start, end) {
       loadSportsDataFeed();
       initSourceDrawers();
       loadSkyEventsFeed();
+      loadCostOfLivingData();
 
       // Priority order: URL hash → localStorage → nothing
       const hashProfile = decodeProfileFromHash();
@@ -9721,6 +9872,15 @@ function countPresidentialElectionsExperienced(start, end) {
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
 
 
 

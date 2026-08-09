@@ -11,6 +11,8 @@ Open `index.html` directly for layout and calculation review. The bundled `vendo
 - `index.html` — the complete Life Pulse experience
 - `sports-data-v4.json` — versioned historical sports facts
 - `live-data.json` — the most recent scheduled daily feed
+- `cost-of-living-data.json` - maintained historical and current U.S. cost comparisons
+- `scripts/update-cost-of-living-data.mjs` - date-gated annual refresh for Census, FRED, and movie-ticket series
 - `scripts/update-live-data.mjs` — refreshes horoscope, astronomy, population, and gas data
 - `package.json` — pins Astronomy Engine to a tested version
 - `vendor/astronomy.browser.min.js` — supports private, on-device eclipse visibility calculations
@@ -75,9 +77,9 @@ Leap-second history is refreshed against the latest IERS Bulletin C. December 31
 
 The dashboard now follows a clearer reading order: **Right Now**, **Lifetime at a Glance**, **Your Life Story**, **Your Starting World**, **Sports History**, **Cosmic & Astrology**, **Identity & Numerology**, and **Share Your Pulse**. Each section is collapsible, open/closed choices are remembered on that device, and **Expand All** / **Collapse All** controls make long-page navigation faster. Only **Right Now** opens by default for a first-time visitor.
 
-The new **Born Then / Living Now** panel compares population, gasoline, temperature, the U.S. president, and everyday technology at birth with current values. It reuses data already maintained by Life Pulse and adds no new web request.
+The expanded **Born Then / Living Now** panel groups World & Society, Everyday Costs, and Major Life Costs. Birth weather now sits with the birth-date cards in **Your Life Story**, while Life Era, soundtrack, movie, technology, shared celebrity birthday, and birth-date history are collected under **Culture & Technology at Your Birth**. It compares population, gasoline, temperature, civic and technology context, housing, rent, vehicles, a casual-meal estimate, movie tickets, household income, Walt Disney World admission, public four-year tuition, and the federal minimum wage. Labels distinguish medians, averages, and estimates; the Source & Method drawer explains the nominal-dollar comparison.
 
-The **Right Now** section also recognizes a profile's birthday and major U.S. holidays. Birthdays receive a personalized message, extended celebration animation, and a synthesized Happy Birthday melody before the normal LifePulse background track begins. Holidays use their own message, icon, and color theme. The calendar and birthday melody are produced in the browser, so this feature adds no API usage.
+The **Right Now** section also recognizes a profile's birthday and major U.S. holidays. The developer-only Diagnostics panel includes a Celebration Preview control for testing every birthday and holiday treatment without changing the saved profile. Birthdays receive a personalized message, extended celebration animation, and a synthesized Happy Birthday melody before the normal LifePulse background track begins. Holidays use their own message, icon, and color theme. The calendar and birthday melody are produced in the browser, so this feature adds no API usage.
 
 The **Share Your Pulse** section now includes Cosmic, Milestone, and Minimal card styles, privacy switches for name and birthplace, and an optional event from the life timeline. The same privacy choices apply to image exports, copied summaries, and generated share links; the card is still created entirely in the browser.
 
@@ -111,7 +113,7 @@ Authoritative or calculation-first routes now include:
 - Open-Meteo for matched birthplace timezone and historical weather
 - A validated local sports dataset with explicit result and schedule coverage dates, including lifetime NFL, MLB, and NBA championship splits by conference or league
 
-`version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; local-file previews show `v4.local`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
+`version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; local-file previews show a dated build such as `v4.local.20260808`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
 
 ## Optional EIA gasoline key
 
@@ -121,11 +123,16 @@ The existing AAA route remains active without setup. To prefer the more stable U
 
 `scripts/validate-live-data.mjs` runs after every refresh and before Pages packaging. It verifies schema 4, the automatic release-number format, all twelve horoscope signs, astronomy, current comparisons, authoritative reference histories, registered component freshness, a future sports event, and the match between `version.json` and `live-data.json`. A failed validation stops that deployment.
 
+`cost-of-living-data.json` is reviewed annually rather than daily. The workflow refreshes the Census/HUD new-home series and Census household-income series through FRED, the latest Census ACS national gross rent, and the industry movie-ticket series when the dataset reaches its review date. Curated benchmarks such as the casual-meal estimate, new-vehicle average, Disney ticket, tuition, and minimum wage retain explicit sources and are never presented as daily live prices.
+
 Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. Astronomy Engine remains pinned until an update is reviewed and merged.
 
 Live age counters update four times per second, while the heavier lifetime, calendar, source-drawer, and card calculations run once per minute or on an explicit profile/control change. This keeps the dashboard responsive on phones without making the displayed age feel less live.
 
 Editorial concepts, generation names, cultural eras, technology eras, personality copy, and estimates such as steps or meals remain clearly curated rather than presented as live facts. Annual NFL, NBA, and MLB champions and the next missing Olympics or FIFA World Cup edition are automatically checked after their date gates; Gaming Console Eras remains coverage-monitored and editorially reviewed.
+
+
+
 
 
 
