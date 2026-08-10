@@ -946,9 +946,11 @@
 
     .cosmic-arrival.is-active .simple-arrival-ecg-pulse-one { animation: simpleArrivalBeatGlow 900ms linear 320ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-pulse-two { animation: simpleArrivalBeatGlow 900ms linear 1420ms 1 forwards; }
+    .cosmic-arrival.is-active .simple-arrival-ecg-pulse-three { animation: simpleArrivalBeatGlow 900ms linear 2520ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-reveal-one { animation: simpleArrivalReveal 900ms linear 320ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-reveal-two { animation: simpleArrivalReveal 900ms linear 1420ms 1 forwards; }
-    .cosmic-arrival.is-active .simple-arrival-ecg-breath { animation: simpleArrivalBreath 2100ms ease-in-out 2320ms 1 forwards; }
+    .cosmic-arrival.is-active .simple-arrival-ecg-reveal-three { animation: simpleArrivalReveal 900ms linear 2520ms 1 forwards; }
+    .cosmic-arrival.is-active .simple-arrival-ecg-breath { animation: simpleArrivalBreath 2100ms ease-in-out 3420ms 1 forwards; }
     @keyframes simpleArrivalReveal {
       0% { width: 0; }
       84%, 100% { width: 720px; }
@@ -3565,11 +3567,13 @@
         <defs>
           <clipPath id="simple-arrival-reveal-one"><rect class="simple-arrival-ecg-reveal simple-arrival-ecg-reveal-one" x="0" y="0" width="0" height="120" /></clipPath>
           <clipPath id="simple-arrival-reveal-two"><rect class="simple-arrival-ecg-reveal simple-arrival-ecg-reveal-two" x="0" y="0" width="0" height="120" /></clipPath>
+          <clipPath id="simple-arrival-reveal-three"><rect class="simple-arrival-ecg-reveal simple-arrival-ecg-reveal-three" x="0" y="0" width="0" height="120" /></clipPath>
         </defs>
         <g class="simple-arrival-ecg-lines">
           <path class="simple-arrival-ecg-base" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
           <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-one" clip-path="url(#simple-arrival-reveal-one)" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
           <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-two" clip-path="url(#simple-arrival-reveal-two)" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
+          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-three" clip-path="url(#simple-arrival-reveal-three)" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
           <path class="simple-arrival-ecg-breath" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
         </g>
       </svg>
@@ -3581,7 +3585,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.32</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.33</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4452,7 +4456,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260810.32';
+    const LOCAL_RELEASE_VERSION = '4.local.20260810.33';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
@@ -7174,7 +7178,7 @@
       els.cosmicArrival.setAttribute('aria-hidden', 'false');
       void els.cosmicArrival.offsetWidth;
       els.cosmicArrival.classList.add('is-active');
-      await arrivalPause(reducedMotion ? 320 : 4680);
+      await arrivalPause(reducedMotion ? 320 : 5780);
       if (sequenceId !== arrivalSequenceId) return;
       els.cosmicArrival.classList.add('is-leaving');
       await arrivalPause(reducedMotion ? 160 : 340);

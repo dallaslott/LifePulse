@@ -2,7 +2,7 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
-Current local review build: `4.local.20260810.32`.
+Current local review build: `4.local.20260810.33`.
 
 The ordinary dashboard launch uses a brief, locally rendered LifePulse ECG transition. It has no mapping dependency, remote imagery request, account, API key, or usage charge.
 
