@@ -141,7 +141,7 @@ async function refreshBea(data, notes) {
   let latestYear = 0;
   for (const row of rows) {
     const geoName = String(row.GeoName || '').replace(/\s*\*+$/, '');
-    const geoDigits = String(row.GeoFIPS || '').replace(/\D/g, '').slice(0, 5);
+    const geoDigits = String(row.GeoFips || row.GeoFIPS || '').replace(/\D/g, '').slice(0, 5);
     if (geoDigits.length !== 5 || geoDigits.endsWith('000') || !geoName.includes(',')) continue;
     const [rawCounty, stateAbbr] = geoName.split(',').map(item => item.trim());
     const stateFips = geoDigits.slice(0, 2);
