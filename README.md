@@ -2,9 +2,9 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
-Current local review build: `4.local.20260809.12`.
+Current local review build: `4.local.20260809.17`.
 
-The maintained-data workflow can use private `CENSUS_API_KEY` and `BEA_API_KEY` GitHub Actions secrets to generate `place-economic-data.json`. The public dashboard receives only published Census place populations, BEA county income series, source years, and quality metadata; API keys never enter the browser or Pages artifact.
+The maintained-data workflow can use private `CENSUS_API_KEY` and `BEA_API_KEY` GitHub Actions secrets to generate `place-economic-data.json`. The public dashboard receives only published Census place populations, BEA county income series, source years, and quality metadata; API keys never enter the browser or Pages artifact. Current Census API coverage begins with the 2000 decennial census; published historical place records supplement earlier years when available.
 
 ## Local review
 

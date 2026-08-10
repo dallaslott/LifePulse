@@ -1050,16 +1050,15 @@
     }
 
     .timeline-filter-bar {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 7px;
-      overflow-x: auto;
       padding: 4px 0 7px;
       margin-top: 14px;
-      scrollbar-width: thin;
     }
 
     .timeline-filter {
-      flex: 0 0 auto;
+      width: 100%;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 999px;
       padding: 7px 11px;
@@ -1398,25 +1397,18 @@
     }
     .data-quality--estimated { border-color: rgba(255,209,102,0.38); color: #ffe39a; }
     .data-quality--limited { border-color: rgba(255,122,122,0.38); color: #ffb0b0; }
-    .population-journey {
-      margin-top: 10px;
-      padding: 10px 12px;
-      border: 1px solid rgba(0,210,255,0.18);
-      border-radius: 14px;
-      background: rgba(0,210,255,0.035);
+    body:not(.diagnostics-open) .data-quality,
+    body:not(.diagnostics-open) .comparison-methods,
+    body:not(.diagnostics-open) .comparison-diagnostic { display: none !important; }
+    .comparison-diagnostic { grid-column: 2 / -1; margin: -2px 0 0; }
+    .birth-color-swatch {
+      width: 1.05rem;
+      height: 1.05rem;
+      margin-top: 1px;
+      border: 2px solid rgba(255,255,255,0.72);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
     }
-    .population-journey summary { cursor: pointer; color: var(--primary); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; }
-    .population-chart { display: block; width: 100%; height: 190px; margin-top: 10px; overflow: visible; }
-    .population-chart-grid { stroke: rgba(255,255,255,0.09); stroke-width: 1; }
-    .population-chart-axis { fill: var(--text-dim); font-size: 9px; font-weight: 700; }
-    .population-chart-line--birth { fill: none; stroke: var(--primary); stroke-width: 3; }
-    .population-chart-line--home { fill: none; stroke: var(--accent); stroke-width: 3; }
-    .population-chart-dot--birth { fill: var(--primary); }
-    .population-chart-dot--home { fill: var(--accent); }
-    .population-chart-legend { display: flex; flex-wrap: wrap; gap: 12px; color: var(--text-dim); font-size: 0.65rem; font-weight: 800; }
-    .population-chart-legend span::before { content: ''; display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 50%; background: var(--primary); }
-    .population-chart-legend span:last-child::before { background: var(--accent); }
-    .population-chart-note { margin-top: 7px; color: var(--text-dim); font-size: 0.64rem; line-height: 1.4; }
 
     @media (max-width: 520px) {
       .dashboard-group-summary { grid-template-columns: 34px minmax(0,1fr) auto; padding: 13px; }
@@ -3375,7 +3367,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260809.12</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260809.17</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -3824,12 +3816,6 @@
       </div>
       <p class="whats-next-intro" id="born-then-now-summary">A compact look at how your starting world compares with today.</p>
       <div class="comparison-list" id="born-then-now-list" aria-live="polite"></div>
-      <details class="population-journey hidden" id="population-journey">
-        <summary>Population Journey</summary>
-        <svg class="population-chart" id="population-chart" viewBox="0 0 620 190" role="img" aria-label="Birthplace and hometown population history"></svg>
-        <div class="population-chart-legend" id="population-chart-legend"></div>
-        <p class="population-chart-note" id="population-chart-note"></p>
-      </details>
       <details class="comparison-methods">
         <summary>About These Numbers</summary>
         <p>These comparisons show nominal U.S. dollar amounts from your birth year beside the latest maintained value. They are not adjusted for inflation. Population and income cards identify official observations, interpolations, estimates, and limited fallback data directly on the card.</p>
@@ -3930,6 +3916,7 @@
 
     <div class="slate-card slate-card--zodiac" id="zodiac-card">
       <div class="badge-row">
+        <div class="chip"><span class="birth-color-swatch" id="badge-birth-color-swatch" aria-hidden="true"></span><strong id="badge-birth-color-name">...</strong></div>
         <div class="chip"><span>💎</span><strong id="badge-stone-name">...</strong></div>
         <div class="chip"><span id="badge-flower-icon">🌸</span><strong id="badge-flower-name">...</strong></div>
         <div class="chip"><span id="badge-chinese-icon">🐉</span><strong id="badge-chinese-name">...</strong></div>
@@ -4038,7 +4025,7 @@
       </div>
       <p class="atlas-intro">A concise visual look at your arrival sky, birthday patterns, place in the world, and technology eras.</p>
 
-      <details class="atlas-module" open>
+      <details class="atlas-module">
         <summary><span>Birth Sky &amp; Birthday Patterns<span class="atlas-module-subtitle">Your arrival sky plus the repeating calendar rhythm of your birthdays.</span></span></summary>
         <div class="atlas-module-body atlas-grid-2">
           <div class="atlas-subpanel">
@@ -4250,7 +4237,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260809.12';
+    const LOCAL_RELEASE_VERSION = '4.local.20260809.17';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
@@ -4434,10 +4421,6 @@
       bornThenNowYears:       document.getElementById('born-then-now-years'),
       bornThenNowSummary:     document.getElementById('born-then-now-summary'),
       bornThenNowList:        document.getElementById('born-then-now-list'),
-      populationJourney:      document.getElementById('population-journey'),
-      populationChart:        document.getElementById('population-chart'),
-      populationChartLegend:  document.getElementById('population-chart-legend'),
-      populationChartNote:    document.getElementById('population-chart-note'),
       whatsNextSummary:       document.getElementById('whats-next-summary'),
       whatsNextList:          document.getElementById('whats-next-list'),
       life80Percent:         document.getElementById('life80-percent'),
@@ -4521,6 +4504,8 @@
       horoscopeStatus:       document.getElementById('horoscope-status'),
       horoscopeToggle:       document.getElementById('horoscope-toggle'),
       badgeStone:            document.getElementById('badge-stone-name'),
+      badgeBirthColorSwatch: document.getElementById('badge-birth-color-swatch'),
+      badgeBirthColor:       document.getElementById('badge-birth-color-name'),
       badgeFlowerIcon:       document.getElementById('badge-flower-icon'),
       badgeFlower:           document.getElementById('badge-flower-name'),
       badgeChinese:          document.getElementById('badge-chinese-name'),
@@ -4648,18 +4633,18 @@
 
     // ─── Static data ──────────────────────────────────────────────────────────
     const monthData = [
-      { stone: 'Garnet',    flower: 'Carnation' },
-      { stone: 'Amethyst',  flower: 'Violet' },
-      { stone: 'Aquamarine',flower: 'Daffodil' },
-      { stone: 'Diamond',   flower: 'Daisy' },
-      { stone: 'Emerald',   flower: 'Lily' },
-      { stone: 'Pearl',     flower: 'Rose' },
-      { stone: 'Ruby',      flower: 'Larkspur' },
-      { stone: 'Peridot',   flower: 'Gladiolus' },
-      { stone: 'Sapphire',  flower: 'Aster' },
-      { stone: 'Opal',      flower: 'Marigold' },
-      { stone: 'Topaz',     flower: 'Chrysanthemum' },
-      { stone: 'Turquoise', flower: 'Narcissus' }
+      { stone: 'Garnet',    flower: 'Carnation',     color: 'Garnet Red',       hex: '#8b1a2b' },
+      { stone: 'Amethyst',  flower: 'Violet',        color: 'Amethyst Purple',  hex: '#8b5fbf' },
+      { stone: 'Aquamarine',flower: 'Daffodil',      color: 'Aquamarine Blue',  hex: '#7ff0e8' },
+      { stone: 'Diamond',   flower: 'Daisy',         color: 'Diamond White',    hex: '#eef8ff' },
+      { stone: 'Emerald',   flower: 'Lily',          color: 'Emerald Green',    hex: '#20a86b' },
+      { stone: 'Pearl',     flower: 'Rose',          color: 'Pearl White',      hex: '#f4eee3' },
+      { stone: 'Ruby',      flower: 'Larkspur',      color: 'Ruby Red',         hex: '#d7193f' },
+      { stone: 'Peridot',   flower: 'Gladiolus',     color: 'Peridot Green',    hex: '#a8d84e' },
+      { stone: 'Sapphire',  flower: 'Aster',         color: 'Sapphire Blue',    hex: '#2857c5' },
+      { stone: 'Opal',      flower: 'Marigold',      color: 'Opal',             hex: '#d7c7ff' },
+      { stone: 'Topaz',     flower: 'Chrysanthemum', color: 'Topaz Gold',       hex: '#f0b44d' },
+      { stone: 'Turquoise', flower: 'Narcissus',     color: 'Turquoise',        hex: '#35c9c3' }
     ];
 
     const FLOWER_ICONS = {
@@ -5396,7 +5381,7 @@
     }
 
     function auditAllCardDiagnostics() {
-      const diagnosticElements = Array.from(document.querySelectorAll('.source-line, .daily-pulse-source, .horoscope-status'));
+      const diagnosticElements = Array.from(document.querySelectorAll('.source-line, .daily-pulse-source, .horoscope-status, .data-quality, .comparison-methods'));
       const sourceButtons = Array.from(document.querySelectorAll('.source-toggle[data-source-target]'));
       const cardCount = document.querySelectorAll('.insight-card, .birth-card, .zodiac-info-card, .dna-card, .forecast-shell, .daily-pulse-card').length;
       const sourceRoutingOkay = sourceButtons.length > 0 && sourceButtons.every(button => {
@@ -5936,6 +5921,8 @@
         ...zodiac,
         stone:  monthData[month - 1].stone,
         flower: monthData[month - 1].flower,
+        birthColor: monthData[month - 1].color,
+        birthColorHex: monthData[month - 1].hex,
         era:    getLifeEraDetails(Number(year)).name
       };
     }
@@ -6715,7 +6702,15 @@
     }
 
     function formatCurrency(n) {
-      return typeof n === 'number' && Number.isFinite(n) ? `$${n.toFixed(2)}` : 'N/A';
+      return typeof n === 'number' && Number.isFinite(n)
+        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
+        : 'N/A';
+    }
+
+    function formatCurrencyWhole(n) {
+      return typeof n === 'number' && Number.isFinite(n)
+        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
+        : 'N/A';
     }
 
     // Single source of truth — formatTempF delegates to this
@@ -6867,11 +6862,11 @@
         div.className = 'place-suggestion';
         div.role = 'option';
         const populationCopy = Number.isFinite(Number(item.population)) ? ` - Pop. ${Number(item.population).toLocaleString()}` : '';
-        div.textContent = [item.name, item.admin1, item.country].filter(Boolean).join(', ') + populationCopy;
+        div.textContent = formatPlaceLabel(item) + populationCopy;
         const chooseLocation = event => {
           if (event?.type === 'pointerdown') event.preventDefault();
           selectItem({ ...item });
-          inputElement.value = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
+          inputElement.value = formatPlaceLabel(item);
           listElement.classList.add('hidden');
           inputElement.setAttribute('aria-expanded', 'false');
         };
@@ -6972,8 +6967,16 @@
       return results[0] || null;
     }
 
+    function compactCountryName(country, countryCode = '') {
+      const code = String(countryCode || '').toUpperCase();
+      if (code === 'US' || /^United States(?: of America)?$/i.test(String(country || ''))) return 'USA';
+      if (code === 'GB' || /^United Kingdom$/i.test(String(country || ''))) return 'UK';
+      if (code === 'AE' || /^United Arab Emirates$/i.test(String(country || ''))) return 'UAE';
+      return country || '';
+    }
+
     function formatPlaceLabel(item) {
-      return [item?.name, item?.admin1, item?.country].filter(Boolean).join(', ');
+      return [item?.name, item?.admin1, compactCountryName(item?.country, item?.country_code)].filter(Boolean).join(', ');
     }
 
     function placeLooksLikeMatch(placeText, item) {
@@ -7220,7 +7223,7 @@
         const data   = await res.json();
         const hourly = data?.hourly;
         const daily  = data?.daily;
-        const placeLabel = [resolved.name, resolved.admin1, resolved.country].filter(Boolean).join(', ');
+        const placeLabel = formatPlaceLabel(resolved);
         const timeIndex = findNearestHourlyIndex(hourly?.time, dateStr, birthClock.hour, birthClock.minute);
 
         if (timeIndex >= 0) {
@@ -9734,8 +9737,36 @@ function countPresidentialElectionsExperienced(start, end) {
 
     function formatSignedNumber(value, digits = 1, suffix = '') {
       if (!Number.isFinite(value)) return '';
-      const sign = value > 0 ? '+' : value < 0 ? '−' : '';
+      const sign = value > 0 ? '+' : value < 0 ? '-' : '';
       return `${sign}${Math.abs(value).toFixed(digits)}${suffix}`;
+    }
+
+    function abbreviateDisplayLabel(value) {
+      return String(value || '').replace(/\bEstimated\b/g, 'Est.').replace(/\bAverage\b/g, 'Avg.');
+    }
+
+    function fitDisplayLabels() {
+      document.querySelectorAll('.comparison-label-text, .micro-label, .dna-label').forEach(element => {
+        if (element.children.length) return;
+        const fullLabel = element.dataset.fullLabel || element.textContent.trim();
+        const compactLabel = abbreviateDisplayLabel(fullLabel);
+        element.dataset.fullLabel = fullLabel;
+        element.textContent = fullLabel;
+        if (compactLabel === fullLabel) return;
+        const style = getComputedStyle(element);
+        const lineHeight = Number.parseFloat(style.lineHeight) || Number.parseFloat(style.fontSize) * 1.3;
+        const wrapped = element.getClientRects().length > 1 || element.scrollHeight > lineHeight * 1.45;
+        if (wrapped) element.textContent = compactLabel;
+      });
+    }
+
+    function formatAmountDifference(start, end, formatter, higher = 'higher', lower = 'lower') {
+      if (!Number.isFinite(start) || !Number.isFinite(end)) return '';
+      const delta = end - start;
+      const pct = start !== 0 ? (delta / start) * 100 : null;
+      const amount = formatter(Math.abs(delta));
+      const direction = delta > 0 ? higher : delta < 0 ? lower : 'unchanged';
+      return delta === 0 ? `${amount} unchanged` : `${amount} ${direction}${Number.isFinite(pct) ? ` (${formatSignedNumber(pct, 0, '%')})` : ''}`;
     }
 
     function readCostMetric(metric, year) {
@@ -9764,14 +9795,17 @@ function countPresidentialElectionsExperienced(start, end) {
         const birth = readCostMetric(metric, birthYear);
         const current = readCostMetric(metric, currentYear);
         const comparable = Number.isFinite(birth.value) && Number.isFinite(current.value) && birth.value !== 0;
-        const ratio = comparable ? current.value / birth.value : null;
         const change = comparable
-          ? `${ratio.toFixed(ratio >= 10 ? 0 : 1)} times the birth-year amount in nominal dollars.`
+          ? formatAmountDifference(
+              birth.value,
+              current.value,
+              value => metric.unit === 'currency0' ? formatCurrencyWhole(value) : formatCurrency(value)
+            )
           : birth.label === 'Not Open Yet'
             ? 'The resort had not opened yet in your birth year.'
             : `Published comparison coverage begins in ${metric.coverageStart}.`;
         const quality = birth.quality === 'Interpolated' || current.quality === 'Interpolated' ? 'Interpolated' : birth.quality || current.quality || 'Published';
-        return { icon: metric.icon, label: metric.label, then: formatCostMetric(metric, birth), now: formatCostMetric(metric, current), change, group: metric.group || 'everyday', quality };
+        return { icon: metric.icon, label: abbreviateDisplayLabel(metric.label), then: formatCostMetric(metric, birth), now: formatCostMetric(metric, current), change, group: metric.group || 'everyday', quality, diagnostic: `${quality}; ${metric.source || 'maintained comparison source'}.` };
       });
     }
 
@@ -9879,35 +9913,6 @@ function countPresidentialElectionsExperienced(start, end) {
       return '';
     }
 
-    function renderPopulationJourney(records) {
-      if (!els.populationJourney || !els.populationChart) return;
-      const usable = records.filter(item => item?.record && Object.keys(item.record.series || {}).length >= 2);
-      if (!usable.length) {
-        els.populationJourney.classList.add('hidden');
-        els.populationChart.innerHTML = '';
-        return;
-      }
-      const allPoints = usable.flatMap(item => Object.entries(item.record.series).map(([year, value]) => ({ year: Number(year), value: Number(value) })).filter(point => Number.isFinite(point.year) && Number.isFinite(point.value)));
-      const minYear = Math.min(...allPoints.map(point => point.year));
-      const maxYear = Math.max(...allPoints.map(point => point.year));
-      const maxValue = Math.max(...allPoints.map(point => point.value), 1);
-      const left = 52, right = 604, top = 14, bottom = 158;
-      const x = year => left + ((year - minYear) / Math.max(1, maxYear - minYear)) * (right - left);
-      const y = value => bottom - (value / (maxValue * 1.08)) * (bottom - top);
-      const grid = [0, 0.5, 1].map(ratio => `<line class="population-chart-grid" x1="${left}" x2="${right}" y1="${y(maxValue * ratio)}" y2="${y(maxValue * ratio)}"/><text class="population-chart-axis" x="2" y="${y(maxValue * ratio) + 3}">${escapeHtml(formatCompact(maxValue * ratio, 1))}</text>`).join('');
-      const seriesSvg = usable.map((item, index) => {
-        const points = Object.entries(item.record.series).map(([year, value]) => ({ year: Number(year), value: Number(value) })).filter(point => Number.isFinite(point.year) && Number.isFinite(point.value)).sort((a, b) => a.year - b.year);
-        const kind = index === 0 ? 'birth' : 'home';
-        const path = points.map((point, pointIndex) => `${pointIndex ? 'L' : 'M'} ${x(point.year).toFixed(1)} ${y(point.value).toFixed(1)}`).join(' ');
-        const dots = points.map(point => `<circle class="population-chart-dot--${kind}" cx="${x(point.year).toFixed(1)}" cy="${y(point.value).toFixed(1)}" r="4"><title>${escapeHtml(item.label)}: ${point.value.toLocaleString()} (${point.year})</title></circle>`).join('');
-        return `<path class="population-chart-line--${kind}" d="${path}"/>${dots}`;
-      }).join('');
-      els.populationChart.innerHTML = `${grid}${seriesSvg}<text class="population-chart-axis" x="${left}" y="181">${minYear}</text><text class="population-chart-axis" x="${right - 25}" y="181">${maxYear}</text>`;
-      els.populationChartLegend.innerHTML = usable.map(item => `<span>${escapeHtml(item.label)}</span>`).join('');
-      els.populationChartNote.textContent = 'Dots are published Census observations. Lines connect observations and do not imply an official annual count.';
-      els.populationJourney.classList.remove('hidden');
-    }
-
     function renderBornThenNow(now = new Date()) {
       if (!birthMomentGlobal || !els.bornThenNowList) return;
       const birthYear = birthMomentGlobal.getFullYear();
@@ -9940,25 +9945,22 @@ function countPresidentialElectionsExperienced(start, end) {
       const currentTech = getTechSnapshot(currentYear);
       const populationDelta = currentPopulation - birthPopulation;
       const populationPct = birthPopulation ? (populationDelta / birthPopulation) * 100 : 0;
-      const gasDelta = currentGas - birthGas;
       const tempDeltaF = celsiusToFahrenheit(currentTempC) - celsiusToFahrenheit(birthTempC);
       const presidentsLived = countPresidentsExperienced(birthMomentGlobal, now);
       const comparisons = [
         { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).` },
-        { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: `${formatSignedNumber(gasDelta, 2, '/gal')} in nominal dollars since your birth year.` },
-        { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, ' F')} in the estimated global annual average.` },
+        { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`) },
+        { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.` },
         { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.` },
         { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.` }
       ].map(item => ({ ...item, group: 'world' }));
 
       const cityScale = currentPopulation > 0 ? birthPopulation / currentPopulation : null;
-      const chartRecords = [];
       const buildCityPopulationRow = (geo, label, emptyPrompt) => {
         const census = findOfficialPlace(geo);
         const fallbackRecord = geo?.wikidataPopulationSeries
           ? { name: geo.name, state: geo.admin1, series: geo.wikidataPopulationSeries, source: 'Wikidata' }
           : (geo ? wikidataPopulationCache.get(wikidataPlaceCacheKey(geo)) : null);
-        const official = findBestPlacePopulationRecord(geo);
         const censusBirth = readOfficialSeries(census?.series, birthYear, 'Census');
         const officialBirth = censusBirth || readOfficialSeries(fallbackRecord?.series, birthYear, 'Wikidata');
         const officialCurrent = readOfficialSeries(census?.series, currentYear, 'Census') || readOfficialSeries(fallbackRecord?.series, currentYear, 'Wikidata');
@@ -9968,7 +9970,6 @@ function countPresidentialElectionsExperienced(start, end) {
         const estimatedThen = officialBirth?.value ?? (Number.isFinite(latestPopulation) && Number.isFinite(cityScale) ? Math.round(latestPopulation * cityScale) : null);
         const cityName = geo?.name || '';
         const quality = officialBirth?.quality || (officialCurrent ? officialCurrent.quality : geo ? 'Limited Data' : 'Limited Data');
-        if (official) chartRecords.push({ label: cityName || label.replace(' Population', ''), record: official });
         const sourceYear = officialCurrent?.year || geo?.populationDate || currentYear;
         return {
           icon: '&#127961;',
@@ -9979,10 +9980,15 @@ function countPresidentialElectionsExperienced(start, end) {
           nowEra: officialCurrent?.year || currentYear,
           quality,
           change: geo
+            ? Number.isFinite(estimatedThen) && Number.isFinite(latestPopulation)
+              ? `${cityName}: ${formatAmountDifference(estimatedThen, latestPopulation, value => `${Math.round(value).toLocaleString()} people`, 'more', 'fewer')}.`
+              : 'A complete numeric comparison is not available yet.'
+            : `Choose a matching ${label.toLowerCase().replace(' population', '')} on the Initialization page to populate this comparison.`,
+          diagnostic: geo
             ? officialBirth
               ? `${cityName}: ${officialBirth.quality.toLowerCase()} for ${birthYear}; latest maintained observation is ${sourceYear}.`
-              : `${cityName}: historical city coverage is limited, so the birth-year figure remains a broad estimate; latest available location record is ${sourceYear}.`
-            : `Choose a matching ${label.toLowerCase().replace(' population', '')} on the Initialization page to populate this comparison.`,
+              : `${cityName}: historical coverage is limited; the birth-year value uses a broad estimate and the latest location record is ${sourceYear}.`
+            : '',
           group: 'world'
         };
       };
@@ -9998,10 +10004,11 @@ function countPresidentialElectionsExperienced(start, end) {
         const latest = readOfficialSeries(county.series, currentYear);
         if (!birth || !latest) return null;
         return {
-          icon: '&#128200;', label, then: formatCurrency(birth.value), now: formatCurrency(latest.value),
+          icon: '&#128200;', label, then: formatCurrencyWhole(birth.value), now: formatCurrencyWhole(latest.value),
           thenEra: birth.year, nowEra: latest.year,
           quality: birth.quality === 'Interpolated' ? 'Interpolated' : 'Official Estimate', group: 'local',
-          change: `${county.name}: per-capita personal income from BEA regional accounts, in nominal dollars.`
+          change: formatAmountDifference(birth.value, latest.value, formatCurrencyWhole),
+          diagnostic: `${county.name}: per-capita personal income from BEA regional accounts, in nominal dollars.`
         };
       };
       const incomeRows = [
@@ -10012,7 +10019,7 @@ function countPresidentialElectionsExperienced(start, end) {
       comparisons.push(...incomeRows);
       comparisons.push(...buildCostComparisons(birthYear, currentYear));
       if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} to ${currentYear}`;
-      if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} clear comparisons between your starting world and today. Current maintained values replace estimates as they become available.`;
+      if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} comparisons showing how amounts and percentages changed from then to now.`;
       const groupLabels = { world: 'World & Society', local: 'Local Economy', everyday: 'Everyday Costs', major: 'Major Life Costs' };
       els.bornThenNowList.innerHTML = Object.entries(groupLabels).map(([group, title]) => {
         const rows = comparisons.filter(item => item.group === group);
@@ -10021,11 +10028,12 @@ function countPresidentialElectionsExperienced(start, end) {
           <div class="comparison-icon" aria-hidden="true">${item.icon}</div>
           <div class="comparison-side"><span class="comparison-era">Then: ${escapeHtml(item.thenEra || birthYear)}</span><span class="comparison-value">${escapeHtml(item.then)}</span></div>
           <div class="comparison-side"><span class="comparison-era">${Number(item.nowEra || currentYear) === currentYear ? 'Now' : 'Latest'}: ${escapeHtml(item.nowEra || currentYear)}</span><span class="comparison-value">${escapeHtml(item.now)}</span></div>
-          <div class="comparison-label">${escapeHtml(item.label)}${item.quality ? `<span class="data-quality ${dataQualityClass(item.quality)}">${escapeHtml(item.quality)}</span>` : ''}</div>
+          <div class="comparison-label"><span class="comparison-label-text" data-full-label="${escapeHtml(item.label)}">${escapeHtml(item.label)}</span>${item.quality ? `<span class="data-quality ${dataQualityClass(item.quality)}">${escapeHtml(item.quality)}</span>` : ''}</div>
           <p class="comparison-change">${escapeHtml(item.change)}</p>
+          ${item.diagnostic ? `<p class="comparison-diagnostic source-line">${escapeHtml(item.diagnostic)}</p>` : ''}
         </article>`).join('')}</section>`;
       }).join('');
-      renderPopulationJourney(chartRecords);
+      requestAnimationFrame(fitDisplayLabels);
     }
     function collectLifeTimelineEvents(now = new Date()) {
       if (!birthMomentGlobal) return [];
@@ -10868,6 +10876,8 @@ function getBirthSkySnapshot() {
       els.zodiacName.textContent         = currentZodiac.n.toUpperCase();
       renderHoroscopeState();
       els.badgeStone.textContent         = currentZodiac.stone;
+      if (els.badgeBirthColor) els.badgeBirthColor.textContent = currentZodiac.birthColor;
+      if (els.badgeBirthColorSwatch) els.badgeBirthColorSwatch.style.background = currentZodiac.birthColorHex;
       if (els.badgeFlowerIcon) els.badgeFlowerIcon.textContent = getFlowerIcon(currentZodiac.flower);
       els.badgeFlower.textContent        = currentZodiac.flower;
       document.documentElement.style.setProperty('--zodiac-color', currentZodiac.c);
@@ -10940,6 +10950,8 @@ function getBirthSkySnapshot() {
           const resolvedResidence = await geocodePlace(profile.currentResidence);
           if (resolvedResidence) profile.currentResidenceGeo = serializePlaceSelection(resolvedResidence);
         }
+        if (profile.birthPlaceGeo) profile.birthPlace = formatPlaceLabel(profile.birthPlaceGeo);
+        if (profile.currentResidenceGeo) profile.currentResidence = formatPlaceLabel(profile.currentResidenceGeo);
         currentProfile = profile;
 
         setStatus('');
@@ -10952,6 +10964,8 @@ function getBirthSkySnapshot() {
 
         els.formView.classList.add('hidden');
         els.resultView.classList.remove('hidden');
+        collapseProfileViews();
+        requestAnimationFrame(fitDisplayLabels);
 
         lastSlowStatsKey = '';
         updateLiveStats(true);
@@ -11125,6 +11139,11 @@ function getBirthSkySnapshot() {
       saveSectionPreferences();
     }
 
+    function collapseProfileViews() {
+      els.resultView?.querySelectorAll('details').forEach(detail => { detail.open = false; });
+      saveSectionPreferences();
+    }
+
     function organizeBirthSnapshot() {
       const grid = document.getElementById('birth-snapshot-grid');
       if (!grid || grid.dataset.organized === 'true') return;
@@ -11155,14 +11174,13 @@ function getBirthSkySnapshot() {
     function organizeDashboardSections() {
       const container = document.getElementById('dashboard-groups');
       if (!container || container.dataset.ready === 'true') return;
-      const preferences = readSectionPreferences();
       DASHBOARD_SECTION_GROUPS.forEach(config => {
         const nodes = config.nodes.map(id => document.getElementById(id)).filter(Boolean);
         if (!nodes.length) return;
         const group = document.createElement('details');
         group.className = 'dashboard-group';
         group.dataset.groupId = config.id;
-        group.open = Object.prototype.hasOwnProperty.call(preferences, config.id) ? Boolean(preferences[config.id]) : Boolean(config.defaultOpen);
+        group.open = false;
         const summary = document.createElement('summary');
         summary.className = 'dashboard-group-summary';
         summary.innerHTML = `<span class="dashboard-group-icon" aria-hidden="true">${config.icon}</span><span><span class="dashboard-group-title">${escapeHtml(config.title)}</span><span class="dashboard-group-copy">${escapeHtml(config.copy)}</span></span><span class="dashboard-group-chevron" aria-hidden="true">⌄</span>`;
@@ -11178,6 +11196,7 @@ function getBirthSkySnapshot() {
       document.getElementById('collapse-sections-btn')?.addEventListener('click', () => setAllDashboardGroups(false));
     }
     function bindEvents() {
+      els.resultView?.addEventListener('toggle', () => requestAnimationFrame(fitDisplayLabels), true);
       els.btnMale.addEventListener('click',   () => setGender('male'));
       els.btnFemale.addEventListener('click', () => setGender('female'));
       els.dobMonth.addEventListener('change', populateDays);
@@ -11295,7 +11314,10 @@ function getBirthSkySnapshot() {
       // Debounced resize — rebuild star positions without thrashing
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(initStars, 150);
+        resizeTimer = setTimeout(() => {
+          initStars();
+          fitDisplayLabels();
+        }, 150);
       });
 
       // Pause star animation and insight timer when tab is not visible
