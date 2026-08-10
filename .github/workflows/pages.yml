@@ -40,6 +40,17 @@ jobs:
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: node scripts/update-sky-events.mjs
 
+      - name: Refresh annual cost-of-living references when due
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+        run: node scripts/update-cost-of-living-data.mjs
+
+      - name: Refresh official place population and local income data when due
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+          BEA_API_KEY: ${{ secrets.BEA_API_KEY }}
+        run: node scripts/update-place-economic-data.mjs
+
       - name: Refresh daily data
         env:
           FREE_ASTRO_API_KEY: ${{ secrets.FREE_ASTRO_API_KEY }}
@@ -52,13 +63,13 @@ jobs:
       - name: Commit refreshed maintained datasets
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
-          if git diff --quiet -- sports-data-v4.json sky-events.json; then
+          if git diff --quiet -- sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json; then
             echo "No maintained dataset change to commit."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add sports-data-v4.json sky-events.json
-            git commit -m "Refresh maintained sports and sky schedules [skip ci]"
+            git add sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json
+            git commit -m "Refresh maintained LifePulse datasets [skip ci]"
             git push origin HEAD:main
           fi
 
@@ -68,7 +79,7 @@ jobs:
       - name: Prepare the public site
         run: |
           mkdir -p _site/vendor
-          cp index.html live-data.json version.json sports-data-v4.json sky-events.json _site/
+          cp index.html live-data.json version.json sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json _site/
           cp node_modules/astronomy-engine/astronomy.browser.min.js _site/vendor/
           touch _site/.nojekyll
 
@@ -87,5 +98,7 @@ jobs:
       - name: Publish GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+
 
 
