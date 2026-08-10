@@ -178,6 +178,16 @@
                                                    "2024":  9233
                                                }
                                 },
+                    "groceryBasket":  {
+                                           "label":  "Everyday Grocery + Gas Basket",
+                                           "icon":  "\u0026#128722;",
+                                           "group":  "everyday",
+                                           "unit":  "currency2",
+                                           "coverageStart":  1980,
+                                           "source":  "U.S. Bureau of Labor Statistics average price series",
+                                           "sourceUrl":  "https://www.bls.gov/cpi/factsheets/average-prices.htm",
+                                           "series":  {}
+                                       },
                     "minimumWage":  {
                                         "label":  "Federal Minimum Wage",
                                         "icon":  "\u0026#9201;",

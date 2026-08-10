@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": null,
+  "nextReview": "2026-08-09",
+  "populationLatestYear": null,
+  "incomeLatestYear": null,
+  "places": {},
+  "counties": {},
+  "sources": {
+    "population": {
+      "name": "U.S. Census Bureau",
+      "url": "https://www.census.gov/data/developers/data-sets.html"
+    },
+    "income": {
+      "name": "U.S. Bureau of Economic Analysis",
+      "url": "https://apps.bea.gov/api/data/"
+    }
+  },
+  "lastRefreshNotes": [
+    "Awaiting the first GitHub Actions refresh with Census and BEA API keys."
+  ]
+}

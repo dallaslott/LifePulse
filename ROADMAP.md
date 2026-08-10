@@ -53,5 +53,15 @@ Add a web app manifest, purpose-built icons, and a conservative service worker. 
 - Existing share-card image export
 - Hidden Diagnostics and Self-Check
 
+## Future discovery backlog
+
+- Local climate-change comparison using maintained historical normals and present-day conditions.
+- Interactive birthplace-to-hometown map with distance, direction, time zones, and population context.
+- Then/Now comparison slider for culture, prices, technology, and major milestones.
+- Personal Orbit and Cosmic Calendar graphics for birthdays, planetary returns, holidays, sky events, and sports dates.
+- NASA/JPL near-Earth visitor card with the closest notable approach and plain-language distance comparisons.
+- Optional Surprise Me interaction that surfaces one rotating, source-backed LifePulse fact.
+- Extend official population histories internationally when a consistent city-level source and matching strategy are available.
+
 
 

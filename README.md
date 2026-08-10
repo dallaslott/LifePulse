@@ -2,6 +2,10 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
+Current local review build: `4.local.20260809.12`.
+
+The maintained-data workflow can use private `CENSUS_API_KEY` and `BEA_API_KEY` GitHub Actions secrets to generate `place-economic-data.json`. The public dashboard receives only published Census place populations, BEA county income series, source years, and quality metadata; API keys never enter the browser or Pages artifact.
+
 ## Local review
 
 Open `index.html` directly for layout and calculation review. The bundled `vendor/astronomy.browser.min.js` makes the Current Sky and birthplace eclipse calculation available locally. Browser security may still block `live-data.json` and other web feeds from a `file:///` address, so the published GitHub Pages version is the reliable place to verify scheduled data.
@@ -12,7 +16,9 @@ Open `index.html` directly for layout and calculation review. The bundled `vendo
 - `sports-data-v4.json` — versioned historical sports facts
 - `live-data.json` — the most recent scheduled daily feed
 - `cost-of-living-data.json` - maintained historical and current U.S. cost comparisons
+- `place-economic-data.json` - generated Census place-population and BEA county-income histories
 - `scripts/update-cost-of-living-data.mjs` - date-gated annual refresh for Census, FRED, and movie-ticket series
+- `scripts/update-place-economic-data.mjs` - private-key workflow updater for official local population and income data
 - `scripts/update-live-data.mjs` — refreshes horoscope, astronomy, population, and gas data
 - `package.json` — pins Astronomy Engine to a tested version
 - `vendor/astronomy.browser.min.js` — supports private, on-device eclipse visibility calculations
