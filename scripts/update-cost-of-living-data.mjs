@@ -3,6 +3,7 @@
 const DATA_PATH = new URL('../cost-of-living-data.json', import.meta.url);
 const force = process.argv.includes('--force');
 const today = new Date().toISOString().slice(0, 10);
+const censusKey = String(process.env.CENSUS_API_KEY || '').trim();
 
 async function fetchText(url, timeoutMs = 20000) {
   const controller = new AbortController();
@@ -45,8 +46,51 @@ function latestYear(series) {
   return Math.max(...Object.keys(series || {}).map(Number).filter(Number.isFinite));
 }
 
+async function fetchBlsAveragePriceBasket(startYear = 1980, endYear = new Date().getUTCFullYear()) {
+  const series = {
+    bread: 'APU0000702111',
+    groundBeef: 'APU0000703112',
+    eggs: 'APU0000708111',
+    milk: 'APU0000709112',
+    gasoline: 'APU000074714'
+  };
+  const annual = Object.fromEntries(Object.keys(series).map(key => [key, {}]));
+  for (let from = startYear; from <= endYear; from += 10) {
+    const through = Math.min(endYear, from + 9);
+    const response = await fetch('https://api.bls.gov/publicAPI/v2/timeseries/data/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': 'LifePulse-Cost-Updater/1.0' },
+      body: JSON.stringify({ seriesid: Object.values(series), startyear: String(from), endyear: String(through), annualaverage: true })
+    });
+    if (!response.ok) throw new Error(`BLS HTTP ${response.status}`);
+    const payload = await response.json();
+    if (payload?.status !== 'REQUEST_SUCCEEDED') throw new Error(payload?.message?.join('; ') || 'BLS request failed');
+    const keyById = Object.fromEntries(Object.entries(series).map(([key, id]) => [id, key]));
+    for (const result of payload?.Results?.series || []) {
+      const key = keyById[result.seriesID];
+      if (!key) continue;
+      const buckets = new Map();
+      for (const point of result.data || []) {
+        if (!/^M\d{2}$/.test(point.period || '')) continue;
+        const value = Number(point.value);
+        const year = Number(point.year);
+        if (!Number.isFinite(value) || !Number.isFinite(year)) continue;
+        if (!buckets.has(year)) buckets.set(year, []);
+        buckets.get(year).push(value);
+      }
+      for (const [year, values] of buckets) annual[key][year] = values.reduce((sum, value) => sum + value, 0) / values.length;
+    }
+  }
+  const basket = {};
+  for (let year = startYear; year <= endYear; year += 1) {
+    const values = Object.keys(series).map(key => annual[key][year]).filter(Number.isFinite);
+    if (values.length >= 4) basket[year] = Number(values.reduce((sum, value) => sum + value, 0).toFixed(2));
+  }
+  return { basket, components: annual };
+}
+
 const data = JSON.parse((await readFile(DATA_PATH, 'utf8')).replace(/^\uFEFF/, ''));
-if (!force && data.nextReview && today < data.nextReview) {
+if (!force && data.nextReview && today < data.nextReview && Object.keys(data?.metrics?.groceryBasket?.series || {}).length) {
   console.log(`Cost-of-living review is not due until ${data.nextReview}.`);
   process.exit(0);
 }
@@ -54,8 +98,11 @@ if (!force && data.nextReview && today < data.nextReview) {
 const results = await Promise.allSettled([
   fetchText('https://fred.stlouisfed.org/graph/fredgraph.csv?id=MSPUS'),
   fetchText('https://fred.stlouisfed.org/graph/fredgraph.csv?id=MEHOINUSA646N'),
-  fetchText(`https://api.census.gov/data/${new Date().getUTCFullYear() - 1}/acs/acs1?get=NAME,B25064_001E&for=us:*`),
-  fetchText('https://www.the-numbers.com/market/')
+  censusKey
+    ? fetchText(`https://api.census.gov/data/${new Date().getUTCFullYear() - 1}/acs/acs1?get=NAME,B25064_001E&for=us:*&key=${encodeURIComponent(censusKey)}`)
+    : Promise.reject(new Error('CENSUS_API_KEY unavailable')),
+  fetchText('https://www.the-numbers.com/market/'),
+  fetchBlsAveragePriceBasket()
 ]);
 
 const notes = [];
@@ -88,6 +135,16 @@ if (results[3].status === 'fulfilled') {
   }
   notes.push(`movie tickets through ${latestYear(data.metrics.movieTicket.series)}`);
 } else notes.push(`movie tickets retained (${results[3].reason.message})`);
+
+if (results[4].status === 'fulfilled') {
+  data.metrics.groceryBasket = data.metrics.groceryBasket || {
+    label: 'Everyday Grocery + Gas Basket', icon: '&#128722;', group: 'everyday', unit: 'currency2', coverageStart: 1980,
+    source: 'U.S. Bureau of Labor Statistics average price series', sourceUrl: 'https://www.bls.gov/cpi/factsheets/average-prices.htm', series: {}
+  };
+  data.metrics.groceryBasket.series = results[4].value.basket;
+  data.metrics.groceryBasket.components = results[4].value.components;
+  notes.push(`BLS basket through ${latestYear(data.metrics.groceryBasket.series)}`);
+} else notes.push(`BLS basket retained (${results[4].reason.message})`);
 
 data.updatedAt = new Date().toISOString();
 const sourceFailure = results.some(result => result.status === 'rejected');

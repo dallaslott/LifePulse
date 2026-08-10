@@ -10,6 +10,7 @@ const version = await readJson(new URL('../version.json', import.meta.url));
 const sports = await readJson(new URL('../sports-data-v4.json', import.meta.url));
 const sky = await readJson(new URL('../sky-events.json', import.meta.url));
 const costs = await readJson(new URL('../cost-of-living-data.json', import.meta.url));
+const placeEconomy = await readJson(new URL('../place-economic-data.json', import.meta.url));
 const errors = [];
 const now = Date.now();
 const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'populationHistory', 'civic', 'sports'];
@@ -85,13 +86,15 @@ for (let index = 0; index < skyEvents.length; index += 1) {
   if (index && Date.parse(skyEvents[index - 1].date) > Date.parse(skyEvents[index].date)) errors.push('Sky events are not sorted chronologically.');
 }
 
-const requiredCostMetrics = ['homePrice', 'rent', 'newCar', 'meal', 'movieTicket', 'income', 'disneyTicket', 'tuition', 'minimumWage'];
+const requiredCostMetrics = ['homePrice', 'rent', 'newCar', 'meal', 'movieTicket', 'income', 'disneyTicket', 'tuition', 'minimumWage', 'groceryBasket'];
 if (Number(costs?.schemaVersion) < 1) errors.push('Cost-of-living schema is missing.');
 for (const key of requiredCostMetrics) {
   const metric = costs?.metrics?.[key];
   if (!metric?.label || !metric?.source || (!metric?.series && !metric?.stepSeries)) errors.push(`Cost-of-living metric is incomplete: ${key}.`);
 }
 if (!/^\d{4}-\d{2}-\d{2}$/.test(String(costs?.nextReview || ''))) errors.push('Cost-of-living next-review date is missing.');
+if (Number(placeEconomy?.schemaVersion) < 1 || !placeEconomy?.places || !placeEconomy?.counties) errors.push('Place/economic dataset schema is incomplete.');
+if (!/^\d{4}-\d{2}-\d{2}$/.test(String(placeEconomy?.nextReview || ''))) errors.push('Place/economic next-review date is missing.');
 if (!version?.contentHash || Number(version?.dataSchemaVersion) !== Number(data.schemaVersion)) errors.push('version.json does not match live-data.json.');
 const releasePattern = new RegExp(`^${Number(data.schemaVersion)}\\.(?:\\d+\\.\\d+|local\\.\\d{8})$`);
 if (!releasePattern.test(String(version?.releaseVersion || ''))) errors.push(`version.json has an invalid release version: ${version?.releaseVersion || 'missing'}.`);
