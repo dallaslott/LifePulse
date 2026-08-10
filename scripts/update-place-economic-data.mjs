@@ -10,10 +10,6 @@ const STATE_NAMES = {
   '01':'Alabama','02':'Alaska','04':'Arizona','05':'Arkansas','06':'California','08':'Colorado','09':'Connecticut','10':'Delaware','11':'District of Columbia','12':'Florida','13':'Georgia','15':'Hawaii','16':'Idaho','17':'Illinois','18':'Indiana','19':'Iowa','20':'Kansas','21':'Kentucky','22':'Louisiana','23':'Maine','24':'Maryland','25':'Massachusetts','26':'Michigan','27':'Minnesota','28':'Mississippi','29':'Missouri','30':'Montana','31':'Nebraska','32':'Nevada','33':'New Hampshire','34':'New Jersey','35':'New Mexico','36':'New York','37':'North Carolina','38':'North Dakota','39':'Ohio','40':'Oklahoma','41':'Oregon','42':'Pennsylvania','44':'Rhode Island','45':'South Carolina','46':'South Dakota','47':'Tennessee','48':'Texas','49':'Utah','50':'Vermont','51':'Virginia','53':'Washington','54':'West Virginia','55':'Wisconsin','56':'Wyoming','72':'Puerto Rico'
 };
 
-const BEA_STATE_CODES = [
-  'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
-];
-
 function normalize(value) {
   return String(value || '')
     .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
@@ -121,18 +117,18 @@ function extractBeaRows(payload) {
   throw new Error(message ? `BEA: ${message}` : 'BEA county-income response was empty');
 }
 
-async function fetchBeaState(stateCode) {
+async function fetchBeaCounties() {
   const params = new URLSearchParams({
     UserID: beaKey,
     method: 'GetData',
     datasetname: 'Regional',
     TableName: 'CAINC1',
     LineCode: '3',
-    GeoFIPS: stateCode,
+    GeoFIPS: 'COUNTY',
     Year: 'ALL',
     ResultFormat: 'JSON'
   });
-  return extractBeaRows(await fetchJson(`https://apps.bea.gov/api/data?${params}`, 60000));
+  return extractBeaRows(await fetchJson(`https://apps.bea.gov/api/data?${params}`, 180000));
 }
 
 async function refreshBea(data, notes) {
@@ -141,50 +137,28 @@ async function refreshBea(data, notes) {
     return;
   }
   const counties = { ...(data.counties || {}) };
+  const rows = await fetchBeaCounties();
   let latestYear = 0;
-  let refreshedStates = 0;
-  const failures = [];
-  for (let offset = 0; offset < BEA_STATE_CODES.length; offset += 5) {
-    const batch = BEA_STATE_CODES.slice(offset, offset + 5);
-    const settled = await Promise.allSettled(batch.map(fetchBeaState));
-    settled.forEach((result, index) => {
-      const requestedState = batch[index];
-      if (result.status !== 'fulfilled') {
-        failures.push(`${requestedState}: ${result.reason?.message || 'request failed'}`);
-        return;
-      }
-      const rows = result.value;
-      const returnedStateFips = String(rows[0]?.GeoFIPS || '').replace(/\D/g, '').slice(0, 2);
-      const returnedState = STATE_NAMES[returnedStateFips];
-      if (returnedState) {
-        for (const key of Object.keys(counties)) {
-          if (counties[key]?.state === returnedState) delete counties[key];
-        }
-      }
-      for (const row of rows) {
-        const geoName = String(row.GeoName || '').replace(/\s*\*+$/, '');
-        const geoDigits = String(row.GeoFIPS || '').replace(/\D/g, '').slice(0, 5);
-        if (geoDigits.length !== 5 || geoDigits.endsWith('000') || !geoName.includes(',')) continue;
-        const [rawCounty, stateAbbr] = geoName.split(',').map(item => item.trim());
-        const stateFips = geoDigits.slice(0, 2);
-        const state = STATE_NAMES[stateFips] || stateAbbr || '';
-        const year = Number(row.TimePeriod);
-        const value = Number(String(row.DataValue || '').replaceAll(',', ''));
-        if (!rawCounty || !state || !Number.isFinite(year) || !Number.isFinite(value)) continue;
-        const key = countyKey(state, rawCounty);
-        const entry = counties[key] || { name: rawCounty, state, stateFips, countyFips: geoDigits, series: {} };
-        entry.series[String(year)] = Math.round(value);
-        counties[key] = entry;
-        latestYear = Math.max(latestYear, year);
-      }
-      refreshedStates += 1;
-    });
+  for (const row of rows) {
+    const geoName = String(row.GeoName || '').replace(/\s*\*+$/, '');
+    const geoDigits = String(row.GeoFIPS || '').replace(/\D/g, '').slice(0, 5);
+    if (geoDigits.length !== 5 || geoDigits.endsWith('000') || !geoName.includes(',')) continue;
+    const [rawCounty, stateAbbr] = geoName.split(',').map(item => item.trim());
+    const stateFips = geoDigits.slice(0, 2);
+    const state = STATE_NAMES[stateFips] || stateAbbr || '';
+    const year = Number(row.TimePeriod);
+    const value = Number(String(row.DataValue || '').replaceAll(',', ''));
+    if (!rawCounty || !state || !Number.isFinite(year) || !Number.isFinite(value)) continue;
+    const key = countyKey(state, rawCounty);
+    const entry = counties[key] || { name: rawCounty, state, stateFips, countyFips: geoDigits, series: {} };
+    entry.series[String(year)] = Math.round(value);
+    counties[key] = entry;
+    latestYear = Math.max(latestYear, year);
   }
-  if (!refreshedStates) throw new Error(`BEA state requests failed (${failures.slice(0, 3).join('; ')})`);
+  if (!Object.keys(counties).length || !latestYear) throw new Error('BEA returned no usable county-income rows');
   data.counties = counties;
   data.incomeLatestYear = latestYear || data.incomeLatestYear;
-  notes.push(`BEA county income: ${Object.keys(counties).length.toLocaleString()} counties through ${latestYear}; ${refreshedStates}/${BEA_STATE_CODES.length} jurisdictions refreshed`);
-  if (failures.length) notes.push(`BEA retained for ${failures.length} jurisdictions (${failures.slice(0, 3).join('; ')})`);
+  notes.push(`BEA county income: ${Object.keys(counties).length.toLocaleString()} counties through ${latestYear}`);
 }
 
 const data = JSON.parse((await readFile(DATA_PATH, 'utf8')).replace(/^\uFEFF/, ''));
