@@ -776,6 +776,192 @@
       .celebration-title { font-size: clamp(1.22rem, 6vw, 1.55rem); }
       .celebration-copy { font-size: 0.82rem; line-height: 1.42; }
     }
+
+    body.arrival-active { overflow: hidden; }
+
+    .cosmic-arrival {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      overflow: hidden;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      background: #000;
+      transition: opacity 700ms cubic-bezier(.22,.61,.36,1), visibility 700ms ease;
+    }
+
+    .cosmic-arrival::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.7) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 76% 14%, rgba(177,211,255,.55) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 88% 62%, rgba(255,255,255,.42) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 22% 76%, rgba(196,220,255,.38) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 58% 83%, rgba(255,255,255,.5) 0 1px, transparent 1.5px);
+      background-size: 330px 290px, 410px 360px, 520px 430px, 470px 390px, 610px 510px;
+      opacity: .58;
+      pointer-events: none;
+    }
+
+    .cosmic-arrival.is-active {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cosmic-arrival.is-leaving { opacity: 0; }
+
+    .cosmic-arrival-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 1050ms ease, transform 1400ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    .cosmic-arrival-aerial {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background-color: #02070b;
+      background-position: center;
+      background-size: cover;
+      filter: saturate(.88) contrast(1.08) brightness(.7);
+      transform: scale(1.14);
+      transition: opacity 1250ms ease, transform 2300ms cubic-bezier(.16,.78,.18,1), filter 1800ms ease;
+    }
+
+    .cosmic-arrival-shade {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(circle at 50% 47%, transparent 34%, rgba(0,0,0,.22) 68%, rgba(0,0,0,.78) 100%);
+      pointer-events: none;
+    }
+
+    .cosmic-arrival-copy {
+      position: absolute;
+      z-index: 2;
+      left: clamp(22px, 6vw, 84px);
+      bottom: clamp(28px, 7vh, 76px);
+      max-width: min(78vw, 620px);
+      color: #fff;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 700ms ease, transform 900ms cubic-bezier(.16,.72,.2,1);
+      text-shadow: 0 2px 22px rgba(0,0,0,.9);
+    }
+
+    .cosmic-arrival-kicker { display: block; color: rgba(255,255,255,.72); font-size: .58rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; }
+    .cosmic-arrival-title { display: block; margin-top: 8px; color: #fff; font-size: clamp(1.7rem, 6vw, 3.8rem); font-weight: 650; letter-spacing: -.035em; line-height: .98; }
+    .cosmic-arrival-subtitle { display: block; margin-top: 10px; color: rgba(255,255,255,.76); font-size: clamp(.72rem, 2.5vw, .96rem); letter-spacing: .03em; line-height: 1.4; }
+    .cosmic-arrival-credit { position: absolute; z-index: 2; right: 14px; bottom: 10px; color: rgba(255,255,255,.46); font-size: .53rem; letter-spacing: .05em; opacity: 0; transition: opacity 700ms ease; }
+
+    .cosmic-arrival.phase-location .cosmic-arrival-copy,
+    .cosmic-arrival.phase-location .cosmic-arrival-credit { opacity: 1; transform: translateY(0); }
+    .cosmic-arrival.phase-surface .cosmic-arrival-canvas { opacity: 0; transform: scale(1.18); }
+    .cosmic-arrival.phase-surface .cosmic-arrival-aerial { opacity: 1; filter: saturate(.94) contrast(1.05) brightness(.82); transform: scale(1); }
+
+    @media (max-width: 520px) {
+      .cosmic-arrival-copy { left: 22px; bottom: 42px; max-width: calc(100vw - 44px); }
+      .cosmic-arrival-credit { right: 10px; bottom: 7px; font-size: .48rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cosmic-arrival { transition-duration: 180ms; }
+      .cosmic-arrival-canvas, .cosmic-arrival-aerial, .cosmic-arrival-copy { transition-duration: 180ms; }
+    }
+
+    /* Simple branded transition. The retired cinematic renderer remains isolated from the live path. */
+    .cosmic-arrival {
+      display: grid;
+      place-items: center;
+      background: #030509;
+      transition: opacity 340ms ease, visibility 340ms ease;
+    }
+
+    .cosmic-arrival::before {
+      background: radial-gradient(circle, color-mix(in srgb, var(--primary) 14%, transparent) 0, transparent 64%);
+      background-size: auto;
+      opacity: 0;
+      transform: scale(.72);
+      transition: opacity 600ms ease, transform 900ms ease;
+    }
+
+    .cosmic-arrival.is-active::before { opacity: .8; transform: scale(1); }
+
+    .simple-arrival-mark {
+      position: relative;
+      z-index: 1;
+      width: min(90vw, 720px);
+      color: #fff;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(5px) scale(.985);
+      transition: opacity 260ms ease, transform 500ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    .cosmic-arrival.is-active .simple-arrival-mark { opacity: 1; transform: translateY(0) scale(1); }
+    .cosmic-arrival.is-leaving .simple-arrival-mark { opacity: 0; transform: translateY(-4px) scale(1.015); }
+
+    .simple-arrival-word {
+      display: block;
+      margin-bottom: 2px;
+      font-size: clamp(1.45rem, 5vw, 2.35rem);
+      font-weight: 900;
+      letter-spacing: .14em;
+      line-height: 1;
+      text-transform: uppercase;
+      text-shadow: 0 0 26px color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+
+    .simple-arrival-ecg { display: block; width: 100%; height: clamp(92px, 17vh, 138px); overflow: visible; transform-origin: center; }
+    .simple-arrival-ecg-base,
+    .simple-arrival-ecg-pulse { fill: none; vector-effect: non-scaling-stroke; }
+    .simple-arrival-ecg-base { stroke: rgba(255,255,255,.16); stroke-width: 1.5; }
+    .simple-arrival-ecg-pulse {
+      stroke: var(--primary);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 100 100;
+      stroke-dashoffset: 100;
+      filter: drop-shadow(0 0 5px var(--primary));
+    }
+
+    .cosmic-arrival.is-active .simple-arrival-ecg-pulse {
+      animation: simpleArrivalTrace 4200ms linear 0ms 1 forwards;
+    }
+    .cosmic-arrival.is-active .simple-arrival-ecg-lines { animation: simpleArrivalGraphFade 4200ms ease-in-out 0ms 1 forwards; }
+    @keyframes simpleArrivalTrace {
+      0% { stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: .82; stroke-width: 3; }
+      18% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: 1; stroke-width: 3; }
+      20% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: 1; stroke-width: 3; }
+      23% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: 0; stroke-width: 3; }
+      24% { stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: 0; stroke-width: 3; }
+      25% { stroke-dasharray: 100 100; stroke-dashoffset: 100; opacity: .82; stroke-width: 3; }
+      43% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: 1; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+      46% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: .78; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+      60% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: 1; stroke-width: 4.8; filter: drop-shadow(0 0 14px var(--primary)); }
+      75% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: .96; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+      100% { stroke-dasharray: 100 100; stroke-dashoffset: 0; opacity: 1; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+    }
+    @keyframes simpleArrivalGraphFade {
+      0%, 76% { opacity: 1; }
+      88% { opacity: .06; }
+      99%, 100% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cosmic-arrival.is-active .simple-arrival-ecg-pulse { animation: none; stroke-dashoffset: 0; }
+      .cosmic-arrival.is-active .simple-arrival-ecg-lines { animation: none; }
+    }
     .birthday-hero-main {
       display: block;
       font-size: clamp(2.05rem, 7vw, 2.95rem);
@@ -3362,12 +3548,24 @@
     </p>
   </div>
 
+  <div class="cosmic-arrival" id="cosmic-arrival" aria-hidden="true" role="status" aria-live="polite">
+    <div class="simple-arrival-mark" aria-label="LifePulse dashboard loading">
+      <strong class="simple-arrival-word">LifePulse</strong>
+      <svg class="simple-arrival-ecg" viewBox="0 0 720 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <g class="simple-arrival-ecg-lines">
+          <path class="simple-arrival-ecg-base" pathLength="100" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
+          <path class="simple-arrival-ecg-pulse" pathLength="100" d="M0 60 H230 L252 60 L274 39 L296 84 L322 10 L350 108 L378 60 H720" />
+        </g>
+      </svg>
+    </div>
+  </div>
+
   <div class="container hidden" id="result-view">
     <button id="mute-toggle" type="button" aria-label="Toggle sound">🔊</button>
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260809.17</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.28</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4211,6 +4409,7 @@
       <div id="selfcheck-list" class="diagnostics-list"></div>
       <div class="action-row diagnostics-actions">
         <button class="control-btn" id="rerun-diagnostics-btn" type="button">RUN SELF-CHECK</button>
+        <button class="control-btn" id="preview-arrival-btn" type="button">PREVIEW ARRIVAL</button>
         <button class="control-btn" id="mock-toggle-btn" type="button">MOCK LIVE DATA: OFF</button>
         <button class="control-btn" id="clear-cache-btn" type="button">CLEAR LIVE CACHE</button>
       </div>
@@ -4237,7 +4436,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260809.17';
+    const LOCAL_RELEASE_VERSION = '4.local.20260810.28';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
@@ -4316,6 +4515,9 @@
     let lastSlowStatsKey      = '';
     let lastCelebrationKey    = '';
     let activeLocalCelebrationPreview = null;
+    let arrivalSequenceId     = 0;
+    let arrivalRafId          = null;
+    let arrivalRenderer       = null;
     let symphonyRunId         = 0;
     let birthdayIntroPending  = false;
     let updateCheckTimer      = null;
@@ -4346,6 +4548,12 @@
       body:                  document.getElementById('mainBody'),
       formView:              document.getElementById('form-view'),
       resultView:            document.getElementById('result-view'),
+      cosmicArrival:         document.getElementById('cosmic-arrival'),
+      cosmicArrivalCanvas:   document.getElementById('cosmic-arrival-canvas'),
+      cosmicArrivalAerial:   document.getElementById('cosmic-arrival-aerial'),
+      cosmicArrivalTitle:    document.getElementById('cosmic-arrival-title'),
+      cosmicArrivalSubtitle: document.getElementById('cosmic-arrival-subtitle'),
+      cosmicArrivalCredit:   document.getElementById('cosmic-arrival-credit'),
       status:                document.getElementById('status-message'),
       userName:              document.getElementById('userName'),
       birthPlace:            document.getElementById('birthPlace'),
@@ -4379,6 +4587,7 @@
       selfcheckSummary:      document.getElementById('selfcheck-summary'),
       selfcheckList:         document.getElementById('selfcheck-list'),
       rerunDiagnosticsBtn:   document.getElementById('rerun-diagnostics-btn'),
+      previewArrivalBtn:     document.getElementById('preview-arrival-btn'),
       mockToggleBtn:         document.getElementById('mock-toggle-btn'),
       clearCacheBtn:         document.getElementById('clear-cache-btn'),
       environmentNote:       document.getElementById('environment-note'),
@@ -5482,6 +5691,8 @@
       const layoutOkay = !!document.getElementById('chrono-years')
         && !!document.getElementById('birth-song-title')
         && !!document.getElementById('current-sky-moon')
+        && !!document.getElementById('cosmic-arrival')
+        && !!document.querySelector('.simple-arrival-ecg')
         && !!document.getElementById('diagnostics-toggle');
       const astronomyReady = !!window.Astronomy
         && typeof window.Astronomy.SearchGlobalSolarEclipse === 'function'
@@ -6417,6 +6628,547 @@
     }
 
     // ─── Confetti ─────────────────────────────────────────────────────────────
+    const ARRIVAL_LANDMASSES = [
+      [[-168,72],[-138,70],[-110,58],[-84,50],[-55,48],[-78,25],[-98,16],[-118,31],[-145,56]],
+      [[-82,13],[-52,10],[-35,-8],[-48,-55],[-69,-45],[-80,-10]],
+      [[-52,83],[-24,76],[-18,60],[-43,58],[-64,70]],
+      [[-10,70],[38,76],[96,70],[151,55],[132,25],[87,9],[45,34],[10,36],[-10,50]],
+      [[-17,35],[16,37],[51,13],[40,-35],[15,-36],[-11,5]],
+      [[112,-10],[154,-12],[153,-40],[116,-35]]
+    ];
+
+    function clamp01(value) { return Math.max(0, Math.min(1, value)); }
+    function easeOutCubic(value) { return 1 - Math.pow(1 - clamp01(value), 3); }
+
+    function projectArrivalCoordinate(longitude, latitude, centerLongitude, radius, centerX, centerY) {
+      const radians = Math.PI / 180;
+      const lat = Number(latitude) * radians;
+      const relativeLon = (Number(longitude) - centerLongitude) * radians;
+      const depth = Math.cos(lat) * Math.cos(relativeLon);
+      return {
+        x: centerX + radius * Math.cos(lat) * Math.sin(relativeLon),
+        y: centerY - radius * Math.sin(lat),
+        depth,
+        visible: depth > -0.04
+      };
+    }
+
+    function initializeArrivalStars(width, height) {
+      arrivalStars = Array.from({ length: Math.min(620, Math.max(320, Math.round(width * height / 2600))) }, () => ({
+        x: (Math.random() - 0.5) * width * 1.35,
+        y: (Math.random() - 0.5) * height * 1.35,
+        z: 0.08 + Math.random() * 0.92,
+        hue: Math.random() > 0.82 ? 195 + Math.random() * 70 : 0,
+        size: 0.45 + Math.random() * 1.4
+      }));
+    }
+
+    function drawArrivalStars(ctx, width, height, elapsed, delta) {
+      const centerX = width / 2;
+      const centerY = height * 0.46;
+      const earthProgress = clamp01((elapsed - 520) / 2500);
+      const speed = (0.00024 + (1 - earthProgress) * 0.00072) * Math.max(8, delta);
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      for (const star of arrivalStars) {
+        star.z -= speed;
+        if (star.z < 0.035) {
+          star.x = (Math.random() - 0.5) * width * 1.35;
+          star.y = (Math.random() - 0.5) * height * 1.35;
+          star.z = 1;
+        }
+        const previousZ = Math.min(1.1, star.z + speed * 13);
+        const x = centerX + star.x / star.z;
+        const y = centerY + star.y / star.z;
+        const previousX = centerX + star.x / previousZ;
+        const previousY = centerY + star.y / previousZ;
+        if (x < -120 || x > width + 120 || y < -120 || y > height + 120) continue;
+        const intensity = clamp01((1 - star.z) * 1.35) * (1 - earthProgress * 0.58);
+        ctx.strokeStyle = star.hue ? `hsla(${star.hue},95%,82%,${0.18 + intensity * 0.76})` : `rgba(255,255,255,${0.18 + intensity * 0.8})`;
+        ctx.lineWidth = star.size * (0.5 + intensity * 1.8);
+        ctx.beginPath();
+        ctx.moveTo(previousX, previousY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawArrivalEarth(ctx, width, height, elapsed, geo) {
+      const approach = easeOutCubic((elapsed - 520) / 2350);
+      const descent = easeOutCubic((elapsed - 3050) / 920);
+      if (approach <= 0) return;
+      const baseRadius = Math.min(width, height) * (width < 600 ? 0.285 : 0.31);
+      const radius = Math.max(3, baseRadius * approach * (1 + descent * 3.2));
+      const centerX = width / 2;
+      const centerY = height * (0.45 + descent * 0.16);
+      const targetLongitude = Number.isFinite(Number(geo?.longitude)) ? Number(geo.longitude) : -86;
+      const targetLatitude = Number.isFinite(Number(geo?.latitude)) ? Number(geo.latitude) : 39;
+      const centerLongitude = targetLongitude - (1 - approach) * 115 - Math.sin(elapsed * 0.00032) * 8;
+
+      ctx.save();
+      const atmosphere = ctx.createRadialGradient(centerX, centerY, radius * 0.82, centerX, centerY, radius * 1.18);
+      atmosphere.addColorStop(0, 'rgba(27,142,255,0)');
+      atmosphere.addColorStop(0.78, 'rgba(53,174,255,0.08)');
+      atmosphere.addColorStop(0.92, 'rgba(93,211,255,0.4)');
+      atmosphere.addColorStop(1, 'rgba(30,112,255,0)');
+      ctx.fillStyle = atmosphere;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 1.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.clip();
+      const ocean = ctx.createRadialGradient(centerX - radius * 0.38, centerY - radius * 0.42, radius * 0.05, centerX, centerY, radius * 1.1);
+      ocean.addColorStop(0, '#49b9ee');
+      ocean.addColorStop(0.35, '#117fbd');
+      ocean.addColorStop(0.72, '#054c82');
+      ocean.addColorStop(1, '#011429');
+      ctx.fillStyle = ocean;
+      ctx.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+
+      ARRIVAL_LANDMASSES.forEach((land, landIndex) => {
+        const points = land.map(([longitude, latitude]) => projectArrivalCoordinate(longitude, latitude, centerLongitude, radius, centerX, centerY)).filter(point => point.visible);
+        if (points.length < 3) return;
+        ctx.beginPath();
+        points.forEach((point, index) => index ? ctx.lineTo(point.x, point.y) : ctx.moveTo(point.x, point.y));
+        ctx.closePath();
+        const landGradient = ctx.createLinearGradient(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
+        landGradient.addColorStop(0, landIndex % 2 ? '#a4c96b' : '#79b968');
+        landGradient.addColorStop(0.52, landIndex % 2 ? '#4d995c' : '#3d8a52');
+        landGradient.addColorStop(1, '#1e593d');
+        ctx.fillStyle = landGradient;
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 0.26;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1, radius * 0.012);
+      for (let cloud = 0; cloud < 6; cloud += 1) {
+        const cloudY = centerY - radius * 0.62 + cloud * radius * 0.24;
+        ctx.beginPath();
+        ctx.arc(centerX + Math.sin(elapsed * 0.00018 + cloud) * radius * 0.42, cloudY, radius * (0.18 + (cloud % 2) * 0.05), 0.2, 2.45);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      const night = ctx.createRadialGradient(centerX - radius * 0.48, centerY - radius * 0.42, radius * 0.08, centerX + radius * 0.12, centerY + radius * 0.08, radius * 1.15);
+      night.addColorStop(0, 'rgba(255,255,255,0.18)');
+      night.addColorStop(0.48, 'rgba(0,0,0,0.02)');
+      night.addColorStop(0.78, 'rgba(0,0,0,0.35)');
+      night.addColorStop(1, 'rgba(0,0,0,0.88)');
+      ctx.fillStyle = night;
+      ctx.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+      ctx.restore();
+
+      ctx.strokeStyle = 'rgba(116,218,255,0.7)';
+      ctx.lineWidth = Math.max(1.5, radius * 0.009);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius + 1, 0, Math.PI * 2);
+      ctx.stroke();
+
+      if (elapsed > 2180 && descent < 0.92) {
+        const target = projectArrivalCoordinate(targetLongitude, targetLatitude, centerLongitude, radius, centerX, centerY);
+        const lock = easeOutCubic((elapsed - 2180) / 720);
+        const targetX = target.visible ? target.x : centerX;
+        const targetY = target.visible ? target.y : centerY;
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.strokeStyle = `rgba(118,255,180,${0.35 + lock * 0.65})`;
+        ctx.fillStyle = `rgba(118,255,180,${0.65 + lock * 0.35})`;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 7]);
+        const ring = radius * (0.32 - lock * 0.22) + 12;
+        ctx.beginPath();
+        ctx.arc(targetX, targetY, ring, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.arc(targetX, targetY, Math.max(3, radius * 0.018), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(targetX - ring - 14, targetY); ctx.lineTo(targetX + ring + 14, targetY);
+        ctx.moveTo(targetX, targetY - ring - 14); ctx.lineTo(targetX, targetY + ring + 14);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    function startArrivalCanvas(profile, sequenceId, reducedMotion = false) {
+      const canvas = els.cosmicArrivalCanvas;
+      const ctx = canvas?.getContext('2d');
+      if (!canvas || !ctx) return;
+      if (arrivalRafId) cancelAnimationFrame(arrivalRafId);
+      const geo = profile?.currentResidenceGeo || profile?.birthPlaceGeo || null;
+      let startedAt = performance.now();
+      let lastFrame = startedAt;
+      let lastWidth = 0;
+      let lastHeight = 0;
+      const draw = now => {
+        if (sequenceId !== arrivalSequenceId) return;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const ratio = Math.min(2, window.devicePixelRatio || 1);
+        if (width !== lastWidth || height !== lastHeight) {
+          canvas.width = Math.round(width * ratio);
+          canvas.height = Math.round(height * ratio);
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          initializeArrivalStars(width, height);
+          lastWidth = width;
+          lastHeight = height;
+        }
+        const elapsed = reducedMotion ? 2850 : now - startedAt;
+        const delta = Math.min(34, now - lastFrame || 16);
+        lastFrame = now;
+        ctx.clearRect(0, 0, width, height);
+        const space = ctx.createRadialGradient(width * 0.5, height * 0.46, 0, width * 0.5, height * 0.46, Math.max(width, height) * 0.75);
+        space.addColorStop(0, '#07182e');
+        space.addColorStop(0.48, '#020817');
+        space.addColorStop(1, '#00030a');
+        ctx.fillStyle = space;
+        ctx.fillRect(0, 0, width, height);
+        drawArrivalStars(ctx, width, height, elapsed, delta);
+        drawArrivalEarth(ctx, width, height, elapsed, geo);
+        if (!reducedMotion && elapsed < 4550) arrivalRafId = requestAnimationFrame(draw);
+      };
+      arrivalRafId = requestAnimationFrame(draw);
+    }
+
+    function arrivalPause(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
+    async function playLegacyDashboardArrival(profile) {
+      if (!els.cosmicArrival) return;
+      const sequenceId = ++arrivalSequenceId;
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const destination = profile?.currentResidence || profile?.birthPlace || 'Earth';
+      const city = String(destination).split(',')[0].trim() || 'your hometown';
+      document.body.classList.add('arrival-active');
+      els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-earth', 'phase-home');
+      els.cosmicArrival.setAttribute('aria-hidden', 'false');
+      els.cosmicArrivalTitle.textContent = reducedMotion ? `Location Acquired: ${city}` : 'Orbital Transit';
+      els.cosmicArrivalSubtitle.textContent = reducedMotion ? 'LifePulse synchronization complete.' : `Calculating an approach vector for ${destination}.`;
+      void els.cosmicArrival.offsetWidth;
+      els.cosmicArrival.classList.add('is-active');
+      startArrivalCanvas(profile, sequenceId, reducedMotion);
+
+      if (reducedMotion) {
+        await arrivalPause(620);
+      } else {
+        await arrivalPause(900);
+        if (sequenceId !== arrivalSequenceId) return;
+        els.cosmicArrival.classList.add('phase-earth');
+        els.cosmicArrivalTitle.textContent = 'Earth Approach';
+        els.cosmicArrivalSubtitle.textContent = 'Atmospheric profile and surface coordinates acquired.';
+        await arrivalPause(1120);
+        if (sequenceId !== arrivalSequenceId) return;
+        els.cosmicArrival.classList.add('phase-home');
+        els.cosmicArrivalTitle.textContent = `Hometown Signal: ${city}`;
+        els.cosmicArrivalSubtitle.textContent = `Coordinate lock - ${destination}.`;
+        await arrivalPause(1180);
+        if (sequenceId !== arrivalSequenceId) return;
+        els.cosmicArrivalTitle.textContent = 'LifePulse Synchronized';
+        els.cosmicArrivalSubtitle.textContent = 'Personal dashboard online.';
+        await arrivalPause(700);
+      }
+
+      if (sequenceId !== arrivalSequenceId) return;
+      els.cosmicArrival.classList.add('is-leaving');
+      await arrivalPause(reducedMotion ? 180 : 360);
+      if (sequenceId !== arrivalSequenceId) return;
+      if (arrivalRafId) cancelAnimationFrame(arrivalRafId);
+      arrivalRafId = null;
+      els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-earth', 'phase-home');
+      els.cosmicArrival.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('arrival-active');
+    }
+
+    // Cinematic arrival: locally bundled NASA globe plus public USGS/NASA surface imagery.
+    function easeInOutArrival(value) {
+      const t = clamp01(value);
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function createArrivalShader(gl, type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        const message = gl.getShaderInfoLog(shader) || 'Unknown shader error';
+        gl.deleteShader(shader);
+        throw new Error(message);
+      }
+      return shader;
+    }
+
+    function createArrivalEarthMesh(latitudeBands = 72, longitudeBands = 144) {
+      const vertices = [];
+      const indices = [];
+      for (let latIndex = 0; latIndex <= latitudeBands; latIndex += 1) {
+        const latitude = Math.PI / 2 - (latIndex / latitudeBands) * Math.PI;
+        const cosLatitude = Math.cos(latitude);
+        for (let lonIndex = 0; lonIndex <= longitudeBands; lonIndex += 1) {
+          const longitude = -Math.PI + (lonIndex / longitudeBands) * Math.PI * 2;
+          const x = cosLatitude * Math.cos(longitude);
+          const y = Math.sin(latitude);
+          const z = cosLatitude * Math.sin(longitude);
+          vertices.push(x, y, z, x, y, z, lonIndex / longitudeBands, latIndex / latitudeBands);
+        }
+      }
+      const row = longitudeBands + 1;
+      for (let latIndex = 0; latIndex < latitudeBands; latIndex += 1) {
+        for (let lonIndex = 0; lonIndex < longitudeBands; lonIndex += 1) {
+          const first = latIndex * row + lonIndex;
+          const second = first + row;
+          indices.push(first, first + 1, second, second, first + 1, second + 1);
+        }
+      }
+      return { vertices: new Float32Array(vertices), indices: new Uint16Array(indices) };
+    }
+
+    function loadArrivalTextureImage() {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.decoding = 'async';
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error('NASA Earth texture did not load.'));
+        image.src = 'assets/nasa-blue-marble-2048.png';
+      });
+    }
+
+    async function createArrivalEarthRenderer(canvas, geo, sequenceId) {
+      if (!canvas) return null;
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true, powerPreference: 'high-performance' });
+      if (!gl) return null;
+      const vertexSource = `
+        attribute vec3 a_position;
+        attribute vec3 a_normal;
+        attribute vec2 a_uv;
+        uniform float u_rotation_x;
+        uniform float u_rotation_y;
+        uniform float u_scale;
+        uniform float u_aspect;
+        varying vec2 v_uv;
+        varying vec3 v_normal;
+        void main() {
+          float cy = cos(u_rotation_y); float sy = sin(u_rotation_y);
+          float cx = cos(u_rotation_x); float sx = sin(u_rotation_x);
+          mat3 rotateY = mat3(cy, 0.0, -sy, 0.0, 1.0, 0.0, sy, 0.0, cy);
+          mat3 rotateX = mat3(1.0, 0.0, 0.0, 0.0, cx, sx, 0.0, -sx, cx);
+          vec3 world = rotateX * rotateY * a_position;
+          v_normal = normalize(rotateX * rotateY * a_normal);
+          v_uv = a_uv;
+          float cameraDepth = 3.25 - world.z;
+          gl_Position = vec4(world.x * 2.34 * u_scale / u_aspect, world.y * 2.34 * u_scale, (cameraDepth - 2.0) * 0.8, cameraDepth);
+        }`;
+      const fragmentSource = `
+        precision mediump float;
+        uniform sampler2D u_earth;
+        varying vec2 v_uv;
+        varying vec3 v_normal;
+        void main() {
+          vec3 normal = normalize(v_normal);
+          vec3 sun = normalize(vec3(-0.42, 0.28, 0.86));
+          float diffuse = max(dot(normal, sun), 0.0);
+          float dusk = smoothstep(-0.12, 0.18, diffuse);
+          float rim = pow(1.0 - max(normal.z, 0.0), 4.0);
+          vec3 surface = texture2D(u_earth, v_uv).rgb;
+          vec3 lit = surface * (0.075 + 0.98 * diffuse) * dusk;
+          lit += vec3(0.03, 0.16, 0.31) * rim * 1.25;
+          gl_FragColor = vec4(lit, 1.0);
+        }`;
+      const vertexShader = createArrivalShader(gl, gl.VERTEX_SHADER, vertexSource);
+      const fragmentShader = createArrivalShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
+      const program = gl.createProgram();
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) || 'Earth renderer failed to link.');
+
+      const mesh = createArrivalEarthMesh();
+      const vertexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, mesh.vertices, gl.STATIC_DRAW);
+      const indexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+      const stride = 8 * 4;
+      const bindAttribute = (name, size, offset) => {
+        const location = gl.getAttribLocation(program, name);
+        gl.enableVertexAttribArray(location);
+        gl.vertexAttribPointer(location, size, gl.FLOAT, false, stride, offset);
+      };
+      gl.useProgram(program);
+      bindAttribute('a_position', 3, 0);
+      bindAttribute('a_normal', 3, 3 * 4);
+      bindAttribute('a_uv', 2, 6 * 4);
+
+      const image = await loadArrivalTextureImage();
+      if (sequenceId !== arrivalSequenceId) return null;
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      gl.uniform1i(gl.getUniformLocation(program, 'u_earth'), 0);
+      gl.enable(gl.CULL_FACE);
+      gl.cullFace(gl.BACK);
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LEQUAL);
+      gl.clearColor(0, 0, 0, 0);
+
+      const longitude = Number.isFinite(Number(geo?.longitude)) ? Number(geo.longitude) : -96.8;
+      const latitude = Number.isFinite(Number(geo?.latitude)) ? Number(geo.latitude) : 32.8;
+      const targetRotationY = longitude * Math.PI / 180 - Math.PI / 2;
+      const targetRotationX = latitude * Math.PI / 180;
+      const locations = {
+        rotationX: gl.getUniformLocation(program, 'u_rotation_x'),
+        rotationY: gl.getUniformLocation(program, 'u_rotation_y'),
+        scale: gl.getUniformLocation(program, 'u_scale'),
+        aspect: gl.getUniformLocation(program, 'u_aspect')
+      };
+      let lastWidth = 0;
+      let lastHeight = 0;
+      return {
+        render(progress) {
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+          const ratio = Math.min(2, window.devicePixelRatio || 1);
+          if (width !== lastWidth || height !== lastHeight) {
+            canvas.width = Math.round(width * ratio);
+            canvas.height = Math.round(height * ratio);
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            lastWidth = width;
+            lastHeight = height;
+          }
+          const travel = easeInOutArrival(progress);
+          const rotationSettle = easeOutCubic(progress);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.useProgram(program);
+          gl.uniform1f(locations.aspect, width / Math.max(1, height));
+          gl.uniform1f(locations.rotationY, targetRotationY - (1 - rotationSettle) * 1.42);
+          gl.uniform1f(locations.rotationX, targetRotationX * (0.18 + rotationSettle * 0.82));
+          gl.uniform1f(locations.scale, 0.34 + travel * 1.08);
+          gl.drawElements(gl.TRIANGLES, mesh.indices.length, gl.UNSIGNED_SHORT, 0);
+        },
+        destroy() {
+          gl.deleteTexture(texture);
+          gl.deleteBuffer(vertexBuffer);
+          gl.deleteBuffer(indexBuffer);
+          gl.deleteProgram(program);
+          gl.deleteShader(vertexShader);
+          gl.deleteShader(fragmentShader);
+        }
+      };
+    }
+
+    function arrivalImageSize() {
+      const aspect = Math.max(0.55, Math.min(2.2, window.innerWidth / Math.max(1, window.innerHeight)));
+      return aspect >= 1
+        ? { width: 1600, height: Math.max(720, Math.round(1600 / aspect)) }
+        : { width: Math.max(720, Math.round(1600 * aspect)), height: 1600 };
+    }
+
+    function buildArrivalSurfaceUrl(geo) {
+      const latitude = Number(geo?.latitude);
+      const longitude = Number(geo?.longitude);
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+      const dimensions = arrivalImageSize();
+      const aspect = dimensions.width / dimensions.height;
+      const latitudeSpan = 0.34;
+      const longitudeSpan = latitudeSpan * aspect / Math.max(0.28, Math.cos(latitude * Math.PI / 180));
+      const bbox = [longitude - longitudeSpan, latitude - latitudeSpan, longitude + longitudeSpan, latitude + latitudeSpan];
+      const countryCode = String(geo?.country_code || '').toUpperCase();
+      const isUnitedStates = countryCode === 'US' || /^United States(?: of America)?$/i.test(String(geo?.country || ''));
+      if (isUnitedStates) {
+        const params = new URLSearchParams({
+          bbox: bbox.join(','), bboxSR: '4326', imageSR: '3857',
+          size: `${dimensions.width},${dimensions.height}`, format: 'jpg', f: 'image'
+        });
+        return {
+          url: `https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/export?${params}`,
+          credit: 'Earth imagery: NASA  |  Aerial imagery: USGS'
+        };
+      }
+      const date = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const params = new URLSearchParams({
+        SERVICE: 'WMS', REQUEST: 'GetMap', VERSION: '1.3.0',
+        LAYERS: 'MODIS_Terra_CorrectedReflectance_TrueColor', STYLES: '', FORMAT: 'image/jpeg',
+        CRS: 'EPSG:4326', BBOX: `${bbox[1]},${bbox[0]},${bbox[3]},${bbox[2]}`,
+        WIDTH: String(dimensions.width), HEIGHT: String(dimensions.height), TIME: date
+      });
+      return { url: `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?${params}`, credit: 'Earth and surface imagery: NASA' };
+    }
+
+    function preloadArrivalSurface(geo) {
+      const surface = buildArrivalSurfaceUrl(geo);
+      if (!surface) return Promise.resolve(null);
+      return new Promise(resolve => {
+        const image = new Image();
+        const timeout = setTimeout(() => resolve(null), 4200);
+        image.onload = () => { clearTimeout(timeout); resolve(surface); };
+        image.onerror = () => { clearTimeout(timeout); resolve(null); };
+        image.src = surface.url;
+      });
+    }
+
+    function stopArrivalRenderer() {
+      if (arrivalRafId) cancelAnimationFrame(arrivalRafId);
+      arrivalRafId = null;
+      arrivalRenderer?.destroy?.();
+      arrivalRenderer = null;
+    }
+
+    async function startArrivalEarth(profile, sequenceId, reducedMotion) {
+      stopArrivalRenderer();
+      const geo = profile?.currentResidenceGeo || profile?.birthPlaceGeo || null;
+      try {
+        arrivalRenderer = await createArrivalEarthRenderer(els.cosmicArrivalCanvas, geo, sequenceId);
+      } catch (error) {
+        console.warn('Satellite globe unavailable:', error);
+        arrivalRenderer = null;
+      }
+      if (!arrivalRenderer || sequenceId !== arrivalSequenceId) return;
+      const startedAt = performance.now();
+      const draw = now => {
+        if (sequenceId !== arrivalSequenceId || !arrivalRenderer) return;
+        const progress = reducedMotion ? 0.92 : clamp01((now - startedAt) / 3400);
+        arrivalRenderer.render(progress);
+        if (!reducedMotion && progress < 1) arrivalRafId = requestAnimationFrame(draw);
+      };
+      arrivalRafId = requestAnimationFrame(draw);
+    }
+
+    async function playDashboardArrival(profile) {
+      if (!els.cosmicArrival) return;
+      const sequenceId = ++arrivalSequenceId;
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      stopArrivalRenderer();
+      document.body.classList.add('arrival-active');
+      els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
+      els.cosmicArrival.setAttribute('aria-hidden', 'false');
+      void els.cosmicArrival.offsetWidth;
+      els.cosmicArrival.classList.add('is-active');
+      await arrivalPause(reducedMotion ? 320 : 4360);
+      if (sequenceId !== arrivalSequenceId) return;
+      els.cosmicArrival.classList.add('is-leaving');
+      await arrivalPause(reducedMotion ? 160 : 340);
+      if (sequenceId !== arrivalSequenceId) return;
+      els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
+      els.cosmicArrival.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('arrival-active');
+      window.scrollTo(0, 0);
+    }
+
     function triggerConfetti(color, options = {}) {
       if (typeof confetti !== 'function' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
       const colors = Array.isArray(color) ? color : [color];
@@ -6645,7 +7397,7 @@
         resetAudioForCelebrationPreview();
         await playSymphony();
       }
-      els.todayCelebrationPanel?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.scrollTo(0, 0);
     }
 
     function clearSelectedCelebrationPreview() {
@@ -10964,6 +11716,7 @@ function getBirthSkySnapshot() {
 
         els.formView.classList.add('hidden');
         els.resultView.classList.remove('hidden');
+        window.scrollTo(0, 0);
         collapseProfileViews();
         requestAnimationFrame(fitDisplayLabels);
 
@@ -10971,13 +11724,16 @@ function getBirthSkySnapshot() {
         updateLiveStats(true);
         refreshInsightPanels();
         renderDiagnostics();
+        runAsyncEnhancements(profile);
 
         ageTimerId    = setInterval(updateLiveStats, 250);
         insightTimerId = setInterval(() => {
           if (!document.hidden) refreshInsightPanels();
         }, 60000);
 
-        if (!getTodayCelebration(new Date())) triggerConfetti(currentZodiac.c);
+        await playDashboardArrival(profile);
+        lastCelebrationKey = '';
+        renderTodayCelebration(new Date(), true);
         playSymphony();
 
         setLiveDiagnostic('share', { state: 'live', detail: 'This profile can be encoded into a pre-filled share URL at any time.', source: 'URL hash' });
@@ -10991,7 +11747,6 @@ function getBirthSkySnapshot() {
             })
             .catch(() => {});
         }
-        runAsyncEnhancements(profile);
       } catch (err) {
         console.error('Launch failed:', err);
         setStatus('Something interrupted launch. Please try again.', 'error');
@@ -11021,6 +11776,12 @@ function getBirthSkySnapshot() {
 
     async function resetApp() {
       symphonyRunId += 1;
+      arrivalSequenceId += 1;
+      stopArrivalRenderer();
+      els.cosmicArrival?.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
+      if (els.cosmicArrivalAerial) els.cosmicArrivalAerial.style.backgroundImage = '';
+      els.cosmicArrival?.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('arrival-active');
       birthdayIntroPending = false;
       clearTimers();
       stopSoundtrack();
@@ -11225,6 +11986,11 @@ function getBirthSkySnapshot() {
       els.buildChip.addEventListener('touchstart', registerSecretDiagnosticsTap, { passive: true });
       els.updateAvailableBtn?.addEventListener('click', applyDashboardUpdate);
       els.rerunDiagnosticsBtn.addEventListener('click', runSelfCheck);
+      els.previewArrivalBtn?.addEventListener('click', async () => {
+        if (!currentProfile) return;
+        window.scrollTo(0, 0);
+        await playDashboardArrival(currentProfile);
+      });
 
       els.mockToggleBtn.addEventListener('click', toggleMockMode);
       els.clearCacheBtn.addEventListener('click', clearLiveCaches);
