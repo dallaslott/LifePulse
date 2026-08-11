@@ -896,6 +896,9 @@
 
     .cosmic-arrival.is-active::before { opacity: .8; transform: scale(1); }
 
+    .cosmic-arrival.is-active { animation: simpleArrivalBackdropReveal 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
+    .cosmic-arrival.is-active::before { animation: simpleArrivalHaloReveal 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
+
     .simple-arrival-mark {
       position: relative;
       z-index: 1;
@@ -919,9 +922,50 @@
       line-height: 1;
       text-transform: uppercase;
       text-shadow: 0 0 26px color-mix(in srgb, var(--primary) 30%, transparent);
+      transform-origin: center;
+      will-change: transform, opacity, filter;
+    }
+
+    .cosmic-arrival.is-active .simple-arrival-word {
+      animation:
+        simpleArrivalWordZoom 1100ms cubic-bezier(.16,.72,.18,1) 4680ms 1 forwards,
+        simpleArrivalWordGlow 550ms ease-in-out 4680ms 2 alternate both;
+    }
+
+    @keyframes simpleArrivalWordZoom {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(2);
+      }
+    }
+
+    @keyframes simpleArrivalWordGlow {
+      0% {
+        filter: brightness(1);
+        text-shadow: 0 0 26px color-mix(in srgb, var(--primary) 30%, transparent);
+      }
+      100% {
+        filter: brightness(1.45);
+        text-shadow: 0 0 18px #fff, 0 0 42px var(--primary), 0 0 76px color-mix(in srgb, var(--primary) 68%, transparent);
+      }
+    }
+
+    @keyframes simpleArrivalBackdropReveal {
+      0% { background-color: rgba(3,5,9,1); }
+      100% { background-color: rgba(3,5,9,.18); }
+    }
+
+    @keyframes simpleArrivalHaloReveal {
+      0% { opacity: .8; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.16); }
     }
 
     .simple-arrival-ecg { display: block; width: 100%; height: clamp(92px, 17vh, 138px); overflow: visible; transform-origin: center; }
+    .cosmic-arrival.is-active .simple-arrival-ecg { animation: simpleArrivalEcgExit 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
     .simple-arrival-ecg-base,
     .simple-arrival-ecg-pulse,
     .simple-arrival-ecg-breath { fill: none; vector-effect: non-scaling-stroke; }
@@ -950,7 +994,11 @@
     .cosmic-arrival.is-active .simple-arrival-ecg-reveal-one { animation: simpleArrivalReveal 900ms linear 320ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-reveal-two { animation: simpleArrivalReveal 900ms linear 1420ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-reveal-three { animation: simpleArrivalReveal 900ms linear 2520ms 1 forwards; }
-    .cosmic-arrival.is-active .simple-arrival-ecg-breath { animation: simpleArrivalBreath 2100ms ease-in-out 3420ms 1 forwards; }
+    .cosmic-arrival.is-active .simple-arrival-ecg-breath {
+      animation:
+        simpleArrivalBreathPulse 315ms ease-in-out 3420ms 4 alternate both,
+        simpleArrivalBreathFade 1100ms ease-out 4680ms 1 forwards;
+    }
     @keyframes simpleArrivalReveal {
       0% { width: 0; }
       84%, 100% { width: 720px; }
@@ -960,16 +1008,24 @@
       84%, 92% { opacity: 1; }
       100% { opacity: 0; }
     }
-    @keyframes simpleArrivalBreath {
-      0% { opacity: 0; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
-      10% { opacity: .78; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
-      42% { opacity: 1; stroke-width: 4.8; filter: drop-shadow(0 0 14px var(--primary)); }
-      62% { opacity: .96; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
-      82% { opacity: .06; stroke-width: 3; filter: drop-shadow(0 0 3px var(--primary)); }
-      100% { opacity: 1; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+    @keyframes simpleArrivalBreathPulse {
+      0% { opacity: .55; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+      100% { opacity: 1; stroke-width: 4.8; filter: drop-shadow(0 0 14px var(--primary)); }
+    }
+    @keyframes simpleArrivalBreathFade {
+      0% { opacity: .55; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
+      100% { opacity: 0; stroke-width: 3; filter: drop-shadow(0 0 3px var(--primary)); }
+    }
+    @keyframes simpleArrivalEcgExit {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.015); }
     }
 
     @media (prefers-reduced-motion: reduce) {
+      .cosmic-arrival.is-active,
+      .cosmic-arrival.is-active::before,
+      .cosmic-arrival.is-active .simple-arrival-word,
+      .cosmic-arrival.is-active .simple-arrival-ecg { animation: none; }
       .cosmic-arrival.is-active .simple-arrival-ecg-pulse { animation: none; opacity: 1; }
       .cosmic-arrival.is-active .simple-arrival-ecg-reveal { animation: none; width: 720px; }
       .cosmic-arrival.is-active .simple-arrival-ecg-breath { animation: none; opacity: 1; }
@@ -3585,7 +3641,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.35</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.41</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4456,7 +4512,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260810.35';
+    const LOCAL_RELEASE_VERSION = '4.local.20260810.41';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
