@@ -119,7 +119,7 @@
       z-index: 2;
       flex: 0 0 auto;
       display: inline-block;
-      animation: launcherTitleTriggerCycle 3.2s ease-in-out 3940ms infinite;
+      animation: launcherTitleTriggerCycle 3.2s ease-in-out 4220ms infinite;
     }
 
     .entry-title__text::after {
@@ -135,7 +135,7 @@
       opacity: 0;
       transform: scaleX(0);
       transform-origin: left center;
-      animation: identityTriggerLoadCycle 3.2s cubic-bezier(.22,.61,.36,1) 3940ms infinite both;
+      animation: identityTriggerLoadCycle 3.2s cubic-bezier(.22,.61,.36,1) 4220ms infinite both;
     }
 
     .entry-brand-word {
@@ -307,29 +307,39 @@
       width: auto;
       height: 48px;
       margin-left: -0.32em;
-      margin-right: -1.3rem;
+      margin-right: 0;
       opacity: 0.9;
       animation: entryEcgReveal 700ms ease-out 1250ms 1 both;
     }
 
     .entry-ecg .ecg-trace__pulse {
       opacity: 0;
-      stroke-dasharray: 100;
-      stroke-dashoffset: 100;
-      animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 2690ms 1 both;
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      clip-path: inset(-100% 100% -100% 0);
+      filter: none;
+      animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 2970ms 1 both;
     }
 
     @keyframes ecgJumpStart {
-      0% { opacity: 0; stroke-dasharray: 100; stroke-dashoffset: 100; }
+      0% { opacity: 0; clip-path: inset(-100% 100% -100% 0); }
       1% { opacity: 1; }
-      100% { opacity: 1; stroke-dasharray: 100; stroke-dashoffset: 0; }
+      100% { opacity: 1; clip-path: inset(-100% 0 -100% 0); }
     }
 
     .ecg-trace__pulse.ecg-cruising {
       opacity: 1;
-      stroke-dasharray: 18 82;
+      stroke-dasharray: 18 1000;
       stroke-dashoffset: 0;
-      animation: ecgSweep 3.2s linear infinite;
+      clip-path: none;
+      filter: drop-shadow(0 0 5px var(--primary));
+      animation: ecgSweepCleanExit 3.2s linear infinite;
+    }
+
+    @keyframes ecgSweepCleanExit {
+      0% { opacity: 1; stroke-dashoffset: 0; }
+      96% { opacity: 1; stroke-dashoffset: -82; }
+      100% { opacity: 1; stroke-dashoffset: -100; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -356,7 +366,7 @@
     .dashboard-name-row.identity-handoff .hero-title {
       animation:
         entryInitializePulse 760ms ease-in-out 0ms 1,
-        identityTriggerCycle 3.2s ease-in-out 1620ms infinite;
+        identityTriggerCycle 3.2s ease-in-out 1950ms infinite;
     }
 
     .dashboard-name-row.identity-handoff .hero-title::after {
@@ -374,23 +384,23 @@
       transform-origin: left center;
       animation:
         entryInitializeLoad 900ms cubic-bezier(.22,.61,.36,1) 0ms 1 both,
-        identityTriggerLoadCycle 3.2s cubic-bezier(.22,.61,.36,1) 1620ms infinite;
+        identityTriggerLoadCycle 3.2s cubic-bezier(.22,.61,.36,1) 1950ms infinite;
     }
 
     @keyframes identityTriggerCycle {
-      0%, 84%, 100% { text-shadow: 0 0 0 transparent; }
-      94% { text-shadow: 0 0 10px #fff, 0 0 24px var(--primary); }
+      0%, 86%, 100% { text-shadow: 0 0 0 transparent; }
+      97% { text-shadow: 0 0 10px #fff, 0 0 24px var(--primary); }
     }
 
     @keyframes launcherTitleTriggerCycle {
-      0%, 84%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
-      94% { filter: brightness(1.42) drop-shadow(0 0 10px var(--primary)); }
+      0%, 86%, 100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+      97% { filter: brightness(1.42) drop-shadow(0 0 10px var(--primary)); }
     }
 
     @keyframes identityTriggerLoadCycle {
       0%, 78% { opacity: 0; transform: scaleX(0); }
       82% { opacity: .9; }
-      96% { opacity: 1; transform: scaleX(1); }
+      98% { opacity: 1; transform: scaleX(1); }
       100% { opacity: 0; transform: scaleX(1); }
     }
 
@@ -403,20 +413,24 @@
 
     .dashboard-ecg .ecg-trace__pulse {
       opacity: 0;
-      stroke-dasharray: 100;
-      stroke-dashoffset: 100;
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      clip-path: inset(-100% 100% -100% 0);
+      filter: none;
       animation: none;
     }
 
     .dashboard-name-row.identity-handoff .dashboard-ecg .ecg-trace__pulse:not(.ecg-cruising) {
-      animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 370ms 1 both;
+      animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 700ms 1 both;
     }
 
     .dashboard-ecg .ecg-trace__pulse.ecg-cruising {
       opacity: 1;
-      stroke-dasharray: 18 82;
+      stroke-dasharray: 18 1000;
       stroke-dashoffset: 0;
-      animation: ecgSweep 3.2s linear infinite;
+      clip-path: none;
+      filter: drop-shadow(0 0 5px var(--primary));
+      animation: ecgSweepCleanExit 3.2s linear infinite;
     }
 
     @keyframes ecgSweep {
@@ -3880,7 +3894,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260811.59</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260811.68</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4751,7 +4765,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260811.59';
+    const LOCAL_RELEASE_VERSION = '4.local.20260811.68';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
