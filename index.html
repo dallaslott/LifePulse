@@ -90,11 +90,15 @@
     }
 
     /* Animated LifePulse electrocardiogram accents */
-    #form-view { overflow: hidden; }
+    #form-view {
+      overflow: hidden;
+      animation: entryFrameReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both;
+    }
 
     #form-view > :not(.entry-title) {
       position: relative;
       z-index: 2;
+      animation: entryFormReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both;
     }
 
     .entry-title {
@@ -112,6 +116,71 @@
       position: relative;
       z-index: 2;
       flex: 0 0 auto;
+    }
+
+    .entry-brand-word {
+      position: relative;
+      display: inline-block;
+      transform-origin: center;
+      will-change: transform, opacity, filter;
+      animation: entryBrandSettle 1900ms cubic-bezier(.16,.84,.22,1) 80ms 1 both;
+    }
+
+    @keyframes entryBrandSettle {
+      0% {
+        opacity: .18;
+        transform: translate(52vw, 52vh) scale(8.5);
+        filter: brightness(2.15) blur(9px);
+        text-shadow: 0 0 58px var(--primary), 0 0 118px color-mix(in srgb, var(--primary) 72%, transparent);
+      }
+      14% { opacity: .72; }
+      34% { opacity: 1; }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1) blur(0);
+        text-shadow: 0 0 14px rgba(0, 229, 255, 0.42);
+      }
+    }
+
+    .entry-initialize-label {
+      display: inline-block;
+      animation: entryChromeReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both;
+    }
+
+    @keyframes entryFrameReveal {
+      0% {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: 0 0 0 transparent;
+        backdrop-filter: blur(0);
+      }
+      100% {
+        background-color: var(--card-bg);
+        border-color: var(--primary);
+        box-shadow: 0 0 28px var(--glow);
+        backdrop-filter: blur(22px);
+      }
+    }
+
+    @keyframes entryChromeReveal {
+      0% { opacity: 0; filter: blur(2px); }
+      100% { opacity: 1; filter: blur(0); }
+    }
+
+    @keyframes entryFormReveal {
+      0% { opacity: 0; transform: translateY(10px); filter: blur(2px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    @keyframes entryEcgReveal {
+      0% { opacity: 0; filter: blur(2px); }
+      100% { opacity: .9; filter: blur(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .entry-brand-word { animation: none; }
+      #form-view, #form-view > :not(.entry-title), .entry-initialize-label, .entry-ecg { animation: none; }
     }
 
     .pulse-word {
@@ -161,6 +230,11 @@
       margin-left: -0.32em;
       margin-right: -1.3rem;
       opacity: 0.9;
+      animation: entryEcgReveal 700ms ease-out 1250ms 1 both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .entry-ecg { animation: none; }
     }
 
     .dashboard-name-row {
@@ -3539,7 +3613,7 @@
 
 
   <div class="container" id="form-view">
-    <h1 class="hero-title entry-title"><span class="entry-title__text">INITIALIZE LIFE<span class="pulse-word"><span class="pulse-word__label">PULSE</span></span></span><svg class="ecg-trace entry-ecg" viewBox="0 0 460 48" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="ecg-trace__base" pathLength="100" d="M0 24 H42 L52 24 L63 13 L73 35 L84 5 L96 43 L109 24 H190 L200 24 L211 15 L220 33 L231 8 L243 40 L255 24 H460"/><path class="ecg-trace__pulse" pathLength="100" d="M0 24 H42 L52 24 L63 13 L73 35 L84 5 L96 43 L109 24 H190 L200 24 L211 15 L220 33 L231 8 L243 40 L255 24 H460"/></svg></h1>
+    <h1 class="hero-title entry-title"><span class="entry-title__text"><span class="entry-initialize-label">INITIALIZE&nbsp;</span><span class="entry-brand-word">LIFE<span class="pulse-word"><span class="pulse-word__label">PULSE</span></span></span></span><svg class="ecg-trace entry-ecg" viewBox="0 0 460 48" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="ecg-trace__base" pathLength="100" d="M0 24 H42 L52 24 L63 13 L73 35 L84 5 L96 43 L109 24 H190 L200 24 L211 15 L220 33 L231 8 L243 40 L255 24 H460"/><path class="ecg-trace__pulse" pathLength="100" d="M0 24 H42 L52 24 L63 13 L73 35 L84 5 L96 43 L109 24 H190 L200 24 L211 15 L220 33 L231 8 L243 40 L255 24 H460"/></svg></h1>
     <p class="hero-subtitle">Real-time legacy • cosmic identity • premium birth snapshot</p>
 
     <div class="gender-btns" role="radiogroup" aria-label="Gender">
@@ -3641,7 +3715,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.41</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.44</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4512,7 +4586,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260810.41';
+    const LOCAL_RELEASE_VERSION = '4.local.20260810.44';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
