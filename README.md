@@ -2,7 +2,7 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
-Current local review build: `4.local.20260811.70`.
+Current local review build: `4.local.20260811.72`.
 
 The ordinary dashboard launch uses a brief, locally rendered LifePulse ECG transition. It has no mapping dependency, remote imagery request, account, API key, or usage charge.
 
@@ -87,7 +87,7 @@ The dashboard now follows a clearer reading order: **Right Now**, **Lifetime at 
 
 The expanded **Born Then / Living Now** panel groups World & Society, Everyday Costs, and Major Life Costs. Birth weather now sits with the birth-date cards in **Your Life Story**, while Life Era, soundtrack, movie, technology, shared celebrity birthday, and birth-date history are collected under **Culture & Technology at Your Birth**. It compares population, gasoline, temperature, civic and technology context, housing, rent, vehicles, a casual-meal estimate, movie tickets, household income, Walt Disney World admission, public four-year tuition, and the federal minimum wage. Labels distinguish medians, averages, and estimates; the About These Numbers disclosure explains the nominal-dollar comparison.
 
-The streamlined **Your Life Atlas** panel focuses on a birth-sky dial with sunrise/sunset and daylight context, understandable birthday calendar patterns, technology-at-your-age milestones, generational overlap, and a broad world-age comparison. The Next Birthday card uses a circular birthday-year progress indicator. Optional Birthplace and Hometown/Current Residence searches use OpenStreetMap Nominatim location records. Their separate population cards appear beside World Population in Born Then / Living Now, with clearly labeled broad birth-year estimates when population data is available.
+The streamlined **Your Life Atlas** panel focuses on a birth-sky dial with sunrise/sunset and daylight context, understandable birthday calendar patterns, technology-at-your-age milestones, generational overlap, and a broad world-age comparison. The Next Birthday card uses a circular birthday-year progress indicator. Optional Birthplace and Hometown/Current Residence fields accept city names, five-digit U.S. ZIP codes, and ZIP+4 entries. Open-Meteo supplies responsive city suggestions and converts ZIP entries to their resolved city, with U.S. matches prioritized and OpenStreetMap Nominatim retained for final resolution and fallback. Their separate population cards appear beside World Population in Born Then / Living Now, with clearly labeled broad birth-year estimates when population data is available.
 
 The **Right Now** section also recognizes a profile's birthday and major U.S. holidays. The developer-only Diagnostics panel includes a Celebration Preview control for testing every birthday and holiday treatment without changing the saved profile. Birthdays receive a personalized message, extended celebration animation, and a synthesized Happy Birthday melody before the normal LifePulse background track begins. Holidays use their own message, icon, and color theme. The calendar and birthday melody are produced in the browser, so this feature adds no API usage.
 
