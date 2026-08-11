@@ -92,7 +92,9 @@
     /* Animated LifePulse electrocardiogram accents */
     #form-view {
       overflow: hidden;
-      animation: entryFrameReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both;
+      animation:
+        entryFrameReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both,
+        entryOverflowGuard 1900ms step-end 80ms 1 both;
     }
 
     #form-view > :not(.entry-title) {
@@ -122,7 +124,7 @@
       position: relative;
       display: inline-block;
       transform-origin: center;
-      will-change: transform, opacity, filter;
+      will-change: transform, opacity;
       animation: entryBrandSettle 1900ms cubic-bezier(.16,.84,.22,1) 80ms 1 both;
     }
 
@@ -130,7 +132,6 @@
       0% {
         opacity: .18;
         transform: translate(52vw, 52vh) scale(8.5);
-        filter: brightness(2.15) blur(9px);
         text-shadow: 0 0 58px var(--primary), 0 0 118px color-mix(in srgb, var(--primary) 72%, transparent);
       }
       14% { opacity: .72; }
@@ -138,9 +139,13 @@
       100% {
         opacity: 1;
         transform: scale(1);
-        filter: brightness(1) blur(0);
         text-shadow: 0 0 14px rgba(0, 229, 255, 0.42);
       }
+    }
+
+    @keyframes entryOverflowGuard {
+      0%, 99.9% { overflow: visible; }
+      100% { overflow: hidden; }
     }
 
     .entry-initialize-label {
@@ -3715,7 +3720,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">Rebirth • Verified Live</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260810.44</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260811.48</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4586,7 +4591,7 @@
     const BUILD_CODENAME = 'Rebirth';
     const BUILD_VARIANT  = 'Live Sky';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260810.44';
+    const LOCAL_RELEASE_VERSION = '4.local.20260811.48';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const ARCHIVE_BASE    = 'https://archive-api.open-meteo.com/v1/archive';
@@ -4646,6 +4651,7 @@
     let buildAlpha            = 0;
     let stars                 = [];
     let starRafId             = null;
+    let entryStarfieldStartedAt = null;
     let ageTimerId            = null;
     let insightTimerId        = null;
     let placeSearchTimer      = null;
@@ -11976,13 +11982,61 @@ function getBirthSkySnapshot() {
         y:     Math.random() * canvas.height,
         size:  Math.random() * 2 + 0.8,
         speed: Math.random() * 0.09 + 0.04,
-        phase: Math.random() * Math.PI * 2
+        phase: Math.random() * Math.PI * 2,
+        depth: Math.random()
       }));
     }
 
-    function drawStars() {
+    function drawStars(now = performance.now()) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const zodiacColor = getComputedStyle(document.documentElement).getPropertyValue('--zodiac-color').trim() || '#ffffff';
+
+      const entryDuration = 1980;
+      const entryElapsed = entryStarfieldStartedAt == null ? entryDuration : now - entryStarfieldStartedAt;
+      const entryProgress = Math.max(0, Math.min(1, entryElapsed / entryDuration));
+      const entryActive = entryProgress < 1 && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+      if (entryActive) {
+        const vanishX = canvas.width * .78;
+        const vanishY = canvas.height * .76;
+        const velocity = .0015 + Math.pow(1 - entryProgress, 2) * .026;
+        const fade = Math.min(1, entryProgress / .12) * (1 - Math.max(0, entryProgress - .78) / .22);
+        const bloomRadius = Math.min(canvas.width, canvas.height) * .26;
+        const bloom = ctx.createRadialGradient(vanishX, vanishY, 0, vanishX, vanishY, bloomRadius);
+        bloom.addColorStop(0, `rgba(0,229,255,${Math.max(0, fade) * .085})`);
+        bloom.addColorStop(.46, `rgba(71,116,255,${Math.max(0, fade) * .035})`);
+        bloom.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = bloom;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = 'rgba(0,229,255,.78)';
+        ctx.shadowBlur = 8;
+
+        stars.forEach(star => {
+          const depth = Number.isFinite(star.depth) ? star.depth : .5;
+          const starVelocity = velocity * (.52 + depth * .92);
+          star.x = vanishX + (star.x - vanishX) * (1 + starVelocity);
+          star.y = vanishY + (star.y - vanishY) * (1 + starVelocity);
+
+          if (star.x < -80 || star.x > canvas.width + 80 || star.y < -80 || star.y > canvas.height + 80) {
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 18 + Math.random() * Math.min(canvas.width, canvas.height) * .18;
+            star.x = vanishX + Math.cos(angle) * radius;
+            star.y = vanishY + Math.sin(angle) * radius;
+          }
+
+          ctx.globalAlpha = Math.min(1, Math.max(0, fade) * (.22 + depth * .52 + star.size / 5));
+          ctx.beginPath();
+          const approachScale = 1 + Math.pow(1 - entryProgress, 2) * (.24 + depth * .5);
+          ctx.arc(star.x, star.y, Math.max(.55, star.size * .62 * approachScale), 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+        starRafId = requestAnimationFrame(drawStars);
+        return;
+      }
 
       if (currentZodiac) {
         if (buildAlpha < 0.4) buildAlpha += 0.001;
@@ -12264,6 +12318,7 @@ function getBirthSkySnapshot() {
         }
       }
       initStars();
+      entryStarfieldStartedAt = performance.now();
       starRafId = requestAnimationFrame(drawStars);
 
       try {
