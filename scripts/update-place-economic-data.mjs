@@ -74,11 +74,13 @@ async function refreshCensus(data, notes) {
     notes.push('Census retained (CENSUS_API_KEY unavailable)');
     return;
   }
+  const currentYear = new Date().getUTCFullYear();
+  const latestAcsCandidates = [currentYear - 1, currentYear - 2].map(year => [year, `${year}/acs/acs5`, 'B01003_001E']);
   const datasets = [
     [2000, '2000/dec/sf1', 'P001001'],
     [2010, '2010/dec/sf1', 'P001001'],
     [2020, '2020/dec/pl', 'P1_001N'],
-    [2024, '2024/acs/acs5', 'B01003_001E']
+    ...latestAcsCandidates
   ];
   const settled = await Promise.allSettled(datasets.map(args => fetchCensusDataset(...args)));
   const places = { ...(data.places || {}) };

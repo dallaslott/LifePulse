@@ -11,11 +11,12 @@ const PREVIOUS_DATA_URL = process.env.PREVIOUS_DATA_URL || 'https://dallaslott.g
 const PRIMARY_API_KEY = String(process.env.FREE_ASTRO_API_KEY || '').trim();
 const TARGET_DATE = process.env.LIFEPULSE_DATE || new Date().toISOString().slice(0, 10);
 const DATA_SCHEMA_VERSION = 4;
+const APP_RELEASE_MAJOR = 5;
 const GITHUB_RUN_NUMBER = String(process.env.GITHUB_RUN_NUMBER || '').trim();
 const GITHUB_RUN_ATTEMPT = String(process.env.GITHUB_RUN_ATTEMPT || '1').trim();
 const RELEASE_VERSION = GITHUB_RUN_NUMBER
-  ? `${DATA_SCHEMA_VERSION}.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}`
-  : `${DATA_SCHEMA_VERSION}.local.${TARGET_DATE.replaceAll('-', '')}`;
+  ? `${APP_RELEASE_MAJOR}.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}`
+  : `${APP_RELEASE_MAJOR}.local.${TARGET_DATE.replaceAll('-', '')}`;
 const WORLD_POPULATION_URL = 'https://www.worldometers.info/world-population/';
 const AAA_GAS_URL = 'https://gasprices.aaa.com/aaa-gas-cost-calculator/';
 const EIA_GAS_URL = 'https://api.eia.gov/v2/petroleum/pri/gnd/data/';
@@ -23,7 +24,16 @@ const EIA_API_KEY = String(process.env.EIA_API_KEY || '').trim();
 const IERS_BULLETIN_C_URL = 'https://datacenter.iers.org/data/latestVersion/bulletinC.txt';
 const WORLD_BANK_POPULATION_URL = 'https://api.worldbank.org/v2/country/WLD/indicator/SP.POP.TOTL?format=json&per_page=20000&date=1960:2100';
 const NASA_GISTEMP_URL = 'https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv';
+const NOAA_CO2_URL = 'https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.txt';
+const NOAA_CO2_MONTHLY_URL = 'https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.txt';
+const NOAA_CO2_FALLBACK_ANCHORS = {
+  1958: 315.2, 1960: 316.9, 1970: 325.7, 1980: 338.8, 1990: 354.4,
+  2000: 369.6, 2010: 389.9, 2020: 414.2, 2021: 416.5, 2022: 418.6,
+  2023: 421.1, 2024: 424.6, 2025: 427.4, 2026: 431.44
+};
 const USAGOV_PRESIDENT_URL = 'https://www.usa.gov/presidents';
+const WIKIDATA_SIMPSONS_URL = 'https://www.wikidata.org/wiki/Special:EntityData/Q886.json';
+const WIKIDATA_SNL_URL = 'https://www.wikidata.org/wiki/Special:EntityData/Q23831.json';
 const SIGNS = [
   'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
   'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
@@ -255,6 +265,14 @@ function retainRecentSnapshot(value, previousUpdatedAt, maxAgeDays = 14) {
   return Number.isFinite(age) && age >= 0 && age <= maxAgeDays * 86400000 ? { ...value, stale: true } : null;
 }
 
+function isReasonableCurrentComparison(key, value) {
+  const numeric = Number(value?.value);
+  if (!Number.isFinite(numeric)) return false;
+  if (key === 'worldPopulation') return numeric >= 7_000_000_000 && numeric <= 10_000_000_000;
+  if (key === 'gasPrice') return numeric >= 1 && numeric <= 15;
+  return true;
+}
+
 const LEAP_SECOND_HISTORY = [
   '1972-06-30','1972-12-31','1973-12-31','1974-12-31','1975-12-31','1976-12-31',
   '1977-12-31','1978-12-31','1979-12-31','1981-06-30','1982-06-30','1983-06-30',
@@ -366,7 +384,7 @@ async function buildClimateReference(previous) {
         latestYear,
         latestAnomalyC: series[latestYear].anomalyC,
         latestEstimatedAbsoluteC: series[latestYear].estimatedAbsoluteC,
-        baselineNote: 'Absolute values are an approachable estimate using 14.0°C plus NASA’s 1951–1980 anomaly.',
+        baselineNote: 'Absolute values are an approachable estimate using 14.0 C plus NASA\'s 1951-1980 anomaly.',
         source: 'NASA GISTEMP v4',
         sourceUrl: NASA_GISTEMP_URL
       },
@@ -374,6 +392,106 @@ async function buildClimateReference(previous) {
     };
   } catch (error) {
     return { value: previous?.reference?.climate || null, fallbackUsed: true, error: error.message };
+  }
+}
+
+async function buildAtmosphericCO2Reference(previous) {
+  try {
+    const [text, monthlyText] = await Promise.all([fetchText(NOAA_CO2_URL), fetchText(NOAA_CO2_MONTHLY_URL)]);
+    const series = {};
+    text.split(/\r?\n/).forEach(line => {
+      if (!/^\s*\d{4}\s+/.test(line)) return;
+      const columns = line.trim().split(/\s+/);
+      const year = Number(columns[0]);
+      const value = Number(columns[1]);
+      if (Number.isInteger(year) && Number.isFinite(value) && value > 250) series[year] = value;
+    });
+    if (Object.keys(series).length < 60) throw new Error('NOAA Mauna Loa CO2 history was incomplete');
+    const latestYear = Math.max(...Object.keys(series).map(Number));
+    let latestValue = series[latestYear];
+    let latestDate = `${latestYear}-12-31`;
+    monthlyText.split(/\r?\n/).forEach(line => {
+      if (!/^\s*\d{4}\s+\d{1,2}\s+/.test(line)) return;
+      const columns = line.trim().split(/\s+/);
+      const year = Number(columns[0]);
+      const month = Number(columns[1]);
+      const value = Number(columns[3]);
+      if (Number.isInteger(year) && Number.isInteger(month) && Number.isFinite(value) && value > 250) {
+        latestValue = value;
+        latestDate = `${year}-${String(month).padStart(2, '0')}-01`;
+      }
+    });
+    return {
+      value: {
+        series,
+        latestYear,
+        latestValue,
+        latestDate,
+        unit: 'ppm',
+        source: 'NOAA Global Monitoring Laboratory - Mauna Loa',
+        sourceUrl: NOAA_CO2_URL
+      },
+      fallbackUsed: false
+    };
+  } catch (error) {
+    if (previous?.reference?.atmosphericCO2) {
+      return { value: previous.reference.atmosphericCO2, fallbackUsed: true, error: error.message };
+    }
+    const anchorYears = Object.keys(NOAA_CO2_FALLBACK_ANCHORS).map(Number).sort((a, b) => a - b);
+    const series = {};
+    for (let year = anchorYears[0]; year <= anchorYears[anchorYears.length - 1]; year += 1) {
+      const upperIndex = anchorYears.findIndex(anchorYear => anchorYear >= year);
+      const upperYear = anchorYears[Math.max(0, upperIndex)];
+      const lowerYear = anchorYears[Math.max(0, upperIndex - 1)];
+      const lowerValue = NOAA_CO2_FALLBACK_ANCHORS[lowerYear];
+      const upperValue = NOAA_CO2_FALLBACK_ANCHORS[upperYear];
+      const ratio = upperYear === lowerYear ? 0 : (year - lowerYear) / (upperYear - lowerYear);
+      series[year] = Number((lowerValue + (upperValue - lowerValue) * ratio).toFixed(2));
+    }
+    const latestYear = anchorYears[anchorYears.length - 1];
+    return {
+      value: {
+        series,
+        latestYear,
+        latestValue: NOAA_CO2_FALLBACK_ANCHORS[latestYear],
+        latestDate: '2026-06-01',
+        unit: 'ppm',
+        source: 'NOAA Mauna Loa embedded fallback',
+        sourceUrl: NOAA_CO2_URL
+      },
+      fallbackUsed: true,
+      error: error.message
+    };
+  }
+}
+
+function wikidataEpisodeCount(payload, entityId) {
+  const claims = payload?.entities?.[entityId]?.claims?.P1113 || [];
+  const values = claims.map(claim => Number(claim?.mainsnak?.datavalue?.value?.amount)).filter(Number.isFinite);
+  return values.length ? Math.max(...values) : null;
+}
+
+async function buildPopCultureReference(previous) {
+  const fallback = previous?.reference?.popCultureEpisodes || {
+    simpsons: { count: 808, premiere: '1989-12-17', title: 'The Simpsons' },
+    snl: { count: 1000, premiere: '1975-10-11', title: 'Saturday Night Live' }
+  };
+  try {
+    const [simpsonsPayload, snlPayload] = await Promise.all([fetchJson(WIKIDATA_SIMPSONS_URL), fetchJson(WIKIDATA_SNL_URL)]);
+    const simpsonsCount = wikidataEpisodeCount(simpsonsPayload, 'Q886');
+    const snlCount = wikidataEpisodeCount(snlPayload, 'Q23831');
+    if (!Number.isFinite(simpsonsCount) || !Number.isFinite(snlCount)) throw new Error('Wikidata episode counts were incomplete');
+    return {
+      value: {
+        simpsons: { count: simpsonsCount, premiere: '1989-12-17', title: 'The Simpsons' },
+        snl: { count: snlCount, premiere: '1975-10-11', title: 'Saturday Night Live' },
+        source: 'Wikidata',
+        sourceUrl: 'https://www.wikidata.org/'
+      },
+      fallbackUsed: false
+    };
+  } catch (error) {
+    return { value: fallback, fallbackUsed: true, error: error.message };
   }
 }
 
@@ -452,7 +570,9 @@ async function buildCurrentComparisons(previous) {
   ];
   await Promise.all(jobs.map(async ([key, loader]) => {
     try {
-      result[key] = await loader();
+      const loaded = await loader();
+      if (!isReasonableCurrentComparison(key, loaded)) throw new Error(`${key} value failed the plausibility check`);
+      result[key] = loaded;
     } catch (error) {
       const retained = retainRecentSnapshot(previous?.current?.[key], previous?.updatedAt);
       if (retained) result[key] = retained;
@@ -475,12 +595,16 @@ const [
   leapSecondReference,
   populationHistoryReference,
   climateReference,
+  atmosphericCO2Reference,
+  popCultureReference,
   civicReference,
   sportsCoverageReference
 ] = await Promise.all([
   buildLeapSecondReference(previous),
   buildPopulationHistory(previous),
   buildClimateReference(previous),
+  buildAtmosphericCO2Reference(previous),
+  buildPopCultureReference(previous),
   buildCivicReference(previous),
   buildSportsCoverage()
 ]);
@@ -529,6 +653,8 @@ const reference = {
   leapSeconds: leapSecondReference.value,
   populationHistory: populationHistoryReference.value,
   climate: climateReference.value,
+  atmosphericCO2: atmosphericCO2Reference.value,
+  popCultureEpisodes: popCultureReference.value,
   civic: civicReference.value,
   sportsCoverage: sportsCoverageReference.value
 };
@@ -555,6 +681,8 @@ const output = {
     gasPrice: componentRecord({ status: gasCurrent ? (gasCurrent.stale ? 'stale' : 'live') : 'unavailable', asOf: gasCurrent?.asOf || null, fetchedAt: now, expiresInDays: 8, source: gasCurrent?.source || (EIA_API_KEY ? 'U.S. Energy Information Administration' : 'AAA'), sourceUrl: gasCurrent?.sourceUrl || (EIA_API_KEY ? 'https://www.eia.gov/petroleum/gasdiesel/' : AAA_GAS_URL), fallbackUsed: Boolean(gasCurrent?.stale || gasCurrent?.fallbackFrom), note: 'U.S. national regular gasoline average.' }),
     leapSeconds: componentRecord({ status: leapSecondReference.value ? (leapSecondReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: leapSecondReference.value?.bulletinDate || null, fetchedAt: now, expiresInDays: 200, source: leapSecondReference.value?.source || 'IERS Bulletin C', sourceUrl: leapSecondReference.value?.sourceUrl || IERS_BULLETIN_C_URL, fallbackUsed: leapSecondReference.fallbackUsed, coverageEnd: leapSecondReference.value?.nextAnnounced || leapSecondReference.value?.lastEvent || null, note: leapSecondReference.value?.announcement || 'Leap-second announcement status.' }),
     globalTemperature: componentRecord({ status: climateReference.value ? (climateReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: climateReference.value?.latestYear ? `${climateReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: climateReference.value?.source || 'NASA GISTEMP v4', sourceUrl: climateReference.value?.sourceUrl || NASA_GISTEMP_URL, fallbackUsed: climateReference.fallbackUsed, coverageEnd: climateReference.value?.latestYear || null, note: 'Annual global surface-temperature anomaly series.' }),
+    atmosphericCO2: componentRecord({ status: atmosphericCO2Reference.value ? (atmosphericCO2Reference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: atmosphericCO2Reference.value?.latestDate || (atmosphericCO2Reference.value?.latestYear ? `${atmosphericCO2Reference.value.latestYear}-12-31` : null), fetchedAt: now, expiresInDays: 45, source: atmosphericCO2Reference.value?.source || 'NOAA Global Monitoring Laboratory', sourceUrl: atmosphericCO2Reference.value?.sourceUrl || NOAA_CO2_URL, fallbackUsed: atmosphericCO2Reference.fallbackUsed, coverageEnd: atmosphericCO2Reference.value?.latestDate || atmosphericCO2Reference.value?.latestYear || null, note: 'Annual history plus the latest monthly atmospheric carbon dioxide mean at Mauna Loa.' }),
+    popCultureEpisodes: componentRecord({ status: popCultureReference.value ? (popCultureReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: TARGET_DATE, fetchedAt: now, expiresInDays: 8, source: popCultureReference.value?.source || 'Wikidata episode counts', sourceUrl: popCultureReference.value?.sourceUrl || 'https://www.wikidata.org/', fallbackUsed: popCultureReference.fallbackUsed, note: 'Maintained episode-count references for The Simpsons and Saturday Night Live.' }),
     populationHistory: componentRecord({ status: populationHistoryReference.value ? (populationHistoryReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: populationHistoryReference.value?.latestYear ? `${populationHistoryReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: populationHistoryReference.value?.source || 'World Bank', sourceUrl: populationHistoryReference.value?.sourceUrl || WORLD_BANK_POPULATION_URL, fallbackUsed: populationHistoryReference.fallbackUsed, coverageEnd: populationHistoryReference.value?.latestYear || null, note: 'Annual historical world population used for birth-year comparisons.' }),
     civic: componentRecord({ status: civicReference.value ? (civicReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: civicReference.value?.termStarted || TARGET_DATE, fetchedAt: now, expiresInDays: 8, source: civicReference.value?.source || 'USAGov', sourceUrl: civicReference.value?.sourceUrl || USAGOV_PRESIDENT_URL, fallbackUsed: civicReference.fallbackUsed, note: 'Current U.S. president reference.' }),
     sports: componentRecord({ status: sportsCoverageReference.value ? 'validated' : 'unavailable', asOf: TARGET_DATE, fetchedAt: now, expiresInDays: 32, source: sportsCoverageReference.value?.source || 'LifePulse sports dataset', sourceUrl: sportsCoverageReference.value?.sourceUrl || 'sports-data-v4.json', fallbackUsed: sportsCoverageReference.fallbackUsed, coverageEnd: sportsCoverageReference.value?.resultCoverage || null, note: 'Champions are checked once after each projected NFL, NBA, or MLB completion date; coverage monitoring prevents silent gaps.' }),
@@ -577,6 +705,8 @@ const output = {
       ['leapSeconds', leapSecondReference.error],
       ['populationHistory', populationHistoryReference.error],
       ['climate', climateReference.error],
+      ['atmosphericCO2', atmosphericCO2Reference.error],
+      ['popCultureEpisodes', popCultureReference.error],
       ['civic', civicReference.error],
       ['sportsCoverage', sportsCoverageReference.error]
     ].filter(([, message]) => message).map(([feed, message]) => ({ feed, message })),
@@ -596,6 +726,3 @@ if (PRIMARY_API_KEY && primaryCount !== SIGNS.length) {
   console.warn(`Primary provider issues: ${primaryErrors.map(item => `${item.sign}: ${item.message}`).join(' | ')}`);
 }
 if (!PRIMARY_API_KEY) console.warn('FREE_ASTRO_API_KEY is not configured; the legacy provider was used.');
-
-
-

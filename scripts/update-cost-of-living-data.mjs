@@ -21,10 +21,9 @@ async function fetchText(url, timeoutMs = 20000) {
   }
 }
 
-function nextReviewDate(days = null) {
+function nextReviewDate(days = 32) {
   const date = new Date();
-  if (Number.isFinite(days)) date.setUTCDate(date.getUTCDate() + days);
-  else date.setUTCFullYear(date.getUTCFullYear() + 1);
+  date.setUTCDate(date.getUTCDate() + days);
   return date.toISOString().slice(0, 10);
 }
 
@@ -44,6 +43,24 @@ function parseFredCsv(text) {
 
 function latestYear(series) {
   return Math.max(...Object.keys(series || {}).map(Number).filter(Number.isFinite));
+}
+
+async function fetchLatestCensusRent() {
+  if (!censusKey) throw new Error('CENSUS_API_KEY unavailable');
+  const currentYear = new Date().getUTCFullYear();
+  const errors = [];
+  for (const year of [currentYear - 1, currentYear - 2]) {
+    try {
+      const text = await fetchText(`https://api.census.gov/data/${year}/acs/acs1?get=NAME,B25064_001E&for=us:*&key=${encodeURIComponent(censusKey)}`);
+      const payload = JSON.parse(text);
+      const value = Number(payload?.[1]?.[1]);
+      if (Number.isFinite(value)) return { year, value };
+      errors.push(`${year}: missing value`);
+    } catch (error) {
+      errors.push(`${year}: ${error.message}`);
+    }
+  }
+  throw new Error(`no recent ACS rent release (${errors.join('; ')})`);
 }
 
 async function fetchBlsAveragePriceBasket(startYear = 1980, endYear = new Date().getUTCFullYear()) {
@@ -98,9 +115,7 @@ if (!force && data.nextReview && today < data.nextReview && Object.keys(data?.me
 const results = await Promise.allSettled([
   fetchText('https://fred.stlouisfed.org/graph/fredgraph.csv?id=MSPUS'),
   fetchText('https://fred.stlouisfed.org/graph/fredgraph.csv?id=MEHOINUSA646N'),
-  censusKey
-    ? fetchText(`https://api.census.gov/data/${new Date().getUTCFullYear() - 1}/acs/acs1?get=NAME,B25064_001E&for=us:*&key=${encodeURIComponent(censusKey)}`)
-    : Promise.reject(new Error('CENSUS_API_KEY unavailable')),
+  fetchLatestCensusRent(),
   fetchText('https://www.the-numbers.com/market/'),
   fetchBlsAveragePriceBasket()
 ]);
@@ -108,6 +123,9 @@ const results = await Promise.allSettled([
 const notes = [];
 if (results[0].status === 'fulfilled') {
   data.metrics.homePrice.series = { ...data.metrics.homePrice.series, ...parseFredCsv(results[0].value) };
+  const currentYear = new Date().getUTCFullYear();
+  data.metrics.homePrice.preliminaryYears = Array.from(new Set([...(data.metrics.homePrice.preliminaryYears || []), currentYear])).sort();
+  data.metrics.homePrice.estimatedYears = (data.metrics.homePrice.estimatedYears || []).filter(year => Number(year) !== currentYear);
   notes.push(`home through ${latestYear(data.metrics.homePrice.series)}`);
 } else notes.push(`home retained (${results[0].reason.message})`);
 
@@ -117,10 +135,8 @@ if (results[1].status === 'fulfilled') {
 } else notes.push(`income retained (${results[1].reason.message})`);
 
 if (results[2].status === 'fulfilled') {
-  const payload = JSON.parse(results[2].value);
-  const value = Number(payload?.[1]?.[1]);
-  const year = new Date().getUTCFullYear() - 1;
-  if (Number.isFinite(value)) data.metrics.rent.series[year] = value;
+  const { year, value } = results[2].value;
+  data.metrics.rent.series[year] = value;
   notes.push(`rent through ${year}`);
 } else notes.push(`rent retained (${results[2].reason.message})`);
 
@@ -133,6 +149,7 @@ if (results[3].status === 'fulfilled') {
     const ticketPrice = prices[prices.length - 1];
     if (yearMatch && Number.isFinite(ticketPrice) && ticketPrice < 100) data.metrics.movieTicket.series[Number(yearMatch[1])] = ticketPrice;
   }
+  data.metrics.movieTicket.estimatedYears = Object.keys(data.metrics.movieTicket.series || {}).map(Number).filter(year => year >= 2020).sort();
   notes.push(`movie tickets through ${latestYear(data.metrics.movieTicket.series)}`);
 } else notes.push(`movie tickets retained (${results[3].reason.message})`);
 
@@ -148,7 +165,7 @@ if (results[4].status === 'fulfilled') {
 
 data.updatedAt = new Date().toISOString();
 const sourceFailure = results.some(result => result.status === 'rejected');
-data.nextReview = nextReviewDate(sourceFailure ? 30 : null);
+data.nextReview = nextReviewDate(sourceFailure ? 7 : 32);
 data.lastRefreshNotes = notes;
 await writeFile(DATA_PATH, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 console.log(`Updated cost-of-living dataset: ${notes.join('; ')}. Next review ${data.nextReview}.`);
