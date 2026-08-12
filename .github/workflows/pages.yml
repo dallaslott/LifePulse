@@ -33,7 +33,6 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Refresh sports champions and future schedules when due
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: node scripts/update-sports-data.mjs
 
       - name: Refresh annual sky calendar when due
@@ -61,7 +60,6 @@ jobs:
         run: node scripts/validate-live-data.mjs
 
       - name: Commit refreshed maintained datasets
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
           if git diff --quiet -- sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json; then
             echo "No maintained dataset change to commit."
@@ -78,8 +76,9 @@ jobs:
 
       - name: Prepare the public site
         run: |
-          mkdir -p _site/vendor
-          cp index.html live-data.json version.json sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json _site/
+          mkdir -p _site/vendor _site/assets
+          cp index.html manifest.webmanifest sw.js offline.html live-data.json version.json sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json _site/
+          cp assets/lifepulse-icon-192.png assets/lifepulse-icon-512.png assets/lifepulse-maskable-512.png _site/assets/
           cp node_modules/astronomy-engine/astronomy.browser.min.js _site/vendor/
           touch _site/.nojekyll
 
