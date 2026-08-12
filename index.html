@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Life Pulse: Premium Snapshot Edition</title>
+  <title>LifePulse</title>
 
   <!-- SEO & Social Sharing -->
   <meta name="description" content="Get your real-time life stats — age to the second, planetary years, numerology, birth snapshot, and more. Decode your birthday instantly." />
@@ -12,7 +12,14 @@
   <meta property="og:url" content="https://dallaslott.github.io/LifePulse/" />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#050505" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LifePulse" />
   <link rel="canonical" href="https://dallaslott.github.io/LifePulse/" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/lifepulse-icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/lifepulse-icon-192.png" />
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -3788,6 +3795,113 @@
     .cost-earn-time { color: #a7f3d0; }
     @media (max-width: 640px) { .cost-visual-values { flex-wrap: wrap; gap: 4px 10px; } }
 
+    .pwa-entry-card,
+    .pwa-panel {
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      background: linear-gradient(135deg, rgba(0, 210, 255, 0.075), rgba(0, 255, 136, 0.035));
+    }
+
+    .pwa-entry-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin-top: 14px;
+      padding: 12px 13px;
+      border-radius: 16px;
+    }
+
+    .pwa-entry-card strong,
+    .pwa-panel strong { display: block; color: #fff; }
+
+    .pwa-entry-card p,
+    .pwa-panel-copy,
+    .pwa-status {
+      margin-top: 4px;
+      color: #b9c8dd;
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+
+    .pwa-action-btn {
+      min-height: 40px;
+      padding: 9px 12px;
+      border: 1px solid rgba(0, 210, 255, 0.55);
+      border-radius: 999px;
+      background: rgba(0, 210, 255, 0.13);
+      color: #eaffff;
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .pwa-action-btn.secondary {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.045);
+      color: #dce6f5;
+    }
+
+    .pwa-action-btn:disabled { opacity: 0.48; cursor: default; }
+
+    .pwa-state-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .pwa-state-item {
+      padding: 9px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.18);
+    }
+
+    .pwa-state-item span { display: block; color: #8fa3bd; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .pwa-state-item strong { margin-top: 4px; font-size: 0.72rem; }
+
+    .notification-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .notification-option {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 9px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      color: #e7eef8;
+      font-size: 0.7rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .notification-option input { width: 18px; height: 18px; accent-color: var(--primary); }
+    .pwa-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pwa-status[data-state="success"] { color: #9dffd1; }
+    .pwa-status[data-state="warning"] { color: #ffe0a3; }
+    .pwa-status[data-state="error"] { color: #ffb4b4; }
+
+    body.is-standalone { padding-top: max(12px, env(safe-area-inset-top)); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+    body.is-standalone .pwa-entry-card { display: none; }
+
+    @media (max-width: 520px) {
+      .pwa-entry-card { grid-template-columns: 1fr; }
+      .pwa-entry-card .pwa-action-btn { width: 100%; }
+      .pwa-state-grid { grid-template-columns: 1fr; }
+      .notification-options { grid-template-columns: 1fr; }
+      .pwa-actions .pwa-action-btn { flex: 1 1 145px; }
+    }
+
   </style>
 </head>
 <body id="mainBody">
@@ -3877,6 +3991,13 @@
     <p class="tiny-copy" style="margin-top:10px;">
       Core calculations always load. Birthplace unlocks historical weather, and birth time sharpens it to the nearest archived hour.
     </p>
+    <section class="pwa-entry-card" id="pwa-entry-card" aria-labelledby="pwa-entry-title">
+      <div>
+        <strong id="pwa-entry-title">Take LifePulse With You</strong>
+        <p id="pwa-entry-status">Install the Android app experience directly from your browser.</p>
+      </div>
+      <button class="pwa-action-btn" id="install-app-btn" type="button">INSTALL APP</button>
+    </section>
   </div>
 
   <div class="cosmic-arrival" id="cosmic-arrival" aria-hidden="true" role="status" aria-live="polite">
@@ -3904,7 +4025,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260812.86</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.local.20260812.1</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -3930,6 +4051,34 @@
       </svg>
     </div>
     <div id="environment-note" class="environment-note hidden"></div>
+
+    <section class="panel pwa-panel" id="mobile-app-panel" aria-labelledby="mobile-app-title">
+      <div class="section-head">
+        <span class="lifetime-kicker">LifePulse Mobile</span>
+        <span class="panel-note">Version 5</span>
+      </div>
+      <h2 id="mobile-app-title">Installed App & Alerts</h2>
+      <p class="pwa-panel-copy">Install LifePulse on this device and choose which future notifications you want. Preferences stay on this device.</p>
+      <div class="pwa-state-grid" aria-label="Mobile app status">
+        <div class="pwa-state-item"><span>App</span><strong id="pwa-install-state">Browser</strong></div>
+        <div class="pwa-state-item"><span>Offline Shell</span><strong id="pwa-offline-state">Checking</strong></div>
+        <div class="pwa-state-item"><span>Notifications</span><strong id="pwa-notification-state">Not Enabled</strong></div>
+      </div>
+      <div class="notification-options" id="notification-options" aria-label="Notification preferences">
+        <label class="notification-option"><input type="checkbox" data-notification-pref="personal" checked> Birthdays & Personal Milestones</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="sky" checked> Moon, Eclipses & Sky Events</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="calendar" checked> Seasons & Calendar Events</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="sports"> Sports Championships</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="horoscope"> Daily Horoscope</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="data" checked> Important Data Updates</label>
+      </div>
+      <div class="pwa-actions">
+        <button class="pwa-action-btn" id="dashboard-install-app-btn" type="button">INSTALL APP</button>
+        <button class="pwa-action-btn" id="enable-notifications-btn" type="button">ENABLE ALERTS</button>
+        <button class="pwa-action-btn secondary" id="test-notification-btn" type="button">SEND TEST</button>
+      </div>
+      <p class="pwa-status" id="pwa-status" role="status" aria-live="polite">Android is the primary Version 5 test platform. Scheduled delivery will activate when the notification service is connected.</p>
+    </section>
 
     <div class="born-shell">
       <span class="born-kicker">Born On</span>
@@ -4870,10 +5019,11 @@
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
     const SECTION_STORAGE_KEY = 'lifePulseSectionPreferences';
     const SHARE_CARD_STORAGE_KEY = 'lifePulseShareCardPreferences';
+    const NOTIFICATION_PREFS_KEY = 'lifePulseNotificationPreferences';
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260812.86';
+    const LOCAL_RELEASE_VERSION = '5.local.20260812.1';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -4977,6 +5127,8 @@
     let updateCheckTimer      = null;
     let currentReleaseVersion = LOCAL_RELEASE_VERSION;
     let pendingVersionHash    = '';
+    let deferredInstallPrompt = null;
+    let serviceWorkerRegistration = null;
     let selfCheckFeedResult    = { state: 'fallback', detail: 'Press Run Self-Check to validate the published daily feed.' };
     const liveDiagnostics     = {
       environment: { state: 'idle', label: 'Environment', detail: 'Checking runtime environment…', source: 'App runtime' },
@@ -4999,6 +5151,7 @@
       humanHistory: { state: 'static', label: 'Humans ever born', detail: 'Cumulative births are interpolated from Population Reference Bureau benchmarks. More than 99% of human history lacks demographic records, so this is an informed estimate rather than an exact count.', source: 'Population Reference Bureau' },
       cosmicEstimates: { state: 'static', label: 'Cosmic + Earth estimates', detail: 'Galactic progress uses a 230-million-year solar orbit. Solar fusion uses 600 million metric tons of hydrogen/second. Voyager 1 overlap uses 10.563 miles/second after 09/05/1977. Continental drift uses a relatable 1.5 inches/year; actual plate speeds vary. Lunar recession uses 3.8 cm/year. Solar orbit expansion uses NASA\'s modeled 1.5 cm/year per AU. Cosmic expansion shows the added separation of two unbound points one megaparsec apart using a 70 km/s/Mpc reference; it is not a change in the universe\'s total volume.', source: 'NASA mission, Hubble-law, solar, and lunar laser-ranging references + LifePulse stated assumptions' },
       earthEvents: { state: 'static', label: 'Global Earth events', detail: 'Lightning uses NASA\'s rounded global rate of 50 flashes/second. Major earthquakes use the USGS long-term expectation of about 16 magnitude-7-or-greater events/year. Both are lifetime-scale estimates, not personal exposure counts.', source: 'NASA lightning climatology + USGS Earthquake Hazards Program' }
+      ,pwa: { state: 'idle', label: 'Installed app', detail: 'Checking service worker, installation, and notification support.', source: 'Browser PWA APIs' }
     };
 
 
@@ -5030,6 +5183,16 @@
       btnFemale:             document.getElementById('btn-female'),
       launchBtn:             document.getElementById('launch-btn'),
       clearFormBtn:          document.getElementById('clear-form-btn'),
+      pwaEntryStatus:        document.getElementById('pwa-entry-status'),
+      installAppBtn:         document.getElementById('install-app-btn'),
+      dashboardInstallAppBtn:document.getElementById('dashboard-install-app-btn'),
+      pwaInstallState:       document.getElementById('pwa-install-state'),
+      pwaOfflineState:       document.getElementById('pwa-offline-state'),
+      pwaNotificationState:  document.getElementById('pwa-notification-state'),
+      notificationOptions:   document.getElementById('notification-options'),
+      enableNotificationsBtn:document.getElementById('enable-notifications-btn'),
+      testNotificationBtn:   document.getElementById('test-notification-btn'),
+      pwaStatus:             document.getElementById('pwa-status'),
       muteToggle:            document.getElementById('mute-toggle'),
       localCelebrationTools: document.getElementById('local-celebration-tools'),
       localCelebrationChoice:document.getElementById('local-celebration-choice'),
@@ -12188,6 +12351,178 @@ function getBirthSkySnapshot() {
       url.searchParams.set('v', currentReleaseVersion || String(Date.now()));
       location.replace(url.toString());
     }
+
+    function isStandaloneApp() {
+      return window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    function isIosDevice() {
+      return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    function setPwaStatus(message, state = '') {
+      if (els.pwaStatus) {
+        els.pwaStatus.textContent = message;
+        if (state) els.pwaStatus.dataset.state = state;
+        else els.pwaStatus.removeAttribute('data-state');
+      }
+      if (els.pwaEntryStatus) els.pwaEntryStatus.textContent = message;
+    }
+
+    function readNotificationPreferences() {
+      const defaults = { personal: true, sky: true, calendar: true, sports: false, horoscope: false, data: true };
+      try { return { ...defaults, ...(JSON.parse(localStorage.getItem(NOTIFICATION_PREFS_KEY) || '{}') || {}) }; }
+      catch { return defaults; }
+    }
+
+    function applyNotificationPreferences() {
+      const preferences = readNotificationPreferences();
+      els.notificationOptions?.querySelectorAll('[data-notification-pref]').forEach(input => {
+        input.checked = Boolean(preferences[input.dataset.notificationPref]);
+      });
+    }
+
+    function saveNotificationPreferences() {
+      const preferences = {};
+      els.notificationOptions?.querySelectorAll('[data-notification-pref]').forEach(input => {
+        preferences[input.dataset.notificationPref] = input.checked;
+      });
+      try { localStorage.setItem(NOTIFICATION_PREFS_KEY, JSON.stringify(preferences)); } catch {}
+      setPwaStatus('Notification choices saved on this device.', 'success');
+    }
+
+    function renderPwaControls() {
+      const standalone = isStandaloneApp();
+      const canInstall = Boolean(deferredInstallPrompt);
+      const serviceWorkerSupported = 'serviceWorker' in navigator;
+      const notificationSupported = 'Notification' in window;
+      const permission = notificationSupported ? Notification.permission : 'unsupported';
+
+      document.body.classList.toggle('is-standalone', standalone);
+      if (els.pwaInstallState) els.pwaInstallState.textContent = standalone ? 'Installed' : canInstall ? 'Ready To Install' : 'Browser';
+      if (els.pwaOfflineState) els.pwaOfflineState.textContent = serviceWorkerRegistration?.active ? 'Ready' : serviceWorkerSupported && location.protocol !== 'file:' ? 'Preparing' : 'Preview Only';
+      if (els.pwaNotificationState) els.pwaNotificationState.textContent = permission === 'granted' ? 'Enabled' : permission === 'denied' ? 'Blocked' : permission === 'unsupported' ? 'Unsupported' : 'Not Enabled';
+
+      [els.installAppBtn, els.dashboardInstallAppBtn].forEach(button => {
+        if (!button) return;
+        button.disabled = standalone;
+        button.textContent = standalone ? 'APP INSTALLED' : isIosDevice() ? 'ADD TO HOME SCREEN' : 'INSTALL APP';
+      });
+      if (els.testNotificationBtn) els.testNotificationBtn.disabled = permission !== 'granted' || !serviceWorkerRegistration;
+      if (els.enableNotificationsBtn) {
+        els.enableNotificationsBtn.disabled = !notificationSupported || permission === 'denied' || location.protocol === 'file:';
+        els.enableNotificationsBtn.textContent = permission === 'granted' ? 'ALERTS ENABLED' : permission === 'denied' ? 'ALERTS BLOCKED' : 'ENABLE ALERTS';
+      }
+
+      const state = serviceWorkerRegistration?.active ? 'live' : location.protocol === 'file:' ? 'local' : serviceWorkerSupported ? 'cached' : 'error';
+      setLiveDiagnostic('pwa', {
+        state,
+        detail: `${standalone ? 'Running as an installed app.' : 'Running in a browser.'} Offline shell ${serviceWorkerRegistration?.active ? 'is active' : 'is not active in this context'}. Notification permission: ${permission}.`,
+        source: 'Web App Manifest + Service Worker + Notifications API'
+      });
+    }
+
+    async function registerLifePulseServiceWorker() {
+      if (!('serviceWorker' in navigator) || location.protocol === 'file:') {
+        renderPwaControls();
+        setPwaStatus('Install and notification testing become available from the published HTTPS site.', 'warning');
+        return null;
+      }
+      try {
+        serviceWorkerRegistration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+        await navigator.serviceWorker.ready;
+        serviceWorkerRegistration = await navigator.serviceWorker.getRegistration('./') || serviceWorkerRegistration;
+        renderPwaControls();
+        return serviceWorkerRegistration;
+      } catch (error) {
+        setPwaStatus(`App setup could not start: ${error.message}`, 'error');
+        setLiveDiagnostic('pwa', { state: 'error', detail: error.message, source: 'Service Worker registration' });
+        renderPwaControls();
+        return null;
+      }
+    }
+
+    async function installLifePulseApp() {
+      if (isStandaloneApp()) {
+        setPwaStatus('LifePulse is already installed on this device.', 'success');
+        return;
+      }
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        setPwaStatus(choice.outcome === 'accepted' ? 'LifePulse installation accepted.' : 'Installation was dismissed. You can try again anytime.', choice.outcome === 'accepted' ? 'success' : 'warning');
+        renderPwaControls();
+        return;
+      }
+      if (isIosDevice()) {
+        setPwaStatus('On iPhone: open the Share menu, choose Add to Home Screen, then launch LifePulse from its new icon.', 'warning');
+      } else if (location.protocol === 'file:') {
+        setPwaStatus('Open the published HTTPS version to install LifePulse on Android.', 'warning');
+      } else {
+        setPwaStatus('Open your browser menu and choose Install App or Add to Home Screen.', 'warning');
+      }
+    }
+
+    async function enableLifePulseNotifications() {
+      if (!('Notification' in window)) {
+        setPwaStatus('This browser does not support notifications.', 'error');
+        return;
+      }
+      if (location.protocol === 'file:') {
+        setPwaStatus('Notification permission can only be tested from the published HTTPS app.', 'warning');
+        return;
+      }
+      const registration = serviceWorkerRegistration || await registerLifePulseServiceWorker();
+      if (!registration) return;
+      const permission = await Notification.requestPermission();
+      renderPwaControls();
+      if (permission === 'granted') {
+        setPwaStatus('Notifications are enabled. Use Send Test to verify this device.', 'success');
+      } else if (permission === 'denied') {
+        setPwaStatus('Notifications were blocked. Re-enable them in this site’s browser settings.', 'error');
+      } else {
+        setPwaStatus('Notification permission was not granted.', 'warning');
+      }
+    }
+
+    async function sendLifePulseTestNotification() {
+      const registration = serviceWorkerRegistration || await registerLifePulseServiceWorker();
+      if (!registration || Notification.permission !== 'granted') {
+        setPwaStatus('Enable notifications before sending a test.', 'warning');
+        return;
+      }
+      await registration.showNotification('LifePulse Is Connected', {
+        body: 'Your Android notification test worked. Future events can appear here.',
+        icon: './assets/lifepulse-icon-192.png',
+        badge: './assets/lifepulse-icon-192.png',
+        tag: 'lifepulse-device-test',
+        data: { url: './?source=notification-test' }
+      });
+      setPwaStatus('Test notification sent to this device.', 'success');
+    }
+
+    function bindPwaEvents() {
+      window.addEventListener('beforeinstallprompt', event => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        renderPwaControls();
+        setPwaStatus('LifePulse is ready to install on this Android device.', 'success');
+      });
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        renderPwaControls();
+        setPwaStatus('LifePulse is installed and ready from your Home Screen.', 'success');
+      });
+      navigator.serviceWorker?.addEventListener('controllerchange', renderPwaControls);
+      [els.installAppBtn, els.dashboardInstallAppBtn].forEach(button => button?.addEventListener('click', installLifePulseApp));
+      els.enableNotificationsBtn?.addEventListener('click', enableLifePulseNotifications);
+      els.testNotificationBtn?.addEventListener('click', sendLifePulseTestNotification);
+      els.notificationOptions?.addEventListener('change', saveNotificationPreferences);
+      applyNotificationPreferences();
+      renderPwaControls();
+    }
+
     async function loadCostOfLivingData() {
       if (location.protocol === 'file:') {
         try {
@@ -12915,6 +13250,10 @@ function getBirthSkySnapshot() {
       if (!container || container.dataset.ready === 'true') return;
       DASHBOARD_SECTION_GROUPS.forEach(config => {
         const nodes = config.nodes.map(id => document.getElementById(id)).filter(Boolean);
+        if (config.id === 'right-now') {
+          const mobileAppPanel = document.getElementById('mobile-app-panel');
+          if (mobileAppPanel) nodes.unshift(mobileAppPanel);
+        }
         if (!nodes.length) return;
         const group = document.createElement('details');
         group.className = 'dashboard-group';
@@ -12935,6 +13274,7 @@ function getBirthSkySnapshot() {
       document.getElementById('collapse-sections-btn')?.addEventListener('click', () => setAllDashboardGroups(false));
     }
     function bindEvents() {
+      bindPwaEvents();
       els.resultView?.addEventListener('toggle', () => requestAnimationFrame(fitDisplayLabels), true);
       els.btnMale.addEventListener('click',   () => setGender('male'));
       els.btnFemale.addEventListener('click', () => setGender('female'));
@@ -13111,6 +13451,7 @@ function getBirthSkySnapshot() {
       loadSkyEventsFeed();
       loadCostOfLivingData();
       loadPlaceEconomicData();
+      registerLifePulseServiceWorker();
 
       // Priority order: URL hash → localStorage → nothing
       const hashProfile = decodeProfileFromHash();

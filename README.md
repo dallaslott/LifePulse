@@ -2,7 +2,11 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
-Current local review build: `4.local.20260811.82`.
+Current local review build: `5.local.20260812.1`.
+
+Version 5 begins the Android-first mobile-app phase. LifePulse now includes an installable Progressive Web App foundation: a web app manifest, dedicated app icons, a service worker, an offline fallback, device-local notification preferences, Android installation controls, and a notification-permission/test flow. The same standards-based foundation remains compatible with a later iPhone verification pass.
+
+The first Version 5 build does not yet send unattended scheduled alerts. True push delivery requires the planned notification service to securely store each device subscription and send event messages while LifePulse is closed. Until that service is connected, the dashboard clearly identifies preferences as device-local and provides a working notification test after HTTPS publication.
 
 This build restores the approved pre-Version-5 interface and retains only the simplified `LIFEPULSE` identity label at the top of the dashboard.
 
@@ -131,7 +135,7 @@ Authoritative or calculation-first routes now include:
 - Open-Meteo for matched birthplace timezone and historical weather
 - A validated local sports dataset with explicit result and schedule coverage dates, including lifetime NFL, MLB, and NBA championship splits by conference or league
 
-`version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; this local preview is `v4.local.20260812.86`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
+`version.json` is generated with each feed refresh and receives a Version 5 release number such as `v5.27.1` (app generation, GitHub workflow run, run attempt). The live-data schema remains independently versioned so internal data changes do not rename the app. The current version appears subtly beside the build label; this local preview is `v5.local.20260812.1`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
 
 ## Optional EIA gasoline key
 
