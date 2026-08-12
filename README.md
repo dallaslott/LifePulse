@@ -2,9 +2,15 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
-Current local review build: `4.local.20260811.73`.
+Current local review build: `4.local.20260811.82`.
 
 This build restores the approved pre-Version-5 interface and retains only the simplified `LIFEPULSE` identity label at the top of the dashboard.
+
+It also adds age-driven body, Earth, and cosmic comparisons: cellular turnover, high tides, blink darkness, galactic rotation progress, solar fusion, Voyager 1 travel, continental drift, and NOAA atmospheric CO2 change. Scientific rates and calculation assumptions remain in Diagnostic Mode while the dashboard presents concise personal comparisons.
+
+Additional personal-scale comparisons estimate dreams experienced, show microchip transistor growth from birth to a maintained modern benchmark, scale global annual digital data creation into readable GB-through-ZB units, and estimate how many Homo sapiens had ever been born by the user's birth year.
+
+The lifetime and culture views also estimate neutrino interactions, one-strand scalp-hair growth, combined fingernail growth, shed skin mass, lunar orbital recession, Cisco-era internet traffic growth, and maintained episode milestones for The Simpsons and Saturday Night Live.
 
 The ordinary dashboard launch uses a brief, locally rendered LifePulse ECG transition. It has no mapping dependency, remote imagery request, account, API key, or usage charge.
 
@@ -21,7 +27,7 @@ Open `index.html` directly for layout and calculation review. The bundled `vendo
 - `live-data.json` — the most recent scheduled daily feed
 - `cost-of-living-data.json` - maintained historical and current U.S. cost comparisons
 - `place-economic-data.json` - generated Census place-population and BEA county-income histories
-- `scripts/update-cost-of-living-data.mjs` - date-gated annual refresh for Census, FRED, and movie-ticket series
+- `scripts/update-cost-of-living-data.mjs` - date-gated monthly review for Census, FRED, BLS, and movie-ticket series
 - `scripts/update-place-economic-data.mjs` - private-key workflow updater for official local population and income data
 - `scripts/update-live-data.mjs` — refreshes horoscope, astronomy, population, and gas data
 - `package.json` — pins Astronomy Engine to a tested version
@@ -125,7 +131,7 @@ Authoritative or calculation-first routes now include:
 - Open-Meteo for matched birthplace timezone and historical weather
 - A validated local sports dataset with explicit result and schedule coverage dates, including lifetime NFL, MLB, and NBA championship splits by conference or league
 
-`version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; local-file previews show a dated build such as `v4.local.20260808`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
+`version.json` is generated with each feed refresh and receives an automatic release number such as `v4.27.1` (data schema, GitHub workflow run, run attempt). The current version appears subtly beside the build label; this local preview is `v4.local.20260812.86`. Hosted browsers check for a new release at startup, whenever the tab becomes visible, and every 15 minutes. If a newer deployment exists, an **Update Available** button appears. Selecting it acknowledges that release and reloads through a versioned URL so mobile browsers do not keep presenting the same update or reuse an old cached page.
 
 ## Optional EIA gasoline key
 
@@ -135,7 +141,7 @@ The existing AAA route remains active without setup. To prefer the more stable U
 
 `scripts/validate-live-data.mjs` runs after every refresh and before Pages packaging. It verifies schema 4, the automatic release-number format, all twelve horoscope signs, astronomy, current comparisons, authoritative reference histories, registered component freshness, a future sports event, and the match between `version.json` and `live-data.json`. A failed validation stops that deployment.
 
-`cost-of-living-data.json` is reviewed annually rather than daily. The workflow refreshes the Census/HUD new-home series and Census household-income series through FRED, the latest Census ACS national gross rent, and the industry movie-ticket series when the dataset reaches its review date. Curated benchmarks such as the casual-meal estimate, new-vehicle average, Disney ticket, tuition, and minimum wage retain explicit sources and are never presented as daily live prices.
+`cost-of-living-data.json` is checked on a roughly monthly review date rather than presented as a daily-price feed. The workflow refreshes the Census/HUD new-home series and Census household-income series through FRED, the newest available Census ACS national gross rent, BLS grocery/gas averages, and the industry movie-ticket series when the dataset reaches its review date. Current-year partial observations are labeled preliminary; modeled benchmarks such as the casual-meal estimate, new-vehicle average, Disney ticket, tuition, and minimum wage retain explicit sources and are never presented as daily live prices.
 
 Dependabot checks the pinned npm dependency and GitHub Actions versions weekly. Astronomy Engine remains pinned until an update is reviewed and merged.
 

@@ -2097,6 +2097,15 @@
 
     .insight-grid { grid-template-columns: repeat(2, 1fr); }
     .cosmic-grid { grid-template-columns: repeat(2, 1fr); margin-top: 12px; }
+    .cosmic-group-title {
+      grid-column: 1 / -1;
+      margin: 8px 2px 0;
+      color: var(--text-dim);
+      font-size: 0.64rem;
+      font-weight: 900;
+      letter-spacing: 1.15px;
+      text-transform: uppercase;
+    }
     .life-map-grid { grid-template-columns: repeat(3, 1fr); }
     .timeline-subgrid { grid-template-columns: repeat(2, 1fr); margin: 14px 0 10px; }
     .share-stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -3895,7 +3904,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260811.73</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v4.local.20260812.86</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -3996,6 +4005,10 @@
           <span class="lifetime-label">Heartbeats</span>
         </div>
         <div class="lifetime-card compact-card lifetime-card--long">
+          <span class="lifetime-value" id="blood-pumped-value">0</span>
+          <span class="lifetime-label">Blood Volume Pumped</span>
+        </div>
+        <div class="lifetime-card compact-card lifetime-card--long">
           <span class="lifetime-value" id="breaths-value">0</span>
           <span class="lifetime-label">Breaths Taken</span>
         </div>
@@ -4007,13 +4020,21 @@
           <span class="lifetime-value" id="steps-value">0</span>
           <span class="lifetime-label">Steps Walked</span>
         </div>
-        <div class="lifetime-card compact-card">
+        <div class="lifetime-card compact-card lifetime-card--long">
           <span class="lifetime-value" id="miles-walked-value">0</span>
-          <span class="lifetime-label">Miles Walked</span>
+          <span class="lifetime-label">Distance Walked</span>
         </div>
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="sleep-hours-value">0</span>
           <span class="lifetime-label">Hours Slept</span>
+        </div>
+        <div class="lifetime-card compact-card">
+          <span class="lifetime-value" id="dreams-value">0</span>
+          <span class="lifetime-label">Dreams Experienced</span>
+        </div>
+        <div class="lifetime-card compact-card lifetime-card--long">
+          <span class="lifetime-value" id="blink-darkness-value">0</span>
+          <span class="lifetime-label">Time in Blink Darkness</span>
         </div>
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="meals-value">0</span>
@@ -4022,6 +4043,22 @@
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="laughs-value">0</span>
           <span class="lifetime-label">Laughs</span>
+        </div>
+        <div class="lifetime-card compact-card">
+          <span class="lifetime-value" id="hair-growth-value">0</span>
+          <span class="lifetime-label">Hair Growth</span>
+        </div>
+        <div class="lifetime-card compact-card">
+          <span class="lifetime-value" id="nail-growth-value">0</span>
+          <span class="lifetime-label">Nail Growth</span>
+        </div>
+        <div class="lifetime-card compact-card">
+          <span class="lifetime-value" id="shed-skin-value">0</span>
+          <span class="lifetime-label">Shed Skin Cells</span>
+        </div>
+        <div class="lifetime-card compact-card lifetime-card--long">
+          <span class="lifetime-value" id="cell-turnover-value">0</span>
+          <span class="lifetime-label">Cellular Turnover</span>
         </div>
       </div>
     </div>
@@ -4106,15 +4143,32 @@
         <div class="insight-card compact-card"><span class="insight-value" id="fridays-lived-value">0</span><span class="micro-label">Fridays Survived</span></div>
 
         <div class="insight-card compact-card"><span class="insight-value" id="friday13ths-value">0</span><span class="micro-label">Friday the 13ths</span><p class="insight-copy" id="friday13ths-copy"></p></div>
-        <div class="insight-card compact-card"><span class="insight-value" id="dst-switches-value">0</span><span class="micro-label">DST Shifts</span></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="dst-switches-value">0</span><span class="micro-label">DST Shifts</span><p class="insight-copy" id="dst-switches-copy"></p></div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="seasons-value">0</span><span class="micro-label">Season Changes</span></div>
         <div class="insight-card compact-card"><span class="insight-value" id="leapdays-value">0</span><span class="micro-label">Leap Days</span><p class="insight-copy" id="leapdays-copy"></p></div>
 
         <div class="insight-card compact-card insight-card--wide source-card"><span class="insight-value" id="leapseconds-value">0</span><span class="micro-label">Leap Seconds</span><p class="insight-copy" id="leapseconds-copy"></p>
           <button class="source-toggle" type="button" data-source-target="leapseconds" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-leapseconds" hidden></div>
 </div>
+
+        <div class="insight-card compact-card insight-card--wide source-card">
+          <span class="insight-value" id="palindrome-dates-value">0</span><span class="micro-label">Palindrome Dates</span>
+          <p class="insight-copy" id="palindrome-dates-copy"></p>
+          <button class="source-toggle" type="button" data-source-target="palindrome-dates" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-palindrome-dates" hidden></div>
+        </div>
+
+        <div class="insight-card compact-card"><span class="insight-value" id="seasons-value">0</span><span class="micro-label">Season Changes</span><p class="insight-copy" id="seasons-copy"></p></div>
+        <div class="insight-card compact-card insight-card--wide"><span class="insight-value" id="high-tides-value">0</span><span class="micro-label">Approx. High Tides</span></div>
+        <div class="insight-card compact-card insight-card--wide">
+          <span class="insight-value" id="lightning-flashes-value">0</span>
+          <span class="micro-label">Global Lightning Flashes</span>
+        </div>
+        <div class="insight-card compact-card insight-card--wide">
+          <span class="insight-value" id="major-earthquakes-value">0</span>
+          <span class="micro-label">Approx. Major Earthquakes (M7+)</span>
+        </div>
 
         <div class="insight-card compact-card source-card">
           <span class="insight-value" id="presidents-value">0</span><span class="micro-label">U.S. Presidents</span>
@@ -4142,13 +4196,16 @@
           <div class="source-drawer" id="source-drawer-internet-eras" hidden></div>
 </div>
 
-        <div class="insight-card compact-card insight-card--wide source-card">
-          <span class="insight-value" id="palindrome-dates-value">0</span><span class="micro-label">Palindrome Dates</span>
-          <p class="insight-copy" id="palindrome-dates-copy"></p>
-        
-          <button class="source-toggle" type="button" data-source-target="palindrome-dates" aria-expanded="false">Source</button>
-          <div class="source-drawer" id="source-drawer-palindrome-dates" hidden></div>
-</div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="simpsons-episodes-value">...</span>
+          <span class="micro-label">The Simpsons Episodes</span>
+          <p class="insight-copy comparison-diagnostic" id="simpsons-episodes-copy">Episodes since your birth will appear here.</p>
+        </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="snl-episodes-value">...</span>
+          <span class="micro-label">SNL Episodes</span>
+          <p class="insight-copy comparison-diagnostic" id="snl-episodes-copy">Episodes since your birth will appear here.</p>
+        </div>
       </div>
     </div>
     <div class="panel" id="sports-history-panel">
@@ -4249,6 +4306,7 @@
         </div>
       </div>
       <div class="cosmic-grid compact-grid-2">
+        <div class="cosmic-group-title">Orbits + Cycles</div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="trips-around-sun-value">0</span>
           <span class="micro-label">Trips Around the Sun</span>
@@ -4264,11 +4322,59 @@
           <span class="micro-label" id="saturn-return-label">Saturn Returns Lived</span>
           <p class="insight-copy" id="saturn-return-copy">Your Saturn Phase and Next Return will appear here.</p>
         </div>
+        <div class="cosmic-group-title">Motion Through Space</div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="space-miles-value">0</span>
-          <span class="micro-label">Estimated Miles Through Space</span>
+          <span class="micro-label">Est. Miles Through Space</span>
           <p class="insight-copy" id="space-miles-copy">A rough lifetime estimate based on Earth moving through space over time.</p>
         </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="galactic-rotation-value">0%</span>
+          <span class="micro-label">Galactic Rotation Progress</span>
+          <p class="insight-copy" id="galactic-rotation-copy">Your progress through one galactic year will appear here.</p>
+        </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="voyager-distance-value">0</span>
+          <span class="micro-label">Voyager 1 Distance Traveled</span>
+          <p class="insight-copy" id="voyager-distance-copy">Its travel during the portion of the mission overlapping your life will appear here.</p>
+        </div>
+        <div class="cosmic-group-title">Sun + Earth + Moon Changes</div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="solar-mass-value">0</span>
+          <span class="micro-label">Solar Hydrogen Fused</span>
+          <p class="insight-copy" id="solar-mass-copy">Estimated hydrogen fused by the Sun during your lifetime.</p>
+        </div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="solar-orbit-expansion-value">0</span>
+          <span class="micro-label">Solar Orbit Expansion</span>
+          <p class="insight-copy" id="solar-orbit-expansion-copy">Earth's modeled orbital expansion during your lifetime will appear here.</p>
+        </div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="lunar-recession-value">0</span>
+          <span class="micro-label">Lunar Orbit Recession</span>
+          <p class="insight-copy" id="lunar-recession-copy">The Moon's added distance during your lifetime will appear here.</p>
+        </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="continental-drift-value">0</span>
+          <span class="micro-label">Continental Drift</span>
+          <p class="insight-copy" id="continental-drift-copy">Approximate plate movement during your lifetime will appear here.</p>
+        </div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="co2-jump-value">0 ppm</span>
+          <span class="micro-label">Atmospheric CO2 Jump</span>
+          <p class="insight-copy" id="co2-jump-copy">Your birth-year level will be compared with the latest measured level.</p>
+        </div>
+        <div class="cosmic-group-title">Deep Universe + Particles</div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="cosmic-expansion-value">0</span>
+          <span class="micro-label">Cosmic Expansion at 1 Mpc</span>
+          <p class="insight-copy" id="cosmic-expansion-copy">A Hubble-law scale comparison will appear here.</p>
+        </div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="neutrino-collisions-value">0</span>
+          <span class="micro-label">Chance of a Neutrino Collision</span>
+        </div>
+        <div class="cosmic-group-title">Sky Events + Milestones</div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="halley-value">0</span>
           <span class="micro-label">Halley&#39;s Comet Passes</span>
@@ -4389,6 +4495,7 @@
           <span class="dna-label">Life Era</span>
           <p id="birth-era-copy" class="slate-body">...</p>
         </div>
+
 
         <div class="birth-card">
           <span class="birth-card-title" id="birth-movie-title">...</span>
@@ -4763,10 +4870,10 @@
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
     const SECTION_STORAGE_KEY = 'lifePulseSectionPreferences';
     const SHARE_CARD_STORAGE_KEY = 'lifePulseShareCardPreferences';
-    const BUILD_CODENAME = 'Rebirth';
-    const BUILD_VARIANT  = 'Live Sky';
+    const BUILD_CODENAME = 'LIFEPULSE';
+    const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '4.local.20260811.73';
+    const LOCAL_RELEASE_VERSION = '4.local.20260812.86';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -4883,7 +4990,15 @@
       song:        { state: 'idle', label: 'Birth-date soundtrack', detail: 'Waiting for birth snapshot…', source: 'Wikipedia chart history' },
       movie:       { state: 'idle', label: 'Birth-date movie', detail: 'Waiting for birth snapshot…', source: 'Wikipedia box-office history' },
       civic:       { state: 'idle', label: 'Civic reference', detail: 'Waiting for the scheduled USAGov reference…', source: 'USAGov' },
-      skyEvents:   { state: 'idle', label: 'Sky event calendar', detail: 'Waiting for the maintained annual sky calendar.', source: 'NASA GSFC + IMO' }
+      skyEvents:   { state: 'idle', label: 'Sky event calendar', detail: 'Waiting for the maintained annual sky calendar.', source: 'NASA GSFC + IMO' },
+      bodyEstimates: { state: 'static', label: 'Body + lifetime estimates', detail: 'Blood pumped uses the American Heart Association average of 2,000 gallons/day; one Olympic pool is treated as roughly 660,000 gallons, making the age-30 comparison about 33 pools. Walking uses 7,500 steps/day and 2,200 steps/mile. Cellular turnover uses 330 billion cells/day. Blink darkness uses 15 blinks/minute, 0.1 second closed, and 16 waking hours/day. Dreams use four estimated dream periods/night, not remembered dreams. Hair uses one scalp strand at 1 cm/month; nails combine ten fingernails at 3.47 mm/month each; shed skin uses 1.5 g/day. High tides use a broad two-per-day semidiurnal estimate; local patterns vary.', source: 'American Heart Association + peer-reviewed sleep, cell-turnover, dermatology research + LifePulse stated assumptions' },
+      neutrinos: { state: 'static', label: 'Neutrino interactions', detail: 'About 100 trillion neutrinos pass through a body each second, but interaction probability varies enormously with energy. LifePulse scales CERN\'s public estimate of about a one-in-four chance during an 80-year lifetime as a Poisson probability. IceCube-detectable high-energy events are far rarer.', source: 'CERN Neutrino Platform + IceCube references' },
+      technologyScale: { state: 'static', label: 'Technology scale comparisons', detail: 'Microchip cards select the latest maintained processor milestone at or before the birth year. Global data uses broad annual Global Datasphere anchors and interpolation; it includes data created, captured, or replicated rather than only unique files kept forever.', source: 'Intel, NVIDIA, Apple + IDC Global Datasphere references' },
+      internetTraffic: { state: 'static', label: 'Internet traffic growth', detail: 'Global monthly IP traffic uses Cisco VNI anchors through 2022. LifePulse does not extrapolate beyond the maintained Cisco endpoint.', source: 'Cisco Visual Networking Index' },
+      popCultureEpisodes: { state: 'idle', label: 'Pop-culture episode counts', detail: 'Waiting for the scheduled episode-count reference.', source: 'Wikidata with embedded milestone fallback' },
+      humanHistory: { state: 'static', label: 'Humans ever born', detail: 'Cumulative births are interpolated from Population Reference Bureau benchmarks. More than 99% of human history lacks demographic records, so this is an informed estimate rather than an exact count.', source: 'Population Reference Bureau' },
+      cosmicEstimates: { state: 'static', label: 'Cosmic + Earth estimates', detail: 'Galactic progress uses a 230-million-year solar orbit. Solar fusion uses 600 million metric tons of hydrogen/second. Voyager 1 overlap uses 10.563 miles/second after 09/05/1977. Continental drift uses a relatable 1.5 inches/year; actual plate speeds vary. Lunar recession uses 3.8 cm/year. Solar orbit expansion uses NASA\'s modeled 1.5 cm/year per AU. Cosmic expansion shows the added separation of two unbound points one megaparsec apart using a 70 km/s/Mpc reference; it is not a change in the universe\'s total volume.', source: 'NASA mission, Hubble-law, solar, and lunar laser-ranging references + LifePulse stated assumptions' },
+      earthEvents: { state: 'static', label: 'Global Earth events', detail: 'Lightning uses NASA\'s rounded global rate of 50 flashes/second. Major earthquakes use the USGS long-term expectation of about 16 magnitude-7-or-greater events/year. Both are lifetime-scale estimates, not personal exposure counts.', source: 'NASA lightning climatology + USGS Earthquake Hazards Program' }
     };
 
 
@@ -4957,6 +5072,7 @@
       minutesValue:          document.getElementById('minutes-value'),
       secondsValue:          document.getElementById('seconds-value'),
       heartbeatsValue:       document.getElementById('heartbeats-value'),
+      bloodPumpedValue:      document.getElementById('blood-pumped-value'),
       breathsValue:          document.getElementById('breaths-value'),
       stepsValue:            document.getElementById('steps-value'),
       milesWalkedValue:      document.getElementById('miles-walked-value'),
@@ -4964,6 +5080,16 @@
       mealsValue:            document.getElementById('meals-value'),
       wordsValue:            document.getElementById('words-value'),
       laughsValue:           document.getElementById('laughs-value'),
+      cellTurnoverValue:     document.getElementById('cell-turnover-value'),
+      highTidesValue:        document.getElementById('high-tides-value'),
+      lightningFlashesValue: document.getElementById('lightning-flashes-value'),
+      majorEarthquakesValue: document.getElementById('major-earthquakes-value'),
+      blinkDarknessValue:    document.getElementById('blink-darkness-value'),
+      dreamsValue:           document.getElementById('dreams-value'),
+      neutrinoCollisionsValue:document.getElementById('neutrino-collisions-value'),
+      hairGrowthValue:       document.getElementById('hair-growth-value'),
+      nailGrowthValue:       document.getElementById('nail-growth-value'),
+      shedSkinValue:         document.getElementById('shed-skin-value'),
       todayCelebrationPanel: document.getElementById('today-celebration-panel'),
       todayCelebrationIcon:  document.getElementById('today-celebration-icon'),
       todayCelebrationKicker:document.getElementById('today-celebration-kicker'),
@@ -5001,6 +5127,7 @@
       friday13thsValue:      document.getElementById('friday13ths-value'),
       friday13thsCopy:       document.getElementById('friday13ths-copy'),
       dstSwitchesValue:      document.getElementById('dst-switches-value'),
+      dstSwitchesCopy:       document.getElementById('dst-switches-copy'),
       palindromeDatesValue:  document.getElementById('palindrome-dates-value'),
       palindromeDatesCopy:   document.getElementById('palindrome-dates-copy'),
       internetErasCopy:      document.getElementById('internet-eras-copy'),
@@ -5008,6 +5135,7 @@
       sunrisesValue:         document.getElementById('sunrises-value'),
       weekendsValue:         document.getElementById('weekends-value'),
       seasonsValue:          document.getElementById('seasons-value'),
+      seasonsCopy:           document.getElementById('seasons-copy'),
       fullmoonsValue:        document.getElementById('fullmoons-value'),
       blueMoonsValue:        document.getElementById('blue-moons-value'),
       blueMoonsCopy:         document.getElementById('blue-moons-copy'),
@@ -5151,6 +5279,26 @@
       saturnReturnCopy:      document.getElementById('saturn-return-copy'),
       spaceMilesValue:       document.getElementById('space-miles-value'),
       spaceMilesCopy:        document.getElementById('space-miles-copy'),
+      galacticRotationValue: document.getElementById('galactic-rotation-value'),
+      galacticRotationCopy:  document.getElementById('galactic-rotation-copy'),
+      solarMassValue:        document.getElementById('solar-mass-value'),
+      solarMassCopy:         document.getElementById('solar-mass-copy'),
+      voyagerDistanceValue:  document.getElementById('voyager-distance-value'),
+      voyagerDistanceCopy:   document.getElementById('voyager-distance-copy'),
+      continentalDriftValue: document.getElementById('continental-drift-value'),
+      continentalDriftCopy:  document.getElementById('continental-drift-copy'),
+      co2JumpValue:          document.getElementById('co2-jump-value'),
+      co2JumpCopy:           document.getElementById('co2-jump-copy'),
+      lunarRecessionValue:   document.getElementById('lunar-recession-value'),
+      lunarRecessionCopy:    document.getElementById('lunar-recession-copy'),
+      solarOrbitExpansionValue: document.getElementById('solar-orbit-expansion-value'),
+      solarOrbitExpansionCopy: document.getElementById('solar-orbit-expansion-copy'),
+      cosmicExpansionValue:  document.getElementById('cosmic-expansion-value'),
+      cosmicExpansionCopy:   document.getElementById('cosmic-expansion-copy'),
+      simpsonsEpisodesValue: document.getElementById('simpsons-episodes-value'),
+      simpsonsEpisodesCopy:  document.getElementById('simpsons-episodes-copy'),
+      snlEpisodesValue:      document.getElementById('snl-episodes-value'),
+      snlEpisodesCopy:       document.getElementById('snl-episodes-copy'),
       lifeDayClock:          document.getElementById('life-day-clock'),
       lifeDayCalendar:       document.getElementById('life-day-calendar'),
       lifeDaySeason:         document.getElementById('life-day-season'),
@@ -5288,8 +5436,7 @@
       2022: { genre: 'Alternative Pop',       song: 'Heat Waves',                          artist: 'Glass Animals' },
       2023: { genre: 'Pop',                   song: 'Flowers',                             artist: 'Miley Cyrus' },
       2024: { genre: 'Pop',                   song: 'Lose Control',                        artist: 'Teddy Swims' },
-      2025: { genre: 'Pop / R&B',             song: 'Die With a Smile',                    artist: 'Lady Gaga and Bruno Mars' },
-      2026: { genre: 'Pop',                   song: 'Apt.',                                artist: 'Rosé and Bruno Mars' }
+      2025: { genre: 'Pop / R&B',             song: 'Die With a Smile',                    artist: 'Lady Gaga and Bruno Mars' }
     };
 
     // Pre-sorted for fast nearest-year lookup — computed once at startup
@@ -5371,8 +5518,7 @@
       2022: { title: 'Top Gun: Maverick',                                    genre: 'Action Drama' },
       2023: { title: 'Barbie',                                               genre: 'Fantasy Comedy' },
       2024: { title: 'Inside Out 2',                                         genre: 'Animated Family' },
-      2025: { title: 'Minecraft Movie',                                      genre: 'Adventure Comedy' },
-      2026: { title: 'Shrek 5',                                              genre: 'Animated Comedy' }
+      2025: { title: 'A Minecraft Movie',                                    genre: 'Adventure Comedy' }
     };
 
     const YEAR_MOVIE_YEARS = Object.keys(YEAR_MOVIES).map(Number).sort((a, b) => a - b);
@@ -5454,17 +5600,67 @@
       2023: 15.04, 2024: 15.12, 2025: 15.02, 2026: 15.01
     };
 
+    const CO2_ANCHORS_PPM = {
+      1958: 315.2, 1960: 316.9, 1970: 325.7, 1980: 338.8, 1990: 354.4,
+      2000: 369.6, 2010: 389.9, 2020: 414.2, 2021: 416.5, 2022: 418.6,
+      2023: 421.1, 2024: 424.6, 2025: 427.4, 2026: 431.4
+    };
+
+    const CHIP_TRANSISTOR_MILESTONES = [
+      { year: 1971, value: 2300, chip: 'Intel 4004' },
+      { year: 1972, value: 3500, chip: 'Intel 8008' },
+      { year: 1974, value: 4500, chip: 'Intel 8080' },
+      { year: 1978, value: 29000, chip: 'Intel 8086' },
+      { year: 1982, value: 134000, chip: 'Intel 286' },
+      { year: 1985, value: 275000, chip: 'Intel 386' },
+      { year: 1989, value: 1200000, chip: 'Intel 486' },
+      { year: 1993, value: 3100000, chip: 'Intel Pentium' },
+      { year: 1995, value: 5500000, chip: 'Intel Pentium Pro' },
+      { year: 1997, value: 7500000, chip: 'Intel Pentium II' },
+      { year: 1999, value: 9500000, chip: 'Intel Pentium III' },
+      { year: 2000, value: 42000000, chip: 'Intel Pentium 4' },
+      { year: 2003, value: 55000000, chip: 'Intel Pentium M' },
+      { year: 2006, value: 291000000, chip: 'Intel Core 2 Duo' },
+      { year: 2008, value: 410000000, chip: 'Intel Core 2 Duo' },
+      { year: 2010, value: 1160000000, chip: '2nd-Gen Intel Core' },
+      { year: 2012, value: 1400000000, chip: '3rd-Gen Intel Core' },
+      { year: 2020, value: 16000000000, chip: 'Apple M1' },
+      { year: 2022, value: 114000000000, chip: 'Apple M1 Ultra' },
+      { year: 2024, value: 208000000000, chip: 'NVIDIA Blackwell' }
+    ];
+
+    const GLOBAL_DATA_ANCHORS_ZB = {
+      2010: 2, 2012: 6.5, 2015: 15.5, 2018: 33, 2020: 64.2,
+      2022: 101, 2025: 175
+    };
+
+    const HUMANS_EVER_BORN_ANCHORS = {
+      1: 55019222125, 1200: 81610565125, 1650: 94392567578,
+      1750: 97564499091, 1850: 101610739100, 1900: 104510976956,
+      1950: 107901175171, 2000: 113966170055, 2010: 115330173460,
+      2022: 117020448575, 2035: 118779027464, 2050: 120847437072
+    };
+
+    const INTERNET_TRAFFIC_ANCHORS_EB_MONTH = {
+      2005: 2.4, 2010: 20.2, 2015: 72.5, 2017: 122, 2022: 396
+    };
+
+    const POP_CULTURE_EPISODE_FALLBACK = {
+      simpsons: { count: 808, premiere: '1989-12-17', title: 'The Simpsons' },
+      snl: { count: 1000, premiere: '1975-10-11', title: 'Saturday Night Live' }
+    };
+
     const DEFAULT_COST_DATA = {
       updatedAt: '2026-08-09T00:00:00.000Z', nextReview: '2026-09-01',
       methodology: 'Values are nominal U.S. dollars. Birth-year values use the closest published annual observation or interpolation between published anchors. Labels distinguish medians, averages, and estimates.',
       metrics: {
-        homePrice: { label: 'Median New Home Price', icon: '&#127968;', group: 'major', unit: 'currency0', coverageStart: 1963, source: 'U.S. Census Bureau and HUD via FRED', sourceUrl: 'https://fred.stlouisfed.org/series/MSPUS', series: {1963:18000,1970:23400,1980:64700,1990:122900,2000:169000,2010:221800,2020:336900,2024:420300,2025:414500,2026:403200} },
+        homePrice: { label: 'Median New Home Price', icon: '&#127968;', group: 'major', unit: 'currency0', coverageStart: 1963, preliminaryYears: [2026], source: 'U.S. Census Bureau and HUD via FRED', sourceUrl: 'https://fred.stlouisfed.org/series/MSPUS', series: {1963:18000,1970:23400,1980:64700,1990:122900,2000:169000,2010:221800,2020:336900,2024:420300,2025:414500,2026:403200} },
         rent: { label: 'Median Monthly Gross Rent', icon: '&#128273;', group: 'everyday', unit: 'currency0', coverageStart: 1940, source: 'U.S. Census Bureau', sourceUrl: 'https://www.census.gov/data/tables/time-series/dec/coh-grossrents.html', series: {1940:27,1950:42,1960:71,1970:108,1980:243,1990:447,2000:602,2010:855,2020:1163,2023:1406,2024:1487} },
-        newCar: { label: 'Average New Vehicle Price', icon: '&#128663;', group: 'major', unit: 'currency0', coverageStart: 1935, source: 'BEA and industry historical estimates', sourceUrl: 'https://www.bls.gov/cpi/factsheets/new-vehicles.htm', series: {1935:625,1940:850,1950:1510,1960:2600,1970:3542,1980:7574,1990:15472,2000:22100,2010:29150,2020:38000,2024:48200,2025:49200,2026:49500} },
-        meal: { label: 'Estimated Casual Restaurant Meal', icon: '&#127869;', group: 'everyday', unit: 'currency2', coverageStart: 1953, source: 'BLS food-away-from-home index; LifePulse benchmark', sourceUrl: 'https://www.bls.gov/cpi/factsheets/average-prices.htm', series: {1953:1.05,1960:1.25,1970:1.75,1980:3.75,1990:6.25,2000:8.75,2010:11.75,2020:15.50,2024:19.00,2025:19.75,2026:20.25} },
-        movieTicket: { label: 'Average Movie Ticket', icon: '&#127915;', group: 'everyday', unit: 'currency2', coverageStart: 1948, source: 'Cinema United/MPAA; The Numbers estimates since 2020', sourceUrl: 'https://www.the-numbers.com/market/', series: {1948:.36,1950:.46,1960:.69,1970:1.55,1980:2.69,1990:4.22,2000:5.39,2010:7.89,2020:9.18,2024:11.31,2025:11.31,2026:11.31} },
+        newCar: { label: 'Average New Vehicle Price', icon: '&#128663;', group: 'major', unit: 'currency0', coverageStart: 1935, estimatedYears: [2025, 2026], source: 'BEA and industry historical estimates', sourceUrl: 'https://www.bls.gov/cpi/factsheets/new-vehicles.htm', series: {1935:625,1940:850,1950:1510,1960:2600,1970:3542,1980:7574,1990:15472,2000:22100,2010:29150,2020:38000,2024:48200,2025:49200,2026:49500} },
+        meal: { label: 'Estimated Casual Restaurant Meal', icon: '&#127869;', group: 'everyday', unit: 'currency2', coverageStart: 1953, estimatedYears: [2024, 2025, 2026], source: 'BLS food-away-from-home index; LifePulse benchmark', sourceUrl: 'https://www.bls.gov/cpi/factsheets/average-prices.htm', series: {1953:1.05,1960:1.25,1970:1.75,1980:3.75,1990:6.25,2000:8.75,2010:11.75,2020:15.50,2024:19.00,2025:19.75,2026:20.25} },
+        movieTicket: { label: 'Average Movie Ticket', icon: '&#127915;', group: 'everyday', unit: 'currency2', coverageStart: 1948, estimatedYears: [2020, 2024, 2025, 2026], source: 'Cinema United/MPAA; The Numbers estimates since 2020', sourceUrl: 'https://www.the-numbers.com/market/', series: {1948:.36,1950:.46,1960:.69,1970:1.55,1980:2.69,1990:4.22,2000:5.39,2010:7.89,2020:9.18,2024:11.31,2025:11.31,2026:11.31} },
         income: { label: 'Median Household Income', icon: '&#128181;', group: 'major', unit: 'currency0', coverageStart: 1967, source: 'U.S. Census Bureau via FRED', sourceUrl: 'https://fred.stlouisfed.org/series/MEHOINUSA646N', series: {1967:7143,1970:8734,1980:17710,1990:29943,2000:41990,2010:49276,2020:68100,2023:80610,2024:83460} },
-        disneyTicket: { label: 'Walt Disney World One-Day Ticket', icon: '&#127984;', group: 'everyday', unit: 'currency2', coverageStart: 1971, beforeCoverage: 'Not Open Yet', source: 'Walt Disney World and AllEars historical ticket guide', sourceUrl: 'https://allears.net/walt-disney-world/wdw-planning/wdw-ticket-increase-guide/', series: {1971:3.50,1975:6,1980:8,1990:31,2000:46,2010:82,2020:109,2022:109,2025:119,2026:119} },
+        disneyTicket: { label: 'Walt Disney World One-Day Ticket', icon: '&#127984;', group: 'everyday', unit: 'currency2', coverageStart: 1971, beforeCoverage: 'Not Open Yet', estimatedYears: [2025, 2026], source: 'Walt Disney World and AllEars historical ticket guide', sourceUrl: 'https://allears.net/walt-disney-world/wdw-planning/wdw-ticket-increase-guide/', series: {1971:3.50,1975:6,1980:8,1990:31,2000:46,2010:82,2020:109,2022:109,2025:119,2026:119} },
         tuition: { label: 'Public 4-Year In-State Tuition & Fees', icon: '&#127891;', group: 'major', unit: 'currency0', coverageStart: 1963, source: 'National Center for Education Statistics', sourceUrl: 'https://nces.ed.gov/fastfacts/display.asp?id=76', series: {1963:243,1970:358,1980:804,1990:1888,2000:3501,2010:7132,2020:9349,2023:8939,2024:9233} },
         minimumWage: { label: 'Federal Minimum Wage', icon: '&#9201;', group: 'everyday', unit: 'currencyPerHour', coverageStart: 1938, source: 'U.S. Department of Labor', sourceUrl: 'https://www.dol.gov/agencies/whd/minimum-wage/history/chart', stepSeries: {1938:.25,1939:.30,1945:.40,1950:.75,1956:1,1961:1.15,1963:1.25,1967:1.40,1968:1.60,1974:2,1975:2.10,1976:2.30,1978:2.65,1979:2.90,1980:3.10,1981:3.35,1990:3.80,1991:4.25,1996:4.75,1997:5.15,2007:5.85,2008:6.55,2009:7.25} }
       }
@@ -5813,7 +6009,7 @@
           const filmText = cleanWikiCellText(filmCell?.textContent || '');
 
           if (filmText && !/^\$/.test(filmText) && !/^notes?$/i.test(filmText) && !/^gross$/i.test(filmText) && !/^ref\.?$/i.test(filmText)) {
-            currentFilm = filmText.replace(/\s*†+$/g, '').trim();
+            currentFilm = filmText.replace(/\s*[†+]*$/g, '').trim();
             const wikiLink = filmCell?.querySelector('a[href^="/wiki/"]')?.getAttribute('href') || '';
             currentHref = wikiLink ? `https://en.wikipedia.org${wikiLink}` : buildMovieInfoLink(currentFilm);
           }
@@ -6139,7 +6335,7 @@
         const comparisonsOkay = Number.isFinite(Number(payload?.current?.worldPopulation?.value))
           && Number.isFinite(Number(payload?.current?.gasPrice?.value));
         const components = payload?.components && typeof payload.components === 'object' ? payload.components : {};
-        const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'populationHistory', 'civic', 'sports'];
+      const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'atmosphericCO2', 'popCultureEpisodes', 'populationHistory', 'civic', 'sports'];
         const missingComponents = requiredComponents.filter(key => !components[key]);
         const unavailableComponents = requiredComponents.filter(key => components[key]?.status === 'unavailable');
         const expiredComponents = requiredComponents.filter(key => {
@@ -7770,6 +7966,9 @@
     // Use pre-sorted array for O(n) nearest lookup instead of O(n log n) sort on each call
     function getEraSoundtrack(year) {
       if (YEAR_SOUNDTRACKS[year]) return YEAR_SOUNDTRACKS[year];
+      if (year > SOUNDTRACK_YEARS[SOUNDTRACK_YEARS.length - 1]) {
+        return { genre: 'Live Lookup', song: 'Current-Year Chart In Progress', artist: 'Awaiting the exact-date chart result' };
+      }
       const nearest = SOUNDTRACK_YEARS.reduce((a, b) =>
         Math.abs(b - year) < Math.abs(a - year) ? b : a
       );
@@ -7778,6 +7977,9 @@
 
     function getMovieAtTime(year) {
       if (YEAR_MOVIES[year]) return YEAR_MOVIES[year];
+      if (year > YEAR_MOVIE_YEARS[YEAR_MOVIE_YEARS.length - 1]) {
+        return { title: 'Current-Year Box Office In Progress', genre: 'Live Lookup' };
+      }
       const earlyFallback = YEAR_MOVIE_FALLBACKS.find(item => year >= item.start && year <= item.end);
       if (earlyFallback) return earlyFallback;
       const nearest = YEAR_MOVIE_YEARS.reduce((a, b) =>
@@ -8667,6 +8869,7 @@
       const eraDetails = getLifeEraDetails(birthYear);
       els.birthEraValue.textContent = eraDetails.name;
       els.birthEraCopy.textContent  = eraDetails.reason;
+      renderPopCultureEpisodeMilestones(date);
 
       const population = interpolateFromAnchors(birthYear, WORLD_POPULATION_ANCHORS);
       const currentPopulationEstimate = interpolateFromAnchors(new Date().getFullYear(), WORLD_POPULATION_ANCHORS);
@@ -8693,6 +8896,24 @@
       els.birthCelebCopy.textContent  = 'Looking up notable birthdays on your date…';
       els.birthHistoryTitle.textContent = 'Loading…';
       els.birthHistoryCopy.textContent  = 'Looking for a history headline from your date…';
+    }
+
+    function renderPopCultureEpisodeMilestones(birthDate = birthMomentGlobal) {
+      if (!(birthDate instanceof Date)) return;
+      const reference = currentLiveData?.reference?.popCultureEpisodes || POP_CULTURE_EPISODE_FALLBACK;
+      const renderShow = (key, valueEl, copyEl) => {
+        if (!valueEl || !copyEl) return;
+        const show = reference?.[key] || POP_CULTURE_EPISODE_FALLBACK[key];
+        const premiere = new Date(`${show.premiere}T12:00:00`);
+        const total = Number(show.count) || 0;
+        const sinceBirth = birthDate <= premiere ? total : Math.max(0, Math.round(total * (Date.now() - birthDate) / Math.max(1, Date.now() - premiere)));
+        valueEl.textContent = sinceBirth.toLocaleString();
+        copyEl.textContent = birthDate <= premiere
+          ? `Every episode aired after you were born; the series premiered ${formatEventDate(premiere)}.`
+          : `Est. episodes aired since your birth, scaled across the show's broadcast run.`;
+      };
+      renderShow('simpsons', els.simpsonsEpisodesValue, els.simpsonsEpisodesCopy);
+      renderShow('snl', els.snlEpisodesValue, els.snlEpisodesCopy);
     }
 
     async function populateLiveBirthComparisons(date) {
@@ -8785,6 +9006,34 @@
 
     function formatCompact(value, digits = 1) {
       return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: digits }).format(Math.max(0, value || 0));
+    }
+
+    function formatNamedScale(value, digits = 1) {
+      const amount = Math.max(0, Number(value) || 0);
+      const scales = [
+        { value: 1e21, label: 'sextillion' },
+        { value: 1e18, label: 'quintillion' },
+        { value: 1e15, label: 'quadrillion' },
+        { value: 1e12, label: 'trillion' },
+        { value: 1e9, label: 'billion' },
+        { value: 1e6, label: 'million' }
+      ];
+      const scale = scales.find(item => amount >= item.value);
+      if (!scale) return Math.round(amount).toLocaleString();
+      return `${(amount / scale.value).toFixed(digits).replace(/\.0+$/, '')} ${scale.label}`;
+    }
+
+    function formatDigitalData(zettabytes) {
+      const value = Math.max(0, Number(zettabytes) || 0);
+      if (value >= 1) return `${value.toFixed(value >= 100 ? 0 : 1)} ZB`;
+      if (value >= 0.001) return `${(value * 1000).toFixed(value >= 0.1 ? 0 : 1)} EB`;
+      if (value >= 0.000001) return `${(value * 1000000).toFixed(value >= 0.0001 ? 0 : 1)} PB`;
+      if (value >= 0.000000001) return `${(value * 1000000000).toFixed(value >= 0.0000001 ? 0 : 1)} TB`;
+      return `${(value * 1000000000000).toFixed(0)} GB`;
+    }
+
+    function getChipTransistorMilestone(year) {
+      return CHIP_TRANSISTOR_MILESTONES.reduce((selected, entry) => entry.year <= year ? entry : selected, CHIP_TRANSISTOR_MILESTONES[0]);
     }
 
     function formatPercent(value, digits = 1) {
@@ -9895,6 +10144,59 @@ function countPresidentialElectionsExperienced(start, end) {
       }
       return count;
     }
+
+    function getNextDSTShift(now = new Date()) {
+      const timeZone = currentProfile?.birthPlaceGeo?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      let previousOffset = getTimezoneOffsetMinutes(now, timeZone);
+      if (previousOffset == null) return null;
+      for (let day = 1; day <= 550; day += 1) {
+        const probe = new Date(now.getTime() + day * 86400000);
+        const offset = getTimezoneOffsetMinutes(probe, timeZone);
+        if (offset != null && offset !== previousOffset) {
+          let low = new Date(probe.getTime() - 86400000);
+          let high = probe;
+          while (high - low > 3600000) {
+            const middle = new Date((low.getTime() + high.getTime()) / 2);
+            if (getTimezoneOffsetMinutes(middle, timeZone) === previousOffset) low = middle;
+            else high = middle;
+          }
+          return high;
+        }
+        if (offset != null) previousOffset = offset;
+      }
+      return null;
+    }
+
+    function getNextSeasonChange(now = new Date()) {
+      const engine = window.Astronomy;
+      if (engine?.Seasons) {
+        try {
+          const candidates = [];
+          for (const year of [now.getFullYear(), now.getFullYear() + 1]) {
+            const seasons = engine.Seasons(year);
+            candidates.push(
+              { date: seasons.mar_equinox?.date, label: 'March Equinox' },
+              { date: seasons.jun_solstice?.date, label: 'June Solstice' },
+              { date: seasons.sep_equinox?.date, label: 'September Equinox' },
+              { date: seasons.dec_solstice?.date, label: 'December Solstice' }
+            );
+          }
+          const next = candidates
+            .filter(item => item.date instanceof Date && !Number.isNaN(item.date.getTime()) && item.date > now)
+            .sort((a, b) => a.date - b.date)[0];
+          if (next) return next;
+        } catch {}
+      }
+      const year = now.getFullYear();
+      const candidates = [
+        { date: new Date(year, 2, 20, 4), label: 'Spring Equinox' },
+        { date: new Date(year, 5, 20, 21), label: 'Summer Solstice' },
+        { date: new Date(year, 8, 22, 13), label: 'Fall Equinox' },
+        { date: new Date(year, 11, 21, 9), label: 'Winter Solstice' },
+        { date: new Date(year + 1, 2, 20, 4), label: 'Spring Equinox' }
+      ];
+      return candidates.find(item => item.date > now) || candidates[candidates.length - 1];
+    }
     function countCalculatedBlueMoonsExperienced(start, end) {
       const engine = window.Astronomy;
       if (!engine?.SearchMoonPhase) return null;
@@ -10600,6 +10902,8 @@ function countPresidentialElectionsExperienced(start, end) {
       lastSlowStatsKey = slowStatsKey;
 
       const heartbeats = Math.floor(secondsTotal * 1.0);
+      const bloodPumpedGallons = daysExact * 2000;
+      const bloodPumpedPools = bloodPumpedGallons / 660000;
       const breaths    = Math.floor(secondsTotal * (16 / 60));
       const steps      = Math.floor(daysExact * 7500);
       const milesWalked = Math.floor(steps / 2200);
@@ -10607,15 +10911,40 @@ function countPresidentialElectionsExperienced(start, end) {
       const meals      = Math.floor(daysExact * 3);
       const words      = Math.floor(daysExact * 16000);
       const laughs     = Math.floor(daysExact * 18);
+      const cellTurnover = daysExact * 330_000_000_000;
+      const highTides = Math.floor(daysExact * 2);
+      const lightningFlashes = secondsTotal * 50;
+      const majorEarthquakes = years * 16;
+      const blinkDarknessHours = daysExact * 16 * 60 * 15 * 0.1 / 3600;
+      const dreamsExperienced = daysExact * 4;
+      const neutrinoInteractions = years * (-Math.log(0.75) / 80);
+      const neutrinoProbability = (1 - Math.exp(-neutrinoInteractions)) * 100;
+      const hairGrowthMeters = years * 0.12;
+      const nailGrowthMeters = years * 0.0347 * 10;
+      const shedSkinCells = daysExact * 500_000_000;
 
       els.heartbeatsValue.textContent = heartbeats.toLocaleString();
+      if (els.bloodPumpedValue) {
+        els.bloodPumpedValue.textContent = `${formatNamedScale(bloodPumpedGallons, 1)} gal`;
+        els.bloodPumpedValue.title = `About ${formatNamedScale(bloodPumpedPools, 1)} Olympic-sized swimming pools`;
+      }
       els.breathsValue.textContent    = breaths.toLocaleString();
       els.stepsValue.textContent      = steps.toLocaleString();
-      els.milesWalkedValue.textContent= milesWalked.toLocaleString();
+      els.milesWalkedValue.textContent= `${milesWalked.toLocaleString()} mi`;
       els.sleepHoursValue.textContent = sleepHours.toLocaleString();
       els.mealsValue.textContent      = meals.toLocaleString();
       els.wordsValue.textContent      = words.toLocaleString();
       els.laughsValue.textContent     = laughs.toLocaleString();
+      if (els.cellTurnoverValue) els.cellTurnoverValue.textContent = formatNamedScale(cellTurnover, 1) + ' cells';
+      if (els.highTidesValue) els.highTidesValue.textContent = highTides.toLocaleString();
+      if (els.lightningFlashesValue) els.lightningFlashesValue.textContent = formatNamedScale(lightningFlashes, 1);
+      if (els.majorEarthquakesValue) els.majorEarthquakesValue.textContent = Math.floor(majorEarthquakes).toLocaleString();
+      if (els.blinkDarknessValue) els.blinkDarknessValue.textContent = `${Math.floor(blinkDarknessHours / 24).toLocaleString()} days`;
+      if (els.dreamsValue) els.dreamsValue.textContent = Math.floor(dreamsExperienced).toLocaleString();
+      if (els.neutrinoCollisionsValue) els.neutrinoCollisionsValue.textContent = `${neutrinoProbability.toFixed(1)}%`;
+      if (els.hairGrowthValue) els.hairGrowthValue.textContent = `${(hairGrowthMeters * 3.28084).toFixed(1)} ft`;
+      if (els.nailGrowthValue) els.nailGrowthValue.textContent = `${(nailGrowthMeters * 3.28084).toFixed(1)} ft`;
+      if (els.shedSkinValue) els.shedSkinValue.textContent = `${formatNamedScale(shedSkinCells, 1)} cells`;
 
       els.nextBirthdayDays.textContent = `${nextBirthday.daysUntil.toLocaleString()} DAYS`;
       els.nextBirthdayAge.textContent  = `Until you turn ${nextBirthday.nextAge}`;
@@ -10665,6 +10994,10 @@ function countPresidentialElectionsExperienced(start, end) {
       els.sunrisesValue.textContent = daysTotal.toLocaleString();
       els.weekendsValue.textContent = Math.floor(daysTotal / 7 * 2).toLocaleString();
       els.seasonsValue.textContent = Math.floor(years * 4).toLocaleString();
+      if (els.seasonsCopy) {
+        const nextSeason = getNextSeasonChange(now);
+        els.seasonsCopy.textContent = `Next: ${formatEventDate(nextSeason.date)} - ${nextSeason.label}`;
+      }
       els.fullmoonsValue.textContent = Math.floor(daysExact / 29.53).toLocaleString();
       els.blueMoonsValue.textContent = estimateBlueMoonsExperienced(birthMomentGlobal, now).toLocaleString();
       if (els.blueMoonsCopy) {
@@ -10682,10 +11015,15 @@ function countPresidentialElectionsExperienced(start, end) {
         els.leapdaysCopy.textContent = `Next: ${formatEventDate(getNextLeapDay(now))}`;
       }
       els.dstSwitchesValue.textContent = countDSTShiftsExperienced(birthMomentGlobal, now).toLocaleString();
+      if (els.dstSwitchesCopy) {
+        const nextDST = getNextDSTShift(now);
+        els.dstSwitchesCopy.textContent = nextDST ? `Next: ${formatEventDate(nextDST)}` : 'No upcoming shift detected.';
+      }
       const leapSecondsCount = countLeapSecondsExperienced(birthMomentGlobal, now);
       els.leapsecondsValue.textContent = leapSecondsCount.toLocaleString();
       if (els.leapsecondsCopy) {
-        els.leapsecondsCopy.textContent = `A leap second is an occasional extra second added to UTC so clock time stays close to Earth’s rotation. ${leapSecondsCount.toLocaleString()} ${leapSecondsCount === 1 ? 'has' : 'have'} occurred since your birth.`;
+        const announcement = currentLiveData?.reference?.leapSeconds?.announcement;
+        els.leapsecondsCopy.textContent = `A leap second is an occasional extra second added to UTC so clock time stays close to Earth's rotation. ${leapSecondsCount.toLocaleString()} ${leapSecondsCount === 1 ? 'has' : 'have'} occurred since your birth.${announcement ? ` ${announcement}` : ''}`;
       }
       els.eclipsesValue.textContent = estimateSolarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
       els.totalLunarEclipsesValue.textContent = estimateTotalLunarEclipsesExperienced(birthMomentGlobal, now).toLocaleString();
@@ -10827,8 +11165,51 @@ function countPresidentialElectionsExperienced(start, end) {
       els.spaceMilesValue.textContent = formatCompact(estimatedSpaceMiles, 2);
       if (els.spaceMilesCopy) {
         const earthCircumferences = estimatedSpaceMiles / 24901;
-        els.spaceMilesCopy.textContent = `A rough lifetime estimate using Earth’s ~514,000 mph motion through space — about ${formatCompact(earthCircumferences, 2)} trips around Earth.`;
+        els.spaceMilesCopy.textContent = `A frame-dependent comparison combining Earth's solar orbit with the Sun's galactic motion - about ${formatCompact(earthCircumferences, 2)} trips around Earth.`;
       }
+      const galacticYearYears = 230_000_000;
+      const galacticProgress = years / galacticYearYears * 100;
+      if (els.galacticRotationValue) els.galacticRotationValue.textContent = `${galacticProgress.toFixed(6)}%`;
+      if (els.galacticRotationCopy) els.galacticRotationCopy.textContent = `A tiny but real slice of the Sun's journey around the Milky Way during your life.`;
+
+      const solarHydrogenFusedTons = secondsTotal * 600_000_000;
+      if (els.solarMassValue) els.solarMassValue.textContent = `${formatNamedScale(solarHydrogenFusedTons, 1)} tons`;
+      if (els.solarMassCopy) els.solarMassCopy.textContent = `Hydrogen the Sun has fused into helium during your lifetime.`;
+
+      const voyagerLaunch = new Date('1977-09-05T12:56:00Z');
+      const voyagerOverlapStart = birthMomentGlobal > voyagerLaunch ? birthMomentGlobal : voyagerLaunch;
+      const voyagerOverlapSeconds = Math.max(0, (now - voyagerOverlapStart) / 1000);
+      const voyagerMiles = voyagerOverlapSeconds * 10.563;
+      if (els.voyagerDistanceValue) els.voyagerDistanceValue.textContent = voyagerOverlapSeconds ? `${formatCompact(voyagerMiles, 2)} mi` : 'Not Launched Yet';
+      if (els.voyagerDistanceCopy) els.voyagerDistanceCopy.textContent = voyagerOverlapSeconds
+        ? `Approx. Voyager 1 travel during your lifetime, or since its 09/05/1977 launch if you were already alive.`
+        : `Voyager 1 launches on 09/05/1977 in your personal timeline.`;
+
+      const driftInches = years * 1.5;
+      if (els.continentalDriftValue) els.continentalDriftValue.textContent = driftInches >= 12 ? `${(driftInches / 12).toFixed(1)} ft` : `${driftInches.toFixed(1)} in`;
+      if (els.continentalDriftCopy) els.continentalDriftCopy.textContent = `At a fingernail-like pace, Earth's tectonic plates could have shifted roughly this far during your life.`;
+
+      const lunarRecessionCm = years * 3.8;
+      if (els.lunarRecessionValue) els.lunarRecessionValue.textContent = `${(lunarRecessionCm / 30.48).toFixed(2)} ft`;
+      if (els.lunarRecessionCopy) els.lunarRecessionCopy.textContent = `The Moon is roughly this much farther from Earth than when you were born.`;
+
+      const solarOrbitExpansionCm = years * 1.5;
+      if (els.solarOrbitExpansionValue) els.solarOrbitExpansionValue.textContent = `${(solarOrbitExpansionCm / 30.48).toFixed(2)} ft`;
+      if (els.solarOrbitExpansionCopy) els.solarOrbitExpansionCopy.textContent = `Earth's average orbit is modeled to be roughly this much farther from the Sun than when you were born.`;
+
+      const cosmicExpansionKmAtOneMpc = secondsTotal * 70;
+      if (els.cosmicExpansionValue) els.cosmicExpansionValue.textContent = `${formatNamedScale(cosmicExpansionKmAtOneMpc, 1)} km`;
+      if (els.cosmicExpansionCopy) els.cosmicExpansionCopy.textContent = `Added separation during your life between two unbound points one megaparsec apart, using 70 km/s/Mpc.`;
+
+      const co2Reference = currentLiveData?.reference?.atmosphericCO2;
+      const co2Series = co2Reference?.series || {};
+      const combinedCo2Series = { ...CO2_ANCHORS_PPM, ...co2Series };
+      const birthCo2 = interpolateFromAnchors(birthMomentGlobal.getFullYear(), combinedCo2Series);
+      const latestCo2 = Number(co2Reference?.latestValue) || interpolateFromAnchors(now.getFullYear(), CO2_ANCHORS_PPM);
+      const co2Delta = latestCo2 - birthCo2;
+      const co2Pct = birthCo2 ? co2Delta / birthCo2 * 100 : 0;
+      if (els.co2JumpValue) els.co2JumpValue.textContent = `${co2Delta >= 0 ? '+' : ''}${co2Delta.toFixed(1)} ppm`;
+      if (els.co2JumpCopy) els.co2JumpCopy.textContent = `${birthMomentGlobal.getFullYear()}: ${birthCo2.toFixed(1)} ppm  |  Latest: ${latestCo2.toFixed(1)} ppm  |  ${co2Pct >= 0 ? '+' : ''}${co2Pct.toFixed(1)}%.`;
       els.lifeDayClock.textContent = lifeCompressed.clock;
       els.lifeDayCalendar.textContent = lifeCompressed.calendar;
       els.lifeDaySeason.textContent = lifeCompressed.phase;
@@ -10890,6 +11271,17 @@ function countPresidentialElectionsExperienced(start, end) {
       return dates.find(date => date > now) || null;
     }
 
+    function nextRoundMilestone(value, steps = [1000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000]) {
+      const current = Math.max(0, Number(value) || 0);
+      const size = steps.find(step => step > current) || Math.pow(10, Math.floor(Math.log10(Math.max(1, current)))) * 5;
+      return Math.ceil((current + 1) / size) * size;
+    }
+
+    function dateForDailyRateMilestone(currentValue, targetValue, perDay, now) {
+      const days = Math.max(0, (targetValue - currentValue) / Math.max(0.000001, perDay));
+      return new Date(now.getTime() + days * 86400000);
+    }
+
     function buildUpcomingEvents(now = new Date()) {
       if (!birthMomentGlobal) return [];
       const birthday = getNextBirthdayInfo(now);
@@ -10908,7 +11300,17 @@ function countPresidentialElectionsExperienced(start, end) {
       const halley = nextDatedItem(HALLEY_COMET_DATES, now);
       const nextMeteor = getNextMaintainedSkyEvent(now, event => event.type === 'meteor-shower');
       const nextVisibleSky = getNextMaintainedSkyEvent(now, event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type));
+      const ageDays = Math.max(0, (now - birthMomentGlobal) / 86400000);
+      const walkedMiles = ageDays * 7500 / 2200;
+      const walkingMilestone = nextRoundMilestone(walkedMiles);
+      const dreamsExperienced = ageDays * 4;
+      const dreamMilestone = nextRoundMilestone(dreamsExperienced);
+      const highTides = ageDays * 2;
+      const tideMilestone = nextRoundMilestone(highTides);
       const events = [
+        { date: dateForDailyRateMilestone(walkedMiles, walkingMilestone, 7500 / 2200, now), category: 'personal', icon: '&#128694;', title: `${walkingMilestone.toLocaleString()} Miles Walked`, detail: 'Your next est. lifetime walking milestone' },
+        { date: dateForDailyRateMilestone(dreamsExperienced, dreamMilestone, 4, now), category: 'personal', icon: '&#128164;', title: `${dreamMilestone.toLocaleString()} Dreams`, detail: 'Your next est. dreams-experienced milestone' },
+        { date: dateForDailyRateMilestone(highTides, tideMilestone, 2, now), category: 'world', icon: '&#127754;', title: `${tideMilestone.toLocaleString()} High Tides`, detail: 'Your next approx. semidiurnal-tide milestone' },
         { date: birthday.nextBirthday, category: 'personal', icon: '🎂', title: `Birthday #${birthday.nextAge}`, detail: 'Your next trip around the Sun' },
         { date: getNextMercuryBirthday(birthMomentGlobal, now), category: 'sky', icon: '☿', title: 'Mercury Birthday', detail: 'Another 87.97 Earth-day Mercury year' },
         { date: fullMoonDate, category: 'sky', icon: '🌕', title: 'Full Moon', detail: 'The next lunar peak' },
@@ -10994,16 +11396,24 @@ function countPresidentialElectionsExperienced(start, end) {
     }
 
     function readCostMetric(metric, year) {
-      if (!metric || year < Number(metric.coverageStart || 0)) return { value: null, label: metric?.beforeCoverage || 'Not Tracked Yet', quality: 'Limited Data' };
+      if (!metric || year < Number(metric.coverageStart || 0)) return { value: null, label: metric?.beforeCoverage || 'Not Tracked Yet', quality: 'Limited Data', year };
       if (metric.stepSeries) {
         const years = Object.keys(metric.stepSeries).map(Number).filter(item => item <= year).sort((a, b) => a - b);
         const match = years[years.length - 1];
-        return Number.isFinite(match) ? { value: Number(metric.stepSeries[match]), label: '', quality: match === year ? 'Published' : 'Published Rate' } : { value: null, label: 'Not Tracked Yet', quality: 'Limited Data' };
+        return Number.isFinite(match) ? { value: Number(metric.stepSeries[match]), label: '', quality: match === year ? 'Published' : 'Published Rate', year: match } : { value: null, label: 'Not Tracked Yet', quality: 'Limited Data', year };
       }
       const exact = Number(metric.series?.[year]);
-      if (Number.isFinite(exact)) return { value: exact, label: '', quality: 'Published' };
+      if (Number.isFinite(exact)) {
+        const preliminary = Array.isArray(metric.preliminaryYears) && metric.preliminaryYears.map(Number).includes(year);
+        const estimated = Array.isArray(metric.estimatedYears) && metric.estimatedYears.map(Number).includes(year);
+        return { value: exact, label: '', quality: preliminary ? 'Preliminary' : estimated ? 'Modeled Estimate' : 'Published', year };
+      }
+      const years = Object.keys(metric.series || {}).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+      if (!years.length) return { value: null, label: 'Unavailable', quality: 'Limited Data', year };
+      const latest = years[years.length - 1];
+      if (year > latest) return { value: Number(metric.series[latest]), label: '', quality: 'Latest Published', year: latest };
       const value = interpolateFromAnchors(year, metric.series || {});
-      return Number.isFinite(value) ? { value, label: '', quality: 'Interpolated' } : { value: null, label: 'Unavailable', quality: 'Limited Data' };
+      return Number.isFinite(value) ? { value, label: '', quality: 'Interpolated', year } : { value: null, label: 'Unavailable', quality: 'Limited Data', year };
     }
 
     function formatCostMetric(metric, result) {
@@ -11028,8 +11438,14 @@ function countPresidentialElectionsExperienced(start, end) {
           : birth.label === 'Not Open Yet'
             ? 'The resort had not opened yet in your birth year.'
             : `Published comparison coverage begins in ${metric.coverageStart}.`;
-        const quality = birth.quality === 'Interpolated' || current.quality === 'Interpolated' ? 'Interpolated' : birth.quality || current.quality || 'Published';
-        return { icon: metric.icon, label: abbreviateDisplayLabel(metric.label), then: formatCostMetric(metric, birth), now: formatCostMetric(metric, current), change, group: metric.group || 'everyday', quality, diagnostic: `${quality}; ${metric.source || 'maintained comparison source'}.` };
+        const quality = [birth.quality, current.quality].includes('Modeled Estimate')
+          ? 'Modeled Estimate'
+          : [birth.quality, current.quality].includes('Preliminary')
+            ? 'Preliminary'
+            : [birth.quality, current.quality].includes('Interpolated')
+              ? 'Interpolated'
+              : current.quality || birth.quality || 'Published';
+        return { icon: metric.icon, label: abbreviateDisplayLabel(metric.label), then: formatCostMetric(metric, birth), now: formatCostMetric(metric, current), thenEra: birth.year || birthYear, nowEra: current.year || currentYear, change, group: metric.group || 'everyday', quality, diagnostic: `${quality}; ${metric.source || 'maintained comparison source'}.` };
       });
     }
 
@@ -11171,13 +11587,34 @@ function countPresidentialElectionsExperienced(start, end) {
       const populationPct = birthPopulation ? (populationDelta / birthPopulation) * 100 : 0;
       const tempDeltaF = celsiusToFahrenheit(currentTempC) - celsiusToFahrenheit(birthTempC);
       const presidentsLived = countPresidentsExperienced(birthMomentGlobal, now);
+      const birthChip = getChipTransistorMilestone(birthYear);
+      const currentChip = CHIP_TRANSISTOR_MILESTONES[CHIP_TRANSISTOR_MILESTONES.length - 1];
+      const transistorMultiplier = currentChip.value / birthChip.value;
+      const globalDataYears = Object.keys(GLOBAL_DATA_ANCHORS_ZB).map(Number).sort((a, b) => a - b);
+      const latestDataYear = globalDataYears.filter(year => year <= currentYear).pop() || globalDataYears[0];
+      const birthDataZb = birthYear >= globalDataYears[0] ? interpolateFromAnchors(birthYear, GLOBAL_DATA_ANCHORS_ZB) : null;
+      const currentDataZb = GLOBAL_DATA_ANCHORS_ZB[latestDataYear];
+      let dataCreatedDuringLife = 0;
+      for (let year = Math.max(birthYear, globalDataYears[0]); year <= latestDataYear; year += 1) dataCreatedDuringLife += interpolateFromAnchors(year, GLOBAL_DATA_ANCHORS_ZB);
+      const humansEverBornAtBirth = interpolateFromAnchors(birthYear, HUMANS_EVER_BORN_ANCHORS);
+      const humansEverBornNow = interpolateFromAnchors(currentYear, HUMANS_EVER_BORN_ANCHORS);
+      const humansBornSince = Math.max(0, humansEverBornNow - humansEverBornAtBirth);
+      const internetTrafficYears = Object.keys(INTERNET_TRAFFIC_ANCHORS_EB_MONTH).map(Number).sort((a, b) => a - b);
+      const latestInternetTrafficYear = internetTrafficYears[internetTrafficYears.length - 1];
+      const birthInternetTraffic = birthYear >= internetTrafficYears[0] ? interpolateFromAnchors(birthYear, INTERNET_TRAFFIC_ANCHORS_EB_MONTH) : null;
+      const latestInternetTraffic = INTERNET_TRAFFIC_ANCHORS_EB_MONTH[latestInternetTrafficYear];
+      const internetTrafficMultiplier = birthInternetTraffic ? latestInternetTraffic / birthInternetTraffic : null;
       const comparisons = [
-        { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).` },
-        { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`) },
-        { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.` },
-        { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.` },
-        { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.` }
-      ].map(item => ({ ...item, group: 'world' }));
+        { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
+        { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `Est. ${formatNamedScale(humansBornSince, 1)} additional Homo sapiens have been born since you arrived.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate.', group: 'world' },
+        { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`), group: 'everyday' },
+        { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.`, group: 'world' },
+        { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.`, group: 'world' },
+        { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.`, group: 'technology' },
+        { icon: '&#129504;', label: 'Microchip Transistors', then: birthYear < 1971 ? 'Not Yet Invented' : formatNamedScale(birthChip.value, 1), now: formatNamedScale(currentChip.value, 0), thenEra: birthYear < 1971 ? birthYear : birthChip.year, nowEra: currentChip.year, change: birthYear < 1971 ? `${currentChip.chip} now contains ${formatNamedScale(currentChip.value, 0)} transistors.` : `${currentChip.chip} contains about ${formatNamedScale(transistorMultiplier, 1)} times the transistors of the ${birthChip.chip}.`, diagnostic: `Then benchmark: ${birthChip.chip} (${birthChip.year}). Latest maintained benchmark: ${currentChip.chip} (${currentChip.year}).`, group: 'technology' },
+        { icon: '&#128190;', label: 'Annual Global Data Created', then: birthDataZb == null ? 'Before Tracking' : formatDigitalData(birthDataZb), now: formatDigitalData(currentDataZb), nowEra: latestDataYear, change: `Est. tracked cumulative total since ${Math.max(birthYear, globalDataYears[0])}: ${formatDigitalData(dataCreatedDuringLife)} created, captured, or replicated globally.`, diagnostic: 'Broad Global Datasphere estimates and interpolation beginning in 2010; this sums estimated annual volumes and does not represent permanently stored unique files.', group: 'technology' },
+        { icon: '&#127760;', label: 'Monthly Internet Traffic', then: birthInternetTraffic == null ? 'Before Tracking' : `${birthInternetTraffic.toFixed(1)} EB`, now: `${latestInternetTraffic.toFixed(0)} EB`, nowEra: latestInternetTrafficYear, change: internetTrafficMultiplier ? `Global monthly IP traffic grew about ${internetTrafficMultiplier.toFixed(1)}x from your birth-year estimate.` : `Modern tracking reached ${latestInternetTraffic.toFixed(0)} EB per month by ${latestInternetTrafficYear}.`, diagnostic: 'Cisco VNI historical and forecast anchors through 2022; later values are not extrapolated.', group: 'technology' }
+      ];
 
       const cityScale = currentPopulation > 0 ? birthPopulation / currentPopulation : null;
       const buildCityPopulationRow = (geo, label, emptyPrompt) => {
@@ -11244,7 +11681,7 @@ function countPresidentialElectionsExperienced(start, end) {
       comparisons.push(...buildCostComparisons(birthYear, currentYear));
       if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} to ${currentYear}`;
       if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} comparisons showing how amounts and percentages changed from then to now.`;
-      const groupLabels = { world: 'World & Society', local: 'Local Economy', everyday: 'Everyday Costs', major: 'Major Life Costs' };
+      const groupLabels = { world: 'World & Society', local: 'Local Economy', technology: 'Technology', everyday: 'Everyday Costs', major: 'Major Life Costs' };
       els.bornThenNowList.innerHTML = Object.entries(groupLabels).map(([group, title]) => {
         const rows = comparisons.filter(item => item.group === group);
         if (!rows.length) return '';
@@ -11663,6 +12100,7 @@ function getBirthSkySnapshot() {
     function applyScheduledReferenceData(payload) {
       if (!payload || typeof payload !== 'object') return;
       currentLiveData = payload;
+      if (birthMomentGlobal) renderPopCultureEpisodeMilestones(birthMomentGlobal);
 
       Object.entries(payload.components || {}).forEach(([key, component]) => {
         const expired = Number.isFinite(Date.parse(component?.expiresAt || '')) && Date.parse(component.expiresAt) < Date.now();
@@ -11752,13 +12190,24 @@ function getBirthSkySnapshot() {
     }
     async function loadCostOfLivingData() {
       if (location.protocol === 'file:') {
-        setLiveDiagnostic('costOfLiving', {
-          label: 'Cost Comparison Dataset',
-          state: 'local',
-          detail: `Embedded comparison snapshot updated ${formatSourceDate(currentCostData?.updatedAt)}; next review ${formatSourceDate(currentCostData?.nextReview)}.`,
-          source: 'Embedded cost snapshot'
-        });
-        return currentCostData;
+        try {
+          const publicUrl = `https://dallaslott.github.io/LifePulse/${COST_DATA_URL}?v=${Date.now()}`;
+          const response = await fetch(publicUrl, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`Published cost data failed (${response.status}).`);
+          const payload = await response.json();
+          if (!payload?.metrics || Object.keys(payload.metrics).length < 8) throw new Error('Published cost data is incomplete.');
+          currentCostData = payload;
+          if (birthMomentGlobal) { renderBornThenNow(new Date()); renderLifeAtlas(new Date()); }
+          setLiveDiagnostic('costOfLiving', { label: 'Cost Comparison Dataset', state: 'live', detail: `Local preview loaded the published dataset updated ${formatSourceDate(payload.updatedAt)}; next review ${formatSourceDate(payload.nextReview)}.`, source: 'Published LifePulse cost dataset' });
+          return currentCostData;
+        } catch (error) {
+          setLiveDiagnostic('costOfLiving', {
+            label: 'Cost Comparison Dataset', state: 'local',
+            detail: `Published data was unavailable (${error.message}); using embedded snapshot updated ${formatSourceDate(currentCostData?.updatedAt)}.`,
+            source: 'Embedded cost snapshot'
+          });
+          return currentCostData;
+        }
       }
       try {
         const response = await fetch(`${COST_DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
@@ -11777,12 +12226,20 @@ function getBirthSkySnapshot() {
 
     async function loadPlaceEconomicData() {
       if (location.protocol === 'file:') {
-        setLiveDiagnostic('placeEconomy', {
-          label: 'Official Place + Income Data', state: 'local',
-          detail: 'Local preview uses clearly labeled location fallbacks. The published GitHub workflow supplies Census and BEA records.',
-          source: 'Local preview fallback'
-        });
-        return currentPlaceEconomicData;
+        try {
+          const publicUrl = `https://dallaslott.github.io/LifePulse/${PLACE_ECONOMIC_DATA_URL}?v=${Date.now()}`;
+          const response = await fetch(publicUrl, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`Published place data failed (${response.status}).`);
+          const payload = await response.json();
+          if (Number(payload?.schemaVersion) < 1 || Object.keys(payload?.places || {}).length < 25000 || Object.keys(payload?.counties || {}).length < 3000) throw new Error('Published place data is incomplete.');
+          currentPlaceEconomicData = payload;
+          if (birthMomentGlobal) renderBornThenNow(new Date());
+          setLiveDiagnostic('placeEconomy', { label: 'Official Place + Income Data', state: 'live', detail: `Local preview loaded ${Object.keys(payload.places).length.toLocaleString()} Census places and ${Object.keys(payload.counties).length.toLocaleString()} BEA counties.`, source: 'Published Census + BEA dataset' });
+          return currentPlaceEconomicData;
+        } catch (error) {
+          setLiveDiagnostic('placeEconomy', { label: 'Official Place + Income Data', state: 'local', detail: `Published data was unavailable (${error.message}); using location-record fallbacks.`, source: 'Local preview fallback' });
+          return currentPlaceEconomicData;
+        }
       }
       try {
         const response = await fetch(`${PLACE_ECONOMIC_DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
