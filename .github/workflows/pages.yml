@@ -78,7 +78,17 @@ jobs:
         run: |
           mkdir -p _site/vendor _site/assets
           cp index.html manifest.webmanifest sw.js offline.html live-data.json version.json sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json _site/
-          cp assets/lifepulse-icon-192.png assets/lifepulse-icon-512.png assets/lifepulse-maskable-512.png assets/lifepulse-notification.png assets/simpsons-intro.mp4 _site/assets/
+          cp assets/lifepulse-icon-192.png assets/lifepulse-icon-512.png assets/lifepulse-maskable-512.png _site/assets/
+          if [ -f assets/lifepulse-notification.png ]; then
+            cp assets/lifepulse-notification.png _site/assets/
+          else
+            cp assets/lifepulse-icon-192.png _site/assets/lifepulse-notification.png
+          fi
+          if [ -f assets/simpsons-intro.mp4 ]; then
+            cp assets/simpsons-intro.mp4 _site/assets/
+          elif [ -f "assets/Simpsons Intro.mp4" ]; then
+            cp "assets/Simpsons Intro.mp4" _site/assets/simpsons-intro.mp4
+          fi
           cp node_modules/astronomy-engine/astronomy.browser.min.js _site/vendor/
           touch _site/.nojekyll
 
