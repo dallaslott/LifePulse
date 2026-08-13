@@ -2,7 +2,7 @@
 
 Life Pulse turns a birth date into a personal dashboard with live age calculations, lifetime estimates, zodiac and numerology details, historical context, sports facts, astronomy, and birth-location weather.
 
-Current local review build: `5.local.20260812.1`.
+Current local review build: `5.80.1.local`.
 
 Version 5 begins the Android-first mobile-app phase. LifePulse now includes an installable Progressive Web App foundation: a web app manifest, dedicated app icons, a service worker, an offline fallback, device-local notification preferences, Android installation controls, and a notification-permission/test flow. The same standards-based foundation remains compatible with a later iPhone verification pass.
 
@@ -14,7 +14,7 @@ It also adds age-driven body, Earth, and cosmic comparisons: cellular turnover, 
 
 Additional personal-scale comparisons estimate dreams experienced, show microchip transistor growth from birth to a maintained modern benchmark, scale global annual digital data creation into readable GB-through-ZB units, and estimate how many Homo sapiens had ever been born by the user's birth year.
 
-The lifetime and culture views also estimate neutrino interactions, one-strand scalp-hair growth, combined fingernail growth, shed skin mass, lunar orbital recession, Cisco-era internet traffic growth, and maintained episode milestones for The Simpsons and Saturday Night Live.
+The lifetime and culture views also estimate circulatory loops, flatulence, visual samples processed, neutrino interactions, one-strand scalp-hair growth, combined fingernail growth, shed skin mass, lunar orbital recession, Cisco-era internet traffic growth, and maintained episode milestones for The Simpsons and Saturday Night Live. The cosmic view additionally tracks average sunspot cycles, Halley's average orbit progress, broad solar-system movement around the Milky Way, satellite-era global sea-level change, and global ocean water cycled. These are clearly labeled estimates; the assumptions and source notes are available only in Diagnostic Mode.
 
 The ordinary dashboard launch uses a brief, locally rendered LifePulse ECG transition. It has no mapping dependency, remote imagery request, account, API key, or usage charge.
 
@@ -36,7 +36,18 @@ Open `index.html` directly for layout and calculation review. The bundled `vendo
 - `scripts/update-live-data.mjs` — refreshes horoscope, astronomy, population, and gas data
 - `package.json` — pins Astronomy Engine to a tested version
 - `vendor/astronomy.browser.min.js` - supports private, on-device eclipse visibility calculations
-- `.github/workflows/pages.yml` — refreshes data and publishes GitHub Pages
+- `.github/workflows/pages.yml` - refreshes data and publishes GitHub Pages
+
+## Workspace layout
+
+- `publish/LifePulse-Upload-This/` - the current ready-to-upload copy; use this folder when manually publishing through GitHub's web interface
+- `publish/GitHub-Upload-Kit/` - upload shortcuts and checklist
+- `archive/release-snapshots/` - preserved prior release copies
+- `archive/rollbacks/` - preserved restore points
+- `reference/` - supplied examples and design references
+- `development/temp/` and `development/pdf-renders/` - disposable local test output; never upload these folders
+
+The active GitHub Pages source files remain at the project root. Do not move `index.html`, JSON feeds, `.github/`, `assets/`, `scripts/`, or `vendor/`.
 
 ## Published site
 

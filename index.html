@@ -4025,7 +4025,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.local.20260812.1</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.80.1.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4051,34 +4051,6 @@
       </svg>
     </div>
     <div id="environment-note" class="environment-note hidden"></div>
-
-    <section class="panel pwa-panel" id="mobile-app-panel" aria-labelledby="mobile-app-title">
-      <div class="section-head">
-        <span class="lifetime-kicker">LifePulse Mobile</span>
-        <span class="panel-note">Version 5</span>
-      </div>
-      <h2 id="mobile-app-title">Installed App & Alerts</h2>
-      <p class="pwa-panel-copy">Install LifePulse on this device and choose which future notifications you want. Preferences stay on this device.</p>
-      <div class="pwa-state-grid" aria-label="Mobile app status">
-        <div class="pwa-state-item"><span>App</span><strong id="pwa-install-state">Browser</strong></div>
-        <div class="pwa-state-item"><span>Offline Shell</span><strong id="pwa-offline-state">Checking</strong></div>
-        <div class="pwa-state-item"><span>Notifications</span><strong id="pwa-notification-state">Not Enabled</strong></div>
-      </div>
-      <div class="notification-options" id="notification-options" aria-label="Notification preferences">
-        <label class="notification-option"><input type="checkbox" data-notification-pref="personal" checked> Birthdays & Personal Milestones</label>
-        <label class="notification-option"><input type="checkbox" data-notification-pref="sky" checked> Moon, Eclipses & Sky Events</label>
-        <label class="notification-option"><input type="checkbox" data-notification-pref="calendar" checked> Seasons & Calendar Events</label>
-        <label class="notification-option"><input type="checkbox" data-notification-pref="sports"> Sports Championships</label>
-        <label class="notification-option"><input type="checkbox" data-notification-pref="horoscope"> Daily Horoscope</label>
-        <label class="notification-option"><input type="checkbox" data-notification-pref="data" checked> Important Data Updates</label>
-      </div>
-      <div class="pwa-actions">
-        <button class="pwa-action-btn" id="dashboard-install-app-btn" type="button">INSTALL APP</button>
-        <button class="pwa-action-btn" id="enable-notifications-btn" type="button">ENABLE ALERTS</button>
-        <button class="pwa-action-btn secondary" id="test-notification-btn" type="button">SEND TEST</button>
-      </div>
-      <p class="pwa-status" id="pwa-status" role="status" aria-live="polite">Android is the primary Version 5 test platform. Scheduled delivery will activate when the notification service is connected.</p>
-    </section>
 
     <div class="born-shell">
       <span class="born-kicker">Born On</span>
@@ -4158,6 +4130,10 @@
           <span class="lifetime-label">Blood Volume Pumped</span>
         </div>
         <div class="lifetime-card compact-card lifetime-card--long">
+          <span class="lifetime-value" id="circulation-loops-value">0</span>
+          <span class="lifetime-label">Circulatory Loops</span>
+        </div>
+        <div class="lifetime-card compact-card lifetime-card--long">
           <span class="lifetime-value" id="breaths-value">0</span>
           <span class="lifetime-label">Breaths Taken</span>
         </div>
@@ -4192,6 +4168,14 @@
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="laughs-value">0</span>
           <span class="lifetime-label">Laughs</span>
+        </div>
+        <div class="lifetime-card compact-card">
+          <span class="lifetime-value" id="farts-value">0</span>
+          <span class="lifetime-label">Farts</span>
+        </div>
+        <div class="lifetime-card compact-card lifetime-card--long">
+          <span class="lifetime-value" id="visual-samples-value">0</span>
+          <span class="lifetime-label">Visual Samples Processed</span>
         </div>
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="hair-growth-value">0</span>
@@ -4471,6 +4455,16 @@
           <span class="micro-label" id="saturn-return-label">Saturn Returns Lived</span>
           <p class="insight-copy" id="saturn-return-copy">Your Saturn Phase and Next Return will appear here.</p>
         </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="sunspot-cycles-value">0</span>
+          <span class="micro-label">Sunspot Cycles</span>
+          <p class="insight-copy" id="sunspot-cycles-copy">Your solar-cycle progress will appear here.</p>
+        </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="comet-orbit-value">0</span>
+          <span class="micro-label">Halley Orbit Progress</span>
+          <p class="insight-copy" id="comet-orbit-copy">Your progress through Halley&#39;s long orbit will appear here.</p>
+        </div>
         <div class="cosmic-group-title">Motion Through Space</div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="space-miles-value">0</span>
@@ -4481,6 +4475,11 @@
           <span class="insight-value" id="galactic-rotation-value">0%</span>
           <span class="micro-label">Galactic Rotation Progress</span>
           <p class="insight-copy" id="galactic-rotation-copy">Your progress through one galactic year will appear here.</p>
+        </div>
+        <div class="insight-card compact-card">
+          <span class="insight-value" id="galactic-center-distance-value">0</span>
+          <span class="micro-label">From Galactic Center</span>
+          <p class="insight-copy" id="galactic-center-distance-copy">Our solar system&#39;s galactic address will appear here.</p>
         </div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="voyager-distance-value">0</span>
@@ -4512,6 +4511,16 @@
           <span class="insight-value" id="co2-jump-value">0 ppm</span>
           <span class="micro-label">Atmospheric CO2 Jump</span>
           <p class="insight-copy" id="co2-jump-copy">Your birth-year level will be compared with the latest measured level.</p>
+        </div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="sea-level-rise-value">0</span>
+          <span class="micro-label">Global Mean Sea Rise</span>
+          <p class="insight-copy" id="sea-level-rise-copy">Satellite-era comparison will appear here.</p>
+        </div>
+        <div class="insight-card compact-card lifetime-card--long">
+          <span class="insight-value" id="ocean-cycle-value">0</span>
+          <span class="micro-label">Ocean Water Cycled</span>
+          <p class="insight-copy" id="ocean-cycle-copy">Global ocean evaporation volume will appear here.</p>
         </div>
         <div class="cosmic-group-title">Deep Universe + Particles</div>
         <div class="insight-card compact-card lifetime-card--long">
@@ -4946,6 +4955,34 @@
 
     <div class="dashboard-groups" id="dashboard-groups"></div>
 
+    <section class="panel pwa-panel" id="mobile-app-panel" aria-labelledby="mobile-app-title">
+      <div class="section-head">
+        <span class="lifetime-kicker">LifePulse Mobile</span>
+        <span class="panel-note">Version 5</span>
+      </div>
+      <h2 id="mobile-app-title">Installed App & Alerts</h2>
+      <p class="pwa-panel-copy">Install LifePulse on this device and choose which future notifications you want. Preferences stay on this device.</p>
+      <div class="pwa-state-grid" aria-label="Mobile app status">
+        <div class="pwa-state-item"><span>App</span><strong id="pwa-install-state">Browser</strong></div>
+        <div class="pwa-state-item"><span>Offline Shell</span><strong id="pwa-offline-state">Checking</strong></div>
+        <div class="pwa-state-item"><span>Notifications</span><strong id="pwa-notification-state">Not Enabled</strong></div>
+      </div>
+      <div class="notification-options" id="notification-options" aria-label="Notification preferences">
+        <label class="notification-option"><input type="checkbox" data-notification-pref="personal" checked> Birthdays & Personal Milestones</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="sky" checked> Moon, Eclipses & Sky Events</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="calendar" checked> Seasons & Calendar Events</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="sports"> Sports Championships</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="horoscope"> Daily Horoscope</label>
+        <label class="notification-option"><input type="checkbox" data-notification-pref="data" checked> Important Data Updates</label>
+      </div>
+      <div class="pwa-actions">
+        <button class="pwa-action-btn" id="dashboard-install-app-btn" type="button">INSTALL APP</button>
+        <button class="pwa-action-btn" id="enable-notifications-btn" type="button">ENABLE ALERTS</button>
+        <button class="pwa-action-btn secondary" id="test-notification-btn" type="button">SEND TEST</button>
+      </div>
+      <p class="pwa-status" id="pwa-status" role="status" aria-live="polite">Android is the primary Version 5 test platform. Scheduled delivery will activate when the notification service is connected.</p>
+    </section>
+
     <div id="diagnostics-panel" class="panel diagnostics-panel hidden">
       <div class="section-head">
         <span class="lifetime-kicker">Diagnostics</span>
@@ -5023,7 +5060,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.local.20260812.1';
+    const LOCAL_RELEASE_VERSION = '5.80.1.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5143,13 +5180,13 @@
       movie:       { state: 'idle', label: 'Birth-date movie', detail: 'Waiting for birth snapshot…', source: 'Wikipedia box-office history' },
       civic:       { state: 'idle', label: 'Civic reference', detail: 'Waiting for the scheduled USAGov reference…', source: 'USAGov' },
       skyEvents:   { state: 'idle', label: 'Sky event calendar', detail: 'Waiting for the maintained annual sky calendar.', source: 'NASA GSFC + IMO' },
-      bodyEstimates: { state: 'static', label: 'Body + lifetime estimates', detail: 'Blood pumped uses the American Heart Association average of 2,000 gallons/day; one Olympic pool is treated as roughly 660,000 gallons, making the age-30 comparison about 33 pools. Walking uses 7,500 steps/day and 2,200 steps/mile. Cellular turnover uses 330 billion cells/day. Blink darkness uses 15 blinks/minute, 0.1 second closed, and 16 waking hours/day. Dreams use four estimated dream periods/night, not remembered dreams. Hair uses one scalp strand at 1 cm/month; nails combine ten fingernails at 3.47 mm/month each; shed skin uses 1.5 g/day. High tides use a broad two-per-day semidiurnal estimate; local patterns vary.', source: 'American Heart Association + peer-reviewed sleep, cell-turnover, dermatology research + LifePulse stated assumptions' },
+      bodyEstimates: { state: 'static', label: 'Body + lifetime estimates', detail: 'Blood pumped uses the American Heart Association average of 2,000 gallons/day; one Olympic pool is treated as roughly 660,000 gallons, making the age-30 comparison about 33 pools. Circulatory loops use a one-minute whole-circulation average (1,440/day), not the length of all blood vessels. Walking uses 7,500 steps/day and 2,200 steps/mile. Cellular turnover uses 330 billion cells/day. Blink darkness uses 15 blinks/minute, 0.1 second closed, and 16 waking hours/day. Dreams use four estimated dream periods/night, not remembered dreams. Farts use 11/day, the midpoint of the NIDDK 8–14/day range. Visual samples use a conservative 30/second display-rate comparison; they are not unique images or visual memories. Hair uses one scalp strand at 1 cm/month; nails combine ten fingernails at 3.47 mm/month each; shed skin uses 1.5 g/day. High tides use a broad two-per-day semidiurnal estimate; local patterns vary.', source: 'American Heart Association, NIDDK, vision research + LifePulse stated assumptions' },
       neutrinos: { state: 'static', label: 'Neutrino interactions', detail: 'About 100 trillion neutrinos pass through a body each second, but interaction probability varies enormously with energy. LifePulse scales CERN\'s public estimate of about a one-in-four chance during an 80-year lifetime as a Poisson probability. IceCube-detectable high-energy events are far rarer.', source: 'CERN Neutrino Platform + IceCube references' },
       technologyScale: { state: 'static', label: 'Technology scale comparisons', detail: 'Microchip cards select the latest maintained processor milestone at or before the birth year. Global data uses broad annual Global Datasphere anchors and interpolation; it includes data created, captured, or replicated rather than only unique files kept forever.', source: 'Intel, NVIDIA, Apple + IDC Global Datasphere references' },
       internetTraffic: { state: 'static', label: 'Internet traffic growth', detail: 'Global monthly IP traffic uses Cisco VNI anchors through 2022. LifePulse does not extrapolate beyond the maintained Cisco endpoint.', source: 'Cisco Visual Networking Index' },
       popCultureEpisodes: { state: 'idle', label: 'Pop-culture episode counts', detail: 'Waiting for the scheduled episode-count reference.', source: 'Wikidata with embedded milestone fallback' },
       humanHistory: { state: 'static', label: 'Humans ever born', detail: 'Cumulative births are interpolated from Population Reference Bureau benchmarks. More than 99% of human history lacks demographic records, so this is an informed estimate rather than an exact count.', source: 'Population Reference Bureau' },
-      cosmicEstimates: { state: 'static', label: 'Cosmic + Earth estimates', detail: 'Galactic progress uses a 230-million-year solar orbit. Solar fusion uses 600 million metric tons of hydrogen/second. Voyager 1 overlap uses 10.563 miles/second after 09/05/1977. Continental drift uses a relatable 1.5 inches/year; actual plate speeds vary. Lunar recession uses 3.8 cm/year. Solar orbit expansion uses NASA\'s modeled 1.5 cm/year per AU. Cosmic expansion shows the added separation of two unbound points one megaparsec apart using a 70 km/s/Mpc reference; it is not a change in the universe\'s total volume.', source: 'NASA mission, Hubble-law, solar, and lunar laser-ranging references + LifePulse stated assumptions' },
+      cosmicEstimates: { state: 'static', label: 'Cosmic + Earth estimates', detail: 'Galactic progress uses a 230-million-year solar orbit and NASA\'s approximately 26,000-light-year galactic-center distance. Sunspot cycles use an 11-year average, so their timing is illustrative rather than an official cycle boundary. Halley orbit progress uses 75.32 years. Solar fusion uses 600 million metric tons of hydrogen/second. Voyager 1 overlap uses 10.563 miles/second after 09/05/1977. Continental drift uses a relatable 1.5 inches/year; actual plate speeds vary. Lunar recession uses 3.8 cm/year. Solar orbit expansion uses NASA\'s modeled 1.5 cm/year per AU. Global sea level uses NOAA\'s satellite-era average rate of 3.8 mm/year; it is a global comparison, not a local-coast forecast. Ocean water cycled uses NOAA\'s global ocean evaporation flux of 425,000 km³/year. Cosmic expansion shows the added separation of two unbound points one megaparsec apart using a 70 km/s/Mpc reference; it is not a change in the universe\'s total volume.', source: 'NASA + NOAA + Hubble-law and lunar laser-ranging references + LifePulse stated assumptions' },
       earthEvents: { state: 'static', label: 'Global Earth events', detail: 'Lightning uses NASA\'s rounded global rate of 50 flashes/second. Major earthquakes use the USGS long-term expectation of about 16 magnitude-7-or-greater events/year. Both are lifetime-scale estimates, not personal exposure counts.', source: 'NASA lightning climatology + USGS Earthquake Hazards Program' }
       ,pwa: { state: 'idle', label: 'Installed app', detail: 'Checking service worker, installation, and notification support.', source: 'Browser PWA APIs' }
     };
@@ -5236,6 +5273,7 @@
       secondsValue:          document.getElementById('seconds-value'),
       heartbeatsValue:       document.getElementById('heartbeats-value'),
       bloodPumpedValue:      document.getElementById('blood-pumped-value'),
+      circulationLoopsValue: document.getElementById('circulation-loops-value'),
       breathsValue:          document.getElementById('breaths-value'),
       stepsValue:            document.getElementById('steps-value'),
       milesWalkedValue:      document.getElementById('miles-walked-value'),
@@ -5243,6 +5281,8 @@
       mealsValue:            document.getElementById('meals-value'),
       wordsValue:            document.getElementById('words-value'),
       laughsValue:           document.getElementById('laughs-value'),
+      fartsValue:            document.getElementById('farts-value'),
+      visualSamplesValue:    document.getElementById('visual-samples-value'),
       cellTurnoverValue:     document.getElementById('cell-turnover-value'),
       highTidesValue:        document.getElementById('high-tides-value'),
       lightningFlashesValue: document.getElementById('lightning-flashes-value'),
@@ -5299,6 +5339,10 @@
       weekendsValue:         document.getElementById('weekends-value'),
       seasonsValue:          document.getElementById('seasons-value'),
       seasonsCopy:           document.getElementById('seasons-copy'),
+      sunspotCyclesValue:    document.getElementById('sunspot-cycles-value'),
+      sunspotCyclesCopy:     document.getElementById('sunspot-cycles-copy'),
+      cometOrbitValue:       document.getElementById('comet-orbit-value'),
+      cometOrbitCopy:        document.getElementById('comet-orbit-copy'),
       fullmoonsValue:        document.getElementById('fullmoons-value'),
       blueMoonsValue:        document.getElementById('blue-moons-value'),
       blueMoonsCopy:         document.getElementById('blue-moons-copy'),
@@ -5322,6 +5366,12 @@
       phoneErasValue:        document.getElementById('phone-eras-value'),
       halleyValue:           document.getElementById('halley-value'),
       halleyCopy:            document.getElementById('halley-copy'),
+      galacticCenterDistanceValue: document.getElementById('galactic-center-distance-value'),
+      galacticCenterDistanceCopy: document.getElementById('galactic-center-distance-copy'),
+      seaLevelRiseValue:     document.getElementById('sea-level-rise-value'),
+      seaLevelRiseCopy:      document.getElementById('sea-level-rise-copy'),
+      oceanCycleValue:       document.getElementById('ocean-cycle-value'),
+      oceanCycleCopy:        document.getElementById('ocean-cycle-copy'),
       afcSuperbowlsValue:   document.getElementById('afc-superbowls-value'),
       afcSuperbowlsCopy:    document.getElementById('afc-superbowls-copy'),
       nfcSuperbowlsValue:   document.getElementById('nfc-superbowls-value'),
@@ -11067,6 +11117,7 @@ function countPresidentialElectionsExperienced(start, end) {
       const heartbeats = Math.floor(secondsTotal * 1.0);
       const bloodPumpedGallons = daysExact * 2000;
       const bloodPumpedPools = bloodPumpedGallons / 660000;
+      const circulationLoops = Math.floor(daysExact * 1440);
       const breaths    = Math.floor(secondsTotal * (16 / 60));
       const steps      = Math.floor(daysExact * 7500);
       const milesWalked = Math.floor(steps / 2200);
@@ -11074,6 +11125,8 @@ function countPresidentialElectionsExperienced(start, end) {
       const meals      = Math.floor(daysExact * 3);
       const words      = Math.floor(daysExact * 16000);
       const laughs     = Math.floor(daysExact * 18);
+      const fartsEstimated = Math.floor(daysExact * 11);
+      const visualSamples = Math.floor(secondsTotal * 30);
       const cellTurnover = daysExact * 330_000_000_000;
       const highTides = Math.floor(daysExact * 2);
       const lightningFlashes = secondsTotal * 50;
@@ -11091,6 +11144,7 @@ function countPresidentialElectionsExperienced(start, end) {
         els.bloodPumpedValue.textContent = `${formatNamedScale(bloodPumpedGallons, 1)} gal`;
         els.bloodPumpedValue.title = `About ${formatNamedScale(bloodPumpedPools, 1)} Olympic-sized swimming pools`;
       }
+      if (els.circulationLoopsValue) els.circulationLoopsValue.textContent = formatNamedScale(circulationLoops, 1);
       els.breathsValue.textContent    = breaths.toLocaleString();
       els.stepsValue.textContent      = steps.toLocaleString();
       els.milesWalkedValue.textContent= `${milesWalked.toLocaleString()} mi`;
@@ -11098,6 +11152,8 @@ function countPresidentialElectionsExperienced(start, end) {
       els.mealsValue.textContent      = meals.toLocaleString();
       els.wordsValue.textContent      = words.toLocaleString();
       els.laughsValue.textContent     = laughs.toLocaleString();
+      if (els.fartsValue) els.fartsValue.textContent = fartsEstimated.toLocaleString();
+      if (els.visualSamplesValue) els.visualSamplesValue.textContent = formatNamedScale(visualSamples, 1);
       if (els.cellTurnoverValue) els.cellTurnoverValue.textContent = formatNamedScale(cellTurnover, 1) + ' cells';
       if (els.highTidesValue) els.highTidesValue.textContent = highTides.toLocaleString();
       if (els.lightningFlashesValue) els.lightningFlashesValue.textContent = formatNamedScale(lightningFlashes, 1);
@@ -11159,7 +11215,7 @@ function countPresidentialElectionsExperienced(start, end) {
       els.seasonsValue.textContent = Math.floor(years * 4).toLocaleString();
       if (els.seasonsCopy) {
         const nextSeason = getNextSeasonChange(now);
-        els.seasonsCopy.textContent = `Next: ${formatEventDate(nextSeason.date)} - ${nextSeason.label}`;
+        els.seasonsCopy.textContent = `Next: ${formatEventDate(nextSeason.date)} - ${nextSeason.label}. Solstices and equinoxes count as season changes.`;
       }
       els.fullmoonsValue.textContent = Math.floor(daysExact / 29.53).toLocaleString();
       els.blueMoonsValue.textContent = estimateBlueMoonsExperienced(birthMomentGlobal, now).toLocaleString();
@@ -11334,6 +11390,18 @@ function countPresidentialElectionsExperienced(start, end) {
       const galacticProgress = years / galacticYearYears * 100;
       if (els.galacticRotationValue) els.galacticRotationValue.textContent = `${galacticProgress.toFixed(6)}%`;
       if (els.galacticRotationCopy) els.galacticRotationCopy.textContent = `A tiny but real slice of the Sun's journey around the Milky Way during your life.`;
+      const galacticCenterDistanceLy = 26000;
+      const solarSystemOrbitMiles = hoursTotal * 515000;
+      if (els.galacticCenterDistanceValue) els.galacticCenterDistanceValue.textContent = `${galacticCenterDistanceLy.toLocaleString()} light-years`;
+      if (els.galacticCenterDistanceCopy) els.galacticCenterDistanceCopy.textContent = `Approx. current distance; the Solar System has traveled ${formatCompact(solarSystemOrbitMiles, 2)} mi along its galactic orbit since your birth.`;
+
+      const sunspotCycles = years / 11;
+      if (els.sunspotCyclesValue) els.sunspotCyclesValue.textContent = sunspotCycles.toFixed(2);
+      if (els.sunspotCyclesCopy) els.sunspotCyclesCopy.textContent = `At the Sun's average 11-year activity cycle; ${Math.floor(sunspotCycles).toLocaleString()} complete cycle${Math.floor(sunspotCycles) === 1 ? '' : 's'} so far.`;
+
+      const halleyOrbitProgress = years / 75.32;
+      if (els.cometOrbitValue) els.cometOrbitValue.textContent = halleyOrbitProgress.toFixed(2);
+      if (els.cometOrbitCopy) els.cometOrbitCopy.textContent = `Your life equals this many average Halley orbits (75.32 years each).`;
 
       const solarHydrogenFusedTons = secondsTotal * 600_000_000;
       if (els.solarMassValue) els.solarMassValue.textContent = `${formatNamedScale(solarHydrogenFusedTons, 1)} tons`;
@@ -11373,6 +11441,14 @@ function countPresidentialElectionsExperienced(start, end) {
       const co2Pct = birthCo2 ? co2Delta / birthCo2 * 100 : 0;
       if (els.co2JumpValue) els.co2JumpValue.textContent = `${co2Delta >= 0 ? '+' : ''}${co2Delta.toFixed(1)} ppm`;
       if (els.co2JumpCopy) els.co2JumpCopy.textContent = `${birthMomentGlobal.getFullYear()}: ${birthCo2.toFixed(1)} ppm  |  Latest: ${latestCo2.toFixed(1)} ppm  |  ${co2Pct >= 0 ? '+' : ''}${co2Pct.toFixed(1)}%.`;
+
+      const satelliteEraSeaLevelRiseMm = years * 3.8;
+      if (els.seaLevelRiseValue) els.seaLevelRiseValue.textContent = `${(satelliteEraSeaLevelRiseMm / 25.4).toFixed(1)} in`;
+      if (els.seaLevelRiseCopy) els.seaLevelRiseCopy.textContent = `At the recent global satellite-era average of 3.8 mm/year; local coastlines can differ.`;
+
+      const oceanWaterCycledKm3 = years * 425000;
+      if (els.oceanCycleValue) els.oceanCycleValue.textContent = `${formatNamedScale(oceanWaterCycledKm3, 1)} km3`;
+      if (els.oceanCycleCopy) els.oceanCycleCopy.textContent = `Approx. ocean water evaporated into Earth's global water cycle during your lifetime.`;
       els.lifeDayClock.textContent = lifeCompressed.clock;
       els.lifeDayCalendar.textContent = lifeCompressed.calendar;
       els.lifeDaySeason.textContent = lifeCompressed.phase;
