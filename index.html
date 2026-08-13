@@ -14442,8 +14442,8 @@ function getBirthSkySnapshot() {
         return snlVideoAssetPromise;
       }
       const segments = [
-        'assets/snl-simpsons-intro.part1',
-        'assets/snl-simpsons-intro.part2'
+        'assets/snl-simpsons-intro-1.mp4',
+        'assets/snl-simpsons-intro-2.mp4'
       ];
       snlVideoAssetPromise = Promise.all(segments.map(async url => {
         const response = await fetch(url, { cache: 'force-cache' });
