@@ -14265,7 +14265,7 @@ function getBirthSkySnapshot() {
         overlay.className = 'simpsons-easter-overlay';
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-label', 'The Simpsons Easter egg');
-        overlay.innerHTML = '<video class="simpsons-easter-video" src="assets/Simpsons%20Intro.mp4" preload="metadata" playsinline aria-label="The Simpsons intro"></video>';
+        overlay.innerHTML = '<video class="simpsons-easter-video" src="assets/simpsons-intro.mp4" preload="auto" playsinline webkit-playsinline aria-label="The Simpsons intro"></video>';
         document.body.appendChild(overlay);
       }
 
@@ -14298,6 +14298,7 @@ function getBirthSkySnapshot() {
         video.volume = 1;
         video.onended = dismiss;
         video.onerror = dismiss;
+        if (video.readyState === HTMLMediaElement.HAVE_NOTHING) video.load();
         video.play().catch(() => {
           video.controls = true;
         });
@@ -14318,10 +14319,21 @@ function getBirthSkySnapshot() {
       const card = document.getElementById('simpsons-easter-card');
       if (!card || card.dataset.easterBound === 'true') return;
       let taps = [];
-      card.addEventListener('click', () => {
+      let videoPrimed = false;
+      card.addEventListener('click', event => {
+        event.preventDefault();
         const now = performance.now();
-        taps = taps.filter(time => now - time < 1650);
+        taps = taps.filter(time => now - time < 2500);
         taps.push(now);
+        if (!videoPrimed) {
+          videoPrimed = true;
+          const preloadVideo = document.createElement('video');
+          preloadVideo.preload = 'auto';
+          preloadVideo.src = 'assets/simpsons-intro.mp4';
+          preloadVideo.playsInline = true;
+          preloadVideo.load();
+          card._simpsonsPreload = preloadVideo;
+        }
         if (taps.length < 3) return;
         taps = [];
         showSimpsonsEasterEgg();

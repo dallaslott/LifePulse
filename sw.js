@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-6';
+const CACHE_VERSION = 'lifepulse-v5-shell-7';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -8,7 +8,6 @@ const SHELL_ASSETS = [
   './assets/lifepulse-icon-512.png',
   './assets/lifepulse-maskable-512.png',
   './assets/lifepulse-notification.png',
-  './assets/Simpsons%20Intro.mp4',
   './cost-of-living-data.json',
   './sports-data-v4.json',
   './sky-events.json'
@@ -72,6 +71,13 @@ self.addEventListener('fetch', event => {
 
   if (/\/(version|live-data)\.json$/.test(url.pathname)) {
     event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Let the browser handle byte-range requests for video natively. Android
+  // media players depend on the server's 206 Partial Content responses.
+  if (/\.mp4$/i.test(url.pathname)) {
+    event.respondWith(fetch(request));
     return;
   }
 
