@@ -1811,12 +1811,53 @@
     .dashboard-group-chevron {
       color: var(--accent);
       font-size: 1rem;
-      transition: transform 0.2s ease;
+      transform-origin: 50% 52%;
+      transition: transform 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
     }
 
-    .dashboard-group[open] .dashboard-group-chevron { transform: rotate(180deg); }
+    .dashboard-group:not([open]) .dashboard-group-chevron {
+      animation: section-chevron-cue 5.6s ease-in-out 1.4s infinite;
+    }
 
-    .dashboard-group-content { padding: 0 12px 14px; }
+    .dashboard-group[open] .dashboard-group-chevron {
+      animation: none;
+      transform: rotate(180deg);
+    }
+
+    @keyframes section-chevron-cue {
+      0%, 72%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        color: var(--accent);
+        text-shadow: 0 0 0 rgba(0,210,255,0);
+      }
+      76% {
+        transform: translateY(-1px) rotate(-9deg) scale(1.06);
+        text-shadow: 0 0 6px rgba(0,210,255,0.42);
+      }
+      80% {
+        transform: translateY(2px) rotate(10deg) scale(1.18);
+        color: #9af4ff;
+        text-shadow: 0 0 12px rgba(0,210,255,0.78);
+      }
+      84% {
+        transform: translateY(-1px) rotate(-6deg) scale(1.08);
+        text-shadow: 0 0 7px rgba(0,210,255,0.48);
+      }
+      89% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        color: var(--accent);
+        text-shadow: 0 0 0 rgba(0,210,255,0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .dashboard-group:not([open]) .dashboard-group-chevron { animation: none; }
+    }
+
+    .dashboard-group-content {
+      padding: 0 12px 14px;
+      transform-origin: top center;
+    }
     .dashboard-group-content > :first-child { margin-top: 0; }
     .dashboard-group-content > :last-child { margin-bottom: 0; }
 
@@ -2137,6 +2178,180 @@
     }
     .insight-card--source {
       cursor: pointer;
+    }
+
+    .simpsons-easter-card,
+    .snl-easter-card {
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .simpsons-easter-card:active,
+    .snl-easter-card:active {
+      border-color: rgba(255, 232, 63, 0.42);
+    }
+
+    .simpsons-easter-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2400;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 20% 22%, rgba(255,255,255,0.92) 0 5%, transparent 5.5%),
+        radial-gradient(ellipse at 78% 30%, rgba(255,255,255,0.88) 0 7%, transparent 7.5%),
+        radial-gradient(ellipse at 43% 78%, rgba(255,255,255,0.82) 0 6%, transparent 6.5%),
+        linear-gradient(180deg, #4ebcff 0%, #1d8fe4 100%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .simpsons-easter-overlay.is-playing {
+      visibility: visible;
+      pointer-events: auto;
+      animation: simpsons-sky-in 3.25s ease-in-out both;
+    }
+
+    .simpsons-easter-logo {
+      color: #ffe62e;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(3rem, 16vw, 9rem);
+      font-style: italic;
+      font-weight: 900;
+      letter-spacing: -0.075em;
+      line-height: 0.78;
+      text-align: center;
+      text-transform: uppercase;
+      transform: scale(0.055) rotate(-7deg);
+      text-shadow: -3px -3px 0 #111, 3px -3px 0 #111, -3px 3px 0 #111, 3px 3px 0 #111, 0 10px 28px rgba(0,0,0,0.42);
+      will-change: transform, opacity;
+    }
+
+    .simpsons-easter-logo span {
+      display: block;
+      font-size: 0.35em;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      transform: translateX(-0.9em) rotate(-3deg);
+    }
+
+    .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
+      animation: simpsons-logo-zoom 3.25s cubic-bezier(.18,.72,.2,1) both;
+    }
+
+    @keyframes simpsons-sky-in {
+      0% { opacity: 0; }
+      10%, 82% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes simpsons-logo-zoom {
+      0% { transform: scale(0.055) rotate(-7deg); opacity: 0; filter: blur(2px); }
+      11% { opacity: 1; filter: blur(0); }
+      68% { transform: scale(1) rotate(-2deg); opacity: 1; }
+      84% { transform: scale(1.42) rotate(0deg); opacity: 1; }
+      100% { transform: scale(4.8) rotate(2deg); opacity: 0; filter: blur(1px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .simpsons-easter-overlay.is-playing { animation: simpsons-sky-in 2.2s ease both; }
+      .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
+        animation: none;
+        transform: scale(1) rotate(-2deg);
+        opacity: 1;
+      }
+    }
+
+    .snl-easter-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2400;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 24px;
+      background:
+        linear-gradient(116deg, transparent 0 38%, rgba(56,156,255,0.2) 48%, transparent 58%),
+        linear-gradient(64deg, transparent 0 38%, rgba(255,71,174,0.18) 48%, transparent 58%),
+        radial-gradient(circle at 50% 42%, #263d66 0%, #090d18 44%, #020308 100%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .snl-easter-overlay::before,
+    .snl-easter-overlay::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      width: 42vw;
+      height: 120%;
+      background: linear-gradient(to top, rgba(255,255,255,0.1), transparent 70%);
+      filter: blur(10px);
+      transform-origin: bottom center;
+    }
+
+    .snl-easter-overlay::before { left: 3%; transform: rotate(24deg); }
+    .snl-easter-overlay::after { right: 3%; transform: rotate(-24deg); }
+
+    .snl-easter-overlay.is-playing {
+      visibility: visible;
+      pointer-events: auto;
+      animation: snl-stage-in 3.8s ease-in-out both;
+    }
+
+    .snl-easter-title {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      color: #fff;
+      font-size: clamp(1.9rem, 8.5vw, 5.6rem);
+      font-weight: 950;
+      letter-spacing: -0.055em;
+      line-height: 0.96;
+      text-align: center;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: scale(0.78) translateY(18px);
+      text-shadow: 0 0 12px rgba(255,255,255,0.55), 0 0 32px rgba(58,160,255,0.58), 0 12px 36px rgba(0,0,0,0.72);
+    }
+
+    .snl-easter-title span {
+      display: block;
+      margin-bottom: 0.25em;
+      color: #9fd6ff;
+      font-size: 0.43em;
+      letter-spacing: 0.17em;
+    }
+
+    .snl-easter-overlay.is-playing .snl-easter-title {
+      animation: snl-title-hit 3.8s cubic-bezier(.2,.75,.22,1) both;
+    }
+
+    @keyframes snl-stage-in {
+      0% { opacity: 0; }
+      8%, 84% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes snl-title-hit {
+      0%, 15% { opacity: 0; transform: scale(0.78) translateY(18px); filter: blur(5px); }
+      28% { opacity: 1; transform: scale(1.04) translateY(0); filter: blur(0); }
+      38%, 76% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(1.55) translateY(-4px); filter: blur(2px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .snl-easter-overlay.is-playing { animation: snl-stage-in 2.7s ease both; }
+      .snl-easter-overlay.is-playing .snl-easter-title {
+        animation: none;
+        transform: none;
+        opacity: 1;
+      }
     }
     .source-toggle {
       position: absolute;
@@ -4146,7 +4361,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.86.1.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.86.6.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4460,12 +4675,12 @@
           <div class="source-drawer" id="source-drawer-internet-eras" hidden></div>
 </div>
 
-        <div class="insight-card compact-card">
+        <div class="insight-card compact-card simpsons-easter-card" id="simpsons-easter-card" aria-label="The Simpsons Episodes">
           <span class="insight-value" id="simpsons-episodes-value">...</span>
           <span class="micro-label">The Simpsons Episodes</span>
           <p class="insight-copy comparison-diagnostic" id="simpsons-episodes-copy">Episodes since your birth will appear here.</p>
         </div>
-        <div class="insight-card compact-card">
+        <div class="insight-card compact-card snl-easter-card" id="snl-easter-card" aria-label="SNL Episodes">
           <span class="insight-value" id="snl-episodes-value">...</span>
           <span class="micro-label">SNL Episodes</span>
           <p class="insight-copy comparison-diagnostic" id="snl-episodes-copy">Episodes since your birth will appear here.</p>
@@ -5206,7 +5421,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.86.1.local';
+    const LOCAL_RELEASE_VERSION = '5.86.6.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -10972,6 +11187,7 @@ function countPresidentialElectionsExperienced(start, end) {
         btn.textContent = willOpen ? 'Close -' : 'Details +';
         btn.setAttribute('aria-label', willOpen ? 'Close card details' : 'Show card details');
       });
+      playInterfaceSound(willOpen ? 'detail-open' : 'detail-close');
     }
 
     function initSourceDrawers() {
@@ -11067,6 +11283,7 @@ function countPresidentialElectionsExperienced(start, end) {
           panel.hidden = !willOpen;
           button.setAttribute('aria-expanded', String(willOpen));
           button.closest('.lifetime-card')?.classList.toggle('info-open', willOpen);
+          playInterfaceSound(willOpen ? 'detail-open' : 'detail-close');
         });
       });
     }
@@ -13618,6 +13835,267 @@ function getBirthSkySnapshot() {
       grid.classList.add('birth-grid--organized');
       grid.dataset.organized = 'true';
     }
+
+    async function playInterfaceSound(kind = 'detail-open') {
+      if (isMuted) return;
+      const ok = await unlockAudio();
+      if (!ok || !audioCtx || isMuted) return;
+      const now = audioCtx.currentTime;
+      const isDrawer = kind.startsWith('drawer-');
+      const isOpen = kind.endsWith('open');
+      const duration = isDrawer ? 0.19 : 0.075;
+      const startFrequency = isDrawer ? (isOpen ? 185 : 310) : (isOpen ? 410 : 335);
+      const endFrequency = isDrawer ? (isOpen ? 325 : 175) : (isOpen ? 510 : 275);
+      const peak = isDrawer ? 0.095 : 0.042;
+      const osc = audioCtx.createOscillator();
+      const overtone = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      overtone.type = 'triangle';
+      osc.frequency.setValueAtTime(startFrequency, now);
+      osc.frequency.exponentialRampToValueAtTime(endFrequency, now + duration);
+      overtone.frequency.setValueAtTime(startFrequency * 2, now);
+      overtone.frequency.exponentialRampToValueAtTime(endFrequency * 2, now + duration);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(isDrawer ? 1150 : 900, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(peak, now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(filter);
+      overtone.connect(filter);
+      filter.connect(gain);
+      gain.connect(soundtrackMaster);
+      osc.start(now);
+      overtone.start(now);
+      osc.stop(now + duration + 0.02);
+      overtone.stop(now + duration + 0.02);
+    }
+
+    function bindNestedDetailSounds() {
+      document.addEventListener('click', event => {
+        const summary = event.target.closest('summary');
+        const detail = summary?.parentElement;
+        if (!detail || detail.tagName !== 'DETAILS' || detail.classList.contains('dashboard-group')) return;
+        detail.dataset.soundPending = 'true';
+        window.setTimeout(() => { delete detail.dataset.soundPending; }, 650);
+      }, true);
+      document.addEventListener('toggle', event => {
+        const detail = event.target;
+        if (detail?.tagName !== 'DETAILS' || detail.classList.contains('dashboard-group') || detail.dataset.soundPending !== 'true') return;
+        delete detail.dataset.soundPending;
+        playInterfaceSound(detail.open ? 'detail-open' : 'detail-close');
+      }, true);
+    }
+
+    async function animateDashboardGroup(group, willOpen) {
+      const content = group?.querySelector('.dashboard-group-content');
+      if (!content || group.dataset.animating === 'true') return;
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      if (reducedMotion || typeof content.animate !== 'function') {
+        group.open = willOpen;
+        return;
+      }
+
+      group.dataset.animating = 'true';
+      playInterfaceSound(willOpen ? 'drawer-open' : 'drawer-close');
+      if (willOpen) group.open = true;
+      const fullHeight = content.scrollHeight;
+      content.style.overflow = 'hidden';
+      const frames = willOpen
+        ? [
+            { height: '0px', opacity: 0.38, transform: 'translateY(-7px)', clipPath: 'inset(0 0 100% 0)' },
+            { height: `${fullHeight}px`, opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0 0 0 0)' }
+          ]
+        : [
+            { height: `${fullHeight}px`, opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0 0 0 0)' },
+            { height: '0px', opacity: 0.25, transform: 'translateY(-5px)', clipPath: 'inset(0 0 100% 0)' }
+          ];
+      const animation = content.animate(frames, {
+        duration: willOpen ? 270 : 205,
+        easing: willOpen ? 'cubic-bezier(.22,.75,.25,1)' : 'cubic-bezier(.4,0,.7,.25)',
+        fill: 'both'
+      });
+      try { await animation.finished; } catch {}
+      if (!willOpen) group.open = false;
+      animation.cancel();
+      content.style.overflow = '';
+      delete group.dataset.animating;
+    }
+
+    function playSimpsonsEasterFanfare() {
+      if (isMuted) return;
+      unlockAudio().then(ok => {
+        if (!ok || !audioCtx || isMuted) return;
+        const start = audioCtx.currentTime + 0.03;
+        const bus = soundtrackBus || soundtrackMaster;
+        [60, 64, 67, 72].forEach((midi, index) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = index < 3 ? 'triangle' : 'sine';
+          osc.frequency.setValueAtTime(midiToFreq(midi), start + index * 0.085);
+          gain.gain.setValueAtTime(0.0001, start + index * 0.085);
+          gain.gain.linearRampToValueAtTime(0.055, start + index * 0.085 + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.9 + index * 0.085);
+          osc.connect(gain);
+          gain.connect(bus);
+          osc.start(start + index * 0.085);
+          osc.stop(start + 1.05 + index * 0.085);
+        });
+      });
+
+      if ('speechSynthesis' in window) {
+        window.setTimeout(() => {
+          if (isMuted) return;
+          const title = new SpeechSynthesisUtterance('The Simpsons');
+          title.rate = 0.72;
+          title.pitch = 1.35;
+          title.volume = 0.86;
+          window.speechSynthesis.speak(title);
+        }, 260);
+      }
+    }
+
+    function showSimpsonsEasterEgg() {
+      let overlay = document.getElementById('simpsons-easter-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'simpsons-easter-overlay';
+        overlay.className = 'simpsons-easter-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-label', 'The Simpsons Easter egg');
+        overlay.innerHTML = '<div class="simpsons-easter-logo"><span>The</span>Simpsons</div>';
+        document.body.appendChild(overlay);
+      }
+
+      if (overlay._escapeHandler) document.removeEventListener('keydown', overlay._escapeHandler);
+      const dismiss = () => {
+        overlay.classList.remove('is-playing');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.removeEventListener('keydown', onEscape);
+        overlay._escapeHandler = null;
+      };
+      overlay.classList.remove('is-playing');
+      void overlay.offsetWidth;
+      overlay.setAttribute('aria-hidden', 'false');
+      overlay.classList.add('is-playing');
+      playSimpsonsEasterFanfare();
+      navigator.vibrate?.([35, 35, 70]);
+      window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
+      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 3300));
+      overlay.onclick = dismiss;
+      const onEscape = event => {
+        if (event.key !== 'Escape') return;
+        dismiss();
+      };
+      overlay._escapeHandler = onEscape;
+      document.addEventListener('keydown', onEscape);
+    }
+
+    function bindSimpsonsEasterEgg() {
+      const card = document.getElementById('simpsons-easter-card');
+      if (!card || card.dataset.easterBound === 'true') return;
+      let taps = [];
+      card.addEventListener('click', () => {
+        const now = performance.now();
+        taps = taps.filter(time => now - time < 1650);
+        taps.push(now);
+        if (taps.length < 3) return;
+        taps = [];
+        showSimpsonsEasterEgg();
+      });
+      card.dataset.easterBound = 'true';
+    }
+
+    function playSnLEasterSting() {
+      if (isMuted) return;
+      unlockAudio().then(ok => {
+        if (!ok || !audioCtx || isMuted) return;
+        const start = audioCtx.currentTime + 0.02;
+        const bus = soundtrackBus || soundtrackMaster;
+        [48, 55, 60, 64].forEach((midi, index) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const filter = audioCtx.createBiquadFilter();
+          osc.type = index < 2 ? 'sawtooth' : 'triangle';
+          osc.frequency.setValueAtTime(midiToFreq(midi), start);
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1450, start);
+          filter.frequency.exponentialRampToValueAtTime(650, start + 1.15);
+          gain.gain.setValueAtTime(0.0001, start);
+          gain.gain.linearRampToValueAtTime(index === 0 ? 0.06 : 0.035, start + 0.035 + index * 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.25);
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(bus);
+          osc.start(start);
+          osc.stop(start + 1.3);
+        });
+      });
+
+      if ('speechSynthesis' in window) {
+        window.setTimeout(() => {
+          if (isMuted) return;
+          const line = new SpeechSynthesisUtterance("Live from New York, it's Saturday Night!");
+          line.rate = 0.93;
+          line.pitch = 0.82;
+          line.volume = 0.92;
+          window.speechSynthesis.speak(line);
+        }, 360);
+      }
+    }
+
+    function showSnLEasterEgg() {
+      let overlay = document.getElementById('snl-easter-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'snl-easter-overlay';
+        overlay.className = 'snl-easter-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-label', 'Saturday Night Live Easter egg');
+        overlay.innerHTML = '<div class="snl-easter-title"><span>Live From New York</span>It\'s Saturday Night!</div>';
+        document.body.appendChild(overlay);
+      }
+
+      if (overlay._escapeHandler) document.removeEventListener('keydown', overlay._escapeHandler);
+      const dismiss = () => {
+        overlay.classList.remove('is-playing');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.removeEventListener('keydown', onEscape);
+        overlay._escapeHandler = null;
+      };
+      overlay.classList.remove('is-playing');
+      void overlay.offsetWidth;
+      overlay.setAttribute('aria-hidden', 'false');
+      overlay.classList.add('is-playing');
+      playSnLEasterSting();
+      navigator.vibrate?.([30, 35, 30, 35, 80]);
+      window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
+      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 3850));
+      overlay.onclick = dismiss;
+      const onEscape = event => {
+        if (event.key !== 'Escape') return;
+        dismiss();
+      };
+      overlay._escapeHandler = onEscape;
+      document.addEventListener('keydown', onEscape);
+    }
+
+    function bindSnLEasterEgg() {
+      const card = document.getElementById('snl-easter-card');
+      if (!card || card.dataset.easterBound === 'true') return;
+      let taps = [];
+      card.addEventListener('click', () => {
+        const now = performance.now();
+        taps = taps.filter(time => now - time < 1650);
+        taps.push(now);
+        if (taps.length < 3) return;
+        taps = [];
+        showSnLEasterEgg();
+      });
+      card.dataset.easterBound = 'true';
+    }
+
     function organizeDashboardSections() {
       const container = document.getElementById('dashboard-groups');
       if (!container || container.dataset.ready === 'true') return;
@@ -13635,6 +14113,10 @@ function getBirthSkySnapshot() {
         content.className = 'dashboard-group-content';
         nodes.forEach(node => content.appendChild(node));
         group.append(summary, content);
+        summary.addEventListener('click', event => {
+          event.preventDefault();
+          animateDashboardGroup(group, !group.open);
+        });
         group.addEventListener('toggle', saveSectionPreferences);
         container.appendChild(group);
       });
@@ -13644,6 +14126,9 @@ function getBirthSkySnapshot() {
     }
     function bindEvents() {
       bindPwaEvents();
+      bindSimpsonsEasterEgg();
+      bindSnLEasterEgg();
+      bindNestedDetailSounds();
       els.resultView?.addEventListener('toggle', () => requestAnimationFrame(fitDisplayLabels), true);
       els.btnMale.addEventListener('click',   () => setGender('male'));
       els.btnFemale.addEventListener('click', () => setGender('female'));
