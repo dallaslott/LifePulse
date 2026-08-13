@@ -729,6 +729,11 @@
     .audio-setting-option:hover { background: rgba(255,255,255,0.06); }
     .audio-setting-option + .audio-setting-option { border-top: 1px solid rgba(255,255,255,0.06); }
     .audio-setting-option input { width: 17px; height: 17px; margin: 0; accent-color: var(--accent); }
+    .audio-setting-option.is-muted-choice {
+      opacity: 0.46;
+      cursor: default;
+    }
+    .audio-setting-option.is-muted-choice:hover { background: transparent; }
     .audio-setting-copy strong { display: block; font-size: 0.78rem; }
     .audio-setting-copy span { display: block; margin-top: 2px; color: var(--text-dim); font-size: 0.62rem; line-height: 1.3; }
     .audio-setting-option--master { margin-top: 4px; color: #ffd7df; }
@@ -4420,7 +4425,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.87.4.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.90.1.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5482,7 +5487,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.87.4.local';
+    const LOCAL_RELEASE_VERSION = '5.90.1.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -7273,8 +7278,16 @@
       const musicToggle = document.getElementById('audio-music-toggle');
       const effectsToggle = document.getElementById('audio-effects-toggle');
       const muteAllToggle = document.getElementById('audio-mute-all-toggle');
-      if (musicToggle) musicToggle.checked = musicEnabled;
-      if (effectsToggle) effectsToggle.checked = soundEffectsEnabled;
+      if (musicToggle) {
+        musicToggle.checked = !isMuted && musicEnabled;
+        musicToggle.disabled = isMuted;
+        musicToggle.closest('.audio-setting-option')?.classList.toggle('is-muted-choice', isMuted);
+      }
+      if (effectsToggle) {
+        effectsToggle.checked = !isMuted && soundEffectsEnabled;
+        effectsToggle.disabled = isMuted;
+        effectsToggle.closest('.audio-setting-option')?.classList.toggle('is-muted-choice', isMuted);
+      }
       if (muteAllToggle) muteAllToggle.checked = isMuted;
       if (els.muteToggle) {
         const fullySilent = isMuted || (!musicEnabled && !soundEffectsEnabled);
