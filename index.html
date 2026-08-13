@@ -670,10 +670,14 @@
     .error-message { color: var(--danger); }
     .success-message { color: var(--success); }
 
-    #mute-toggle {
+    .audio-control {
       position: absolute;
       top: 12px;
       right: 12px;
+      z-index: 80;
+    }
+
+    #mute-toggle {
       background: none;
       border: none;
       color: #fff;
@@ -681,6 +685,53 @@
       opacity: 0.75;
       cursor: pointer;
     }
+
+    #mute-toggle[aria-expanded="true"] {
+      opacity: 1;
+      text-shadow: 0 0 12px rgba(0,210,255,0.7);
+    }
+
+    .audio-settings-menu {
+      position: absolute;
+      top: 38px;
+      right: 0;
+      width: min(250px, calc(100vw - 44px));
+      padding: 10px;
+      border: 1px solid rgba(0,210,255,0.28);
+      border-radius: 15px;
+      background: rgba(5,10,24,0.97);
+      box-shadow: 0 16px 38px rgba(0,0,0,0.48), 0 0 20px rgba(0,210,255,0.1);
+      backdrop-filter: blur(18px);
+    }
+
+    .audio-settings-title {
+      display: block;
+      padding: 3px 5px 8px;
+      color: var(--text-dim);
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+    }
+
+    .audio-setting-option {
+      display: grid;
+      grid-template-columns: 20px minmax(0,1fr);
+      gap: 9px;
+      align-items: center;
+      min-height: 42px;
+      padding: 8px;
+      border-radius: 10px;
+      color: #eef7ff;
+      cursor: pointer;
+    }
+
+    .audio-setting-option:hover { background: rgba(255,255,255,0.06); }
+    .audio-setting-option + .audio-setting-option { border-top: 1px solid rgba(255,255,255,0.06); }
+    .audio-setting-option input { width: 17px; height: 17px; margin: 0; accent-color: var(--accent); }
+    .audio-setting-copy strong { display: block; font-size: 0.78rem; }
+    .audio-setting-copy span { display: block; margin-top: 2px; color: var(--text-dim); font-size: 0.62rem; line-height: 1.3; }
+    .audio-setting-option--master { margin-top: 4px; color: #ffd7df; }
 
     .panel {
       background: rgba(0,0,0,0.38);
@@ -2200,79 +2251,34 @@
       display: grid;
       place-items: center;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 48%, rgba(46,147,224,0.5) 0%, rgba(10,49,94,0.72) 34%, rgba(2,8,20,0.98) 76%),
-        #020814;
+      padding: 0;
+      background: #000;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
 
-    .simpsons-easter-overlay::before {
-      content: '';
-      position: absolute;
-      width: min(78vw, 620px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,230,46,0.16), rgba(53,163,255,0.08) 38%, transparent 69%);
-      filter: blur(18px);
-      transform: scale(0.45);
-      opacity: 0;
-    }
-
     .simpsons-easter-overlay.is-playing {
       visibility: visible;
       pointer-events: auto;
-      animation: simpsons-sky-in 2.95s ease-in-out both;
+      animation: simpsons-video-in 180ms ease-out both;
     }
 
-    .simpsons-easter-logo {
+    .simpsons-easter-video {
       display: block;
-      width: min(94vw, 1120px);
-      max-height: 84vh;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      border-radius: 12px;
-      transform: scale(0.12);
-      box-shadow: 0 16px 64px rgba(0,0,0,0.58), 0 0 38px rgba(64,180,255,0.18);
-      will-change: transform, opacity;
+      background: #000;
     }
 
-    .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
-      animation: simpsons-logo-zoom 2.95s cubic-bezier(.18,.72,.2,1) both;
-    }
-
-    .simpsons-easter-overlay.is-playing::before {
-      animation: simpsons-light-bloom 2.95s ease-out both;
-    }
-
-    @keyframes simpsons-sky-in {
+    @keyframes simpsons-video-in {
       0% { opacity: 0; }
-      9%, 81% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    @keyframes simpsons-logo-zoom {
-      0% { transform: scale(0.12); opacity: 0; filter: blur(5px); }
-      14% { opacity: 0.82; filter: blur(1.5px); }
-      64% { transform: scale(1); opacity: 1; filter: blur(0); }
-      80% { transform: scale(1.06); opacity: 1; }
-      100% { transform: scale(3.4); opacity: 0; filter: blur(3px); }
-    }
-
-    @keyframes simpsons-light-bloom {
-      0% { transform: scale(0.4); opacity: 0; }
-      45% { opacity: 0.8; }
-      82% { transform: scale(1.3); opacity: 0.5; }
-      100% { transform: scale(2); opacity: 0; }
+      100% { opacity: 1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .simpsons-easter-overlay.is-playing { animation: simpsons-sky-in 2.2s ease both; }
-      .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
-        animation: none;
-        transform: scale(1);
-        opacity: 1;
-      }
+      .simpsons-easter-overlay.is-playing { animation: none; opacity: 1; }
     }
 
     .snl-easter-overlay {
@@ -4239,6 +4245,46 @@
     body.is-standalone { padding-top: max(12px, env(safe-area-inset-top)); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
     body.is-standalone .pwa-entry-card { display: none; }
 
+    .portrait-lock-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: none;
+      place-items: center;
+      padding: 28px;
+      background: radial-gradient(circle at center, #10284b 0%, #050914 68%);
+      color: #fff;
+      text-align: center;
+    }
+
+    .portrait-lock-message {
+      max-width: 360px;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .portrait-lock-icon {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--accent);
+      font-size: 3rem;
+      animation: portrait-device-turn 1.8s ease-in-out infinite;
+    }
+
+    @keyframes portrait-device-turn {
+      0%, 20% { transform: rotate(90deg); }
+      55%, 100% { transform: rotate(0deg); }
+    }
+
+    @media (orientation: landscape) {
+      body.is-standalone .portrait-lock-overlay { display: grid; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .portrait-lock-icon { animation: none; transform: rotate(0deg); }
+    }
+
     @media (max-width: 520px) {
       .pwa-entry-card { grid-template-columns: 1fr; }
       .pwa-entry-card .pwa-action-btn { width: 100%; }
@@ -4365,12 +4411,16 @@
     </div>
   </div>
 
+  <div class="portrait-lock-overlay" id="portrait-lock-overlay" aria-live="polite">
+    <div class="portrait-lock-message"><span class="portrait-lock-icon" aria-hidden="true">&#128241;</span>LifePulse is designed for portrait view.<br>Rotate your device upright to continue.</div>
+  </div>
+
   <div class="container hidden" id="result-view">
     <button id="mute-toggle" type="button" aria-label="Toggle sound">🔊</button>
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.86.9.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.87.4.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5422,15 +5472,17 @@
   <script>
     // ─── Constants ────────────────────────────────────────────────────────────
     const STORAGE_KEY     = 'lifePulseProfile';
-    const STORAGE_VERSION = 4;
+    const STORAGE_VERSION = 5;
     const MOCK_STORAGE_KEY = 'lifePulseMockMode';
     const SECTION_STORAGE_KEY = 'lifePulseSectionPreferences';
     const SHARE_CARD_STORAGE_KEY = 'lifePulseShareCardPreferences';
     const NOTIFICATION_PREFS_KEY = 'lifePulseNotificationPreferences';
+    const AUDIO_PREFS_KEY = 'lifePulseAudioPreferences';
+    const DASHBOARD_SESSION_KEY = 'lifePulseActiveDashboardSession';
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.86.9.local';
+    const LOCAL_RELEASE_VERSION = '5.87.4.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5482,6 +5534,8 @@
 
     // ─── State ────────────────────────────────────────────────────────────────
     let isMuted               = false;
+    let musicEnabled          = true;
+    let soundEffectsEnabled   = true;
     let audioCtx              = null;
     let soundtrackInterval    = null;
     let soundtrackMaster      = null;
@@ -7091,7 +7145,7 @@
       const year       = String(els.dobYear?.value ?? '').trim();
       let   time       = String(els.birthTime?.value ?? '').trim();
       if (!time) time  = '12:00';
-      const profile = { name, birthPlace, currentResidence, gender: userGender, month, day, year, time };
+      const profile = { name, birthPlace, currentResidence, gender: userGender, month, day, year, time, audioPreferences: getAudioPreferences() };
       if (selectedPlaceSuggestion && placeLooksLikeMatch(birthPlace, selectedPlaceSuggestion)) {
         profile.birthPlaceGeo = serializePlaceSelection(selectedPlaceSuggestion);
       }
@@ -7173,6 +7227,143 @@
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
     }
 
+    function saveDashboardSessionState() {
+      if (!els.resultView || els.resultView.classList.contains('hidden') || !currentProfile) return;
+      try {
+        const state = JSON.stringify({ active: true, scrollY: Math.max(0, window.scrollY || 0), savedAt: Date.now() });
+        sessionStorage.setItem(DASHBOARD_SESSION_KEY, state);
+        localStorage.setItem(DASHBOARD_SESSION_KEY, state);
+      } catch {}
+    }
+
+    function readDashboardSessionState() {
+      try {
+        const raw = sessionStorage.getItem(DASHBOARD_SESSION_KEY) || localStorage.getItem(DASHBOARD_SESSION_KEY);
+        const state = JSON.parse(raw || 'null');
+        const recent = state?.savedAt && Date.now() - Number(state.savedAt) < 12 * 60 * 60 * 1000;
+        return state?.active && recent ? state : null;
+      } catch { return null; }
+    }
+
+    function clearDashboardSessionState() {
+      try {
+        sessionStorage.removeItem(DASHBOARD_SESSION_KEY);
+        localStorage.removeItem(DASHBOARD_SESSION_KEY);
+      } catch {}
+    }
+
+    async function requestPortraitOrientation() {
+      if (!isStandaloneApp() || !screen.orientation?.lock) return false;
+      try {
+        await screen.orientation.lock('portrait-primary');
+        return true;
+      } catch {
+        try {
+          await screen.orientation.lock('portrait');
+          return true;
+        } catch { return false; }
+      }
+    }
+
+    function getAudioPreferences() {
+      return { music: musicEnabled, soundEffects: soundEffectsEnabled, muteAll: isMuted };
+    }
+
+    function updateAudioSettingsUi() {
+      const musicToggle = document.getElementById('audio-music-toggle');
+      const effectsToggle = document.getElementById('audio-effects-toggle');
+      const muteAllToggle = document.getElementById('audio-mute-all-toggle');
+      if (musicToggle) musicToggle.checked = musicEnabled;
+      if (effectsToggle) effectsToggle.checked = soundEffectsEnabled;
+      if (muteAllToggle) muteAllToggle.checked = isMuted;
+      if (els.muteToggle) {
+        const fullySilent = isMuted || (!musicEnabled && !soundEffectsEnabled);
+        els.muteToggle.textContent = String.fromCodePoint(fullySilent ? 0x1F507 : (musicEnabled ? 0x1F50A : 0x1F509));
+        els.muteToggle.setAttribute('aria-label', fullySilent ? 'Open audio settings, audio is muted' : 'Open audio settings');
+      }
+    }
+
+    function saveAudioPreferences() {
+      const preferences = getAudioPreferences();
+      try { localStorage.setItem(AUDIO_PREFS_KEY, JSON.stringify(preferences)); } catch {}
+      if (currentProfile) {
+        currentProfile.audioPreferences = preferences;
+        saveProfile(currentProfile);
+      }
+    }
+
+    function loadAudioPreferences(profilePreferences = null) {
+      let preferences = profilePreferences;
+      if (!preferences) {
+        try { preferences = JSON.parse(localStorage.getItem(AUDIO_PREFS_KEY) || 'null'); } catch {}
+      }
+      if (preferences && typeof preferences === 'object') {
+        if (typeof preferences.music === 'boolean') musicEnabled = preferences.music;
+        if (typeof preferences.soundEffects === 'boolean') soundEffectsEnabled = preferences.soundEffects;
+        if (typeof preferences.muteAll === 'boolean') isMuted = preferences.muteAll;
+      }
+      updateAudioSettingsUi();
+    }
+
+    async function applyAudioPreferences(preferences) {
+      if (typeof preferences.music === 'boolean') musicEnabled = preferences.music;
+      if (typeof preferences.soundEffects === 'boolean') soundEffectsEnabled = preferences.soundEffects;
+      if (typeof preferences.muteAll === 'boolean') isMuted = preferences.muteAll;
+      updateAudioSettingsUi();
+      saveAudioPreferences();
+      if (!audioCtx) return;
+      try {
+        if (!isMuted) await unlockAudio();
+        soundtrackMaster?.gain.cancelScheduledValues(audioCtx.currentTime);
+        soundtrackMaster?.gain.setTargetAtTime(isMuted ? 0.0001 : 0.18, audioCtx.currentTime, 0.12);
+        soundtrackBus?.gain.cancelScheduledValues(audioCtx.currentTime);
+        soundtrackBus?.gain.setTargetAtTime(!isMuted && musicEnabled ? 0.92 : 0.0001, audioCtx.currentTime, 0.14);
+        if (isMuted || !musicEnabled) stopSoundtrack();
+        else if (!birthdayIntroPending) startSoundtrack();
+      } catch (error) { console.error('Audio preference update failed:', error); }
+    }
+
+    function initAudioSettingsMenu() {
+      const button = els.muteToggle;
+      if (!button || button.closest('.audio-control')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'audio-control';
+      wrapper.id = 'audio-control';
+      button.parentNode.insertBefore(wrapper, button);
+      wrapper.appendChild(button);
+      button.setAttribute('aria-controls', 'audio-settings-menu');
+      button.setAttribute('aria-expanded', 'false');
+      const menu = document.createElement('div');
+      menu.className = 'audio-settings-menu hidden';
+      menu.id = 'audio-settings-menu';
+      menu.setAttribute('role', 'group');
+      menu.setAttribute('aria-label', 'Audio settings');
+      menu.innerHTML = `
+        <span class="audio-settings-title">Audio Settings</span>
+        <label class="audio-setting-option"><input id="audio-music-toggle" type="checkbox"><span class="audio-setting-copy"><strong>Music</strong><span>Background score and celebration music</span></span></label>
+        <label class="audio-setting-option"><input id="audio-effects-toggle" type="checkbox"><span class="audio-setting-copy"><strong>Sound Effects</strong><span>Drawers, details, and Easter eggs</span></span></label>
+        <label class="audio-setting-option audio-setting-option--master"><input id="audio-mute-all-toggle" type="checkbox"><span class="audio-setting-copy"><strong>Mute All</strong><span>Temporarily silence every sound</span></span></label>`;
+      wrapper.appendChild(menu);
+
+      const closeMenu = () => {
+        menu.classList.add('hidden');
+        button.setAttribute('aria-expanded', 'false');
+      };
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        const willOpen = menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', !willOpen);
+        button.setAttribute('aria-expanded', String(willOpen));
+      });
+      menu.addEventListener('click', event => event.stopPropagation());
+      menu.querySelector('#audio-music-toggle').addEventListener('change', event => applyAudioPreferences({ music: event.target.checked }));
+      menu.querySelector('#audio-effects-toggle').addEventListener('change', event => applyAudioPreferences({ soundEffects: event.target.checked }));
+      menu.querySelector('#audio-mute-all-toggle').addEventListener('change', event => applyAudioPreferences({ muteAll: event.target.checked }));
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
+      updateAudioSettingsUi();
+    }
+
     // ─── URL hash sharing — encode/decode profile in URL ─────────────────────
     function encodeProfileToHash(profile) {
       try {
@@ -7227,6 +7418,7 @@
       if (profile.day !== undefined) els.dobDay.value = String(profile.day);
       if (profile.time)              els.birthTime.value = profile.time;
       setGender(profile.gender === 'female' ? 'female' : 'male');
+      if (profile.audioPreferences) loadAudioPreferences(profile.audioPreferences);
     }
 
     // ─── Data lookups (pre-sorted arrays avoid re-sorting every call) ─────────
@@ -7370,12 +7562,12 @@
       }
       if (!soundtrackMaster) {
         soundtrackMaster = audioCtx.createGain();
-        soundtrackMaster.gain.value = 0.18;
+        soundtrackMaster.gain.value = isMuted ? 0.0001 : 0.18;
         soundtrackMaster.connect(audioCtx.destination);
       }
       if (!soundtrackBus) {
         soundtrackBus = audioCtx.createGain();
-        soundtrackBus.gain.value = 0.92;
+        soundtrackBus.gain.value = !isMuted && musicEnabled ? 0.92 : 0.0001;
 
         soundtrackToneFilter = audioCtx.createBiquadFilter();
         soundtrackToneFilter.type = 'lowpass';
@@ -7423,7 +7615,7 @@
     }
 
     function playLaunchSwell() {
-      if (!audioCtx || isMuted) return;
+      if (!audioCtx || isMuted || !musicEnabled) return;
       const now = audioCtx.currentTime;
       const bus = soundtrackBus || soundtrackMaster;
       const rootFreqs = [110, 164.81, 220, 329.63];
@@ -7500,7 +7692,7 @@
     }
 
     function scheduleHappyBirthdayMelody() {
-      if (!audioCtx || isMuted) return 0;
+      if (!audioCtx || isMuted || !musicEnabled) return 0;
       const melody = [
         [67, 0.34], [67, 0.24], [69, 0.58], [67, 0.58], [72, 0.58], [71, 1.02],
         [67, 0.34], [67, 0.24], [69, 0.58], [67, 0.58], [74, 0.58], [72, 1.02],
@@ -7689,7 +7881,7 @@
     }
 
     function scheduleSoundtrackCycle() {
-      if (!audioCtx || isMuted) return;
+      if (!audioCtx || isMuted || !musicEnabled) return;
       const palette = getSoundtrackPalette();
       const cycleLength = 10;
       const start = audioCtx.currentTime + 0.08;
@@ -7710,7 +7902,7 @@
 
     function startSoundtrack() {
       ensureAudioContext();
-      if (!audioCtx || isMuted) return;
+      if (!audioCtx || isMuted || !musicEnabled) return;
       stopSoundtrack();
       scheduleSoundtrackCycle();
       soundtrackInterval = setInterval(scheduleSoundtrackCycle, 40000);
@@ -7721,7 +7913,7 @@
       birthdayIntroPending = false;
       try {
         const ok = await unlockAudio();
-        if (!ok || isMuted) return;
+        if (!ok || isMuted || !musicEnabled) return;
         const celebration = getTodayCelebration(new Date());
         if (celebration?.isBirthday) {
           birthdayIntroPending = true;
@@ -7730,7 +7922,7 @@
           await new Promise(resolve => setTimeout(resolve, birthdayDuration * 1000));
           if (runId !== symphonyRunId) return;
           birthdayIntroPending = false;
-          if (isMuted) return;
+          if (isMuted || !musicEnabled) return;
         }
         playLaunchSwell();
         startSoundtrack();
@@ -8540,7 +8732,7 @@
       }
 
       const celebration = renderTodayCelebration(new Date(), true);
-      if (celebration?.isBirthday && !isMuted) {
+      if (celebration?.isBirthday && !isMuted && musicEnabled) {
         resetAudioForCelebrationPreview();
         await playSymphony();
       }
@@ -13577,9 +13769,11 @@ function getBirthSkySnapshot() {
 
         els.formView.classList.add('hidden');
         els.resultView.classList.remove('hidden');
+        requestPortraitOrientation();
         document.activeElement?.blur?.();
         settleDashboardAtTop();
         collapseProfileViews();
+        saveDashboardSessionState();
         requestAnimationFrame(fitDisplayLabels);
 
         lastSlowStatsKey = '';
@@ -13619,6 +13813,7 @@ function getBirthSkySnapshot() {
 
     function clearForm() {
       clearSavedProfile();
+      clearDashboardSessionState();
       setGender('male');
       els.userName.value   = '';
       els.birthPlace.value = '';
@@ -13638,7 +13833,46 @@ function getBirthSkySnapshot() {
       renderDiagnostics();
     }
 
+    function restoreActiveDashboard(profile, sessionState) {
+      const error = validateProfile(profile);
+      if (error) {
+        clearDashboardSessionState();
+        return false;
+      }
+      currentProfile = profile;
+      clearTimers();
+      stopSoundtrack();
+      hydrateProfile(profile);
+      els.cosmicArrival?.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
+      els.cosmicArrival?.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('arrival-active');
+      els.formView.classList.add('hidden');
+      els.resultView.classList.remove('hidden');
+      requestPortraitOrientation();
+      restoreSectionPreferences();
+      lastSlowStatsKey = '';
+      updateLiveStats(true);
+      refreshInsightPanels();
+      renderDiagnostics();
+      runAsyncEnhancements(profile);
+      ageTimerId = setInterval(updateLiveStats, 250);
+      insightTimerId = setInterval(() => {
+        if (!document.hidden) refreshInsightPanels();
+      }, 60000);
+      lastCelebrationKey = '';
+      renderTodayCelebration(new Date(), false);
+      requestAnimationFrame(() => {
+        fitDisplayLabels();
+        requestAnimationFrame(() => {
+          window.scrollTo(0, Math.max(0, Number(sessionState?.scrollY) || 0));
+          saveDashboardSessionState();
+        });
+      });
+      return true;
+    }
+
     async function resetApp() {
+      clearDashboardSessionState();
       symphonyRunId += 1;
       arrivalSequenceId += 1;
       stopArrivalRenderer();
@@ -13799,6 +14033,14 @@ function getBirthSkySnapshot() {
       catch { return {}; }
     }
 
+    function restoreSectionPreferences() {
+      const preferences = readSectionPreferences();
+      document.querySelectorAll('.dashboard-group').forEach(group => {
+        group.open = preferences[group.dataset.groupId] === true;
+        if (!group.open) syncDashboardChevron(group);
+      });
+    }
+
     function saveSectionPreferences() {
       try {
         const state = {};
@@ -13808,12 +14050,18 @@ function getBirthSkySnapshot() {
     }
 
     function setAllDashboardGroups(open) {
-      document.querySelectorAll('.dashboard-group').forEach(group => { group.open = open; });
+      document.querySelectorAll('.dashboard-group').forEach(group => {
+        if (!open) syncDashboardChevron(group);
+        group.open = open;
+      });
       saveSectionPreferences();
     }
 
     function collapseProfileViews() {
-      els.resultView?.querySelectorAll('details').forEach(detail => { detail.open = false; });
+      els.resultView?.querySelectorAll('details').forEach(detail => {
+        if (detail.classList.contains('dashboard-group')) syncDashboardChevron(detail);
+        detail.open = false;
+      });
       saveSectionPreferences();
     }
 
@@ -13846,9 +14094,9 @@ function getBirthSkySnapshot() {
     }
 
     async function playInterfaceSound(kind = 'detail-open') {
-      if (isMuted) return;
+      if (isMuted || !soundEffectsEnabled) return;
       const ok = await unlockAudio();
-      if (!ok || !audioCtx || isMuted) return;
+      if (!ok || !audioCtx || isMuted || !soundEffectsEnabled) return;
       const now = audioCtx.currentTime;
       const isDrawer = kind.startsWith('drawer-');
       const isOpen = kind.endsWith('open');
@@ -13959,18 +14207,21 @@ function getBirthSkySnapshot() {
         fill: 'both'
       });
       try { await animation.finished; } catch {}
-      if (!willOpen) group.open = false;
+      if (!willOpen) {
+        syncDashboardChevron(group);
+        group.open = false;
+      }
       animation.cancel();
       content.style.overflow = '';
       delete group.dataset.animating;
     }
 
     function playSimpsonsEasterFanfare() {
-      if (isMuted) return;
+      if (isMuted || !soundEffectsEnabled) return;
       unlockAudio().then(ok => {
-        if (!ok || !audioCtx || isMuted) return;
+        if (!ok || !audioCtx || isMuted || !soundEffectsEnabled) return;
         const start = audioCtx.currentTime + 0.03;
-        const bus = soundtrackBus || soundtrackMaster;
+        const bus = soundtrackMaster;
         [55, 62, 67].forEach((midi, index) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -14001,25 +14252,46 @@ function getBirthSkySnapshot() {
         overlay.className = 'simpsons-easter-overlay';
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-label', 'The Simpsons Easter egg');
-        overlay.innerHTML = '<img class="simpsons-easter-logo" src="assets/Simpsons_Intro-01.png" alt="The Simpsons">';
+        overlay.innerHTML = '<video class="simpsons-easter-video" src="assets/Simpsons%20Intro.mp4" preload="metadata" playsinline aria-label="The Simpsons intro"></video>';
         document.body.appendChild(overlay);
       }
 
+      const video = overlay.querySelector('.simpsons-easter-video');
       if (overlay._escapeHandler) document.removeEventListener('keydown', overlay._escapeHandler);
       const dismiss = () => {
+        video?.pause();
+        window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
         overlay.classList.remove('is-playing');
         overlay.setAttribute('aria-hidden', 'true');
         document.removeEventListener('keydown', onEscape);
         overlay._escapeHandler = null;
+        if (audioCtx && soundtrackBus && !isMuted && musicEnabled) {
+          soundtrackBus.gain.cancelScheduledValues(audioCtx.currentTime);
+          soundtrackBus.gain.setTargetAtTime(0.92, audioCtx.currentTime, 0.16);
+        }
       };
       overlay.classList.remove('is-playing');
       void overlay.offsetWidth;
       overlay.setAttribute('aria-hidden', 'false');
       overlay.classList.add('is-playing');
-      playSimpsonsEasterFanfare();
+      if (audioCtx && soundtrackBus) {
+        soundtrackBus.gain.cancelScheduledValues(audioCtx.currentTime);
+        soundtrackBus.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.08);
+      }
+      if (video) {
+        video.controls = false;
+        video.currentTime = 0;
+        video.muted = isMuted || !soundEffectsEnabled;
+        video.volume = 1;
+        video.onended = dismiss;
+        video.onerror = dismiss;
+        video.play().catch(() => {
+          video.controls = true;
+        });
+      }
       navigator.vibrate?.([35, 35, 70]);
       window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
-      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 3000));
+      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 120000));
       overlay.onclick = dismiss;
       const onEscape = event => {
         if (event.key !== 'Escape') return;
@@ -14045,11 +14317,11 @@ function getBirthSkySnapshot() {
     }
 
     function playSnLEasterSting() {
-      if (isMuted) return;
+      if (isMuted || !soundEffectsEnabled) return;
       unlockAudio().then(ok => {
-        if (!ok || !audioCtx || isMuted) return;
+        if (!ok || !audioCtx || isMuted || !soundEffectsEnabled) return;
         const start = audioCtx.currentTime + 0.02;
-        const bus = soundtrackBus || soundtrackMaster;
+        const bus = soundtrackMaster;
         [48, 55, 60, 64].forEach((midi, index) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -14072,7 +14344,7 @@ function getBirthSkySnapshot() {
 
       if ('speechSynthesis' in window) {
         window.setTimeout(() => {
-          if (isMuted) return;
+          if (isMuted || !soundEffectsEnabled) return;
           const line = new SpeechSynthesisUtterance("Live from New York, it's Saturday Night!");
           line.rate = 0.93;
           line.pitch = 0.82;
@@ -14133,6 +14405,19 @@ function getBirthSkySnapshot() {
       card.dataset.easterBound = 'true';
     }
 
+    const SECTION_CHEVRON_CYCLE_MS = 5600;
+    const SECTION_CHEVRON_INITIAL_PAUSE_MS = 1400;
+
+    function syncDashboardChevron(group) {
+      const chevron = group?.querySelector('.dashboard-group-chevron');
+      if (!chevron) return;
+      const elapsed = performance.now();
+      const delay = elapsed < SECTION_CHEVRON_INITIAL_PAUSE_MS
+        ? SECTION_CHEVRON_INITIAL_PAUSE_MS - elapsed
+        : -((elapsed - SECTION_CHEVRON_INITIAL_PAUSE_MS) % SECTION_CHEVRON_CYCLE_MS);
+      chevron.style.animationDelay = `${delay}ms`;
+    }
+
     function organizeDashboardSections() {
       const container = document.getElementById('dashboard-groups');
       if (!container || container.dataset.ready === 'true') return;
@@ -14154,8 +14439,12 @@ function getBirthSkySnapshot() {
           event.preventDefault();
           animateDashboardGroup(group, !group.open);
         });
-        group.addEventListener('toggle', saveSectionPreferences);
+        group.addEventListener('toggle', () => {
+          saveSectionPreferences();
+          if (!group.open) requestAnimationFrame(() => syncDashboardChevron(group));
+        });
         container.appendChild(group);
+        syncDashboardChevron(group);
       });
       container.dataset.ready = 'true';
       document.getElementById('expand-sections-btn')?.addEventListener('click', () => setAllDashboardGroups(true));
@@ -14185,7 +14474,6 @@ function getBirthSkySnapshot() {
         liveDataPromise = null;
         refreshLiveHoroscope();
       });
-      els.muteToggle.addEventListener('click',      toggleMute);
       els.showCelebrationPreview?.addEventListener('click', showSelectedCelebrationPreview);
       els.clearCelebrationPreview?.addEventListener('click', clearSelectedCelebrationPreview);
       els.diagnosticsToggle.addEventListener('click', toggleDiagnosticsPanel);
@@ -14297,6 +14585,8 @@ function getBirthSkySnapshot() {
           fitDisplayLabels();
         }, 150);
       });
+      window.addEventListener('orientationchange', saveDashboardSessionState);
+      window.addEventListener('pagehide', saveDashboardSessionState);
 
       // Pause star animation and insight timer when tab is not visible
       document.addEventListener('visibilitychange', () => {
@@ -14316,6 +14606,8 @@ function getBirthSkySnapshot() {
       organizeBirthSnapshot();
       organizeDashboardSections();
       loadShareCardPreferences();
+      loadAudioPreferences();
+      initAudioSettingsMenu();
       bindEvents();
       if (window.location.protocol === 'file:') {
         els.localCelebrationTools?.classList.remove('hidden');
@@ -14325,6 +14617,7 @@ function getBirthSkySnapshot() {
         }
       }
       initStars();
+      requestPortraitOrientation();
       entryStarfieldStartedAt = performance.now();
       starRafId = requestAnimationFrame(drawStars);
 
@@ -14348,6 +14641,7 @@ function getBirthSkySnapshot() {
       // Priority order: URL hash → localStorage → nothing
       const hashProfile = decodeProfileFromHash();
       if (hashProfile) {
+        clearDashboardSessionState();
         applyProfileToForm(hashProfile);
         setStatus('Profile loaded from share link. Launch whenever you are ready.', 'success');
         setLiveDiagnostic('share', { state: 'cached', detail: 'A pre-filled share link restored this profile into the form.', source: 'URL hash' });
@@ -14355,7 +14649,12 @@ function getBirthSkySnapshot() {
         const saved = loadSavedProfile();
         if (saved) {
           applyProfileToForm(saved);
-          setStatus('Last saved profile restored. Launch whenever you are ready.', 'success');
+          const dashboardSession = readDashboardSessionState();
+          if (dashboardSession && restoreActiveDashboard(saved, dashboardSession)) {
+            setStatus('Dashboard restored after the display changed.', 'success');
+          } else {
+            setStatus('Last saved profile restored. Launch whenever you are ready.', 'success');
+          }
         }
       }
 

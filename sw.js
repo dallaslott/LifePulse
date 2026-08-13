@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-4';
+const CACHE_VERSION = 'lifepulse-v5-shell-6';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -8,7 +8,7 @@ const SHELL_ASSETS = [
   './assets/lifepulse-icon-512.png',
   './assets/lifepulse-maskable-512.png',
   './assets/lifepulse-notification.png',
-  './assets/Simpsons_Intro-01.png',
+  './assets/Simpsons%20Intro.mp4',
   './cost-of-living-data.json',
   './sports-data-v4.json',
   './sky-events.json'
