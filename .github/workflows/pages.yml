@@ -89,6 +89,7 @@ jobs:
           elif [ -f "assets/Simpsons Intro.mp4" ]; then
             cp "assets/Simpsons Intro.mp4" _site/assets/simpsons-intro.mp4
           fi
+          cp assets/snl-simpsons-intro.part1 assets/snl-simpsons-intro.part2 _site/assets/
           cp node_modules/astronomy-engine/astronomy.browser.min.js _site/vendor/
           touch _site/.nojekyll
 
