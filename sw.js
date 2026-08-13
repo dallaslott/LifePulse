@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-8';
+const CACHE_VERSION = 'lifepulse-v5-shell-10';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -76,7 +76,7 @@ self.addEventListener('fetch', event => {
 
   // Let the browser handle byte-range requests for video natively. Android
   // media players depend on the server's 206 Partial Content responses.
-  if (/\.mp4$/i.test(url.pathname)) {
+  if (/\.mp4$/i.test(url.pathname) || /\/snl-simpsons-intro\.part\d+$/i.test(url.pathname)) {
     event.respondWith(fetch(request));
     return;
   }

@@ -4914,6 +4914,13 @@
           <span class="micro-label">Voyager 1 Distance Traveled</span>
           <p class="insight-copy" id="voyager-distance-copy">Its travel during the portion of the mission overlapping your life will appear here.</p>
         </div>
+        <div class="insight-card compact-card source-card source-card--show-copy lifetime-card--long" data-source-target="orbital-objects">
+          <span class="insight-value" id="orbital-objects-value">0</span>
+          <span class="micro-label">Objects in Orbit</span>
+          <p class="insight-copy" id="orbital-objects-copy">Your birth year will be compared with the latest tracked count.</p>
+          <button class="source-toggle" type="button" data-source-target="orbital-objects" aria-expanded="false">Source</button>
+          <div class="source-drawer" id="source-drawer-orbital-objects" hidden></div>
+        </div>
         <div class="cosmic-group-title">Sun + Earth + Moon Changes</div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="solar-mass-value">0</span>
@@ -5952,6 +5959,8 @@
       solarMassCopy:         document.getElementById('solar-mass-copy'),
       voyagerDistanceValue:  document.getElementById('voyager-distance-value'),
       voyagerDistanceCopy:   document.getElementById('voyager-distance-copy'),
+      orbitalObjectsValue:   document.getElementById('orbital-objects-value'),
+      orbitalObjectsCopy:    document.getElementById('orbital-objects-copy'),
       continentalDriftValue: document.getElementById('continental-drift-value'),
       continentalDriftCopy:  document.getElementById('continental-drift-copy'),
       co2JumpValue:          document.getElementById('co2-jump-value'),
@@ -6271,6 +6280,16 @@
       1958: 315.2, 1960: 316.9, 1970: 325.7, 1980: 338.8, 1990: 354.4,
       2000: 369.6, 2010: 389.9, 2020: 414.2, 2021: 416.5, 2022: 418.6,
       2023: 421.1, 2024: 424.6, 2025: 427.4, 2026: 431.4
+    };
+
+    const ORBITAL_OBJECTS_FALLBACK = {
+      1957:1,1958:2,1959:7,1960:19,1961:31,1962:52,1963:86,1964:134,1965:233,1966:298,1967:386,1968:451,1969:517,
+      1970:600,1971:720,1972:819,1973:916,1974:1024,1975:1173,1976:1344,1977:1470,1978:1578,1979:1631,1980:1685,
+      1981:1814,1982:1912,1983:2066,1984:2240,1985:2419,1986:2554,1987:2684,1988:2794,1989:2891,1990:3047,
+      1991:3155,1992:3277,1993:3401,1994:3542,1995:3640,1996:3735,1997:3900,1998:4399,1999:4507,2000:4599,
+      2001:4613,2002:4661,2003:4744,2004:4812,2005:4866,2006:4956,2007:5062,2008:5175,2009:5295,2010:5408,
+      2011:5516,2012:5627,2013:5809,2014:5934,2015:6058,2016:6192,2017:6541,2018:6862,2019:7221,2020:8340,
+      2021:9924,2022:11865,2023:13936,2024:15471,2025:18592
     };
 
     const CHIP_TRANSISTOR_MILESTONES = [
@@ -12123,6 +12142,25 @@ function countPresidentialElectionsExperienced(start, end) {
         ? `Approx. Voyager 1 travel during your lifetime, or since its 09/05/1977 launch if you were already alive.`
         : `Voyager 1 launches on 09/05/1977 in your personal timeline.`;
 
+      const orbitalReference = currentLiveData?.reference?.orbitalObjects;
+      const orbitalSeries = { ...ORBITAL_OBJECTS_FALLBACK, ...(orbitalReference?.series || {}) };
+      const orbitalDataYears = Object.keys(orbitalSeries).map(Number).sort((a, b) => a - b);
+      const latestOrbitalYear = Number(orbitalReference?.latestYear) || orbitalDataYears.at(-1);
+      const latestOrbitalCount = Number(orbitalReference?.latestValue) || Number(orbitalSeries[latestOrbitalYear]);
+      const birthOrbitalCount = birthMomentGlobal.getFullYear() < 1957
+        ? 0
+        : Math.round(interpolateFromAnchors(birthMomentGlobal.getFullYear(), orbitalSeries));
+      const orbitalMultiplier = birthOrbitalCount > 0 ? latestOrbitalCount / birthOrbitalCount : null;
+      if (els.orbitalObjectsValue) els.orbitalObjectsValue.textContent = orbitalMultiplier ? `${orbitalMultiplier.toFixed(1)}x` : latestOrbitalCount.toLocaleString();
+      if (els.orbitalObjectsCopy) {
+        els.orbitalObjectsCopy.textContent = `${birthMomentGlobal.getFullYear()}: ${birthOrbitalCount ? birthOrbitalCount.toLocaleString() : 'None Yet'}  |  ${latestOrbitalYear}: ${latestOrbitalCount.toLocaleString()}`;
+      }
+      setSourceDrawer('orbital-objects', {
+        intro: `The tracked population grew from ${birthOrbitalCount ? birthOrbitalCount.toLocaleString() : 'none'} in ${birthMomentGlobal.getFullYear()} to ${latestOrbitalCount.toLocaleString()} in ${latestOrbitalYear}${orbitalMultiplier ? ` - about ${orbitalMultiplier.toFixed(1)} times as many` : ''}. This count includes satellites and spent rocket bodies still in orbit, but not loose collision or launch debris.`,
+        diagnosticMeta: `Source: ${orbitalReference?.source || 'United States Space Force via Our World in Data embedded fallback'}. Annual history through ${latestOrbitalYear}; objects are removed after atmospheric reentry.`,
+        lines: [`Birth Year: ${birthOrbitalCount.toLocaleString()} tracked objects`, `Latest Year: ${latestOrbitalCount.toLocaleString()} tracked objects`]
+      });
+
       const driftInches = years * 1.5;
       if (els.continentalDriftValue) els.continentalDriftValue.textContent = driftInches >= 12 ? `${(driftInches / 12).toFixed(1)} ft` : `${driftInches.toFixed(1)} in`;
       if (els.continentalDriftCopy) els.continentalDriftCopy.textContent = `At a fingernail-like pace, Earth's tectonic plates could have shifted roughly this far during your life.`;
@@ -14395,42 +14433,27 @@ function getBirthSkySnapshot() {
       card.dataset.easterBound = 'true';
     }
 
-    function playSnLEasterSting() {
-      if (isMuted || !soundEffectsEnabled) return;
-      unlockAudio().then(ok => {
-        if (!ok || !audioCtx || isMuted || !soundEffectsEnabled) return;
-        const start = audioCtx.currentTime + 0.02;
-        const bus = soundtrackMaster;
-        [48, 55, 60, 64].forEach((midi, index) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          const filter = audioCtx.createBiquadFilter();
-          osc.type = index < 2 ? 'sawtooth' : 'triangle';
-          osc.frequency.setValueAtTime(midiToFreq(midi), start);
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(1450, start);
-          filter.frequency.exponentialRampToValueAtTime(650, start + 1.15);
-          gain.gain.setValueAtTime(0.0001, start);
-          gain.gain.linearRampToValueAtTime(index === 0 ? 0.06 : 0.035, start + 0.035 + index * 0.012);
-          gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.25);
-          osc.connect(filter);
-          filter.connect(gain);
-          gain.connect(bus);
-          osc.start(start);
-          osc.stop(start + 1.3);
-        });
-      });
+    let snlVideoAssetPromise = null;
 
-      if ('speechSynthesis' in window) {
-        window.setTimeout(() => {
-          if (isMuted || !soundEffectsEnabled) return;
-          const line = new SpeechSynthesisUtterance("Live from New York, it's Saturday Night!");
-          line.rate = 0.93;
-          line.pitch = 0.82;
-          line.volume = 0.92;
-          window.speechSynthesis.speak(line);
-        }, 360);
+    function prepareSnLVideoAsset() {
+      if (snlVideoAssetPromise) return snlVideoAssetPromise;
+      if (location.protocol === 'file:') {
+        snlVideoAssetPromise = Promise.resolve(new URL('assets/SNL-Simpsons Intro.mp4', location.href).href);
+        return snlVideoAssetPromise;
       }
+      const segments = [
+        'assets/snl-simpsons-intro.part1',
+        'assets/snl-simpsons-intro.part2'
+      ];
+      snlVideoAssetPromise = Promise.all(segments.map(async url => {
+        const response = await fetch(url, { cache: 'force-cache' });
+        if (!response.ok) throw new Error(`SNL video segment failed with HTTP ${response.status}`);
+        return response.arrayBuffer();
+      })).then(parts => URL.createObjectURL(new Blob(parts, { type: 'video/mp4' }))).catch(error => {
+        snlVideoAssetPromise = null;
+        throw error;
+      });
+      return snlVideoAssetPromise;
     }
 
     function showSnLEasterEgg() {
@@ -14438,29 +14461,97 @@ function getBirthSkySnapshot() {
       if (!overlay) {
         overlay = document.createElement('div');
         overlay.id = 'snl-easter-overlay';
-        overlay.className = 'snl-easter-overlay';
+        overlay.className = 'simpsons-easter-overlay snl-video-overlay';
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-label', 'Saturday Night Live Easter egg');
-        overlay.innerHTML = '<div class="snl-easter-title"><span>Live From New York</span>It\'s Saturday Night!</div>';
+        overlay.innerHTML = '<video class="simpsons-easter-video" preload="auto" playsinline webkit-playsinline aria-label="Saturday Night Live intro"></video><div class="simpsons-easter-status" role="status">Loading video...</div>';
         document.body.appendChild(overlay);
       }
 
+      const video = overlay.querySelector('.simpsons-easter-video');
+      const status = overlay.querySelector('.simpsons-easter-status');
+      let awaitingManualPlay = false;
+      const playToken = `${Date.now()}-${Math.random()}`;
+      overlay.dataset.playToken = playToken;
       if (overlay._escapeHandler) document.removeEventListener('keydown', overlay._escapeHandler);
       const dismiss = () => {
+        overlay.dataset.playToken = '';
+        video?.pause();
+        window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
         overlay.classList.remove('is-playing');
         overlay.setAttribute('aria-hidden', 'true');
         document.removeEventListener('keydown', onEscape);
         overlay._escapeHandler = null;
+        if (audioCtx && soundtrackBus && !isMuted && musicEnabled) {
+          soundtrackBus.gain.cancelScheduledValues(audioCtx.currentTime);
+          soundtrackBus.gain.setTargetAtTime(0.92, audioCtx.currentTime, 0.16);
+        }
       };
       overlay.classList.remove('is-playing');
       void overlay.offsetWidth;
       overlay.setAttribute('aria-hidden', 'false');
       overlay.classList.add('is-playing');
-      playSnLEasterSting();
+      if (audioCtx && soundtrackBus) {
+        soundtrackBus.gain.cancelScheduledValues(audioCtx.currentTime);
+        soundtrackBus.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.08);
+      }
+      if (video) {
+        video.controls = false;
+        video.muted = isMuted || !soundEffectsEnabled;
+        video.volume = 1;
+        video.onended = dismiss;
+        video.onplaying = () => {
+          awaitingManualPlay = false;
+          status?.classList.add('hidden');
+        };
+        video.onwaiting = () => {
+          if (!awaitingManualPlay && status) {
+            status.textContent = 'Loading video...';
+            status.classList.remove('hidden');
+          }
+        };
+        video.onerror = () => {
+          awaitingManualPlay = false;
+          if (status) {
+            status.textContent = 'Video unavailable. Update LifePulse and try again.';
+            status.classList.remove('hidden');
+          }
+        };
+        prepareSnLVideoAsset().then(sourceUrl => {
+          if (overlay.dataset.playToken !== playToken) return;
+          if (video.src !== sourceUrl) {
+            video.src = sourceUrl;
+            video.load();
+          }
+          video.currentTime = 0;
+          return video.play();
+        }).catch(() => {
+          if (overlay.dataset.playToken !== playToken) return;
+          if (video.error) {
+            awaitingManualPlay = false;
+            if (status) status.textContent = 'Video unavailable. Update LifePulse and try again.';
+            return;
+          }
+          awaitingManualPlay = true;
+          if (status) {
+            status.textContent = 'Tap once to play';
+            status.classList.remove('hidden');
+          }
+        });
+      }
       navigator.vibrate?.([30, 35, 30, 35, 80]);
       window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
-      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 3850));
-      overlay.onclick = dismiss;
+      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 120000));
+      overlay.onclick = event => {
+        if (awaitingManualPlay && video) {
+          event.stopPropagation();
+          video.play().catch(() => {
+            if (status) status.textContent = 'Video unavailable. Update LifePulse and try again.';
+          });
+          return;
+        }
+        dismiss();
+      };
       const onEscape = event => {
         if (event.key !== 'Escape') return;
         dismiss();
@@ -14473,10 +14564,16 @@ function getBirthSkySnapshot() {
       const card = document.getElementById('snl-easter-card');
       if (!card || card.dataset.easterBound === 'true') return;
       let taps = [];
-      card.addEventListener('click', () => {
+      let videoPrimed = false;
+      card.addEventListener('click', event => {
+        event.preventDefault();
         const now = performance.now();
-        taps = taps.filter(time => now - time < 1650);
+        taps = taps.filter(time => now - time < 2500);
         taps.push(now);
+        if (!videoPrimed) {
+          videoPrimed = true;
+          prepareSnLVideoAsset().catch(() => {});
+        }
         if (taps.length < 3) return;
         taps = [];
         showSnLEasterEgg();
