@@ -18,8 +18,8 @@
   <meta name="apple-mobile-web-app-title" content="LifePulse" />
   <link rel="canonical" href="https://dallaslott.github.io/LifePulse/" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/lifepulse-icon-192.png" />
-  <link rel="apple-touch-icon" href="assets/lifepulse-icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/lifepulse-icon-512.png" />
+  <link rel="apple-touch-icon" href="assets/lifepulse-icon-512.png" />
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -100,14 +100,14 @@
     #form-view {
       overflow: hidden;
       animation:
-        entryFrameReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both,
-        entryOverflowGuard 1900ms step-end 80ms 1 both;
+        entryFrameReveal 600ms cubic-bezier(.22,.61,.36,1) 1840ms 1 both,
+        entryOverflowGuard 1800ms step-end 80ms 1 both;
     }
 
     #form-view > :not(.entry-title) {
       position: relative;
       z-index: 2;
-      animation: entryFormReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both;
+      animation: entryFormReveal 600ms cubic-bezier(.22,.61,.36,1) 1840ms 1 both;
     }
 
     .entry-title {
@@ -126,7 +126,7 @@
       z-index: 2;
       flex: 0 0 auto;
       display: inline-block;
-      animation: launcherTitleTriggerCycle 3.2s ease-in-out 4220ms infinite;
+      animation: launcherTitleTriggerCycle 3.2s ease-in-out 5340ms infinite;
     }
 
     .entry-title__text::after {
@@ -142,7 +142,7 @@
       opacity: 0;
       transform: scaleX(0);
       transform-origin: left center;
-      animation: identityTriggerLoadCycle 3.2s cubic-bezier(.22,.61,.36,1) 4220ms infinite both;
+      animation: identityTriggerLoadCycle 3.2s cubic-bezier(.22,.61,.36,1) 5340ms infinite both;
     }
 
     .entry-brand-word {
@@ -151,8 +151,8 @@
       transform-origin: center;
       will-change: transform, opacity;
       animation:
-        entryBrandSettle 1900ms cubic-bezier(.16,.84,.22,1) 80ms 1 both,
-        entryInitializePulse 760ms ease-in-out 2320ms 1;
+        entryBrandSettle 1650ms cubic-bezier(.16,.84,.22,1) 80ms 1 both,
+        entryInitializePulse 760ms ease-in-out 3440ms 1;
     }
 
     .entry-brand-word::after {
@@ -169,12 +169,12 @@
       transform: scaleX(0);
       transform-origin: left center;
       animation:
-        entryInitializeLoad 900ms cubic-bezier(.22,.61,.36,1) 2270ms 1 both;
+        entryInitializeLoad 900ms cubic-bezier(.22,.61,.36,1) 3390ms 1 both;
     }
 
     .entry-brand-word .pulse-word__label {
       animation:
-        entryInitializePulse 760ms ease-in-out 2320ms 1;
+        entryInitializePulse 760ms ease-in-out 3440ms 1;
     }
 
     @keyframes entryBrandSettle {
@@ -201,8 +201,8 @@
       position: relative;
       display: inline-block;
       animation:
-        entryChromeReveal 700ms cubic-bezier(.22,.61,.36,1) 1250ms 1 both,
-        entryInitializePulse 760ms ease-in-out 1500ms 1 both;
+        entryChromeReveal 600ms cubic-bezier(.22,.61,.36,1) 1840ms 1 both,
+        entryInitializePulse 760ms ease-in-out 2620ms 1 both;
     }
 
     .entry-initialize-label::after {
@@ -218,7 +218,7 @@
       opacity: 0;
       transform: scaleX(0);
       transform-origin: left center;
-      animation: entryInitializeLoad 900ms cubic-bezier(.22,.61,.36,1) 1450ms 1 both;
+      animation: entryInitializeLoad 900ms cubic-bezier(.22,.61,.36,1) 2570ms 1 both;
     }
 
     @keyframes entryFrameReveal {
@@ -316,7 +316,7 @@
       margin-left: -0.32em;
       margin-right: 0;
       opacity: 0.9;
-      animation: entryEcgReveal 700ms ease-out 1250ms 1 both;
+      animation: entryEcgReveal 600ms ease-out 1840ms 1 both;
     }
 
     .entry-ecg .ecg-trace__pulse {
@@ -325,7 +325,7 @@
       stroke-dashoffset: 0;
       clip-path: inset(-100% 100% -100% 0);
       filter: none;
-      animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 2970ms 1 both;
+      animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 4090ms 1 both;
     }
 
     @keyframes ecgJumpStart {
@@ -1164,6 +1164,8 @@
       position: relative;
       z-index: 1;
       width: min(90vw, 720px);
+      margin-inline: auto;
+      justify-self: center;
       color: #fff;
       text-align: center;
       opacity: 0;
@@ -1176,7 +1178,9 @@
 
     .simple-arrival-word {
       display: block;
+      width: 100%;
       margin-bottom: 2px;
+      text-align: center;
       font-size: clamp(1.45rem, 5vw, 2.35rem);
       font-weight: 900;
       letter-spacing: .14em;
@@ -1225,7 +1229,7 @@
       100% { opacity: 0; transform: scale(1.16); }
     }
 
-    .simple-arrival-ecg { display: block; width: 100%; height: clamp(92px, 17vh, 138px); overflow: visible; transform-origin: center; }
+    .simple-arrival-ecg { display: block; width: 100%; height: clamp(92px, 17vh, 138px); margin-inline: auto; overflow: visible; transform-origin: center; }
     .cosmic-arrival.is-active .simple-arrival-ecg { animation: simpleArrivalEcgExit 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
     .simple-arrival-ecg-base,
     .simple-arrival-ecg-pulse,
@@ -2152,6 +2156,64 @@
     .source-toggle:focus-visible {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
+    }
+    .source-card > .insight-value {
+      max-width: calc(100% - 82px);
+    }
+    .has-card-info {
+      position: relative;
+      align-items: flex-start;
+      padding-right: 48px;
+      text-align: left;
+    }
+    .has-card-info > .lifetime-value,
+    .has-card-info > .lifetime-label {
+      width: 100%;
+      padding-inline: 0;
+      text-align: left;
+    }
+    .card-info-toggle {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(82, 218, 255, 0.34);
+      border-radius: 50%;
+      background: rgba(24, 124, 160, 0.13);
+      color: #bfeeff;
+      font: 900 0.78rem/1 Georgia, serif;
+      cursor: pointer;
+    }
+    .card-info-toggle:hover,
+    .card-info-toggle[aria-expanded="true"] {
+      background: rgba(41, 194, 239, 0.2);
+      border-color: rgba(82, 218, 255, 0.62);
+      color: #fff;
+    }
+    .card-info-toggle:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .card-info-panel {
+      align-self: stretch;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.09);
+      color: #bfd0e8;
+      font-size: 0.76rem;
+      font-weight: 500;
+      line-height: 1.48;
+      letter-spacing: 0;
+      text-align: left;
+    }
+    .card-info-panel[hidden] {
+      display: none;
+    }
+    .lifetime-card.info-open {
+      grid-column: 1 / -1;
     }
     .source-drawer {
       margin-top: 10px;
@@ -3891,6 +3953,65 @@
     .pwa-status[data-state="warning"] { color: #ffe0a3; }
     .pwa-status[data-state="error"] { color: #ffb4b4; }
 
+    .settings-panel {
+      padding: 0;
+      overflow: hidden;
+    }
+    .settings-tab {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      color: #fff;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .settings-tab::-webkit-details-marker { display: none; }
+    .settings-tab-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .settings-tab-status {
+      margin-left: auto;
+      color: #a9bdd7;
+      font-size: 0.62rem;
+      font-weight: 800;
+      text-align: right;
+    }
+    .settings-tab::after {
+      content: '+';
+      flex: 0 0 auto;
+      color: var(--primary);
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .settings-panel[open] .settings-tab::after { content: '-'; }
+    .settings-panel[open] .settings-tab { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .settings-content { padding: 14px; }
+
+    .notification-recovery {
+      margin-top: 12px;
+      padding: 12px 13px;
+      border: 1px solid rgba(255, 190, 92, 0.32);
+      border-radius: 14px;
+      background: rgba(117, 73, 13, 0.14);
+      color: #dce8f7;
+      font-size: 0.72rem;
+      line-height: 1.5;
+    }
+    .notification-recovery strong { color: #fff2c9; }
+    .notification-recovery ol { margin: 8px 0 10px 20px; padding: 0; }
+    .notification-recovery li + li { margin-top: 5px; }
+
     body.is-standalone { padding-top: max(12px, env(safe-area-inset-top)); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
     body.is-standalone .pwa-entry-card { display: none; }
 
@@ -4025,7 +4146,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.81.1.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.86.1.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4125,13 +4246,17 @@
           <span class="lifetime-value" id="heartbeats-value">0</span>
           <span class="lifetime-label">Heartbeats</span>
         </div>
-        <div class="lifetime-card compact-card lifetime-card--long">
+        <div class="lifetime-card compact-card lifetime-card--long has-card-info">
+          <button class="card-info-toggle" type="button" aria-expanded="false" aria-controls="card-info-blood" aria-label="Explain Blood Volume Pumped">i</button>
           <span class="lifetime-value" id="blood-pumped-value">0</span>
           <span class="lifetime-label">Blood Volume Pumped</span>
+          <div class="card-info-panel" id="card-info-blood" hidden><span id="blood-pumped-info-copy">LifePulse converts an average of about 2,000 gallons pumped per day into Olympic-sized swimming pools.</span> This is a lifetime-scale estimate, not a medical measurement.</div>
         </div>
-        <div class="lifetime-card compact-card lifetime-card--long">
+        <div class="lifetime-card compact-card lifetime-card--long has-card-info">
+          <button class="card-info-toggle" type="button" aria-expanded="false" aria-controls="card-info-circulation" aria-label="Explain Circulatory Loops">i</button>
           <span class="lifetime-value" id="circulation-loops-value">0</span>
           <span class="lifetime-label">Circulatory Loops</span>
+          <div class="card-info-panel" id="card-info-circulation" hidden>A loop is one approximate trip through the circulatory system. LifePulse uses a broad average of one complete circulation per minute; individual blood cells do not all travel at one speed.</div>
         </div>
         <div class="lifetime-card compact-card lifetime-card--long">
           <span class="lifetime-value" id="breaths-value">0</span>
@@ -4157,9 +4282,11 @@
           <span class="lifetime-value" id="dreams-value">0</span>
           <span class="lifetime-label">Dreams Experienced</span>
         </div>
-        <div class="lifetime-card compact-card lifetime-card--long">
+        <div class="lifetime-card compact-card lifetime-card--long has-card-info">
+          <button class="card-info-toggle" type="button" aria-expanded="false" aria-controls="card-info-blink" aria-label="Explain Time in Blink Darkness">i</button>
           <span class="lifetime-value" id="blink-darkness-value">0</span>
           <span class="lifetime-label">Time in Blink Darkness</span>
+          <div class="card-info-panel" id="card-info-blink" hidden>The estimated time your eyelids were fully closed during ordinary blinking. It uses 15 blinks per minute, 0.1 second closed per blink, and 16 waking hours per day.</div>
         </div>
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="meals-value">0</span>
@@ -4173,10 +4300,6 @@
           <span class="lifetime-value" id="farts-value">0</span>
           <span class="lifetime-label">Farts</span>
         </div>
-        <div class="lifetime-card compact-card lifetime-card--long">
-          <span class="lifetime-value" id="visual-samples-value">0</span>
-          <span class="lifetime-label">Visual Samples Processed</span>
-        </div>
         <div class="lifetime-card compact-card">
           <span class="lifetime-value" id="hair-growth-value">0</span>
           <span class="lifetime-label">Hair Growth</span>
@@ -4189,9 +4312,17 @@
           <span class="lifetime-value" id="shed-skin-value">0</span>
           <span class="lifetime-label">Shed Skin Cells</span>
         </div>
-        <div class="lifetime-card compact-card lifetime-card--long">
+        <div class="lifetime-card compact-card lifetime-card--long has-card-info">
+          <button class="card-info-toggle" type="button" aria-expanded="false" aria-controls="card-info-cellular" aria-label="Explain Cellular Turnover">i</button>
           <span class="lifetime-value" id="cell-turnover-value">0</span>
           <span class="lifetime-label">Cellular Turnover</span>
+          <div class="card-info-panel" id="card-info-cellular" hidden>The estimated number of cells your body has replaced or shed while continually renewing itself. LifePulse uses a broad 330-billion-cells-per-day estimate; real turnover varies greatly by tissue.</div>
+        </div>
+        <div class="lifetime-card compact-card lifetime-card--long has-card-info">
+          <button class="card-info-toggle" type="button" aria-expanded="false" aria-controls="card-info-visual" aria-label="Explain Visual Samples Processed">i</button>
+          <span class="lifetime-value" id="visual-samples-value">0</span>
+          <span class="lifetime-label">Visual Samples Processed</span>
+          <div class="card-info-panel" id="card-info-visual" hidden>A relatable 30-samples-per-second comparison for the continuous visual information sent toward your brain. These are not literal video frames, unique memories, or a limit on human vision.</div>
         </div>
       </div>
     </div>
@@ -4292,7 +4423,7 @@
           <div class="source-drawer" id="source-drawer-palindrome-dates" hidden></div>
         </div>
 
-        <div class="insight-card compact-card"><span class="insight-value" id="seasons-value">0</span><span class="micro-label">Season Changes</span><p class="insight-copy" id="seasons-copy"></p></div>
+        <div class="insight-card compact-card"><span class="insight-value" id="seasons-value">0</span><span class="micro-label">Season Changes</span><p class="insight-copy" id="seasons-copy"></p><p class="source-line">Solstices and equinoxes count as season changes.</p></div>
         <div class="insight-card compact-card insight-card--wide"><span class="insight-value" id="high-tides-value">0</span><span class="micro-label">Approx. High Tides</span></div>
         <div class="insight-card compact-card insight-card--wide">
           <span class="insight-value" id="lightning-flashes-value">0</span>
@@ -4567,7 +4698,7 @@
         </div>
         <div class="insight-card compact-card source-card source-card--show-copy sky-event-card celestial-preview-card">
           <span class="insight-value" id="meteor-shower-value">Loading...</span>
-          <span class="micro-label">Meteor Shower</span>
+          <span class="micro-label">Meteor Peaks Since Birth</span>
           <p class="insight-copy sky-event-copy" id="meteor-shower-copy">The next peak and viewing window will appear here.</p>
           <button class="source-toggle" type="button" data-source-target="meteor-showers" aria-expanded="false">Source</button>
           <div class="source-drawer" id="source-drawer-meteor-showers" hidden></div>
@@ -4955,7 +5086,12 @@
 
     <div class="dashboard-groups" id="dashboard-groups"></div>
 
-    <section class="panel pwa-panel" id="mobile-app-panel" aria-labelledby="mobile-app-title">
+    <details class="panel pwa-panel settings-panel" id="mobile-app-panel">
+      <summary class="settings-tab">
+        <span class="settings-tab-title"><span aria-hidden="true">&#9881;</span> Settings</span>
+        <span class="settings-tab-status" id="settings-tab-status">App &amp; Alerts</span>
+      </summary>
+      <div class="settings-content">
       <div class="section-head">
         <span class="lifetime-kicker">LifePulse Mobile</span>
         <span class="panel-note">Version 5</span>
@@ -4980,8 +5116,18 @@
         <button class="pwa-action-btn" id="enable-notifications-btn" type="button">ENABLE ALERTS</button>
         <button class="pwa-action-btn secondary" id="test-notification-btn" type="button">SEND TEST</button>
       </div>
+      <div class="notification-recovery hidden" id="notification-recovery" aria-live="polite">
+        <strong>Restore Android notification access</strong>
+        <ol>
+          <li>For the installed app: press and hold the LifePulse icon, tap App info, then Notifications.</li>
+          <li>Turn on Allow notifications, return to LifePulse, then tap Check Again.</li>
+          <li>If using the browser instead, open the site controls beside the address, choose Permissions, and allow Notifications.</li>
+        </ol>
+        <button class="pwa-action-btn secondary" id="check-notification-permission-btn" type="button">CHECK AGAIN</button>
+      </div>
       <p class="pwa-status" id="pwa-status" role="status" aria-live="polite">Android is the primary Version 5 test platform. Scheduled delivery will activate when the notification service is connected.</p>
-    </section>
+      </div>
+    </details>
 
     <div id="diagnostics-panel" class="panel diagnostics-panel hidden">
       <div class="section-head">
@@ -5060,7 +5206,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.81.1.local';
+    const LOCAL_RELEASE_VERSION = '5.86.1.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5229,9 +5375,12 @@
       pwaInstallState:       document.getElementById('pwa-install-state'),
       pwaOfflineState:       document.getElementById('pwa-offline-state'),
       pwaNotificationState:  document.getElementById('pwa-notification-state'),
+      settingsTabStatus:     document.getElementById('settings-tab-status'),
       notificationOptions:   document.getElementById('notification-options'),
       enableNotificationsBtn:document.getElementById('enable-notifications-btn'),
       testNotificationBtn:   document.getElementById('test-notification-btn'),
+      notificationRecovery:  document.getElementById('notification-recovery'),
+      checkNotificationPermissionBtn: document.getElementById('check-notification-permission-btn'),
       pwaStatus:             document.getElementById('pwa-status'),
       muteToggle:            document.getElementById('mute-toggle'),
       localCelebrationTools: document.getElementById('local-celebration-tools'),
@@ -5276,6 +5425,7 @@
       secondsValue:          document.getElementById('seconds-value'),
       heartbeatsValue:       document.getElementById('heartbeats-value'),
       bloodPumpedValue:      document.getElementById('blood-pumped-value'),
+      bloodPumpedInfoCopy:   document.getElementById('blood-pumped-info-copy'),
       circulationLoopsValue: document.getElementById('circulation-loops-value'),
       breathsValue:          document.getElementById('breaths-value'),
       stepsValue:            document.getElementById('steps-value'),
@@ -9864,14 +10014,14 @@
       const meteor = getNextMaintainedSkyEvent(now, event => event.type === 'meteor-shower');
       const visible = getNextMaintainedSkyEvent(now, event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type));
       const meteorPeaksExperienced = countMajorMeteorShowerPeaks(birthMomentGlobal, now);
-      if (els.meteorShowerValue) els.meteorShowerValue.textContent = compactSkyEventTitle(meteor);
+      if (els.meteorShowerValue) els.meteorShowerValue.textContent = meteorPeaksExperienced.toLocaleString();
       if (els.meteorShowerCopy) {
         els.meteorShowerCopy.textContent = meteor
           ? formatEventDate(meteor.date) + ' • Up To ' + Number(meteor.idealRate || 0).toLocaleString() + '/Hr\n' + compactSkyViewing(meteor.viewing)
           : 'The maintained meteor calendar does not contain another supported peak yet.';
       }
       if (els.meteorShowerCopy && meteor) {
-        els.meteorShowerCopy.textContent = `Next: ${formatEventDate(meteor.date)} - Up To ${Number(meteor.idealRate || 0).toLocaleString()}/Hr\n${meteorPeaksExperienced.toLocaleString()} Major Peaks Since Birth`;
+        els.meteorShowerCopy.textContent = `Next: ${compactSkyEventTitle(meteor)} - ${formatEventDate(meteor.date)}\nIdeal Rate: Up To ${Number(meteor.idealRate || 0).toLocaleString()}/Hr`;
       }
       if (els.visibleSkyEventValue) els.visibleSkyEventValue.textContent = compactSkyEventTitle(visible);
       if (els.visibleSkyEventCopy) {
@@ -10817,13 +10967,19 @@ function countPresidentialElectionsExperienced(start, end) {
       if (!drawer) return;
       const willOpen = drawer.hidden;
       drawer.hidden = !willOpen;
-      buttons.forEach(btn => btn.setAttribute('aria-expanded', String(willOpen)));
+      buttons.forEach(btn => {
+        btn.setAttribute('aria-expanded', String(willOpen));
+        btn.textContent = willOpen ? 'Close -' : 'Details +';
+        btn.setAttribute('aria-label', willOpen ? 'Close card details' : 'Show card details');
+      });
     }
 
     function initSourceDrawers() {
       document.querySelectorAll('.source-toggle').forEach(btn => {
         const target = btn.dataset.sourceTarget;
         if (target) btn.setAttribute('aria-controls', `source-drawer-${target}`);
+        btn.textContent = 'Details +';
+        btn.setAttribute('aria-label', 'Show card details');
         btn.addEventListener('click', (event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -10844,6 +11000,74 @@ function countPresidentialElectionsExperienced(start, end) {
         event.stopPropagation();
         sourceDrawerViewModes.set(option.dataset.sourceKey, option.dataset.sourceView);
         renderSourceDrawer(option.dataset.sourceKey);
+      });
+    }
+
+    const LIFETIME_INFO_BY_VALUE_ID = {
+      'heartbeats-value': 'An estimated lifetime total using a resting-style average of 60 heartbeats per minute. Actual heart rate changes constantly with sleep, movement, stress, health, and age.',
+      'blood-pumped-value': 'LifePulse uses an average of about 2,000 gallons pumped per day. The expanded comparison also converts that total into Olympic-sized swimming pools; it is a lifetime-scale estimate, not a medical measurement.',
+      'circulation-loops-value': 'A loop is one approximate trip through the circulatory system. LifePulse uses a broad average of one complete circulation per minute; individual blood cells do not all travel at one speed.',
+      'breaths-value': 'An estimated lifetime total using an average of 16 breaths per minute. Real breathing rates vary with activity, sleep, altitude, age, and health.',
+      'words-value': 'A relatable estimate based on about 16,000 spoken words per day. Individual speaking habits and life circumstances vary widely.',
+      'steps-value': 'An estimated lifetime total based on 7,500 steps per day. It represents a consistent daily-average model, not a reading from a fitness tracker.',
+      'miles-walked-value': 'The estimated step total converted to miles using about 2,200 steps per mile. Stride length and actual daily movement vary by person.',
+      'sleep-hours-value': 'An estimated lifetime total using eight hours of sleep per day. It does not measure your actual sleep history or sleep quality.',
+      'dreams-value': 'An estimate using four dream periods per night. It represents likely dreaming cycles, not the smaller number of dreams a person remembers.',
+      'blink-darkness-value': 'The estimated time your eyelids were fully closed during ordinary blinking. It uses 15 blinks per minute, 0.1 second closed per blink, and 16 waking hours per day.',
+      'meals-value': 'A simple lifetime estimate using three meals per day. Snacks, skipped meals, and personal eating patterns are not counted separately.',
+      'laughs-value': 'A lighthearted estimate using 18 laughs per day. There is no universal daily laugh rate, so this is intended as a relatable lifetime comparison.',
+      'farts-value': 'An estimate using 11 per day, the midpoint of the commonly cited 8-to-14-per-day range. Digestion and diet make the real number highly individual.',
+      'hair-growth-value': 'The distance one representative scalp hair could grow using about one centimeter per month. This is not the combined length of every hair on the body.',
+      'nail-growth-value': 'The combined estimated growth of ten fingernails using about 3.47 millimeters per nail each month. Toenails are not included.',
+      'shed-skin-value': 'An estimated number of skin cells naturally shed using about 500 million cells per day. Shedding varies with skin, environment, and health.',
+      'cell-turnover-value': 'The estimated number of cells your body has replaced or shed while continually renewing itself. LifePulse uses a broad 330-billion-cells-per-day estimate; real turnover varies greatly by tissue.',
+      'visual-samples-value': 'A relatable 30-samples-per-second comparison for the continuous visual information sent toward your brain. These are not literal video frames, unique memories, or a limit on human vision.'
+    };
+
+    function initCardInfoToggles() {
+      document.querySelectorAll('#lifetime-estimates-panel .lifetime-card').forEach(card => {
+        const value = card.querySelector('.lifetime-value[id]');
+        const explanation = value ? LIFETIME_INFO_BY_VALUE_ID[value.id] : '';
+        if (!value || !explanation) return;
+
+        card.classList.add('has-card-info');
+        let button = card.querySelector('.card-info-toggle');
+        let panel = card.querySelector('.card-info-panel');
+        const panelId = panel?.id || `card-info-${value.id.replace(/-value$/, '')}`;
+
+        if (!button) {
+          button = document.createElement('button');
+          button.className = 'card-info-toggle';
+          button.type = 'button';
+          button.textContent = 'i';
+          button.setAttribute('aria-expanded', 'false');
+          button.setAttribute('aria-controls', panelId);
+          const label = card.querySelector('.lifetime-label')?.textContent?.trim() || 'this estimate';
+          button.setAttribute('aria-label', `Explain ${label}`);
+          card.prepend(button);
+        }
+
+        if (!panel) {
+          panel = document.createElement('div');
+          panel.className = 'card-info-panel';
+          panel.id = panelId;
+          panel.hidden = true;
+          panel.textContent = explanation;
+          card.append(panel);
+        }
+      });
+
+      document.querySelectorAll('.card-info-toggle[aria-controls]').forEach(button => {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          const panel = document.getElementById(button.getAttribute('aria-controls'));
+          if (!panel) return;
+          const willOpen = panel.hidden;
+          panel.hidden = !willOpen;
+          button.setAttribute('aria-expanded', String(willOpen));
+          button.closest('.lifetime-card')?.classList.toggle('info-open', willOpen);
+        });
       });
     }
 
@@ -11177,6 +11401,7 @@ function countPresidentialElectionsExperienced(start, end) {
         els.bloodPumpedValue.textContent = `${formatNamedScale(bloodPumpedGallons, 1)} gal`;
         els.bloodPumpedValue.title = `About ${formatNamedScale(bloodPumpedPools, 1)} Olympic-sized swimming pools`;
       }
+      if (els.bloodPumpedInfoCopy) els.bloodPumpedInfoCopy.textContent = `About ${formatNamedScale(bloodPumpedGallons, 1)} gallons, converted using roughly 660,000 gallons per Olympic-sized swimming pool.`;
       if (els.circulationLoopsValue) els.circulationLoopsValue.textContent = formatNamedScale(circulationLoops, 1);
       els.breathsValue.textContent    = breaths.toLocaleString();
       els.stepsValue.textContent      = steps.toLocaleString();
@@ -11248,7 +11473,7 @@ function countPresidentialElectionsExperienced(start, end) {
       els.seasonsValue.textContent = Math.floor(years * 4).toLocaleString();
       if (els.seasonsCopy) {
         const nextSeason = getNextSeasonChange(now);
-        els.seasonsCopy.textContent = `Next: ${formatEventDate(nextSeason.date)} - ${nextSeason.label}. Solstices and equinoxes count as season changes.`;
+        els.seasonsCopy.textContent = `Next: ${formatEventDate(nextSeason.date)} - ${nextSeason.label}.`;
       }
       els.fullmoonsValue.textContent = Math.floor(daysExact / 29.53).toLocaleString();
       els.blueMoonsValue.textContent = estimateBlueMoonsExperienced(birthMomentGlobal, now).toLocaleString();
@@ -12419,8 +12644,12 @@ function getBirthSkySnapshot() {
       }
     }
 
+    function isPreviewRuntime() {
+      return location.protocol === 'file:' || location.hostname === 'codex-remote.invalid' || location.hostname.endsWith('.invalid');
+    }
+
     async function checkForDashboardUpdate() {
-      if (location.protocol === 'file:') {
+      if (isPreviewRuntime()) {
         currentReleaseVersion = LOCAL_RELEASE_VERSION;
         renderDiagnostics();
         return;
@@ -12506,11 +12735,14 @@ function getBirthSkySnapshot() {
       const serviceWorkerSupported = 'serviceWorker' in navigator;
       const notificationSupported = 'Notification' in window;
       const permission = notificationSupported ? Notification.permission : 'unsupported';
+      const previewRuntime = isPreviewRuntime();
 
       document.body.classList.toggle('is-standalone', standalone);
       if (els.pwaInstallState) els.pwaInstallState.textContent = standalone ? 'Installed' : canInstall ? 'Ready To Install' : 'Browser';
-      if (els.pwaOfflineState) els.pwaOfflineState.textContent = serviceWorkerRegistration?.active ? 'Ready' : serviceWorkerSupported && location.protocol !== 'file:' ? 'Preparing' : 'Preview Only';
+      if (els.pwaOfflineState) els.pwaOfflineState.textContent = serviceWorkerRegistration?.active ? 'Ready' : serviceWorkerSupported && !previewRuntime ? 'Preparing' : 'Preview Only';
       if (els.pwaNotificationState) els.pwaNotificationState.textContent = permission === 'granted' ? 'Enabled' : permission === 'denied' ? 'Blocked' : permission === 'unsupported' ? 'Unsupported' : 'Not Enabled';
+      if (els.settingsTabStatus) els.settingsTabStatus.textContent = previewRuntime ? 'Preview Only' : permission === 'granted' ? 'Alerts Enabled' : permission === 'denied' ? 'Alerts Blocked' : 'App & Alerts';
+      els.notificationRecovery?.classList.toggle('hidden', permission !== 'denied');
 
       [els.installAppBtn, els.dashboardInstallAppBtn].forEach(button => {
         if (!button) return;
@@ -12519,11 +12751,11 @@ function getBirthSkySnapshot() {
       });
       if (els.testNotificationBtn) els.testNotificationBtn.disabled = permission !== 'granted' || !serviceWorkerRegistration;
       if (els.enableNotificationsBtn) {
-        els.enableNotificationsBtn.disabled = !notificationSupported || permission === 'denied' || location.protocol === 'file:';
-        els.enableNotificationsBtn.textContent = permission === 'granted' ? 'ALERTS ENABLED' : permission === 'denied' ? 'ALERTS BLOCKED' : 'ENABLE ALERTS';
+        els.enableNotificationsBtn.disabled = !notificationSupported || previewRuntime;
+        els.enableNotificationsBtn.textContent = permission === 'granted' ? 'ALERTS ENABLED' : permission === 'denied' ? 'RESTORE ALERTS' : 'ENABLE ALERTS';
       }
 
-      const state = serviceWorkerRegistration?.active ? 'live' : location.protocol === 'file:' ? 'local' : serviceWorkerSupported ? 'cached' : 'error';
+      const state = serviceWorkerRegistration?.active ? 'live' : previewRuntime ? 'local' : serviceWorkerSupported ? 'cached' : 'error';
       setLiveDiagnostic('pwa', {
         state,
         detail: `${standalone ? 'Running as an installed app.' : 'Running in a browser.'} Offline shell ${serviceWorkerRegistration?.active ? 'is active' : 'is not active in this context'}. Notification permission: ${permission}.`,
@@ -12532,9 +12764,10 @@ function getBirthSkySnapshot() {
     }
 
     async function registerLifePulseServiceWorker() {
-      if (!('serviceWorker' in navigator) || location.protocol === 'file:') {
+      if (!('serviceWorker' in navigator) || isPreviewRuntime()) {
         renderPwaControls();
-        setPwaStatus('Install and notification testing become available from the published HTTPS site.', 'warning');
+        setPwaStatus('Preview mode: app installation and notification testing are available on the published HTTPS site.', 'warning');
+        setLiveDiagnostic('pwa', { state: 'local', detail: 'Service-worker registration is intentionally skipped in this preview environment.', source: 'Local preview runtime' });
         return null;
       }
       try {
@@ -12578,8 +12811,13 @@ function getBirthSkySnapshot() {
         setPwaStatus('This browser does not support notifications.', 'error');
         return;
       }
-      if (location.protocol === 'file:') {
+      if (isPreviewRuntime()) {
         setPwaStatus('Notification permission can only be tested from the published HTTPS app.', 'warning');
+        return;
+      }
+      if (Notification.permission === 'denied') {
+        els.notificationRecovery?.classList.remove('hidden');
+        setPwaStatus('Android has blocked notification access. Follow the recovery steps above, then tap Check Again.', 'error');
         return;
       }
       const registration = serviceWorkerRegistration || await registerLifePulseServiceWorker();
@@ -12589,7 +12827,8 @@ function getBirthSkySnapshot() {
       if (permission === 'granted') {
         setPwaStatus('Notifications are enabled. Use Send Test to verify this device.', 'success');
       } else if (permission === 'denied') {
-        setPwaStatus('Notifications were blocked. Re-enable them in this site’s browser settings.', 'error');
+        els.notificationRecovery?.classList.remove('hidden');
+        setPwaStatus('Notifications were blocked. Use Restore Alerts for the Android recovery steps.', 'error');
       } else {
         setPwaStatus('Notification permission was not granted.', 'warning');
       }
@@ -12603,12 +12842,24 @@ function getBirthSkySnapshot() {
       }
       await registration.showNotification('LifePulse Is Connected', {
         body: 'Your Android notification test worked. Future events can appear here.',
-        icon: './assets/lifepulse-icon-192.png',
-        badge: './assets/lifepulse-icon-192.png',
-        tag: 'lifepulse-device-test',
+        icon: './assets/lifepulse-notification.png',
+        tag: 'lifepulse-device-test-v2',
         data: { url: './?source=notification-test' }
       });
       setPwaStatus('Test notification sent to this device.', 'success');
+    }
+
+    function checkLifePulseNotificationPermission() {
+      renderPwaControls();
+      if (!('Notification' in window)) {
+        setPwaStatus('This browser does not support notifications.', 'error');
+      } else if (Notification.permission === 'granted') {
+        setPwaStatus('Notification access is restored. Send a test to verify this device.', 'success');
+      } else if (Notification.permission === 'denied') {
+        setPwaStatus('Notification access is still blocked in Android or browser settings.', 'error');
+      } else {
+        setPwaStatus('Notification access is reset. Tap Enable Alerts to show the permission request again.', 'warning');
+      }
     }
 
     function bindPwaEvents() {
@@ -12624,9 +12875,13 @@ function getBirthSkySnapshot() {
         setPwaStatus('LifePulse is installed and ready from your Home Screen.', 'success');
       });
       navigator.serviceWorker?.addEventListener('controllerchange', renderPwaControls);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) renderPwaControls();
+      });
       [els.installAppBtn, els.dashboardInstallAppBtn].forEach(button => button?.addEventListener('click', installLifePulseApp));
       els.enableNotificationsBtn?.addEventListener('click', enableLifePulseNotifications);
       els.testNotificationBtn?.addEventListener('click', sendLifePulseTestNotification);
+      els.checkNotificationPermissionBtn?.addEventListener('click', checkLifePulseNotificationPermission);
       els.notificationOptions?.addEventListener('change', saveNotificationPreferences);
       applyNotificationPreferences();
       renderPwaControls();
@@ -12856,9 +13111,16 @@ function getBirthSkySnapshot() {
         if (els.horoscopeStatus) {
           els.horoscopeStatus.textContent = 'Zodiac Profile • Built Into The App';
         }
-        setLiveDiagnostic('horoscope', {
-          state: 'static',
-          detail: 'Showing the built-in zodiac archetype instead of the dated daily reading.',
+        const availableReading = currentLiveHoroscope;
+        setLiveDiagnostic('horoscope', availableReading ? {
+          state: availableReading.live ? 'live' : availableReading.previous ? 'cached' : 'fallback',
+          detail: availableReading.live
+            ? 'Today\'s dated horoscope is ready; the built-in zodiac profile is currently selected.'
+            : 'The most recent dated horoscope is ready; the built-in zodiac profile is currently selected.',
+          source: availableReading.source || 'Life Pulse daily feed'
+        } : {
+          state: 'fallback',
+          detail: 'The built-in zodiac profile is visible while the dated horoscope feed loads.',
           source: 'Life Pulse zodiac profile'
         });
         return;
@@ -13555,6 +13817,7 @@ function getBirthSkySnapshot() {
       updateCheckTimer = setInterval(checkForDashboardUpdate, 15 * 60 * 1000);
       loadSportsDataFeed();
       initSourceDrawers();
+      initCardInfoToggles();
       loadSkyEventsFeed();
       loadCostOfLivingData();
       loadPlaceEconomicData();
