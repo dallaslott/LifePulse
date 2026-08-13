@@ -1,14 +1,14 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-2';
+const CACHE_VERSION = 'lifepulse-v5-shell-4';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
   OFFLINE_URL,
-  './assets/lifepulse-icon-192.png',
   './assets/lifepulse-icon-512.png',
   './assets/lifepulse-maskable-512.png',
-  './assets/lifepulse-notification.svg',
+  './assets/lifepulse-notification.png',
+  './assets/Simpsons_Intro-01.png',
   './cost-of-living-data.json',
   './sports-data-v4.json',
   './sky-events.json'
@@ -85,8 +85,7 @@ self.addEventListener('push', event => {
   const title = payload.title || 'LifePulse';
   const options = {
     body: payload.body || 'A new LifePulse event is ready.',
-    icon: './assets/lifepulse-notification.svg',
-    badge: './assets/lifepulse-notification.svg',
+    icon: './assets/lifepulse-notification.png',
     tag: payload.tag || 'lifepulse-update',
     renotify: Boolean(payload.renotify),
     data: { url: payload.url || './?source=notification' }

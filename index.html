@@ -2201,67 +2201,76 @@
       place-items: center;
       overflow: hidden;
       background:
-        radial-gradient(ellipse at 20% 22%, rgba(255,255,255,0.92) 0 5%, transparent 5.5%),
-        radial-gradient(ellipse at 78% 30%, rgba(255,255,255,0.88) 0 7%, transparent 7.5%),
-        radial-gradient(ellipse at 43% 78%, rgba(255,255,255,0.82) 0 6%, transparent 6.5%),
-        linear-gradient(180deg, #4ebcff 0%, #1d8fe4 100%);
+        radial-gradient(circle at 50% 48%, rgba(46,147,224,0.5) 0%, rgba(10,49,94,0.72) 34%, rgba(2,8,20,0.98) 76%),
+        #020814;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
 
+    .simpsons-easter-overlay::before {
+      content: '';
+      position: absolute;
+      width: min(78vw, 620px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,230,46,0.16), rgba(53,163,255,0.08) 38%, transparent 69%);
+      filter: blur(18px);
+      transform: scale(0.45);
+      opacity: 0;
+    }
+
     .simpsons-easter-overlay.is-playing {
       visibility: visible;
       pointer-events: auto;
-      animation: simpsons-sky-in 3.25s ease-in-out both;
+      animation: simpsons-sky-in 2.95s ease-in-out both;
     }
 
     .simpsons-easter-logo {
-      color: #ffe62e;
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: clamp(3rem, 16vw, 9rem);
-      font-style: italic;
-      font-weight: 900;
-      letter-spacing: -0.075em;
-      line-height: 0.78;
-      text-align: center;
-      text-transform: uppercase;
-      transform: scale(0.055) rotate(-7deg);
-      text-shadow: -3px -3px 0 #111, 3px -3px 0 #111, -3px 3px 0 #111, 3px 3px 0 #111, 0 10px 28px rgba(0,0,0,0.42);
+      display: block;
+      width: min(94vw, 1120px);
+      max-height: 84vh;
+      object-fit: contain;
+      border-radius: 12px;
+      transform: scale(0.12);
+      box-shadow: 0 16px 64px rgba(0,0,0,0.58), 0 0 38px rgba(64,180,255,0.18);
       will-change: transform, opacity;
     }
 
-    .simpsons-easter-logo span {
-      display: block;
-      font-size: 0.35em;
-      letter-spacing: 0.18em;
-      line-height: 1;
-      transform: translateX(-0.9em) rotate(-3deg);
+    .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
+      animation: simpsons-logo-zoom 2.95s cubic-bezier(.18,.72,.2,1) both;
     }
 
-    .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
-      animation: simpsons-logo-zoom 3.25s cubic-bezier(.18,.72,.2,1) both;
+    .simpsons-easter-overlay.is-playing::before {
+      animation: simpsons-light-bloom 2.95s ease-out both;
     }
 
     @keyframes simpsons-sky-in {
       0% { opacity: 0; }
-      10%, 82% { opacity: 1; }
+      9%, 81% { opacity: 1; }
       100% { opacity: 0; }
     }
 
     @keyframes simpsons-logo-zoom {
-      0% { transform: scale(0.055) rotate(-7deg); opacity: 0; filter: blur(2px); }
-      11% { opacity: 1; filter: blur(0); }
-      68% { transform: scale(1) rotate(-2deg); opacity: 1; }
-      84% { transform: scale(1.42) rotate(0deg); opacity: 1; }
-      100% { transform: scale(4.8) rotate(2deg); opacity: 0; filter: blur(1px); }
+      0% { transform: scale(0.12); opacity: 0; filter: blur(5px); }
+      14% { opacity: 0.82; filter: blur(1.5px); }
+      64% { transform: scale(1); opacity: 1; filter: blur(0); }
+      80% { transform: scale(1.06); opacity: 1; }
+      100% { transform: scale(3.4); opacity: 0; filter: blur(3px); }
+    }
+
+    @keyframes simpsons-light-bloom {
+      0% { transform: scale(0.4); opacity: 0; }
+      45% { opacity: 0.8; }
+      82% { transform: scale(1.3); opacity: 0.5; }
+      100% { transform: scale(2); opacity: 0; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .simpsons-easter-overlay.is-playing { animation: simpsons-sky-in 2.2s ease both; }
       .simpsons-easter-overlay.is-playing .simpsons-easter-logo {
         animation: none;
-        transform: scale(1) rotate(-2deg);
+        transform: scale(1);
         opacity: 1;
       }
     }
@@ -4361,7 +4370,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.86.6.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.86.9.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5421,7 +5430,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.86.6.local';
+    const LOCAL_RELEASE_VERSION = '5.86.9.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -13843,10 +13852,43 @@ function getBirthSkySnapshot() {
       const now = audioCtx.currentTime;
       const isDrawer = kind.startsWith('drawer-');
       const isOpen = kind.endsWith('open');
-      const duration = isDrawer ? 0.19 : 0.075;
-      const startFrequency = isDrawer ? (isOpen ? 185 : 310) : (isOpen ? 410 : 335);
-      const endFrequency = isDrawer ? (isOpen ? 325 : 175) : (isOpen ? 510 : 275);
-      const peak = isDrawer ? 0.095 : 0.042;
+      if (isDrawer) {
+        const duration = isOpen ? 0.27 : 0.22;
+        const frameCount = Math.max(1, Math.floor(audioCtx.sampleRate * duration));
+        const buffer = audioCtx.createBuffer(1, frameCount, audioCtx.sampleRate);
+        const samples = buffer.getChannelData(0);
+        let smoothed = 0;
+        for (let index = 0; index < samples.length; index += 1) {
+          smoothed = smoothed * 0.72 + (Math.random() * 2 - 1) * 0.28;
+          samples[index] = smoothed;
+        }
+        const air = audioCtx.createBufferSource();
+        const sweep = audioCtx.createBiquadFilter();
+        const softener = audioCtx.createBiquadFilter();
+        const airGain = audioCtx.createGain();
+        air.buffer = buffer;
+        sweep.type = 'bandpass';
+        sweep.Q.value = 0.62;
+        sweep.frequency.setValueAtTime(isOpen ? 380 : 1900, now);
+        sweep.frequency.exponentialRampToValueAtTime(isOpen ? 2200 : 310, now + duration);
+        softener.type = 'lowpass';
+        softener.frequency.value = 3600;
+        airGain.gain.setValueAtTime(0.0001, now);
+        airGain.gain.linearRampToValueAtTime(isOpen ? 0.115 : 0.09, now + 0.035);
+        airGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        air.connect(sweep);
+        sweep.connect(softener);
+        softener.connect(airGain);
+        airGain.connect(soundtrackMaster);
+        air.start(now);
+        air.stop(now + duration + 0.01);
+        return;
+      }
+
+      const duration = 0.075;
+      const startFrequency = isOpen ? 410 : 335;
+      const endFrequency = isOpen ? 510 : 275;
+      const peak = 0.042;
       const osc = audioCtx.createOscillator();
       const overtone = audioCtx.createOscillator();
       const filter = audioCtx.createBiquadFilter();
@@ -13858,7 +13900,7 @@ function getBirthSkySnapshot() {
       overtone.frequency.setValueAtTime(startFrequency * 2, now);
       overtone.frequency.exponentialRampToValueAtTime(endFrequency * 2, now + duration);
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(isDrawer ? 1150 : 900, now);
+      filter.frequency.setValueAtTime(900, now);
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.linearRampToValueAtTime(peak, now + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
@@ -13929,31 +13971,26 @@ function getBirthSkySnapshot() {
         if (!ok || !audioCtx || isMuted) return;
         const start = audioCtx.currentTime + 0.03;
         const bus = soundtrackBus || soundtrackMaster;
-        [60, 64, 67, 72].forEach((midi, index) => {
+        [55, 62, 67].forEach((midi, index) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-          osc.type = index < 3 ? 'triangle' : 'sine';
-          osc.frequency.setValueAtTime(midiToFreq(midi), start + index * 0.085);
-          gain.gain.setValueAtTime(0.0001, start + index * 0.085);
-          gain.gain.linearRampToValueAtTime(0.055, start + index * 0.085 + 0.025);
-          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.9 + index * 0.085);
-          osc.connect(gain);
+          const filter = audioCtx.createBiquadFilter();
+          osc.type = index === 0 ? 'sine' : 'triangle';
+          osc.frequency.setValueAtTime(midiToFreq(midi), start + index * 0.055);
+          osc.detune.linearRampToValueAtTime(index * 3, start + 1.15);
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1250, start);
+          filter.frequency.exponentialRampToValueAtTime(620, start + 1.25);
+          gain.gain.setValueAtTime(0.0001, start + index * 0.055);
+          gain.gain.linearRampToValueAtTime(index === 0 ? 0.052 : 0.035, start + index * 0.055 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.35 + index * 0.055);
+          osc.connect(filter);
+          filter.connect(gain);
           gain.connect(bus);
-          osc.start(start + index * 0.085);
-          osc.stop(start + 1.05 + index * 0.085);
+          osc.start(start + index * 0.055);
+          osc.stop(start + 1.42 + index * 0.055);
         });
       });
-
-      if ('speechSynthesis' in window) {
-        window.setTimeout(() => {
-          if (isMuted) return;
-          const title = new SpeechSynthesisUtterance('The Simpsons');
-          title.rate = 0.72;
-          title.pitch = 1.35;
-          title.volume = 0.86;
-          window.speechSynthesis.speak(title);
-        }, 260);
-      }
     }
 
     function showSimpsonsEasterEgg() {
@@ -13964,7 +14001,7 @@ function getBirthSkySnapshot() {
         overlay.className = 'simpsons-easter-overlay';
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-label', 'The Simpsons Easter egg');
-        overlay.innerHTML = '<div class="simpsons-easter-logo"><span>The</span>Simpsons</div>';
+        overlay.innerHTML = '<img class="simpsons-easter-logo" src="assets/Simpsons_Intro-01.png" alt="The Simpsons">';
         document.body.appendChild(overlay);
       }
 
@@ -13982,7 +14019,7 @@ function getBirthSkySnapshot() {
       playSimpsonsEasterFanfare();
       navigator.vibrate?.([35, 35, 70]);
       window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
-      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 3300));
+      overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 3000));
       overlay.onclick = dismiss;
       const onEscape = event => {
         if (event.key !== 'Escape') return;
