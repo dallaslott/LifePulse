@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <radialGradient id="bg" cx="32%" cy="24%" r="88%"><stop offset="0" stop-color="#173b63"/><stop offset=".58" stop-color="#071727"/><stop offset="1" stop-color="#030811"/></radialGradient>
+    <linearGradient id="pulse" x1="0" x2="1"><stop stop-color="#00cfff"/><stop offset="1" stop-color="#00f28b"/></linearGradient>
+    <filter id="glow" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="3.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="192" height="192" rx="28" fill="url(#bg)"/>
+  <path d="M19 99h38l10-8 10 8h15l9 11 13-50 16 76 16-37h21l11-15 14 15h27" fill="none" stroke="url(#pulse)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>
