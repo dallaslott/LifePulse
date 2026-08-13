@@ -4025,7 +4025,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.80.1.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.81.1.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5060,7 +5060,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.80.1.local';
+    const LOCAL_RELEASE_VERSION = '5.81.1.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5075,6 +5075,9 @@
     const AAA_GAS_URL = 'https://gasprices.aaa.com/aaa-gas-cost-calculator/';
     const WORLD_POPULATION_URL = 'https://www.worldometers.info/world-population/';
     const WIKIPEDIA_PARSE_BASE = 'https://en.wikipedia.org/w/api.php?action=parse&prop=text&format=json&formatversion=2&origin=*';
+    const ANNUAL_MAJOR_METEOR_SHOWER_PEAKS = [
+      [0, 3], [3, 22], [4, 5], [6, 28], [6, 30], [7, 13], [9, 8], [9, 21], [10, 5], [10, 12], [10, 18], [11, 14], [11, 22]
+    ];
 
     function runDashboardIdentityHandoff() {
       const row = document.querySelector('.dashboard-name-row');
@@ -7922,7 +7925,21 @@
       els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
       els.cosmicArrival.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('arrival-active');
-      window.scrollTo(0, 0);
+      settleDashboardAtTop();
+    }
+
+    function settleDashboardAtTop() {
+      const reset = () => {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        window.scrollTo(0, 0);
+      };
+      reset();
+      requestAnimationFrame(() => {
+        reset();
+        requestAnimationFrame(reset);
+      });
+      setTimeout(reset, 120);
     }
 
     function triggerConfetti(color, options = {}) {
@@ -9831,14 +9848,30 @@
         .replace(/^Viewing:\s*/i, '')
         .trim();
     }
+    function countMajorMeteorShowerPeaks(start, end) {
+      if (!(start instanceof Date) || !(end instanceof Date) || end < start) return 0;
+      let count = 0;
+      for (let year = start.getFullYear(); year <= end.getFullYear(); year += 1) {
+        ANNUAL_MAJOR_METEOR_SHOWER_PEAKS.forEach(([month, day]) => {
+          const peak = new Date(year, month, day, 12, 0, 0, 0);
+          if (peak >= start && peak <= end) count += 1;
+        });
+      }
+      return count;
+    }
+
     function renderSkyEventCards(now = new Date()) {
       const meteor = getNextMaintainedSkyEvent(now, event => event.type === 'meteor-shower');
       const visible = getNextMaintainedSkyEvent(now, event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type));
+      const meteorPeaksExperienced = countMajorMeteorShowerPeaks(birthMomentGlobal, now);
       if (els.meteorShowerValue) els.meteorShowerValue.textContent = compactSkyEventTitle(meteor);
       if (els.meteorShowerCopy) {
         els.meteorShowerCopy.textContent = meteor
           ? formatEventDate(meteor.date) + ' • Up To ' + Number(meteor.idealRate || 0).toLocaleString() + '/Hr\n' + compactSkyViewing(meteor.viewing)
           : 'The maintained meteor calendar does not contain another supported peak yet.';
+      }
+      if (els.meteorShowerCopy && meteor) {
+        els.meteorShowerCopy.textContent = `Next: ${formatEventDate(meteor.date)} - Up To ${Number(meteor.idealRate || 0).toLocaleString()}/Hr\n${meteorPeaksExperienced.toLocaleString()} Major Peaks Since Birth`;
       }
       if (els.visibleSkyEventValue) els.visibleSkyEventValue.textContent = compactSkyEventTitle(visible);
       if (els.visibleSkyEventCopy) {
@@ -9849,7 +9882,7 @@
       const upcomingMeteors = getMaintainedSkyEvents().filter(event => event.type === 'meteor-shower' && event.date > now).slice(0, 14);
       const upcomingVisible = getMaintainedSkyEvents().filter(event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type) && event.date > now).slice(0, 18);
       setSourceDrawer('meteor-showers', {
-        intro: 'Upcoming major meteor-shower peaks, ideal-sky rates, and practical viewing guidance.',
+        intro: 'Upcoming major meteor-shower peaks, ideal-sky rates, and practical viewing guidance. The lifetime count uses 13 major recurring annual peaks; it counts calendar opportunities, not observed meteors.',
         diagnosticMeta: 'Source: NASA GSFC Sky Events Calendar dates with International Meteor Organization annual observing guidance. Coverage: ' + (currentSkyData?.coverage?.startYear || 2026) + '-' + (currentSkyData?.coverage?.endYear || 2027) + '.',
         lines: upcomingMeteors.map(event => formatSourceDate(event.date) + ' - ' + event.title + ' - Up To ' + Number(event.idealRate || 0).toLocaleString() + '/Hr - ' + event.viewing)
       });
@@ -13056,7 +13089,8 @@ function getBirthSkySnapshot() {
 
         els.formView.classList.add('hidden');
         els.resultView.classList.remove('hidden');
-        window.scrollTo(0, 0);
+        document.activeElement?.blur?.();
+        settleDashboardAtTop();
         collapseProfileViews();
         requestAnimationFrame(fitDisplayLabels);
 
@@ -13075,6 +13109,7 @@ function getBirthSkySnapshot() {
         runDashboardIdentityHandoff();
         lastCelebrationKey = '';
         renderTodayCelebration(new Date(), true);
+        settleDashboardAtTop();
         playSymphony();
 
         setLiveDiagnostic('share', { state: 'live', detail: 'This profile can be encoded into a pre-filled share URL at any time.', source: 'URL hash' });
@@ -13326,10 +13361,6 @@ function getBirthSkySnapshot() {
       if (!container || container.dataset.ready === 'true') return;
       DASHBOARD_SECTION_GROUPS.forEach(config => {
         const nodes = config.nodes.map(id => document.getElementById(id)).filter(Boolean);
-        if (config.id === 'right-now') {
-          const mobileAppPanel = document.getElementById('mobile-app-panel');
-          if (mobileAppPanel) nodes.unshift(mobileAppPanel);
-        }
         if (!nodes.length) return;
         const group = document.createElement('details');
         group.className = 'dashboard-group';
