@@ -5,6 +5,7 @@ import * as Astronomy from 'astronomy-engine';
 const OUTPUT_PATH = new URL('../live-data.json', import.meta.url);
 const VERSION_PATH = new URL('../version.json', import.meta.url);
 const SPORTS_PATH = new URL('../sports-data-v4.json', import.meta.url);
+const ORBITAL_OBJECTS_URL = 'https://ourworldindata.org/grapher/space-objects-by-orbit.csv?v=1&csvType=full&useColumnShortNames=false';
 const PRIMARY_URL = 'https://api.freeastroapi.com/api/v2/horoscope/daily/sign';
 const LEGACY_URL = 'https://freehoroscopeapi.com/api/v1/get-horoscope/daily';
 const PREVIOUS_DATA_URL = process.env.PREVIOUS_DATA_URL || 'https://dallaslott.github.io/LifePulse/live-data.json';
@@ -83,7 +84,7 @@ async function fetchText(url, timeoutMs = 20000) {
     const response = await fetch(url, {
       cache: 'no-store',
       headers: {
-        Accept: 'text/html,application/xhtml+xml',
+        Accept: 'text/csv,text/plain,text/html,application/xhtml+xml',
         'User-Agent': 'LifePulse-GitHub-Pages-Updater/3.0'
       },
       signal: controller.signal
@@ -465,6 +466,36 @@ async function buildAtmosphericCO2Reference(previous) {
   }
 }
 
+async function buildOrbitalObjectsReference(previous) {
+  try {
+    const csv = await fetchText(ORBITAL_OBJECTS_URL);
+    const series = {};
+    csv.split(/\r?\n/).slice(1).forEach(line => {
+      const columns = line.trim().split(',');
+      const year = Number(columns[1]);
+      const value = Number(columns[2]);
+      if (!Number.isInteger(year) || !Number.isFinite(value)) return;
+      series[year] = (series[year] || 0) + value;
+    });
+    const years = Object.keys(series).map(Number).sort((a, b) => a - b);
+    if (years.length < 60) throw new Error('Orbital-object history was incomplete');
+    const latestYear = years.at(-1);
+    return {
+      value: {
+        series,
+        latestYear,
+        latestValue: series[latestYear],
+        definition: 'Payloads and rocket bodies still in orbit; loose debris is excluded.',
+        source: 'United States Space Force via Our World in Data',
+        sourceUrl: 'https://ourworldindata.org/grapher/space-objects-by-orbit'
+      },
+      fallbackUsed: false
+    };
+  } catch (error) {
+    return { value: previous?.reference?.orbitalObjects || null, fallbackUsed: true, error: error.message };
+  }
+}
+
 function wikidataEpisodeCount(payload, entityId) {
   const claims = payload?.entities?.[entityId]?.claims?.P1113 || [];
   const values = claims.map(claim => Number(claim?.mainsnak?.datavalue?.value?.amount)).filter(Number.isFinite);
@@ -596,6 +627,7 @@ const [
   populationHistoryReference,
   climateReference,
   atmosphericCO2Reference,
+  orbitalObjectsReference,
   popCultureReference,
   civicReference,
   sportsCoverageReference
@@ -604,6 +636,7 @@ const [
   buildPopulationHistory(previous),
   buildClimateReference(previous),
   buildAtmosphericCO2Reference(previous),
+  buildOrbitalObjectsReference(previous),
   buildPopCultureReference(previous),
   buildCivicReference(previous),
   buildSportsCoverage()
@@ -654,6 +687,7 @@ const reference = {
   populationHistory: populationHistoryReference.value,
   climate: climateReference.value,
   atmosphericCO2: atmosphericCO2Reference.value,
+  orbitalObjects: orbitalObjectsReference.value,
   popCultureEpisodes: popCultureReference.value,
   civic: civicReference.value,
   sportsCoverage: sportsCoverageReference.value
@@ -682,6 +716,7 @@ const output = {
     leapSeconds: componentRecord({ status: leapSecondReference.value ? (leapSecondReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: leapSecondReference.value?.bulletinDate || null, fetchedAt: now, expiresInDays: 200, source: leapSecondReference.value?.source || 'IERS Bulletin C', sourceUrl: leapSecondReference.value?.sourceUrl || IERS_BULLETIN_C_URL, fallbackUsed: leapSecondReference.fallbackUsed, coverageEnd: leapSecondReference.value?.nextAnnounced || leapSecondReference.value?.lastEvent || null, note: leapSecondReference.value?.announcement || 'Leap-second announcement status.' }),
     globalTemperature: componentRecord({ status: climateReference.value ? (climateReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: climateReference.value?.latestYear ? `${climateReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: climateReference.value?.source || 'NASA GISTEMP v4', sourceUrl: climateReference.value?.sourceUrl || NASA_GISTEMP_URL, fallbackUsed: climateReference.fallbackUsed, coverageEnd: climateReference.value?.latestYear || null, note: 'Annual global surface-temperature anomaly series.' }),
     atmosphericCO2: componentRecord({ status: atmosphericCO2Reference.value ? (atmosphericCO2Reference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: atmosphericCO2Reference.value?.latestDate || (atmosphericCO2Reference.value?.latestYear ? `${atmosphericCO2Reference.value.latestYear}-12-31` : null), fetchedAt: now, expiresInDays: 45, source: atmosphericCO2Reference.value?.source || 'NOAA Global Monitoring Laboratory', sourceUrl: atmosphericCO2Reference.value?.sourceUrl || NOAA_CO2_URL, fallbackUsed: atmosphericCO2Reference.fallbackUsed, coverageEnd: atmosphericCO2Reference.value?.latestDate || atmosphericCO2Reference.value?.latestYear || null, note: 'Annual history plus the latest monthly atmospheric carbon dioxide mean at Mauna Loa.' }),
+    orbitalObjects: componentRecord({ status: orbitalObjectsReference.value ? (orbitalObjectsReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: orbitalObjectsReference.value?.latestYear ? `${orbitalObjectsReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 370, source: orbitalObjectsReference.value?.source || 'United States Space Force via Our World in Data', sourceUrl: orbitalObjectsReference.value?.sourceUrl || ORBITAL_OBJECTS_URL, fallbackUsed: orbitalObjectsReference.fallbackUsed, coverageEnd: orbitalObjectsReference.value?.latestYear || null, note: 'Annual historical count of payloads and rocket bodies still in orbit, excluding loose debris.' }),
     popCultureEpisodes: componentRecord({ status: popCultureReference.value ? (popCultureReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: TARGET_DATE, fetchedAt: now, expiresInDays: 8, source: popCultureReference.value?.source || 'Wikidata episode counts', sourceUrl: popCultureReference.value?.sourceUrl || 'https://www.wikidata.org/', fallbackUsed: popCultureReference.fallbackUsed, note: 'Maintained episode-count references for The Simpsons and Saturday Night Live.' }),
     populationHistory: componentRecord({ status: populationHistoryReference.value ? (populationHistoryReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: populationHistoryReference.value?.latestYear ? `${populationHistoryReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: populationHistoryReference.value?.source || 'World Bank', sourceUrl: populationHistoryReference.value?.sourceUrl || WORLD_BANK_POPULATION_URL, fallbackUsed: populationHistoryReference.fallbackUsed, coverageEnd: populationHistoryReference.value?.latestYear || null, note: 'Annual historical world population used for birth-year comparisons.' }),
     civic: componentRecord({ status: civicReference.value ? (civicReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: civicReference.value?.termStarted || TARGET_DATE, fetchedAt: now, expiresInDays: 8, source: civicReference.value?.source || 'USAGov', sourceUrl: civicReference.value?.sourceUrl || USAGOV_PRESIDENT_URL, fallbackUsed: civicReference.fallbackUsed, note: 'Current U.S. president reference.' }),
@@ -706,6 +741,7 @@ const output = {
       ['populationHistory', populationHistoryReference.error],
       ['climate', climateReference.error],
       ['atmosphericCO2', atmosphericCO2Reference.error],
+      ['orbitalObjects', orbitalObjectsReference.error],
       ['popCultureEpisodes', popCultureReference.error],
       ['civic', civicReference.error],
       ['sportsCoverage', sportsCoverageReference.error]

@@ -14,7 +14,7 @@ const placeEconomy = await readJson(new URL('../place-economic-data.json', impor
 const errors = [];
 const now = Date.now();
 const APP_RELEASE_MAJOR = 5;
-const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'atmosphericCO2', 'popCultureEpisodes', 'populationHistory', 'civic', 'sports'];
+const requiredComponents = ['horoscope', 'astronomy', 'worldPopulation', 'gasPrice', 'leapSeconds', 'globalTemperature', 'atmosphericCO2', 'orbitalObjects', 'popCultureEpisodes', 'populationHistory', 'civic', 'sports'];
 const currentYear = new Date().getUTCFullYear();
 
 function latestSeriesYear(series) {
@@ -48,9 +48,11 @@ if (!Array.isArray(data?.reference?.leapSeconds?.events) || data.reference.leapS
 if (Object.keys(data?.reference?.populationHistory?.series || {}).length < 40) errors.push('World Bank population history is incomplete.');
 if (Object.keys(data?.reference?.climate?.series || {}).length < 100) errors.push('NASA climate history is incomplete.');
 if (Object.keys(data?.reference?.atmosphericCO2?.series || {}).length < 60) errors.push('NOAA atmospheric CO2 history is incomplete.');
+if (Object.keys(data?.reference?.orbitalObjects?.series || {}).length < 60) errors.push('Orbital-object history is incomplete.');
 if (!Number.isFinite(Number(data?.reference?.popCultureEpisodes?.simpsons?.count)) || !Number.isFinite(Number(data?.reference?.popCultureEpisodes?.snl?.count))) errors.push('Pop-culture episode references are incomplete.');
 requireRecentYear('World Bank population history', Number(data?.reference?.populationHistory?.latestYear), 2);
 requireRecentYear('NASA global temperature history', Number(data?.reference?.climate?.latestYear), 2);
+requireRecentYear('orbital-object history', Number(data?.reference?.orbitalObjects?.latestYear), 2);
 const latestCo2Date = Date.parse(data?.reference?.atmosphericCO2?.latestDate || '');
 if (!Number.isFinite(latestCo2Date) || now - latestCo2Date > 120 * 86400000) errors.push(`NOAA atmospheric CO2 latest observation is too old: ${data?.reference?.atmosphericCO2?.latestDate || 'missing'}.`);
 for (const sign of Object.values(data?.horoscope?.signs || {})) {
@@ -69,6 +71,7 @@ for (const key of requiredComponents) {
 }
 const expectedLiveComponentSources = {
   atmosphericCO2: /NOAA/i,
+  orbitalObjects: /Space Force|Our World in Data/i,
   globalTemperature: /NASA/i,
   populationHistory: /World Bank/i,
   leapSeconds: /IERS/i,
