@@ -2277,6 +2277,24 @@
       background: #000;
     }
 
+    .simpsons-easter-status {
+      position: absolute;
+      left: 50%;
+      bottom: max(28px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 1;
+      max-width: min(88vw, 460px);
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.76);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
     @keyframes simpsons-video-in {
       0% { opacity: 0; }
       100% { opacity: 1; }
@@ -4425,7 +4443,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.90.1.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.92.1.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5487,7 +5505,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.90.1.local';
+    const LOCAL_RELEASE_VERSION = '5.92.1.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -14265,11 +14283,13 @@ function getBirthSkySnapshot() {
         overlay.className = 'simpsons-easter-overlay';
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-label', 'The Simpsons Easter egg');
-        overlay.innerHTML = '<video class="simpsons-easter-video" src="assets/simpsons-intro.mp4" preload="auto" playsinline webkit-playsinline aria-label="The Simpsons intro"></video>';
+        overlay.innerHTML = '<video class="simpsons-easter-video" src="assets/simpsons-intro.mp4" preload="auto" playsinline webkit-playsinline aria-label="The Simpsons intro"></video><div class="simpsons-easter-status" role="status">Loading video...</div>';
         document.body.appendChild(overlay);
       }
 
       const video = overlay.querySelector('.simpsons-easter-video');
+      const status = overlay.querySelector('.simpsons-easter-status');
+      let awaitingManualPlay = false;
       if (overlay._escapeHandler) document.removeEventListener('keydown', overlay._escapeHandler);
       const dismiss = () => {
         video?.pause();
@@ -14297,16 +14317,50 @@ function getBirthSkySnapshot() {
         video.muted = isMuted || !soundEffectsEnabled;
         video.volume = 1;
         video.onended = dismiss;
-        video.onerror = dismiss;
+        video.onplaying = () => {
+          awaitingManualPlay = false;
+          status?.classList.add('hidden');
+        };
+        video.onwaiting = () => {
+          if (!awaitingManualPlay && status) {
+            status.textContent = 'Loading video...';
+            status.classList.remove('hidden');
+          }
+        };
+        video.onerror = () => {
+          awaitingManualPlay = false;
+          if (status) {
+            status.textContent = 'Video unavailable. Update LifePulse and try again.';
+            status.classList.remove('hidden');
+          }
+        };
         if (video.readyState === HTMLMediaElement.HAVE_NOTHING) video.load();
         video.play().catch(() => {
-          video.controls = true;
+          if (video.error) {
+            awaitingManualPlay = false;
+            if (status) status.textContent = 'Video unavailable. Update LifePulse and try again.';
+            return;
+          }
+          awaitingManualPlay = true;
+          if (status) {
+            status.textContent = 'Tap once to play';
+            status.classList.remove('hidden');
+          }
         });
       }
       navigator.vibrate?.([35, 35, 70]);
       window.clearTimeout(Number(overlay.dataset.dismissTimer || 0));
       overlay.dataset.dismissTimer = String(window.setTimeout(dismiss, 120000));
-      overlay.onclick = dismiss;
+      overlay.onclick = event => {
+        if (awaitingManualPlay && video) {
+          event.stopPropagation();
+          video.play().catch(() => {
+            if (status) status.textContent = 'Video unavailable. Update LifePulse and try again.';
+          });
+          return;
+        }
+        dismiss();
+      };
       const onEscape = event => {
         if (event.key !== 'Escape') return;
         dismiss();
