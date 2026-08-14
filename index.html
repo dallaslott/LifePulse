@@ -6296,6 +6296,16 @@
       2021:4748,2022:6717,2023:8981,2024:10597,2025:14088,2026:16279
     };
 
+    const GLOBAL_LIFE_EXPECTANCY_FALLBACK = {
+      1960:50.9419,1970:57.9373,1980:62.1515,1990:65.1086,2000:67.6505,2010:70.6826,
+      2020:72.1832,2021:71.2161,2022:72.9690,2023:73.3302,2024:73.4818
+    };
+
+    const GLOBAL_URBAN_SHARE_FALLBACK = {
+      1960:34.2336,1970:36.4465,1980:39.4796,1990:42.8321,2000:46.8399,2010:51.7598,
+      2020:56.4442,2021:56.8092,2022:57.0723,2023:57.3117,2024:57.5656,2025:57.8251
+    };
+
     const TALLEST_BUILDING_TIMELINE = [
       { from: '1899-01-01', name: 'Park Row Building', city: 'New York City, USA', feet: 391, meters: 119 },
       { from: '1908-01-01', name: 'Singer Building', city: 'New York City, USA', feet: 612, meters: 187 },
@@ -12652,15 +12662,29 @@ function countPresidentialElectionsExperienced(start, end) {
       const birthTallestBuilding = getTallestBuildingAtDate(birthMomentGlobal);
       const currentTallestBuilding = getTallestBuildingAtDate(now);
       const buildingHeightDifference = currentTallestBuilding.feet - birthTallestBuilding.feet;
+      const lifeExpectancyReference = currentLiveData?.reference?.lifeExpectancy;
+      const lifeExpectancySeries = { ...GLOBAL_LIFE_EXPECTANCY_FALLBACK, ...(lifeExpectancyReference?.series || {}) };
+      const lifeExpectancyYears = Object.keys(lifeExpectancySeries).map(Number).sort((a, b) => a - b);
+      const latestLifeExpectancyYear = Number(lifeExpectancyReference?.latestYear) || lifeExpectancyYears.at(-1);
+      const latestLifeExpectancy = Number(lifeExpectancyReference?.latestValue) || Number(lifeExpectancySeries[latestLifeExpectancyYear]);
+      const birthLifeExpectancy = birthYear >= lifeExpectancyYears[0] ? interpolateFromAnchors(birthYear, lifeExpectancySeries) : null;
+      const urbanShareReference = currentLiveData?.reference?.urbanPopulationShare;
+      const urbanShareSeries = { ...GLOBAL_URBAN_SHARE_FALLBACK, ...(urbanShareReference?.series || {}) };
+      const urbanShareYears = Object.keys(urbanShareSeries).map(Number).sort((a, b) => a - b);
+      const latestUrbanShareYear = Number(urbanShareReference?.latestYear) || urbanShareYears.at(-1);
+      const latestUrbanShare = Number(urbanShareReference?.latestValue) || Number(urbanShareSeries[latestUrbanShareYear]);
+      const birthUrbanShare = birthYear >= urbanShareYears[0] ? interpolateFromAnchors(birthYear, urbanShareSeries) : null;
       const comparisons = [
         { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
         { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `Est. ${formatNamedScale(humansBornSince, 1)} additional Homo sapiens have been born since you arrived.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate.', group: 'world' },
+        { icon: '&#10084;', label: 'Global Life Expectancy', then: birthLifeExpectancy == null ? 'Before Coverage' : `${birthLifeExpectancy.toFixed(1)} yrs`, now: `${latestLifeExpectancy.toFixed(1)} yrs`, nowEra: latestLifeExpectancyYear, change: birthLifeExpectancy == null ? `Worldwide annual coverage begins in ${lifeExpectancyYears[0]}.` : `${formatSignedNumber(latestLifeExpectancy - birthLifeExpectancy, 1, ' yrs')} since your birth year.`, diagnostic: 'Worldwide life expectancy at birth from the World Bank and UN Population Division; this is a population average, not an individual lifespan prediction.', group: 'world' },
+        { icon: '&#127961;', label: 'Urban Population Share', then: birthUrbanShare == null ? 'Before Coverage' : `${birthUrbanShare.toFixed(1)}%`, now: `${latestUrbanShare.toFixed(1)}%`, nowEra: latestUrbanShareYear, change: birthUrbanShare == null ? `Worldwide annual coverage begins in ${urbanShareYears[0]}.` : `${formatSignedNumber(latestUrbanShare - birthUrbanShare, 1, ' pts')} more of humanity lives in urban areas.`, diagnostic: 'World Bank and UN World Urbanization Prospects. Urban definitions vary by country, so the worldwide percentage is an aggregated estimate.', group: 'world' },
+        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${birthTallestBuilding.feet.toLocaleString()} ft)`, now: `${currentTallestBuilding.name} (${currentTallestBuilding.feet.toLocaleString()} ft)`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}; the record rose ${buildingHeightDifference.toLocaleString()} ft.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. The maintained timeline is checked against the Skyscraper Center.', group: 'world' },
         { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`), group: 'everyday' },
         { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.`, group: 'world' },
         { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.`, group: 'world' },
         { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.`, group: 'technology' },
         { icon: '&#128752;', label: 'Active Satellites', then: birthSatelliteCount ? birthSatelliteCount.toLocaleString() : 'None Yet', now: latestSatelliteCount.toLocaleString(), nowEra: latestSatelliteYear, change: birthSatelliteCount ? `${satelliteDifference.toLocaleString()} more active satellites now (+${satellitePercent.toFixed(0)}%).` : `${latestSatelliteCount.toLocaleString()} active satellites now orbit Earth; the first launched in 1957.`, diagnostic: `Historical active-payload counts from Jonathan McDowell's General Catalog of Artificial Space Objects. Uses the birth month when the scheduled feed is available and a year-end fallback offline. Latest maintained observation: ${activeSatelliteReference?.latestDate || latestSatelliteYear}.`, group: 'technology' },
-        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${birthTallestBuilding.feet.toLocaleString()} ft)`, now: `${currentTallestBuilding.name} (${currentTallestBuilding.feet.toLocaleString()} ft)`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}; the record rose ${buildingHeightDifference.toLocaleString()} ft.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. The maintained timeline is checked against the Skyscraper Center.', group: 'technology' },
         { icon: '&#129504;', label: 'Microchip Transistors', then: birthYear < 1971 ? 'Not Yet Invented' : formatNamedScale(birthChip.value, 1), now: formatNamedScale(currentChip.value, 0), thenEra: birthYear < 1971 ? birthYear : birthChip.year, nowEra: currentChip.year, change: birthYear < 1971 ? `${currentChip.chip} now contains ${formatNamedScale(currentChip.value, 0)} transistors.` : `${currentChip.chip} contains about ${formatNamedScale(transistorMultiplier, 1)} times the transistors of the ${birthChip.chip}.`, diagnostic: `Then benchmark: ${birthChip.chip} (${birthChip.year}). Latest maintained benchmark: ${currentChip.chip} (${currentChip.year}).`, group: 'technology' },
         { icon: '&#128190;', label: 'Annual Global Data Created', then: birthDataZb == null ? 'Before Tracking' : formatDigitalData(birthDataZb), now: formatDigitalData(currentDataZb), nowEra: latestDataYear, change: `Est. tracked cumulative total since ${Math.max(birthYear, globalDataYears[0])}: ${formatDigitalData(dataCreatedDuringLife)} created, captured, or replicated globally.`, diagnostic: 'Broad Global Datasphere estimates and interpolation beginning in 2010; this sums estimated annual volumes and does not represent permanently stored unique files.', group: 'technology' },
         { icon: '&#127760;', label: 'Monthly Internet Traffic', then: birthInternetTraffic == null ? 'Before Tracking' : `${birthInternetTraffic.toFixed(1)} EB`, now: `${latestInternetTraffic.toFixed(0)} EB`, nowEra: latestInternetTrafficYear, change: internetTrafficMultiplier ? `Global monthly IP traffic grew about ${internetTrafficMultiplier.toFixed(1)}x from your birth-year estimate.` : `Modern tracking reached ${latestInternetTraffic.toFixed(0)} EB per month by ${latestInternetTrafficYear}.`, diagnostic: 'Cisco VNI historical and forecast anchors through 2022; later values are not extrapolated.', group: 'technology' }
