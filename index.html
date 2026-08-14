@@ -6286,6 +6286,37 @@
       2021:9924,2022:11865,2023:13936,2024:15471,2025:18592
     };
 
+    const ACTIVE_SATELLITES_FALLBACK = {
+      1957:0,1958:2,1959:2,1960:6,1961:8,1962:22,1963:26,1964:51,1965:87,1966:102,1967:128,1968:143,1969:159,
+      1970:161,1971:191,1972:183,1973:197,1974:200,1975:231,1976:258,1977:270,1978:308,1979:305,1980:311,
+      1981:334,1982:335,1983:358,1984:366,1985:390,1986:406,1987:414,1988:422,1989:423,1990:474,
+      1991:504,1992:517,1993:514,1994:538,1995:544,1996:550,1997:609,1998:685,1999:739,2000:782,
+      2001:791,2002:825,2003:849,2004:869,2005:872,2006:890,2007:929,2008:966,2009:999,2010:1019,
+      2011:1055,2012:1112,2013:1203,2014:1294,2015:1404,2016:1507,2017:1814,2018:2042,2019:2286,2020:3258,
+      2021:4748,2022:6717,2023:8981,2024:10597,2025:14088,2026:16279
+    };
+
+    const TALLEST_BUILDING_TIMELINE = [
+      { from: '1899-01-01', name: 'Park Row Building', city: 'New York City, USA', feet: 391, meters: 119 },
+      { from: '1908-01-01', name: 'Singer Building', city: 'New York City, USA', feet: 612, meters: 187 },
+      { from: '1909-01-01', name: 'Metropolitan Life Tower', city: 'New York City, USA', feet: 700, meters: 213 },
+      { from: '1913-04-24', name: 'Woolworth Building', city: 'New York City, USA', feet: 792, meters: 241 },
+      { from: '1930-05-27', name: 'Chrysler Building', city: 'New York City, USA', feet: 1046, meters: 319 },
+      { from: '1931-05-01', name: 'Empire State Building', city: 'New York City, USA', feet: 1250, meters: 381 },
+      { from: '1972-01-01', name: 'One World Trade Center', city: 'New York City, USA', feet: 1368, meters: 417 },
+      { from: '1974-01-01', name: 'Sears Tower', city: 'Chicago, USA', feet: 1451, meters: 442 },
+      { from: '1998-01-01', name: 'Petronas Towers', city: 'Kuala Lumpur, Malaysia', feet: 1483, meters: 452 },
+      { from: '2004-01-01', name: 'Taipei 101', city: 'Taipei, Taiwan', feet: 1667, meters: 508 },
+      { from: '2010-01-04', name: 'Burj Khalifa', city: 'Dubai, UAE', feet: 2717, meters: 828 }
+    ];
+
+    function getTallestBuildingAtDate(date) {
+      const moment = date instanceof Date ? date.getTime() : new Date(date).getTime();
+      return TALLEST_BUILDING_TIMELINE.reduce((record, building) => {
+        return new Date(`${building.from}T00:00:00`).getTime() <= moment ? building : record;
+      }, TALLEST_BUILDING_TIMELINE[0]);
+    }
+
     const CHIP_TRANSISTOR_MILESTONES = [
       { year: 1971, value: 2300, chip: 'Intel 4004' },
       { year: 1972, value: 3500, chip: 'Intel 8008' },
@@ -12604,6 +12635,23 @@ function countPresidentialElectionsExperienced(start, end) {
       const birthInternetTraffic = birthYear >= internetTrafficYears[0] ? interpolateFromAnchors(birthYear, INTERNET_TRAFFIC_ANCHORS_EB_MONTH) : null;
       const latestInternetTraffic = INTERNET_TRAFFIC_ANCHORS_EB_MONTH[latestInternetTrafficYear];
       const internetTrafficMultiplier = birthInternetTraffic ? latestInternetTraffic / birthInternetTraffic : null;
+      const activeSatelliteReference = currentLiveData?.reference?.activeSatellites;
+      const activeSatelliteSeries = { ...ACTIVE_SATELLITES_FALLBACK, ...(activeSatelliteReference?.series || {}) };
+      const activeSatelliteYears = Object.keys(activeSatelliteSeries).map(Number).sort((a, b) => a - b);
+      const latestSatelliteYear = Number(activeSatelliteReference?.latestYear) || activeSatelliteYears.at(-1);
+      const latestSatelliteCount = Number(activeSatelliteReference?.latestValue) || Number(activeSatelliteSeries[latestSatelliteYear]);
+      const birthSatelliteMonth = `${birthYear}-${String(birthMomentGlobal.getMonth() + 1).padStart(2, '0')}`;
+      const monthlyBirthSatelliteCount = Number(activeSatelliteReference?.monthlySeries?.[birthSatelliteMonth]);
+      const birthSatelliteCount = birthYear < 1957
+        ? 0
+        : Number.isFinite(monthlyBirthSatelliteCount) && monthlyBirthSatelliteCount >= 0
+          ? Math.round(monthlyBirthSatelliteCount)
+          : Math.round(interpolateFromAnchors(birthYear, activeSatelliteSeries));
+      const satelliteDifference = latestSatelliteCount - birthSatelliteCount;
+      const satellitePercent = birthSatelliteCount > 0 ? satelliteDifference / birthSatelliteCount * 100 : null;
+      const birthTallestBuilding = getTallestBuildingAtDate(birthMomentGlobal);
+      const currentTallestBuilding = getTallestBuildingAtDate(now);
+      const buildingHeightDifference = currentTallestBuilding.feet - birthTallestBuilding.feet;
       const comparisons = [
         { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
         { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `Est. ${formatNamedScale(humansBornSince, 1)} additional Homo sapiens have been born since you arrived.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate.', group: 'world' },
@@ -12611,6 +12659,8 @@ function countPresidentialElectionsExperienced(start, end) {
         { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.`, group: 'world' },
         { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.`, group: 'world' },
         { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.`, group: 'technology' },
+        { icon: '&#128752;', label: 'Active Satellites', then: birthSatelliteCount ? birthSatelliteCount.toLocaleString() : 'None Yet', now: latestSatelliteCount.toLocaleString(), nowEra: latestSatelliteYear, change: birthSatelliteCount ? `${satelliteDifference.toLocaleString()} more active satellites now (+${satellitePercent.toFixed(0)}%).` : `${latestSatelliteCount.toLocaleString()} active satellites now orbit Earth; the first launched in 1957.`, diagnostic: `Historical active-payload counts from Jonathan McDowell's General Catalog of Artificial Space Objects. Uses the birth month when the scheduled feed is available and a year-end fallback offline. Latest maintained observation: ${activeSatelliteReference?.latestDate || latestSatelliteYear}.`, group: 'technology' },
+        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${birthTallestBuilding.feet.toLocaleString()} ft)`, now: `${currentTallestBuilding.name} (${currentTallestBuilding.feet.toLocaleString()} ft)`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}; the record rose ${buildingHeightDifference.toLocaleString()} ft.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. The maintained timeline is checked against the Skyscraper Center.', group: 'technology' },
         { icon: '&#129504;', label: 'Microchip Transistors', then: birthYear < 1971 ? 'Not Yet Invented' : formatNamedScale(birthChip.value, 1), now: formatNamedScale(currentChip.value, 0), thenEra: birthYear < 1971 ? birthYear : birthChip.year, nowEra: currentChip.year, change: birthYear < 1971 ? `${currentChip.chip} now contains ${formatNamedScale(currentChip.value, 0)} transistors.` : `${currentChip.chip} contains about ${formatNamedScale(transistorMultiplier, 1)} times the transistors of the ${birthChip.chip}.`, diagnostic: `Then benchmark: ${birthChip.chip} (${birthChip.year}). Latest maintained benchmark: ${currentChip.chip} (${currentChip.year}).`, group: 'technology' },
         { icon: '&#128190;', label: 'Annual Global Data Created', then: birthDataZb == null ? 'Before Tracking' : formatDigitalData(birthDataZb), now: formatDigitalData(currentDataZb), nowEra: latestDataYear, change: `Est. tracked cumulative total since ${Math.max(birthYear, globalDataYears[0])}: ${formatDigitalData(dataCreatedDuringLife)} created, captured, or replicated globally.`, diagnostic: 'Broad Global Datasphere estimates and interpolation beginning in 2010; this sums estimated annual volumes and does not represent permanently stored unique files.', group: 'technology' },
         { icon: '&#127760;', label: 'Monthly Internet Traffic', then: birthInternetTraffic == null ? 'Before Tracking' : `${birthInternetTraffic.toFixed(1)} EB`, now: `${latestInternetTraffic.toFixed(0)} EB`, nowEra: latestInternetTrafficYear, change: internetTrafficMultiplier ? `Global monthly IP traffic grew about ${internetTrafficMultiplier.toFixed(1)}x from your birth-year estimate.` : `Modern tracking reached ${latestInternetTraffic.toFixed(0)} EB per month by ${latestInternetTrafficYear}.`, diagnostic: 'Cisco VNI historical and forecast anchors through 2022; later values are not extrapolated.', group: 'technology' }
