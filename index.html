@@ -1341,15 +1341,10 @@
       100% { opacity: 0; transform: scale(1.015); }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .cosmic-arrival.is-active,
-      .cosmic-arrival.is-active::before,
-      .cosmic-arrival.is-active .simple-arrival-word,
-      .cosmic-arrival.is-active .simple-arrival-ecg { animation: none; }
-      .cosmic-arrival.is-active .simple-arrival-ecg-pulse { animation: none; opacity: 1; }
-      .cosmic-arrival.is-active .simple-arrival-ecg-reveal { animation: none; width: 720px; }
-      .cosmic-arrival.is-active .simple-arrival-ecg-breath { animation: none; opacity: 1; }
-    }
+    /* This sequence is started by an explicit Launch Tracker action. Keep the
+       branded ECG handoff intact across web and installed-app environments;
+       some Android shells otherwise report reduced motion and collapse the
+       entire splash into an imperceptible static frame. */
     .birthday-hero-main {
       display: block;
       font-size: clamp(2.05rem, 7vw, 2.95rem);
@@ -8548,17 +8543,16 @@
     async function playDashboardArrival(profile) {
       if (!els.cosmicArrival) return;
       const sequenceId = ++arrivalSequenceId;
-      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
       stopArrivalRenderer();
       document.body.classList.add('arrival-active');
       els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
       els.cosmicArrival.setAttribute('aria-hidden', 'false');
       void els.cosmicArrival.offsetWidth;
       els.cosmicArrival.classList.add('is-active');
-      await arrivalPause(reducedMotion ? 320 : 5400);
+      await arrivalPause(5400);
       if (sequenceId !== arrivalSequenceId) return;
       els.cosmicArrival.classList.add('is-leaving');
-      await arrivalPause(reducedMotion ? 160 : 340);
+      await arrivalPause(340);
       if (sequenceId !== arrivalSequenceId) return;
       els.cosmicArrival.classList.remove('is-active', 'is-leaving', 'phase-location', 'phase-surface');
       els.cosmicArrival.setAttribute('aria-hidden', 'true');
