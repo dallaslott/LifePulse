@@ -25,6 +25,8 @@ const EIA_GAS_URL = 'https://api.eia.gov/v2/petroleum/pri/gnd/data/';
 const EIA_API_KEY = String(process.env.EIA_API_KEY || '').trim();
 const IERS_BULLETIN_C_URL = 'https://datacenter.iers.org/data/latestVersion/bulletinC.txt';
 const WORLD_BANK_POPULATION_URL = 'https://api.worldbank.org/v2/country/WLD/indicator/SP.POP.TOTL?format=json&per_page=20000&date=1960:2100';
+const WORLD_BANK_LIFE_EXPECTANCY_URL = 'https://api.worldbank.org/v2/country/WLD/indicator/SP.DYN.LE00.IN?format=json&per_page=20000&date=1960:2100';
+const WORLD_BANK_URBAN_SHARE_URL = 'https://api.worldbank.org/v2/country/WLD/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=20000&date=1960:2100';
 const NASA_GISTEMP_URL = 'https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv';
 const NOAA_CO2_URL = 'https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.txt';
 const NOAA_CO2_MONTHLY_URL = 'https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.txt';
@@ -356,6 +358,7 @@ async function buildPopulationHistory(previous) {
     const series = {};
     rows.forEach(row => {
       const year = Number(row?.date);
+      if (row?.value == null || row.value === '') return;
       const value = Number(row?.value);
       if (Number.isInteger(year) && Number.isFinite(value)) series[year] = value;
     });
@@ -364,6 +367,27 @@ async function buildPopulationHistory(previous) {
     return { value: { series, latestYear, latestValue: series[latestYear], source: 'World Bank', sourceUrl: WORLD_BANK_POPULATION_URL }, fallbackUsed: false };
   } catch (error) {
     return { value: previous?.reference?.populationHistory || null, fallbackUsed: true, error: error.message };
+  }
+}
+
+async function buildWorldBankIndicatorReference(previous, referenceKey, url, label) {
+  try {
+    const payload = await fetchJson(url);
+    const rows = Array.isArray(payload?.[1]) ? payload[1] : [];
+    const series = {};
+    rows.forEach(row => {
+      const year = Number(row?.date);
+      const value = Number(row?.value);
+      if (Number.isInteger(year) && Number.isFinite(value)) series[year] = value;
+    });
+    if (Object.keys(series).length < 50) throw new Error(`${label} history was incomplete`);
+    const latestYear = Math.max(...Object.keys(series).map(Number));
+    return {
+      value: { series, latestYear, latestValue: series[latestYear], source: 'World Bank', sourceUrl: url },
+      fallbackUsed: false
+    };
+  } catch (error) {
+    return { value: previous?.reference?.[referenceKey] || null, fallbackUsed: true, error: error.message };
   }
 }
 
@@ -670,6 +694,8 @@ const currentComparisons = await buildCurrentComparisons(previous);
 const [
   leapSecondReference,
   populationHistoryReference,
+  lifeExpectancyReference,
+  urbanPopulationShareReference,
   climateReference,
   atmosphericCO2Reference,
   orbitalObjectsReference,
@@ -680,6 +706,8 @@ const [
 ] = await Promise.all([
   buildLeapSecondReference(previous),
   buildPopulationHistory(previous),
+  buildWorldBankIndicatorReference(previous, 'lifeExpectancy', WORLD_BANK_LIFE_EXPECTANCY_URL, 'World life-expectancy'),
+  buildWorldBankIndicatorReference(previous, 'urbanPopulationShare', WORLD_BANK_URBAN_SHARE_URL, 'World urban-population share'),
   buildClimateReference(previous),
   buildAtmosphericCO2Reference(previous),
   buildOrbitalObjectsReference(previous),
@@ -732,6 +760,8 @@ const feedStatus = primaryCount === SIGNS.length ? 'live' : freshCount === SIGNS
 const reference = {
   leapSeconds: leapSecondReference.value,
   populationHistory: populationHistoryReference.value,
+  lifeExpectancy: lifeExpectancyReference.value,
+  urbanPopulationShare: urbanPopulationShareReference.value,
   climate: climateReference.value,
   atmosphericCO2: atmosphericCO2Reference.value,
   orbitalObjects: orbitalObjectsReference.value,
@@ -768,6 +798,8 @@ const output = {
     activeSatellites: componentRecord({ status: activeSatellitesReference.value ? (activeSatellitesReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: activeSatellitesReference.value?.latestDate || null, fetchedAt: now, expiresInDays: 8, source: activeSatellitesReference.value?.source || "Jonathan McDowell's General Catalog of Artificial Space Objects", sourceUrl: activeSatellitesReference.value?.sourceUrl || ACTIVE_SATELLITES_URL, fallbackUsed: activeSatellitesReference.fallbackUsed, coverageEnd: activeSatellitesReference.value?.latestDate || activeSatellitesReference.value?.latestYear || null, note: 'Historical year-end and latest current counts of active satellite payloads in orbit.' }),
     popCultureEpisodes: componentRecord({ status: popCultureReference.value ? (popCultureReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: TARGET_DATE, fetchedAt: now, expiresInDays: 8, source: popCultureReference.value?.source || 'Wikidata episode counts', sourceUrl: popCultureReference.value?.sourceUrl || 'https://www.wikidata.org/', fallbackUsed: popCultureReference.fallbackUsed, note: 'Maintained episode-count references for The Simpsons and Saturday Night Live.' }),
     populationHistory: componentRecord({ status: populationHistoryReference.value ? (populationHistoryReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: populationHistoryReference.value?.latestYear ? `${populationHistoryReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: populationHistoryReference.value?.source || 'World Bank', sourceUrl: populationHistoryReference.value?.sourceUrl || WORLD_BANK_POPULATION_URL, fallbackUsed: populationHistoryReference.fallbackUsed, coverageEnd: populationHistoryReference.value?.latestYear || null, note: 'Annual historical world population used for birth-year comparisons.' }),
+    lifeExpectancy: componentRecord({ status: lifeExpectancyReference.value ? (lifeExpectancyReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: lifeExpectancyReference.value?.latestYear ? `${lifeExpectancyReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: lifeExpectancyReference.value?.source || 'World Bank', sourceUrl: lifeExpectancyReference.value?.sourceUrl || WORLD_BANK_LIFE_EXPECTANCY_URL, fallbackUsed: lifeExpectancyReference.fallbackUsed, coverageEnd: lifeExpectancyReference.value?.latestYear || null, note: 'Annual worldwide life expectancy at birth.' }),
+    urbanPopulationShare: componentRecord({ status: urbanPopulationShareReference.value ? (urbanPopulationShareReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: urbanPopulationShareReference.value?.latestYear ? `${urbanPopulationShareReference.value.latestYear}-12-31` : null, fetchedAt: now, expiresInDays: 45, source: urbanPopulationShareReference.value?.source || 'World Bank', sourceUrl: urbanPopulationShareReference.value?.sourceUrl || WORLD_BANK_URBAN_SHARE_URL, fallbackUsed: urbanPopulationShareReference.fallbackUsed, coverageEnd: urbanPopulationShareReference.value?.latestYear || null, note: 'Annual worldwide urban share of total population.' }),
     civic: componentRecord({ status: civicReference.value ? (civicReference.fallbackUsed ? 'fallback' : 'live') : 'unavailable', asOf: civicReference.value?.termStarted || TARGET_DATE, fetchedAt: now, expiresInDays: 8, source: civicReference.value?.source || 'USAGov', sourceUrl: civicReference.value?.sourceUrl || USAGOV_PRESIDENT_URL, fallbackUsed: civicReference.fallbackUsed, note: 'Current U.S. president reference.' }),
     sports: componentRecord({ status: sportsCoverageReference.value ? 'validated' : 'unavailable', asOf: TARGET_DATE, fetchedAt: now, expiresInDays: 32, source: sportsCoverageReference.value?.source || 'LifePulse sports dataset', sourceUrl: sportsCoverageReference.value?.sourceUrl || 'sports-data-v4.json', fallbackUsed: sportsCoverageReference.fallbackUsed, coverageEnd: sportsCoverageReference.value?.resultCoverage || null, note: 'Champions are checked once after each projected NFL, NBA, or MLB completion date; coverage monitoring prevents silent gaps.' }),
     historicalWeather: componentRecord({ status: 'on-demand', asOf: null, fetchedAt: now, expiresInDays: 3650, source: 'Open-Meteo Archive API', sourceUrl: 'https://open-meteo.com/en/docs/historical-weather-api', note: 'Fetched in the browser for the saved birthplace and birthday.' }),
@@ -788,6 +820,8 @@ const output = {
     referenceErrors: [
       ['leapSeconds', leapSecondReference.error],
       ['populationHistory', populationHistoryReference.error],
+      ['lifeExpectancy', lifeExpectancyReference.error],
+      ['urbanPopulationShare', urbanPopulationShareReference.error],
       ['climate', climateReference.error],
       ['atmosphericCO2', atmosphericCO2Reference.error],
       ['orbitalObjects', orbitalObjectsReference.error],
