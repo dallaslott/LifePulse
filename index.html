@@ -1213,8 +1213,8 @@
 
     .cosmic-arrival.is-active::before { opacity: .8; transform: scale(1); }
 
-    .cosmic-arrival.is-active { animation: simpleArrivalBackdropReveal 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
-    .cosmic-arrival.is-active::before { animation: simpleArrivalHaloReveal 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
+    .cosmic-arrival.is-active { animation: simpleArrivalBackdropReveal 700ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
+    .cosmic-arrival.is-active::before { animation: simpleArrivalHaloReveal 700ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
 
     .simple-arrival-mark {
       position: relative;
@@ -1249,8 +1249,8 @@
 
     .cosmic-arrival.is-active .simple-arrival-word {
       animation:
-        simpleArrivalWordZoom 1100ms cubic-bezier(.16,.72,.18,1) 4680ms 1 forwards,
-        simpleArrivalWordGlow 550ms ease-in-out 4680ms 2 alternate both;
+        simpleArrivalWordZoom 700ms cubic-bezier(.16,.72,.18,1) 4680ms 1 forwards,
+        simpleArrivalWordGlow 350ms ease-in-out 4680ms 2 alternate both;
     }
 
     @keyframes simpleArrivalWordZoom {
@@ -1260,7 +1260,7 @@
       }
       100% {
         opacity: 0;
-        transform: scale(2);
+        transform: scale(1.12);
       }
     }
 
@@ -1286,7 +1286,7 @@
     }
 
     .simple-arrival-ecg { display: block; width: 100%; height: clamp(92px, 17vh, 138px); margin-inline: auto; overflow: visible; transform-origin: center; }
-    .cosmic-arrival.is-active .simple-arrival-ecg { animation: simpleArrivalEcgExit 1100ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
+    .cosmic-arrival.is-active .simple-arrival-ecg { animation: simpleArrivalEcgExit 700ms cubic-bezier(.22,.61,.36,1) 4680ms 1 forwards; }
     .simple-arrival-ecg-base,
     .simple-arrival-ecg-pulse,
     .simple-arrival-ecg-breath { fill: none; vector-effect: non-scaling-stroke; }
@@ -1297,6 +1297,8 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       opacity: 0;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
       filter: drop-shadow(0 0 5px var(--primary));
     }
     .simple-arrival-ecg-reveal { width: 0; height: 120px; }
@@ -1312,22 +1314,19 @@
     .cosmic-arrival.is-active .simple-arrival-ecg-pulse-one { animation: simpleArrivalBeatGlow 900ms linear 320ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-pulse-two { animation: simpleArrivalBeatGlow 900ms linear 1420ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-pulse-three { animation: simpleArrivalBeatGlow 900ms linear 2520ms 1 forwards; }
-    .cosmic-arrival.is-active .simple-arrival-ecg-reveal-one { animation: simpleArrivalReveal 900ms linear 320ms 1 forwards; }
-    .cosmic-arrival.is-active .simple-arrival-ecg-reveal-two { animation: simpleArrivalReveal 900ms linear 1420ms 1 forwards; }
-    .cosmic-arrival.is-active .simple-arrival-ecg-reveal-three { animation: simpleArrivalReveal 900ms linear 2520ms 1 forwards; }
     .cosmic-arrival.is-active .simple-arrival-ecg-breath {
       animation:
         simpleArrivalBreathPulse 315ms ease-in-out 3420ms 4 alternate both,
-        simpleArrivalBreathFade 1100ms ease-out 4680ms 1 forwards;
+        simpleArrivalBreathFade 700ms ease-out 4680ms 1 forwards;
     }
     @keyframes simpleArrivalReveal {
       0% { width: 0; }
       84%, 100% { width: 720px; }
     }
     @keyframes simpleArrivalBeatGlow {
-      0% { opacity: .82; }
-      84%, 92% { opacity: 1; }
-      100% { opacity: 0; }
+      0% { opacity: .82; stroke-dashoffset: 100; }
+      84%, 92% { opacity: 1; stroke-dashoffset: 0; }
+      100% { opacity: 0; stroke-dashoffset: 0; }
     }
     @keyframes simpleArrivalBreathPulse {
       0% { opacity: .55; stroke-width: 3; filter: drop-shadow(0 0 5px var(--primary)); }
@@ -4425,9 +4424,9 @@
         </defs>
         <g class="simple-arrival-ecg-lines">
           <path class="simple-arrival-ecg-base" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
-          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-one" clip-path="url(#simple-arrival-reveal-one)" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
-          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-two" clip-path="url(#simple-arrival-reveal-two)" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
-          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-three" clip-path="url(#simple-arrival-reveal-three)" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
+          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-one" pathLength="100" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
+          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-two" pathLength="100" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
+          <path class="simple-arrival-ecg-pulse simple-arrival-ecg-pulse-three" pathLength="100" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
           <path class="simple-arrival-ecg-breath" d="M0 60 H174 C188 60 194 48 210 48 C226 48 234 60 250 60 H278 L288 67 L304 10 L322 108 L340 60 H372 C394 60 404 38 430 38 C456 38 468 60 492 60 H720" />
         </g>
       </svg>
@@ -7269,10 +7268,19 @@
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
     }
 
-    function saveDashboardSessionState() {
+    function getDisplaySignature() {
+      return {
+        width: Math.max(1, Number(window.innerWidth) || 1),
+        height: Math.max(1, Number(window.innerHeight) || 1),
+        orientation: window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
+      };
+    }
+
+    function saveDashboardSessionState(reason = 'active') {
       if (!els.resultView || els.resultView.classList.contains('hidden') || !currentProfile) return;
       try {
-        const state = JSON.stringify({ active: true, scrollY: Math.max(0, window.scrollY || 0), savedAt: Date.now() });
+        const display = getDisplaySignature();
+        const state = JSON.stringify({ active: true, scrollY: Math.max(0, window.scrollY || 0), savedAt: Date.now(), reason, ...display });
         sessionStorage.setItem(DASHBOARD_SESSION_KEY, state);
         localStorage.setItem(DASHBOARD_SESSION_KEY, state);
       } catch {}
@@ -7282,8 +7290,22 @@
       try {
         const raw = sessionStorage.getItem(DASHBOARD_SESSION_KEY) || localStorage.getItem(DASHBOARD_SESSION_KEY);
         const state = JSON.parse(raw || 'null');
-        const recent = state?.savedAt && Date.now() - Number(state.savedAt) < 12 * 60 * 60 * 1000;
-        return state?.active && recent ? state : null;
+        const age = state?.savedAt ? Date.now() - Number(state.savedAt) : Infinity;
+        const currentDisplay = getDisplaySignature();
+        const hasDisplaySignature = Number.isFinite(Number(state?.width))
+          && Number.isFinite(Number(state?.height))
+          && (state?.orientation === 'portrait' || state?.orientation === 'landscape');
+        const widthChange = hasDisplaySignature
+          ? Math.abs(currentDisplay.width - Number(state.width)) / Math.max(currentDisplay.width, Number(state.width))
+          : 0;
+        const heightChange = hasDisplaySignature
+          ? Math.abs(currentDisplay.height - Number(state.height)) / Math.max(currentDisplay.height, Number(state.height))
+          : 0;
+        const displayChanged = hasDisplaySignature
+          && (state.orientation !== currentDisplay.orientation || widthChange > 0.2 || heightChange > 0.2);
+        const rotationRecovery = state?.reason === 'orientation' && age < 30 * 1000;
+        const displayRecovery = displayChanged && age < 30 * 1000;
+        return state?.active && (rotationRecovery || displayRecovery) ? state : null;
       } catch { return null; }
     }
 
@@ -8533,7 +8555,7 @@
       els.cosmicArrival.setAttribute('aria-hidden', 'false');
       void els.cosmicArrival.offsetWidth;
       els.cosmicArrival.classList.add('is-active');
-      await arrivalPause(reducedMotion ? 320 : 5780);
+      await arrivalPause(reducedMotion ? 320 : 5400);
       if (sequenceId !== arrivalSequenceId) return;
       els.cosmicArrival.classList.add('is-leaving');
       await arrivalPause(reducedMotion ? 160 : 340);
@@ -14789,8 +14811,15 @@ function getBirthSkySnapshot() {
           fitDisplayLabels();
         }, 150);
       });
-      window.addEventListener('orientationchange', saveDashboardSessionState);
-      window.addEventListener('pagehide', saveDashboardSessionState);
+    let dashboardDisplayChangeAt = 0;
+    window.addEventListener('orientationchange', () => {
+      dashboardDisplayChangeAt = Date.now();
+      saveDashboardSessionState('orientation');
+    });
+    window.addEventListener('pagehide', () => {
+      const isDisplayChange = Date.now() - dashboardDisplayChangeAt < 5000;
+      saveDashboardSessionState(isDisplayChange ? 'orientation' : 'pagehide');
+    });
 
       // Pause star animation and insight timer when tab is not visible
       document.addEventListener('visibilitychange', () => {
@@ -14857,6 +14886,7 @@ function getBirthSkySnapshot() {
           if (dashboardSession && restoreActiveDashboard(saved, dashboardSession)) {
             setStatus('Dashboard restored after the display changed.', 'success');
           } else {
+            clearDashboardSessionState();
             setStatus('Last saved profile restored. Launch whenever you are ready.', 'success');
           }
         }
