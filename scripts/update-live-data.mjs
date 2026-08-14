@@ -360,7 +360,7 @@ async function buildPopulationHistory(previous) {
       const year = Number(row?.date);
       if (row?.value == null || row.value === '') return;
       const value = Number(row?.value);
-      if (Number.isInteger(year) && Number.isFinite(value)) series[year] = value;
+      if (Number.isInteger(year) && Number.isFinite(value) && value > 0) series[year] = value;
     });
     if (Object.keys(series).length < 50) throw new Error('World Bank population history was incomplete');
     const latestYear = Math.max(...Object.keys(series).map(Number));
@@ -377,8 +377,9 @@ async function buildWorldBankIndicatorReference(previous, referenceKey, url, lab
     const series = {};
     rows.forEach(row => {
       const year = Number(row?.date);
+      if (row?.value == null || row.value === '') return;
       const value = Number(row?.value);
-      if (Number.isInteger(year) && Number.isFinite(value)) series[year] = value;
+      if (Number.isInteger(year) && Number.isFinite(value) && value > 0) series[year] = value;
     });
     if (Object.keys(series).length < 50) throw new Error(`${label} history was incomplete`);
     const latestYear = Math.max(...Object.keys(series).map(Number));
