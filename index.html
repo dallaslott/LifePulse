@@ -4437,7 +4437,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.92.1.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.112.1.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5506,7 +5506,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.92.1.local';
+    const LOCAL_RELEASE_VERSION = '5.112.1.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -12663,16 +12663,18 @@ function countPresidentialElectionsExperienced(start, end) {
       const currentTallestBuilding = getTallestBuildingAtDate(now);
       const buildingHeightDifference = currentTallestBuilding.feet - birthTallestBuilding.feet;
       const lifeExpectancyReference = currentLiveData?.reference?.lifeExpectancy;
-      const lifeExpectancySeries = { ...GLOBAL_LIFE_EXPECTANCY_FALLBACK, ...(lifeExpectancyReference?.series || {}) };
+      const validLifeExpectancyFeed = Object.fromEntries(Object.entries(lifeExpectancyReference?.series || {}).filter(([, value]) => Number.isFinite(Number(value)) && Number(value) > 0));
+      const lifeExpectancySeries = { ...GLOBAL_LIFE_EXPECTANCY_FALLBACK, ...validLifeExpectancyFeed };
       const lifeExpectancyYears = Object.keys(lifeExpectancySeries).map(Number).sort((a, b) => a - b);
-      const latestLifeExpectancyYear = Number(lifeExpectancyReference?.latestYear) || lifeExpectancyYears.at(-1);
-      const latestLifeExpectancy = Number(lifeExpectancyReference?.latestValue) || Number(lifeExpectancySeries[latestLifeExpectancyYear]);
+      const latestLifeExpectancyYear = lifeExpectancyYears.at(-1);
+      const latestLifeExpectancy = Number(lifeExpectancySeries[latestLifeExpectancyYear]);
       const birthLifeExpectancy = birthYear >= lifeExpectancyYears[0] ? interpolateFromAnchors(birthYear, lifeExpectancySeries) : null;
       const urbanShareReference = currentLiveData?.reference?.urbanPopulationShare;
-      const urbanShareSeries = { ...GLOBAL_URBAN_SHARE_FALLBACK, ...(urbanShareReference?.series || {}) };
+      const validUrbanShareFeed = Object.fromEntries(Object.entries(urbanShareReference?.series || {}).filter(([, value]) => Number.isFinite(Number(value)) && Number(value) > 0));
+      const urbanShareSeries = { ...GLOBAL_URBAN_SHARE_FALLBACK, ...validUrbanShareFeed };
       const urbanShareYears = Object.keys(urbanShareSeries).map(Number).sort((a, b) => a - b);
-      const latestUrbanShareYear = Number(urbanShareReference?.latestYear) || urbanShareYears.at(-1);
-      const latestUrbanShare = Number(urbanShareReference?.latestValue) || Number(urbanShareSeries[latestUrbanShareYear]);
+      const latestUrbanShareYear = urbanShareYears.at(-1);
+      const latestUrbanShare = Number(urbanShareSeries[latestUrbanShareYear]);
       const birthUrbanShare = birthYear >= urbanShareYears[0] ? interpolateFromAnchors(birthYear, urbanShareSeries) : null;
       const comparisons = [
         { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
