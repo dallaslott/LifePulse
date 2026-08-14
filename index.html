@@ -13800,6 +13800,36 @@ function getBirthSkySnapshot() {
       ]);
     }
 
+    async function resolveMissingProfilePlaces(profile) {
+      const needsBirthplace = Boolean(profile.birthPlace && !profile.birthPlaceGeo);
+      const needsResidence = Boolean(profile.currentResidence && !profile.currentResidenceGeo);
+      if (!needsBirthplace && !needsResidence) return;
+      const [birthplaceResult, residenceResult] = await Promise.allSettled([
+        needsBirthplace ? geocodePlace(profile.birthPlace) : Promise.resolve(null),
+        needsResidence ? geocodePlace(profile.currentResidence) : Promise.resolve(null)
+      ]);
+      if (currentProfile !== profile) return;
+      let changed = false;
+      const birthplace = birthplaceResult.status === 'fulfilled' ? birthplaceResult.value : null;
+      const residence = residenceResult.status === 'fulfilled' ? residenceResult.value : null;
+      if (birthplace && !profile.birthPlaceGeo) {
+        profile.birthPlaceGeo = serializePlaceSelection(birthplace);
+        profile.birthPlace = formatPlaceLabel(profile.birthPlaceGeo);
+        changed = true;
+      }
+      if (residence && !profile.currentResidenceGeo) {
+        profile.currentResidenceGeo = serializePlaceSelection(residence);
+        profile.currentResidence = formatPlaceLabel(profile.currentResidenceGeo);
+        changed = true;
+      }
+      if (!changed || currentProfile !== profile) return;
+      saveProfile(profile);
+      applyProfileToForm(profile);
+      if (els.bornPlace) els.bornPlace.textContent = profile.birthPlace || 'Not Provided';
+      runAsyncEnhancements(profile);
+      refreshInsightPanels();
+    }
+
     // ─── Launch ───────────────────────────────────────────────────────────────
     async function igniteTracker(forceProfile = null) {
       try {
@@ -13815,14 +13845,6 @@ function getBirthSkySnapshot() {
         }
         if (selectedResidenceSuggestion && placeLooksLikeMatch(profile.currentResidence, selectedResidenceSuggestion)) {
           profile.currentResidenceGeo = serializePlaceSelection(selectedResidenceSuggestion);
-        }
-        if (profile.birthPlace && !profile.birthPlaceGeo) {
-          const resolvedBirthplace = await geocodePlace(profile.birthPlace);
-          if (resolvedBirthplace) profile.birthPlaceGeo = serializePlaceSelection(resolvedBirthplace);
-        }
-        if (profile.currentResidence && !profile.currentResidenceGeo) {
-          const resolvedResidence = await geocodePlace(profile.currentResidence);
-          if (resolvedResidence) profile.currentResidenceGeo = serializePlaceSelection(resolvedResidence);
         }
         if (profile.birthPlaceGeo) profile.birthPlace = formatPlaceLabel(profile.birthPlaceGeo);
         if (profile.currentResidenceGeo) profile.currentResidence = formatPlaceLabel(profile.currentResidenceGeo);
@@ -13850,6 +13872,9 @@ function getBirthSkySnapshot() {
         refreshInsightPanels();
         renderDiagnostics();
         runAsyncEnhancements(profile);
+        resolveMissingProfilePlaces(profile).catch(error => {
+          console.warn('Deferred place lookup failed:', error);
+        });
 
         ageTimerId    = setInterval(updateLiveStats, 250);
         insightTimerId = setInterval(() => {
@@ -13864,19 +13889,13 @@ function getBirthSkySnapshot() {
         playSymphony();
 
         setLiveDiagnostic('share', { state: 'live', detail: 'This profile can be encoded into a pre-filled share URL at any time.', source: 'URL hash' });
-        if (profile.birthPlace && !profile.birthPlaceGeo) {
-          resolveBirthplaceSelection(profile.birthPlace)
-            .then((resolved) => {
-              if (resolved && !profile.birthPlaceGeo) {
-                profile.birthPlaceGeo = serializePlaceSelection(resolved);
-                saveProfile(profile);
-              }
-            })
-            .catch(() => {});
-        }
       } catch (err) {
         console.error('Launch failed:', err);
-        setStatus('Something interrupted launch. Please try again.', 'error');
+        clearTimers();
+        els.resultView.classList.add('hidden');
+        els.formView.classList.remove('hidden');
+        setStatus(`Launch interrupted: ${err?.message || 'Please try again.'}`, 'error');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
@@ -14638,9 +14657,18 @@ function getBirthSkySnapshot() {
       els.dobYear.addEventListener('change',  populateDays);
 
       els.launchBtn.addEventListener('click', async () => {
-        await unlockAudio();
-        await arrivalPause(220);
-        igniteTracker();
+        if (els.launchBtn.disabled) return;
+        const priorLabel = els.launchBtn.textContent;
+        els.launchBtn.disabled = true;
+        els.launchBtn.textContent = 'LAUNCHING...';
+        try {
+          await unlockAudio();
+          await arrivalPause(220);
+          await igniteTracker();
+        } finally {
+          els.launchBtn.disabled = false;
+          els.launchBtn.textContent = priorLabel;
+        }
       });
 
       els.clearFormBtn.addEventListener('click',    clearForm);
