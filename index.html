@@ -13280,7 +13280,11 @@ function getBirthSkySnapshot() {
         return null;
       }
       try {
-        serviceWorkerRegistration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+        serviceWorkerRegistration = await navigator.serviceWorker.register('./sw.js', {
+          scope: './',
+          updateViaCache: 'none'
+        });
+        await serviceWorkerRegistration.update().catch(() => {});
         await navigator.serviceWorker.ready;
         serviceWorkerRegistration = await navigator.serviceWorker.getRegistration('./') || serviceWorkerRegistration;
         renderPwaControls();
@@ -14882,13 +14886,11 @@ function getBirthSkySnapshot() {
         const saved = loadSavedProfile();
         if (saved) {
           applyProfileToForm(saved);
-          const dashboardSession = readDashboardSessionState();
-          if (dashboardSession && restoreActiveDashboard(saved, dashboardSession)) {
-            setStatus('Dashboard restored after the display changed.', 'success');
-          } else {
-            clearDashboardSessionState();
-            setStatus('Last saved profile restored. Launch whenever you are ready.', 'success');
-          }
+          // Always enter through the launcher. Android and installed PWAs can
+          // emit orientation/page lifecycle events while merely opening, which
+          // made display-recovery state indistinguishable from a fresh visit.
+          clearDashboardSessionState();
+          setStatus('Last saved profile restored. Launch whenever you are ready.', 'success');
         }
       }
 
