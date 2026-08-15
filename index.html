@@ -2366,6 +2366,36 @@
       touch-action: manipulation;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      padding-right: 48px;
+    }
+
+    .easter-progress-indicator {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 232, 63, 0.52);
+      border-radius: 50%;
+      background: rgba(255, 214, 80, 0.12);
+      color: #ffe96b;
+      font-size: 0.9rem;
+      line-height: 1;
+      opacity: 0;
+      transform: scale(0.78);
+      filter: drop-shadow(0 0 6px rgba(255, 225, 81, 0.32));
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease, filter 180ms ease;
+    }
+
+    .easter-progress-indicator.is-visible {
+      transform: scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .easter-progress-indicator { transition: none; }
     }
 
     .simpsons-easter-card:active,
@@ -4567,7 +4597,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.112.2.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.117.2.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4881,12 +4911,14 @@
           <div class="source-drawer" id="source-drawer-internet-eras" hidden></div>
 </div>
 
-        <div class="insight-card compact-card simpsons-easter-card" id="simpsons-easter-card" aria-label="The Simpsons Episodes">
+        <div class="insight-card compact-card simpsons-easter-card" id="simpsons-easter-card" role="button" tabindex="0" aria-label="The Simpsons Episodes">
+          <span class="easter-progress-indicator" aria-hidden="true">&#129370;</span>
           <span class="insight-value" id="simpsons-episodes-value">...</span>
           <span class="micro-label">The Simpsons Episodes</span>
           <p class="insight-copy comparison-diagnostic" id="simpsons-episodes-copy">Episodes since your birth will appear here.</p>
         </div>
-        <div class="insight-card compact-card snl-easter-card" id="snl-easter-card" aria-label="SNL Episodes">
+        <div class="insight-card compact-card snl-easter-card" id="snl-easter-card" role="button" tabindex="0" aria-label="SNL Episodes">
+          <span class="easter-progress-indicator" aria-hidden="true">&#129370;</span>
           <span class="insight-value" id="snl-episodes-value">...</span>
           <span class="micro-label">SNL Episodes</span>
           <p class="insight-copy comparison-diagnostic" id="snl-episodes-copy">Episodes since your birth will appear here.</p>
@@ -5695,7 +5727,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.112.2.local';
+    const LOCAL_RELEASE_VERSION = '5.117.2.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -14948,13 +14980,8 @@ function getBirthSkySnapshot() {
     function bindSimpsonsEasterEgg() {
       const card = document.getElementById('simpsons-easter-card');
       if (!card || card.dataset.easterBound === 'true') return;
-      let taps = [];
       let videoPrimed = false;
-      card.addEventListener('click', event => {
-        event.preventDefault();
-        const now = performance.now();
-        taps = taps.filter(time => now - time < 2500);
-        taps.push(now);
+      bindProgressiveEasterEgg(card, () => {
         if (!videoPrimed) {
           videoPrimed = true;
           const preloadVideo = document.createElement('video');
@@ -14964,11 +14991,49 @@ function getBirthSkySnapshot() {
           preloadVideo.load();
           card._simpsonsPreload = preloadVideo;
         }
-        if (taps.length < 3) return;
-        taps = [];
+      }, () => {
         showSimpsonsEasterEgg();
       });
       card.dataset.easterBound = 'true';
+    }
+
+    function bindProgressiveEasterEgg(card, onFirstClick, onReveal) {
+      const indicator = card.querySelector('.easter-progress-indicator');
+      const baseLabel = card.getAttribute('aria-label') || 'Easter egg card';
+      const opacitySteps = [0, 0.14, 0.34, 0.56, 0.78, 1];
+      let clickCount = 0;
+
+      const renderProgress = () => {
+        if (indicator) {
+          indicator.style.opacity = String(opacitySteps[clickCount] || 0);
+          indicator.classList.toggle('is-visible', clickCount > 0);
+        }
+        card.dataset.easterProgress = String(clickCount);
+        card.setAttribute('aria-label', clickCount
+          ? `${baseLabel}. Easter egg ${clickCount} of 5.`
+          : baseLabel);
+      };
+
+      const activate = event => {
+        if (event.type === 'keydown') {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+        }
+        if (event.type === 'click' && event.target.closest('button, a, input, select, textarea')) return;
+        clickCount += 1;
+        if (clickCount === 1) onFirstClick?.();
+        renderProgress();
+        if (clickCount < 5) return;
+        window.setTimeout(() => {
+          clickCount = 0;
+          renderProgress();
+          onReveal();
+        }, 180);
+      };
+
+      card.addEventListener('click', activate);
+      card.addEventListener('keydown', activate);
+      renderProgress();
     }
 
     let snlVideoAssetPromise = null;
@@ -15101,19 +15166,13 @@ function getBirthSkySnapshot() {
     function bindSnLEasterEgg() {
       const card = document.getElementById('snl-easter-card');
       if (!card || card.dataset.easterBound === 'true') return;
-      let taps = [];
       let videoPrimed = false;
-      card.addEventListener('click', event => {
-        event.preventDefault();
-        const now = performance.now();
-        taps = taps.filter(time => now - time < 2500);
-        taps.push(now);
+      bindProgressiveEasterEgg(card, () => {
         if (!videoPrimed) {
           videoPrimed = true;
           prepareSnLVideoAsset().catch(() => {});
         }
-        if (taps.length < 3) return;
-        taps = [];
+      }, () => {
         showSnLEasterEgg();
       });
       card.dataset.easterBound = 'true';
