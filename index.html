@@ -1522,6 +1522,136 @@
 
     .forecast-grid { gap: 10px; }
 
+    .birthday-starlight-card {
+      margin-top: 16px;
+      border-color: rgba(91, 214, 255, 0.24);
+      background:
+        radial-gradient(circle at 82% 10%, rgba(87, 112, 255, 0.16), transparent 34%),
+        radial-gradient(circle at 14% 90%, rgba(0, 210, 255, 0.1), transparent 38%),
+        rgba(5, 10, 25, 0.72);
+      box-shadow: inset 0 0 24px rgba(25, 126, 199, 0.05);
+    }
+
+    .starlight-summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 11px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .starlight-summary-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(115, 226, 255, 0.32);
+      border-radius: 50%;
+      color: #dffaff;
+      background: radial-gradient(circle, rgba(207, 248, 255, 0.24), rgba(36, 126, 205, 0.08) 58%, transparent 70%);
+      box-shadow: 0 0 18px rgba(80, 208, 255, 0.2);
+      font-size: 1.05rem;
+    }
+
+    .starlight-summary-text { min-width: 0; }
+    .starlight-summary-kicker {
+      display: block;
+      color: var(--primary);
+      font-size: 0.59rem;
+      font-weight: 950;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .starlight-summary-name {
+      display: block;
+      margin-top: 2px;
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 950;
+      line-height: 1.15;
+    }
+    .starlight-summary-match {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.67rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .starlight-body { padding-top: 2px; }
+    .starlight-stage {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(116, 219, 255, 0.18);
+      border-radius: 15px;
+      background: #030817;
+      box-shadow: inset 0 -24px 46px rgba(7, 46, 88, 0.24);
+    }
+    .starlight-stage svg { display: block; width: 100%; height: auto; }
+    .starlight-target {
+      filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 12px currentColor);
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: starlight-breathe 3.6s ease-in-out infinite;
+    }
+    .starlight-beam {
+      stroke-dasharray: 8 9;
+      animation: starlight-travel 6s linear infinite;
+    }
+    @keyframes starlight-breathe {
+      0%, 100% { opacity: 0.78; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.18); }
+    }
+    @keyframes starlight-travel { to { stroke-dashoffset: -68; } }
+
+    .starlight-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .starlight-metric {
+      min-width: 0;
+      padding: 9px 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 11px;
+      background: rgba(255,255,255,0.035);
+    }
+    .starlight-metric strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: #fff;
+      font-size: 0.78rem;
+      line-height: 1.2;
+    }
+    .starlight-metric span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-dim);
+      font-size: 0.55rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .starlight-story {
+      margin: 11px 1px 0;
+      color: #d9e8f5;
+      font-size: 0.76rem;
+      line-height: 1.55;
+    }
+    .starlight-source { margin-top: 9px; }
+
+    @media (max-width: 560px) {
+      .starlight-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .starlight-summary-name { font-size: 1rem; }
+      .starlight-summary-match { font-size: 0.63rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .starlight-target, .starlight-beam { animation: none; }
+    }
+
     .forecast-pill {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.05);
@@ -4437,7 +4567,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.112.1.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.112.2.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5181,6 +5311,65 @@
           </div>
         </div>
 
+        <details class="atlas-module birthday-starlight-card" id="birthday-starlight-card">
+          <summary>
+            <span class="starlight-summary">
+              <span class="starlight-summary-icon" aria-hidden="true">&#10022;</span>
+              <span class="starlight-summary-text">
+                <span class="starlight-summary-kicker">Birthday Starlight</span>
+                <strong class="starlight-summary-name" id="starlight-star-name">Finding Your Star...</strong>
+                <span class="starlight-summary-match" id="starlight-match-summary">Matching your age to naked-eye starlight.</span>
+              </span>
+            </span>
+          </summary>
+          <div class="atlas-module-body starlight-body">
+            <div class="starlight-stage" role="img" id="starlight-sky-map" aria-label="Sky map for the birthday starlight match">
+              <svg viewBox="0 0 600 275" aria-hidden="true">
+                <defs>
+                  <radialGradient id="starlight-sky-glow" cx="50%" cy="28%" r="78%">
+                    <stop offset="0" stop-color="#102b52" stop-opacity="0.72"/>
+                    <stop offset="0.56" stop-color="#07152c" stop-opacity="0.82"/>
+                    <stop offset="1" stop-color="#020611"/>
+                  </radialGradient>
+                  <linearGradient id="starlight-horizon-glow" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#35d8ff" stop-opacity="0.18"/>
+                    <stop offset="1" stop-color="#35d8ff" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <rect width="600" height="275" fill="url(#starlight-sky-glow)"/>
+                <g fill="#d9f7ff" opacity="0.68">
+                  <circle cx="46" cy="42" r="1.3"/><circle cx="105" cy="86" r="0.9"/><circle cx="166" cy="32" r="1.1"/>
+                  <circle cx="218" cy="103" r="1.5"/><circle cx="272" cy="57" r="0.8"/><circle cx="325" cy="91" r="1.1"/>
+                  <circle cx="377" cy="38" r="1.4"/><circle cx="433" cy="112" r="0.8"/><circle cx="492" cy="58" r="1.2"/>
+                  <circle cx="552" cy="98" r="1"/><circle cx="73" cy="151" r="0.8"/><circle cx="143" cy="129" r="1.2"/>
+                  <circle cx="255" cy="165" r="0.9"/><circle cx="351" cy="145" r="1.1"/><circle cx="468" cy="160" r="1.3"/>
+                  <circle cx="535" cy="139" r="0.8"/>
+                </g>
+                <path d="M24 225 Q300 183 576 225 L576 275 L24 275 Z" fill="url(#starlight-horizon-glow)"/>
+                <path d="M24 225 Q300 183 576 225" fill="none" stroke="#52d9ff" stroke-opacity="0.38" stroke-width="1.5"/>
+                <line x1="300" y1="42" x2="300" y2="225" stroke="#7ddfff" stroke-opacity="0.09"/>
+                <line x1="24" y1="136" x2="576" y2="136" stroke="#7ddfff" stroke-opacity="0.07"/>
+                <text x="24" y="250" fill="#7da6bd" font-size="11" font-weight="700">N</text>
+                <text x="162" y="250" fill="#7da6bd" font-size="11" font-weight="700">E</text>
+                <text x="298" y="250" fill="#7da6bd" font-size="11" font-weight="700">S</text>
+                <text x="438" y="250" fill="#7da6bd" font-size="11" font-weight="700">W</text>
+                <text x="562" y="250" fill="#7da6bd" font-size="11" font-weight="700">N</text>
+                <path class="starlight-beam" id="starlight-map-beam" d="M300 225 L300 92" fill="none" stroke="#9defff" stroke-opacity="0.52" stroke-width="1.5"/>
+                <circle class="starlight-target" id="starlight-map-star" cx="300" cy="92" r="6" fill="#eefcff" style="color:#eefcff"/>
+                <text id="starlight-map-label" x="314" y="86" fill="#fff" font-size="13" font-weight="900">Your Star</text>
+              </svg>
+            </div>
+            <div class="starlight-metrics">
+              <div class="starlight-metric"><strong id="starlight-distance">...</strong><span>Distance</span></div>
+              <div class="starlight-metric"><strong id="starlight-departure">...</strong><span>Light Left</span></div>
+              <div class="starlight-metric"><strong id="starlight-direction">...</strong><span>Direction</span></div>
+              <div class="starlight-metric"><strong id="starlight-visibility">...</strong><span>Viewing</span></div>
+            </div>
+            <p class="starlight-story" id="starlight-story">Calculating the named star whose present-day light began its journey closest to your birthday.</p>
+            <p class="source-line starlight-source" id="starlight-source">Named naked-eye stars derived from HYG/Hipparcos distance data; horizon geometry is calculated on your device. Distance uncertainty prevents an exact departure-day claim.</p>
+          </div>
+        </details>
+
         <div class="forecast-shell">
           <span class="forecast-kicker">Daily Forecast</span>
           <div class="forecast-grid">
@@ -5506,7 +5695,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.112.1.local';
+    const LOCAL_RELEASE_VERSION = '5.112.2.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5637,6 +5826,7 @@
       internetTraffic: { state: 'static', label: 'Internet traffic growth', detail: 'Global monthly IP traffic uses Cisco VNI anchors through 2022. LifePulse does not extrapolate beyond the maintained Cisco endpoint.', source: 'Cisco Visual Networking Index' },
       popCultureEpisodes: { state: 'idle', label: 'Pop-culture episode counts', detail: 'Waiting for the scheduled episode-count reference.', source: 'Wikidata with embedded milestone fallback' },
       humanHistory: { state: 'static', label: 'Humans ever born', detail: 'Cumulative births are interpolated from Population Reference Bureau benchmarks. More than 99% of human history lacks demographic records, so this is an informed estimate rather than an exact count.', source: 'Population Reference Bureau' },
+      birthdayStarlight: { state: 'static', label: 'Birthday starlight', detail: 'Waiting to match the profile age to a named naked-eye star and calculate its local horizon position.', source: 'HYG/Hipparcos star distances + on-device sidereal geometry' },
       cosmicEstimates: { state: 'static', label: 'Cosmic + Earth estimates', detail: 'Galactic progress uses a 230-million-year solar orbit and NASA\'s approximately 26,000-light-year galactic-center distance. Sunspot cycles use an 11-year average, so their timing is illustrative rather than an official cycle boundary. Halley orbit progress uses 75.32 years. Solar fusion uses 600 million metric tons of hydrogen/second. Voyager 1 overlap uses 10.563 miles/second after 09/05/1977. Continental drift uses a relatable 1.5 inches/year; actual plate speeds vary. Lunar recession uses 3.8 cm/year. Solar orbit expansion uses NASA\'s modeled 1.5 cm/year per AU. Global sea level uses NOAA\'s satellite-era average rate of 3.8 mm/year; it is a global comparison, not a local-coast forecast. Ocean water cycled uses NOAA\'s global ocean evaporation flux of 425,000 km³/year. Cosmic expansion shows the added separation of two unbound points one megaparsec apart using a 70 km/s/Mpc reference; it is not a change in the universe\'s total volume.', source: 'NASA + NOAA + Hubble-law and lunar laser-ranging references + LifePulse stated assumptions' },
       earthEvents: { state: 'static', label: 'Global Earth events', detail: 'Lightning uses NASA\'s rounded global rate of 50 flashes/second. Major earthquakes use the USGS long-term expectation of about 16 magnitude-7-or-greater events/year. Both are lifetime-scale estimates, not personal exposure counts.', source: 'NASA lightning climatology + USGS Earthquake Hazards Program' }
       ,pwa: { state: 'idle', label: 'Installed app', detail: 'Checking service worker, installation, and notification support.', source: 'Browser PWA APIs' }
@@ -5876,6 +6066,18 @@
       currentSkyMoon:        document.getElementById('current-sky-moon'),
       currentSkyCopy:        document.getElementById('current-sky-copy'),
       currentSkyStatus:      document.getElementById('current-sky-status'),
+      starlightCard:         document.getElementById('birthday-starlight-card'),
+      starlightStarName:     document.getElementById('starlight-star-name'),
+      starlightMatchSummary: document.getElementById('starlight-match-summary'),
+      starlightSkyMap:       document.getElementById('starlight-sky-map'),
+      starlightMapBeam:      document.getElementById('starlight-map-beam'),
+      starlightMapStar:      document.getElementById('starlight-map-star'),
+      starlightMapLabel:     document.getElementById('starlight-map-label'),
+      starlightDistance:     document.getElementById('starlight-distance'),
+      starlightDeparture:    document.getElementById('starlight-departure'),
+      starlightDirection:    document.getElementById('starlight-direction'),
+      starlightVisibility:   document.getElementById('starlight-visibility'),
+      starlightStory:        document.getElementById('starlight-story'),
       forecastEnergyScore:   document.getElementById('forecast-energy-score'),
       forecastFocusScore:    document.getElementById('forecast-focus-score'),
       forecastSocialScore:   document.getElementById('forecast-social-score'),
@@ -6326,6 +6528,83 @@
         return new Date(`${building.from}T00:00:00`).getTime() <= moment ? building : record;
       }, TALLEST_BUILDING_TIMELINE[0]);
     }
+
+    function getTallestBuildingRecordTenure(building, throughDate = new Date()) {
+      const index = TALLEST_BUILDING_TIMELINE.findIndex(item => item.from === building?.from && item.name === building?.name);
+      if (index < 0) return null;
+      const start = new Date(`${TALLEST_BUILDING_TIMELINE[index].from}T00:00:00`);
+      const successor = TALLEST_BUILDING_TIMELINE[index + 1] || null;
+      const end = successor ? new Date(`${successor.from}T00:00:00`) : throughDate;
+      const years = Math.max(0, (end - start) / 86400000 / 365.2425);
+      return { years, ongoing: !successor };
+    }
+
+    const BIRTHDAY_STAR_CATALOG = [
+      { name: 'Rigil Kentaurus', ra: 14.660765, dec: -60.833976, pc: 1.3248, mag: -0.01, spectral: 'G2V', constellation: 'Centaurus' },
+      { name: 'Sirius', ra: 6.752481, dec: -16.716116, pc: 2.6371, mag: -1.44, spectral: 'A0', constellation: 'Canis Major' },
+      { name: 'Procyon', ra: 7.655033, dec: 5.224993, pc: 3.5142, mag: 0.4, spectral: 'F5', constellation: 'Canis Minor' },
+      { name: 'Altair', ra: 19.846388, dec: 8.868322, pc: 5.1295, mag: 0.76, spectral: 'A7', constellation: 'Aquila' },
+      { name: 'Vega', ra: 18.61564, dec: 38.783692, pc: 7.6787, mag: 0.03, spectral: 'A0', constellation: 'Lyra' },
+      { name: 'Fomalhaut', ra: 22.960838, dec: -29.622236, pc: 7.7036, mag: 1.17, spectral: 'A3', constellation: 'Piscis Austrinus' },
+      { name: 'Pollux', ra: 7.755277, dec: 28.026199, pc: 10.3584, mag: 1.16, spectral: 'K0', constellation: 'Gemini' },
+      { name: 'Denebola', ra: 11.817663, dec: 14.57206, pc: 10.9999, mag: 2.14, spectral: 'A3', constellation: 'Leo' },
+      { name: 'Arcturus', ra: 14.26103, dec: 19.18241, pc: 11.2575, mag: -0.05, spectral: 'K2', constellation: 'Bootes' },
+      { name: 'Capella', ra: 5.27815, dec: 45.997991, pc: 13.1234, mag: 0.08, spectral: 'G8', constellation: 'Auriga' },
+      { name: 'Titawin', ra: 1.613299, dec: 41.405459, pc: 13.4916, mag: 4.1, spectral: 'F8', constellation: 'Andromeda' },
+      { name: 'Alshain', ra: 19.921887, dec: 6.406763, pc: 13.6986, mag: 3.71, spectral: 'G8', constellation: 'Aquila' },
+      { name: 'Chalawan', ra: 10.99112, dec: 40.430257, pc: 14.0627, mag: 5.03, spectral: 'G0', constellation: 'Ursa Major' },
+      { name: 'Errai', ra: 23.65582, dec: 77.632276, pc: 14.1024, mag: 3.21, spectral: 'K1', constellation: 'Cepheus' },
+      { name: 'Dalim', ra: 3.201249, dec: -28.987618, pc: 14.2369, mag: 3.8, spectral: 'F8', constellation: 'Fornax' },
+      { name: 'Talitha', ra: 8.986828, dec: 48.041826, pc: 14.5096, mag: 3.12, spectral: 'A7', constellation: 'Ursa Major' },
+      { name: 'Rasalhague', ra: 17.582241, dec: 12.560035, pc: 14.8965, mag: 2.08, spectral: 'A5', constellation: 'Ophiuchus' },
+      { name: 'Alchiba', ra: 12.140225, dec: -24.728875, pc: 14.9365, mag: 4.02, spectral: 'F0', constellation: 'Corvus' },
+      { name: 'Alderamin', ra: 21.30963, dec: 62.585573, pc: 15.0376, mag: 2.45, spectral: 'A7', constellation: 'Cepheus' },
+      { name: 'Cervantes', ra: 17.735752, dec: -51.834053, pc: 15.5111, mag: 5.12, spectral: 'G5', constellation: 'Ara' },
+      { name: 'Castor', ra: 7.576634, dec: 31.888276, pc: 15.5958, mag: 1.58, spectral: 'A2', constellation: 'Gemini' },
+      { name: 'Caph', ra: 0.152887, dec: 59.14978, pc: 16.7842, mag: 2.28, spectral: 'F2', constellation: 'Cassiopeia' },
+      { name: 'Diadem', ra: 13.166469, dec: 17.529431, pc: 17.8253, mag: 4.32, spectral: 'F5', constellation: 'Coma Berenices' },
+      { name: 'Zosma', ra: 11.235138, dec: 20.523717, pc: 17.9147, mag: 2.56, spectral: 'A4', constellation: 'Leo' },
+      { name: 'Menkent', ra: 14.111395, dec: -36.369954, pc: 18.0343, mag: 2.06, spectral: 'K0', constellation: 'Centaurus' },
+      { name: 'Wasat', ra: 7.335383, dec: 21.98232, pc: 18.5391, mag: 3.5, spectral: 'F0', constellation: 'Gemini' },
+      { name: 'Mothallah', ra: 1.884696, dec: 29.578829, pc: 19.4175, mag: 3.42, spectral: 'F6', constellation: 'Triangulum' },
+      { name: 'Hamal', ra: 2.119555, dec: 23.462423, pc: 20.1776, mag: 2.01, spectral: 'K2', constellation: 'Aries' },
+      { name: 'Aldebaran', ra: 4.598677, dec: 16.509301, pc: 20.4332, mag: 0.87, spectral: 'K5', constellation: 'Taurus' },
+      { name: 'Syrma', ra: 14.266908, dec: -6.000547, pc: 22.237, mag: 4.07, spectral: 'F7', constellation: 'Virgo' },
+      { name: 'Aljanah', ra: 20.770178, dec: 33.970256, pc: 22.2916, mag: 2.48, spectral: 'K0', constellation: 'Cygnus' },
+      { name: 'Unukalhai', ra: 15.737798, dec: 6.425627, pc: 22.6757, mag: 2.63, spectral: 'K2', constellation: 'Serpens' },
+      { name: 'Heze', ra: 13.57822, dec: -0.59582, pc: 22.7118, mag: 3.38, spectral: 'A3', constellation: 'Virgo' },
+      { name: 'Alphecca', ra: 15.578128, dec: 26.714693, pc: 23.0097, mag: 2.22, spectral: 'A0', constellation: 'Corona Borealis' },
+      { name: 'Regulus', ra: 10.139532, dec: 11.967207, pc: 24.3132, mag: 1.36, spectral: 'B7', constellation: 'Leo' },
+      { name: 'Merak', ra: 11.030677, dec: 56.382427, pc: 24.4499, mag: 2.34, spectral: 'A1', constellation: 'Ursa Major' },
+      { name: 'Menkalinan', ra: 5.992149, dec: 44.947433, pc: 24.8694, mag: 1.9, spectral: 'A2', constellation: 'Auriga' },
+      { name: 'Alioth', ra: 12.900472, dec: 55.959821, pc: 25.31, mag: 1.76, spectral: 'A0', constellation: 'Ursa Major' },
+      { name: 'Mizar', ra: 13.398747, dec: 54.925362, pc: 26.3089, mag: 2.23, spectral: 'A2', constellation: 'Ursa Major' },
+      { name: 'Seginus', ra: 14.534636, dec: 38.308253, pc: 26.6099, mag: 3.04, spectral: 'A7', constellation: 'Bootes' },
+      { name: 'Algorab', ra: 12.497739, dec: -16.515432, pc: 26.6312, mag: 2.94, spectral: 'B9', constellation: 'Corvus' },
+      { name: 'Gacrux', ra: 12.519429, dec: -57.113212, pc: 27.1518, mag: 1.59, spectral: 'M4', constellation: 'Crux' },
+      { name: 'Cursa', ra: 5.130829, dec: -5.086446, pc: 27.3973, mag: 2.78, spectral: 'A3', constellation: 'Eridanus' },
+      { name: 'Algol', ra: 3.136148, dec: 40.955648, pc: 27.571, mag: 2.09, spectral: 'B8', constellation: 'Perseus' },
+      { name: 'Athebyne', ra: 16.39986, dec: 61.514213, pc: 28.2326, mag: 2.73, spectral: 'G8', constellation: 'Draco' },
+      { name: 'Diphda', ra: 0.72649, dec: -17.986605, pc: 29.5334, mag: 2.04, spectral: 'K0', constellation: 'Cetus' },
+      { name: 'Alpheratz', ra: 0.139791, dec: 29.090432, pc: 29.7442, mag: 2.07, spectral: 'B9', constellation: 'Andromeda' },
+      { name: 'Ruchbah', ra: 1.430216, dec: 60.235283, pc: 30.4785, mag: 2.66, spectral: 'A5', constellation: 'Cassiopeia' },
+      { name: 'Alnair', ra: 22.137209, dec: -46.960975, pc: 30.9693, mag: 1.73, spectral: 'B7', constellation: 'Grus' },
+      { name: 'Alkaid', ra: 13.792354, dec: 49.313265, pc: 31.8674, mag: 1.85, spectral: 'B3', constellation: 'Ursa Major' },
+      { name: 'Alhena', ra: 6.628528, dec: 16.399252, pc: 33.5121, mag: 1.93, spectral: 'A0', constellation: 'Gemini' },
+      { name: 'Miaplacidus', ra: 9.220041, dec: -69.717208, pc: 34.6981, mag: 1.67, spectral: 'A2', constellation: 'Carina' },
+      { name: 'Cor Caroli', ra: 12.933807, dec: 38.31838, pc: 35.1989, mag: 2.89, spectral: 'A0', constellation: 'Canes Venatici' },
+      { name: 'Dubhe', ra: 11.062155, dec: 61.751033, pc: 37.679, mag: 1.81, spectral: 'F7', constellation: 'Ursa Major' },
+      { name: 'Algieba', ra: 10.332873, dec: 19.841489, pc: 39.8883, mag: 2.01, spectral: 'K0', constellation: 'Leo' },
+      { name: 'Kochab', ra: 14.845105, dec: 74.155505, pc: 40.1445, mag: 2.07, spectral: 'K4', constellation: 'Ursa Minor' },
+      { name: 'Markab', ra: 23.079348, dec: 15.205264, pc: 40.8831, mag: 2.49, spectral: 'B9', constellation: 'Pegasus' },
+      { name: 'Elnath', ra: 5.438198, dec: 28.60745, pc: 41.0509, mag: 1.65, spectral: 'B7', constellation: 'Taurus' },
+      { name: 'Kornephoros', ra: 16.503668, dec: 21.489613, pc: 42.6621, mag: 2.78, spectral: 'G8', constellation: 'Hercules' },
+      { name: 'Achernar', ra: 1.628556, dec: -57.236757, pc: 42.7533, mag: 0.45, spectral: 'B3', constellation: 'Eridanus' },
+      { name: 'Kaus Australis', ra: 18.402868, dec: -34.384616, pc: 43.9367, mag: 1.79, spectral: 'B9', constellation: 'Sagittarius' },
+      { name: 'Ain', ra: 4.476943, dec: 19.180431, pc: 44.964, mag: 3.53, spectral: 'K0', constellation: 'Taurus' },
+      { name: 'Eltanin', ra: 17.943437, dec: 51.488895, pc: 47.3037, mag: 2.24, spectral: 'K5', constellation: 'Draco' },
+      { name: 'Gomeisa', ra: 7.452512, dec: 8.289315, pc: 49.5786, mag: 2.89, spectral: 'B8', constellation: 'Canis Minor' }
+    ].map(star => ({ ...star, distanceLy: star.pc * 3.26156 }));
 
     const CHIP_TRANSISTOR_MILESTONES = [
       { year: 1971, value: 2300, chip: 'Intel 4004' },
@@ -9907,6 +10186,139 @@
       els.zodiacArrivalCopy.textContent  = vibe.copy;
     }
 
+    function getClosestBirthdayStar(ageYears) {
+      return BIRTHDAY_STAR_CATALOG.reduce((closest, star) => {
+        const difference = Math.abs(star.distanceLy - ageYears);
+        if (!closest || difference < closest.difference || (difference === closest.difference && star.mag < closest.star.mag)) {
+          return { star, difference };
+        }
+        return closest;
+      }, null)?.star || BIRTHDAY_STAR_CATALOG[0];
+    }
+
+    function getBirthdayStarColor(spectral = '') {
+      const family = String(spectral).trim().charAt(0).toUpperCase();
+      return ({ O: '#90c7ff', B: '#acd6ff', A: '#e6f4ff', F: '#fff5dc', G: '#ffe6a0', K: '#ffbd72', M: '#ff8268' })[family] || '#e9f8ff';
+    }
+
+    function getBirthdayStarPosition(star, geo, date = new Date()) {
+      const latitude = Number(geo?.latitude);
+      const longitude = Number(geo?.longitude);
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+      const radians = Math.PI / 180;
+      const julianDate = date.getTime() / 86400000 + 2440587.5;
+      const daysSinceJ2000 = julianDate - 2451545.0;
+      const siderealHours = 18.697374558 + 24.06570982441908 * daysSinceJ2000;
+      const localSiderealDegrees = ((siderealHours * 15 + longitude) % 360 + 360) % 360;
+      const hourAngleDegrees = ((localSiderealDegrees - star.ra * 15 + 540) % 360) - 180;
+      const hourAngle = hourAngleDegrees * radians;
+      const declination = star.dec * radians;
+      const observerLatitude = latitude * radians;
+      const altitude = Math.asin(
+        Math.sin(declination) * Math.sin(observerLatitude)
+        + Math.cos(declination) * Math.cos(observerLatitude) * Math.cos(hourAngle)
+      ) / radians;
+      const azimuth = ((Math.atan2(
+        -Math.sin(hourAngle),
+        Math.tan(declination) * Math.cos(observerLatitude) - Math.sin(observerLatitude) * Math.cos(hourAngle)
+      ) / radians) % 360 + 360) % 360;
+      return { altitude, azimuth };
+    }
+
+    function getBirthdayStarDirection(azimuth) {
+      const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      return directions[Math.round(Number(azimuth) / 45) % directions.length];
+    }
+
+    function getNextBirthdayStarHorizonEvent(star, geo, now, currentlyAbove) {
+      let previous = getBirthdayStarPosition(star, geo, now);
+      if (!previous) return null;
+      for (let step = 1; step <= 72; step += 1) {
+        const date = new Date(now.getTime() + step * 20 * 60000);
+        const position = getBirthdayStarPosition(star, geo, date);
+        if (!position) return null;
+        const crosses = currentlyAbove
+          ? previous.altitude >= 0 && position.altitude < 0
+          : previous.altitude <= 0 && position.altitude > 0;
+        if (crosses) return { type: currentlyAbove ? 'Sets' : 'Rises', date };
+        previous = position;
+      }
+      return null;
+    }
+
+    function formatBirthdayStarlightOffset(offsetDays) {
+      const absoluteDays = Math.abs(offsetDays);
+      if (absoluteDays <= 1) return 'within about one day of your birthday';
+      const relation = offsetDays > 0 ? 'after' : 'before';
+      if (absoluteDays < 60) return `about ${absoluteDays.toLocaleString()} days ${relation} your birthday`;
+      if (absoluteDays < 730) return `about ${(absoluteDays / 30.4375).toFixed(1)} months ${relation} your birthday`;
+      return `about ${(absoluteDays / 365.2425).toFixed(1)} years ${relation} your birthday`;
+    }
+
+    function renderBirthdayStarlight(now = new Date()) {
+      if (!birthMomentGlobal || !els.starlightStarName) return;
+      const ageYears = Math.max(0, (now - birthMomentGlobal) / 86400000 / 365.2425);
+      const star = getClosestBirthdayStar(ageYears);
+      const departureDate = new Date(now.getTime() - star.distanceLy * 365.2425 * 86400000);
+      const offsetDays = Math.round((departureDate - birthMomentGlobal) / 86400000);
+      const matchCopy = formatBirthdayStarlightOffset(offsetDays);
+      const geo = currentProfile?.currentResidenceGeo || currentProfile?.birthPlaceGeo || null;
+      const placeName = String(currentProfile?.currentResidence || currentProfile?.birthPlace || 'your saved location').split(',')[0].trim();
+      const position = getBirthdayStarPosition(star, geo, now);
+      const color = getBirthdayStarColor(star.spectral);
+
+      els.starlightStarName.textContent = star.name;
+      els.starlightMatchSummary.textContent = `${star.distanceLy.toFixed(1)} light-years - ${matchCopy}`;
+      els.starlightDistance.textContent = `${star.distanceLy.toFixed(1)} light-years`;
+      els.starlightDeparture.textContent = formatEventDate(departureDate);
+
+      let viewingCopy = 'Add a hometown to calculate where the star is in your sky.';
+      if (position) {
+        const direction = getBirthdayStarDirection(position.azimuth);
+        const above = position.altitude > 0;
+        const horizonEvent = getNextBirthdayStarHorizonEvent(star, geo, now, above);
+        const eventCopy = horizonEvent
+          ? `${horizonEvent.type} around ${horizonEvent.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`
+          : `No horizon crossing in the next 24 hours`;
+        els.starlightDirection.textContent = `${direction} - ${Math.abs(position.altitude).toFixed(0)} deg ${above ? 'high' : 'below'}`;
+        els.starlightVisibility.textContent = above ? 'Above Now' : 'Below Now';
+        viewingCopy = `From ${placeName}, ${star.name} is ${above ? 'above' : 'below'} the horizon now at ${Math.abs(position.altitude).toFixed(1)} degrees ${above ? 'altitude' : 'below the horizon'}. ${eventCopy}.`;
+
+        const x = 24 + (position.azimuth / 360) * 552;
+        const y = position.altitude >= 0
+          ? 225 - Math.min(90, position.altitude) / 90 * 170
+          : 225 + Math.min(28, Math.abs(position.altitude) / 90 * 52);
+        els.starlightMapStar?.setAttribute('cx', x.toFixed(1));
+        els.starlightMapStar?.setAttribute('cy', y.toFixed(1));
+        els.starlightMapStar?.setAttribute('fill', color);
+        if (els.starlightMapStar) els.starlightMapStar.style.color = color;
+        els.starlightMapBeam?.setAttribute('d', `M300 225 L${x.toFixed(1)} ${y.toFixed(1)}`);
+        if (els.starlightMapLabel) {
+          els.starlightMapLabel.textContent = star.name;
+          els.starlightMapLabel.setAttribute('x', (x > 455 ? x - 12 : x + 12).toFixed(1));
+          els.starlightMapLabel.setAttribute('y', Math.max(25, y - 10).toFixed(1));
+          els.starlightMapLabel.setAttribute('text-anchor', x > 455 ? 'end' : 'start');
+        }
+        els.starlightSkyMap?.setAttribute('aria-label', `${star.name} is ${direction} at ${position.altitude.toFixed(1)} degrees altitude from ${placeName}.`);
+      } else {
+        els.starlightDirection.textContent = 'Location Needed';
+        els.starlightVisibility.textContent = 'Choose Hometown';
+        els.starlightMapStar?.setAttribute('fill', color);
+        if (els.starlightMapStar) els.starlightMapStar.style.color = color;
+        if (els.starlightMapLabel) els.starlightMapLabel.textContent = star.name;
+      }
+
+      const closeness = Math.abs(offsetDays) <= 30
+        ? 'This is an unusually close birthday-light match.'
+        : 'This is the closest match in the maintained named, naked-eye star catalog.';
+      els.starlightStory.textContent = `The light reaching Earth from ${star.name} began its journey around ${formatEventDate(departureDate)}, ${matchCopy}. ${star.name} is a magnitude ${star.mag.toFixed(2)} ${star.spectral}-type star in ${star.constellation}. ${closeness} ${viewingCopy}`;
+      setLiveDiagnostic('birthdayStarlight', {
+        state: position ? 'live' : 'static',
+        detail: `${star.name} is the closest maintained age-distance match at ${star.distanceLy.toFixed(2)} light-years. ${position ? `Local altitude and azimuth calculated for ${placeName}.` : 'Add a matched hometown or birthplace for local horizon geometry.'}`,
+        source: 'HYG/Hipparcos star distances + on-device sidereal geometry'
+      });
+    }
+
     function formatCompact(value, digits = 1) {
       return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: digits }).format(Math.max(0, value || 0));
     }
@@ -12640,6 +13052,8 @@ function countPresidentialElectionsExperienced(start, end) {
       const humansEverBornAtBirth = interpolateFromAnchors(birthYear, HUMANS_EVER_BORN_ANCHORS);
       const humansEverBornNow = interpolateFromAnchors(currentYear, HUMANS_EVER_BORN_ANCHORS);
       const humansBornSince = Math.max(0, humansEverBornNow - humansEverBornAtBirth);
+      const humanHistoryPercent = humansEverBornNow > 0 ? humansEverBornAtBirth / humansEverBornNow * 100 : 0;
+      const humanHistoryPercentLabel = humanHistoryPercent >= 99.5 ? humanHistoryPercent.toFixed(2) : humanHistoryPercent.toFixed(1);
       const internetTrafficYears = Object.keys(INTERNET_TRAFFIC_ANCHORS_EB_MONTH).map(Number).sort((a, b) => a - b);
       const latestInternetTrafficYear = internetTrafficYears[internetTrafficYears.length - 1];
       const birthInternetTraffic = birthYear >= internetTrafficYears[0] ? interpolateFromAnchors(birthYear, INTERNET_TRAFFIC_ANCHORS_EB_MONTH) : null;
@@ -12662,6 +13076,14 @@ function countPresidentialElectionsExperienced(start, end) {
       const birthTallestBuilding = getTallestBuildingAtDate(birthMomentGlobal);
       const currentTallestBuilding = getTallestBuildingAtDate(now);
       const buildingHeightDifference = currentTallestBuilding.feet - birthTallestBuilding.feet;
+      const birthBuildingTenure = getTallestBuildingRecordTenure(birthTallestBuilding, now);
+      const birthBuildingTenureYears = birthBuildingTenure ? Math.round(birthBuildingTenure.years).toLocaleString() : null;
+      const birthBuildingTenureCopy = birthBuildingTenure?.ongoing
+        ? `Still holds the record after ${birthBuildingTenureYears} years`
+        : `Birth-era record lasted ${birthBuildingTenureYears} years`;
+      const buildingHeightCopy = buildingHeightDifference > 0
+        ? `today's record is ${buildingHeightDifference.toLocaleString()} ft taller`
+        : `it remains today's record`;
       const lifeExpectancyReference = currentLiveData?.reference?.lifeExpectancy;
       const validLifeExpectancyFeed = Object.fromEntries(Object.entries(lifeExpectancyReference?.series || {}).filter(([, value]) => Number.isFinite(Number(value)) && Number(value) > 0));
       const lifeExpectancySeries = { ...GLOBAL_LIFE_EXPECTANCY_FALLBACK, ...validLifeExpectancyFeed };
@@ -12678,10 +13100,10 @@ function countPresidentialElectionsExperienced(start, end) {
       const birthUrbanShare = birthYear >= urbanShareYears[0] ? interpolateFromAnchors(birthYear, urbanShareSeries) : null;
       const comparisons = [
         { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
-        { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `Est. ${formatNamedScale(humansBornSince, 1)} additional Homo sapiens have been born since you arrived.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate.', group: 'world' },
+        { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `You arrived after about ${humanHistoryPercentLabel}% of all humans ever born; est. ${formatNamedScale(humansBornSince, 1)} have been born since.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate. The percentage compares estimated cumulative births by your birth year with the estimated cumulative total today.', group: 'world' },
         { icon: '&#10084;', label: 'Global Life Expectancy', then: birthLifeExpectancy == null ? 'Before Coverage' : `${birthLifeExpectancy.toFixed(1)} yrs`, now: `${latestLifeExpectancy.toFixed(1)} yrs`, nowEra: latestLifeExpectancyYear, change: birthLifeExpectancy == null ? `Worldwide annual coverage begins in ${lifeExpectancyYears[0]}.` : `${formatSignedNumber(latestLifeExpectancy - birthLifeExpectancy, 1, ' yrs')} since your birth year.`, diagnostic: 'Worldwide life expectancy at birth from the World Bank and UN Population Division; this is a population average, not an individual lifespan prediction.', group: 'world' },
         { icon: '&#127961;', label: 'Urban Population Share', then: birthUrbanShare == null ? 'Before Coverage' : `${birthUrbanShare.toFixed(1)}%`, now: `${latestUrbanShare.toFixed(1)}%`, nowEra: latestUrbanShareYear, change: birthUrbanShare == null ? `Worldwide annual coverage begins in ${urbanShareYears[0]}.` : `${formatSignedNumber(latestUrbanShare - birthUrbanShare, 1, ' pts')} more of humanity lives in urban areas.`, diagnostic: 'World Bank and UN World Urbanization Prospects. Urban definitions vary by country, so the worldwide percentage is an aggregated estimate.', group: 'world' },
-        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${birthTallestBuilding.feet.toLocaleString()} ft)`, now: `${currentTallestBuilding.name} (${currentTallestBuilding.feet.toLocaleString()} ft)`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}; the record rose ${buildingHeightDifference.toLocaleString()} ft.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. The maintained timeline is checked against the Skyscraper Center.', group: 'world' },
+        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${birthTallestBuilding.feet.toLocaleString()} ft)`, now: `${currentTallestBuilding.name} (${currentTallestBuilding.feet.toLocaleString()} ft)`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}. ${birthBuildingTenureCopy}; ${buildingHeightCopy}.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. Record tenure runs from a building\'s maintained completion date until the next record holder, or through today for the current record.', group: 'world' },
         { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`), group: 'everyday' },
         { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.`, group: 'world' },
         { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.`, group: 'world' },
@@ -13060,6 +13482,7 @@ function getBirthSkySnapshot() {
       els.forecastFocusScore.textContent  = currentForecast.focusScore;
       els.forecastSocialScore.textContent = currentForecast.socialScore;
       els.forecastCopy.textContent        = currentForecast.copy;
+      renderBirthdayStarlight(now);
 
       const currentAge = getCurrentAgeYears(now);
       const nextAge = getNextAgeCheckpoint(currentAge);
