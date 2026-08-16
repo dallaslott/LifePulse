@@ -2372,26 +2372,33 @@
     .easter-progress-indicator {
       position: absolute;
       top: 9px;
-      right: 9px;
-      width: 30px;
+      right: 12px;
+      width: 23px;
       height: 30px;
       display: grid;
       place-items: center;
-      border: 1px solid rgba(255, 232, 63, 0.52);
-      border-radius: 50%;
-      background: rgba(255, 214, 80, 0.12);
-      color: #ffe96b;
-      font-size: 0.9rem;
-      line-height: 1;
+      border: 1px solid rgba(255, 245, 191, 0.72);
+      border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+      background:
+        radial-gradient(circle at 28% 30%, rgba(255,255,255,0.92) 0 1.4px, transparent 1.8px),
+        radial-gradient(circle at 72% 70%, rgba(255,255,255,0.82) 0 1.3px, transparent 1.7px),
+        linear-gradient(to bottom,
+          #ff7597 0 22%,
+          #ffd862 22% 35%,
+          #54d8e8 35% 51%,
+          #9b7cff 51% 65%,
+          #71e19a 65% 80%,
+          #ff8b71 80% 100%);
       opacity: 0;
-      transform: scale(0.78);
-      filter: drop-shadow(0 0 6px rgba(255, 225, 81, 0.32));
+      transform: scale(0.76) rotate(5deg);
+      box-shadow: inset 2px 2px 4px rgba(255,255,255,0.22);
+      filter: drop-shadow(0 0 6px rgba(255, 225, 120, 0.38));
       pointer-events: none;
       transition: opacity 180ms ease, transform 180ms ease, filter 180ms ease;
     }
 
     .easter-progress-indicator.is-visible {
-      transform: scale(1);
+      transform: scale(1) rotate(5deg);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -4405,6 +4412,55 @@
     .settings-panel[open] .settings-tab { border-bottom: 1px solid rgba(255,255,255,0.08); }
     .settings-content { padding: 14px; }
 
+    .measurement-settings {
+      margin-bottom: 16px;
+      padding: 13px;
+      border: 1px solid rgba(82, 218, 255, 0.18);
+      border-radius: 14px;
+      background: rgba(24, 124, 160, 0.07);
+    }
+    .measurement-settings-title {
+      display: block;
+      margin-bottom: 3px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .measurement-settings-copy {
+      margin: 0 0 11px;
+      color: #a9bdd7;
+      font-size: 0.66rem;
+      line-height: 1.4;
+    }
+    .measurement-setting-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .measurement-setting {
+      display: grid;
+      gap: 6px;
+      color: #dce8f7;
+      font-size: 0.66rem;
+      font-weight: 800;
+    }
+    .measurement-setting select {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 30px 8px 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 10px;
+      background: #111827;
+      color: #fff;
+      font: inherit;
+      cursor: pointer;
+    }
+    @media (max-width: 430px) {
+      .measurement-setting-grid { grid-template-columns: 1fr; }
+    }
+
     .notification-recovery {
       margin-top: 12px;
       padding: 12px 13px;
@@ -4597,7 +4653,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.117.2.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.119.2.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -4912,13 +4968,13 @@
 </div>
 
         <div class="insight-card compact-card simpsons-easter-card" id="simpsons-easter-card" role="button" tabindex="0" aria-label="The Simpsons Episodes">
-          <span class="easter-progress-indicator" aria-hidden="true">&#129370;</span>
+          <span class="easter-progress-indicator" aria-hidden="true"></span>
           <span class="insight-value" id="simpsons-episodes-value">...</span>
           <span class="micro-label">The Simpsons Episodes</span>
           <p class="insight-copy comparison-diagnostic" id="simpsons-episodes-copy">Episodes since your birth will appear here.</p>
         </div>
         <div class="insight-card compact-card snl-easter-card" id="snl-easter-card" role="button" tabindex="0" aria-label="SNL Episodes">
-          <span class="easter-progress-indicator" aria-hidden="true">&#129370;</span>
+          <span class="easter-progress-indicator" aria-hidden="true"></span>
           <span class="insight-value" id="snl-episodes-value">...</span>
           <span class="micro-label">SNL Episodes</span>
           <p class="insight-copy comparison-diagnostic" id="snl-episodes-copy">Episodes since your birth will appear here.</p>
@@ -5052,7 +5108,7 @@
         <div class="cosmic-group-title">Motion Through Space</div>
         <div class="insight-card compact-card">
           <span class="insight-value" id="space-miles-value">0</span>
-          <span class="micro-label">Est. Miles Through Space</span>
+          <span class="micro-label">Est. Distance Through Space</span>
           <p class="insight-copy" id="space-miles-copy">A rough lifetime estimate based on Earth moving through space over time.</p>
         </div>
         <div class="insight-card compact-card">
@@ -5611,6 +5667,24 @@
         <span class="settings-tab-status" id="settings-tab-status">App &amp; Alerts</span>
       </summary>
       <div class="settings-content">
+      <div class="measurement-settings" aria-labelledby="measurement-settings-title">
+        <span class="measurement-settings-title" id="measurement-settings-title">Measurement Units</span>
+        <p class="measurement-settings-copy">Choose how temperatures and distances appear. U.S. standards are used by default.</p>
+        <div class="measurement-setting-grid">
+          <label class="measurement-setting" for="temperature-unit-select">Temperature
+            <select id="temperature-unit-select">
+              <option value="fahrenheit">Fahrenheit (&deg;F)</option>
+              <option value="celsius">Celsius (&deg;C)</option>
+            </select>
+          </label>
+          <label class="measurement-setting" for="distance-unit-select">Distance &amp; Length
+            <select id="distance-unit-select">
+              <option value="us">Miles, Feet &amp; Inches</option>
+              <option value="metric">Kilometers, Meters &amp; Centimeters</option>
+            </select>
+          </label>
+        </div>
+      </div>
       <div class="section-head">
         <span class="lifetime-kicker">LifePulse Mobile</span>
         <span class="panel-note">Version 5</span>
@@ -5723,11 +5797,12 @@
     const SHARE_CARD_STORAGE_KEY = 'lifePulseShareCardPreferences';
     const NOTIFICATION_PREFS_KEY = 'lifePulseNotificationPreferences';
     const AUDIO_PREFS_KEY = 'lifePulseAudioPreferences';
+    const MEASUREMENT_PREFS_KEY = 'lifePulseMeasurementPreferences';
     const DASHBOARD_SESSION_KEY = 'lifePulseActiveDashboardSession';
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.117.2.local';
+    const LOCAL_RELEASE_VERSION = '5.119.2.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5803,6 +5878,7 @@
     let shareShowBirthplace  = true;
     let selectedShareHighlight = '';
     let currentProfile          = null;
+    let measurementPreferences  = { temperature: 'fahrenheit', distance: 'us' };
     let currentAstronomy        = null;
     let userGender            = 'male';
     let showingHoroscope      = false;
@@ -5900,6 +5976,8 @@
       pwaOfflineState:       document.getElementById('pwa-offline-state'),
       pwaNotificationState:  document.getElementById('pwa-notification-state'),
       settingsTabStatus:     document.getElementById('settings-tab-status'),
+      temperatureUnitSelect: document.getElementById('temperature-unit-select'),
+      distanceUnitSelect:    document.getElementById('distance-unit-select'),
       notificationOptions:   document.getElementById('notification-options'),
       enableNotificationsBtn:document.getElementById('enable-notifications-btn'),
       testNotificationBtn:   document.getElementById('test-notification-btn'),
@@ -7533,7 +7611,7 @@
       const year       = String(els.dobYear?.value ?? '').trim();
       let   time       = String(els.birthTime?.value ?? '').trim();
       if (!time) time  = '12:00';
-      const profile = { name, birthPlace, currentResidence, gender: userGender, month, day, year, time, audioPreferences: getAudioPreferences() };
+      const profile = { name, birthPlace, currentResidence, gender: userGender, month, day, year, time, audioPreferences: getAudioPreferences(), measurementPreferences: { ...measurementPreferences } };
       if (selectedPlaceSuggestion && placeLooksLikeMatch(birthPlace, selectedPlaceSuggestion)) {
         profile.birthPlaceGeo = serializePlaceSelection(selectedPlaceSuggestion);
       }
@@ -7724,6 +7802,62 @@
       updateAudioSettingsUi();
     }
 
+    function normalizeMeasurementPreferences(preferences = null) {
+      return {
+        temperature: preferences?.temperature === 'celsius' ? 'celsius' : 'fahrenheit',
+        distance: preferences?.distance === 'metric' ? 'metric' : 'us'
+      };
+    }
+
+    function updateMeasurementSettingsUi() {
+      if (els.temperatureUnitSelect) els.temperatureUnitSelect.value = measurementPreferences.temperature;
+      if (els.distanceUnitSelect) els.distanceUnitSelect.value = measurementPreferences.distance;
+    }
+
+    function loadMeasurementPreferences(profilePreferences = null) {
+      let preferences = profilePreferences;
+      if (!preferences) {
+        try { preferences = JSON.parse(localStorage.getItem(MEASUREMENT_PREFS_KEY) || 'null'); } catch {}
+      }
+      measurementPreferences = normalizeMeasurementPreferences(preferences);
+      updateMeasurementSettingsUi();
+    }
+
+    function saveMeasurementPreferences() {
+      try { localStorage.setItem(MEASUREMENT_PREFS_KEY, JSON.stringify(measurementPreferences)); } catch {}
+      if (currentProfile) {
+        currentProfile.measurementPreferences = { ...measurementPreferences };
+        saveProfile(currentProfile);
+      }
+    }
+
+    function syncMeasurementInfoCopy() {
+      const walkingInfo = document.getElementById('card-info-miles-walked');
+      if (walkingInfo) walkingInfo.textContent = usesMetricDistance()
+        ? 'The estimated step total converted to kilometers using about 2,200 steps per mile. Stride length and actual daily movement vary by person.'
+        : 'The estimated step total converted to miles using about 2,200 steps per mile. Stride length and actual daily movement vary by person.';
+    }
+
+    function refreshMeasurementDisplays() {
+      syncMeasurementInfoCopy();
+      if (!birthMomentGlobal) return;
+      lastSlowStatsKey = '';
+      updateLiveStats(true);
+      populateBirthSnapshotCore(birthMomentGlobal);
+      if (currentProfile) populateBirthWeather(birthMomentGlobal, currentProfile).catch(() => {});
+      requestAnimationFrame(fitDisplayLabels);
+    }
+
+    function applyMeasurementPreferenceChange() {
+      measurementPreferences = normalizeMeasurementPreferences({
+        temperature: els.temperatureUnitSelect?.value,
+        distance: els.distanceUnitSelect?.value
+      });
+      updateMeasurementSettingsUi();
+      saveMeasurementPreferences();
+      refreshMeasurementDisplays();
+    }
+
     async function applyAudioPreferences(preferences) {
       if (typeof preferences.music === 'boolean') musicEnabled = preferences.music;
       if (typeof preferences.soundEffects === 'boolean') soundEffectsEnabled = preferences.soundEffects;
@@ -7838,6 +7972,7 @@
       if (profile.time)              els.birthTime.value = profile.time;
       setGender(profile.gender === 'female' ? 'female' : 'male');
       if (profile.audioPreferences) loadAudioPreferences(profile.audioPreferences);
+      if (profile.measurementPreferences) loadMeasurementPreferences(profile.measurementPreferences);
     }
 
     // ─── Data lookups (pre-sorted arrays avoid re-sorting every call) ─────────
@@ -9231,12 +9366,12 @@
     // Single source of truth — formatTempF delegates to this
     function celsiusToFahrenheit(celsius) { return (celsius * 9 / 5) + 32; }
 
-    function formatTempF(celsius) {
+    function legacyFormatTempF(celsius) {
       if (typeof celsius !== 'number' || !Number.isFinite(celsius)) return 'N/A';
       return `${celsiusToFahrenheit(celsius).toFixed(2)}°F`;
     }
 
-    function describeTempChange(birthTempC, currentTempC, birthYear) {
+    function legacyDescribeTempChange(birthTempC, currentTempC, birthYear) {
       if (
         typeof birthTempC  !== 'number' || !Number.isFinite(birthTempC)  ||
         typeof currentTempC !== 'number' || !Number.isFinite(currentTempC)
@@ -9251,6 +9386,71 @@
       // diffF > 0 → today is WARMER than birth year → world has warmed since then
       if (diffF > 0) return `The world is ${absDiffF.toFixed(2)}°F warmer today than when you were born (today’s est. global average: ${currentF.toFixed(2)}°F).`;
       return `The world is ${absDiffF.toFixed(2)}°F cooler today than when you were born (today’s est. global average: ${currentF.toFixed(2)}°F).`;
+    }
+
+    // Display-unit helpers. Source data remains unchanged for diagnostics.
+    function usesCelsius() { return measurementPreferences.temperature === 'celsius'; }
+    function usesMetricDistance() { return measurementPreferences.distance === 'metric'; }
+
+    function formatTemperatureFromCelsius(celsius, digits = 1) {
+      if (typeof celsius !== 'number' || !Number.isFinite(celsius)) return 'N/A';
+      const value = usesCelsius() ? celsius : celsiusToFahrenheit(celsius);
+      return `${value.toFixed(digits)}\u00B0${usesCelsius() ? 'C' : 'F'}`;
+    }
+
+    function formatTemperatureFromFahrenheit(fahrenheit, digits = 0) {
+      if (typeof fahrenheit !== 'number' || !Number.isFinite(fahrenheit)) return 'N/A';
+      const value = usesCelsius() ? (fahrenheit - 32) * 5 / 9 : fahrenheit;
+      return `${value.toFixed(digits)}\u00B0${usesCelsius() ? 'C' : 'F'}`;
+    }
+
+    function formatTempF(celsius) {
+      return formatTemperatureFromCelsius(celsius, 2);
+    }
+
+    function describeTempChange(birthTempC, currentTempC) {
+      if (!Number.isFinite(birthTempC) || !Number.isFinite(currentTempC)) return 'Temperature comparison unavailable.';
+      const birthValue = usesCelsius() ? birthTempC : celsiusToFahrenheit(birthTempC);
+      const currentValue = usesCelsius() ? currentTempC : celsiusToFahrenheit(currentTempC);
+      const difference = currentValue - birthValue;
+      const absoluteDifference = Math.abs(difference);
+      const unit = `\u00B0${usesCelsius() ? 'C' : 'F'}`;
+      if (absoluteDifference < 0.1) return `About the same as today's estimated global average of ${currentValue.toFixed(2)}${unit}.`;
+      return `The world is ${absoluteDifference.toFixed(2)}${unit} ${difference > 0 ? 'warmer' : 'cooler'} today than when you were born (today's est. global average: ${currentValue.toFixed(2)}${unit}).`;
+    }
+
+    function formatMilesDistance(miles, digits = 1, compact = false) {
+      const value = usesMetricDistance() ? miles * 1.609344 : miles;
+      const unit = usesMetricDistance() ? 'km' : 'mi';
+      return `${compact ? formatCompact(value, digits) : value.toLocaleString('en-US', { maximumFractionDigits: digits })} ${unit}`;
+    }
+
+    function formatMetersLength(meters, digits = 1) {
+      const value = usesMetricDistance() ? meters : meters * 3.28084;
+      return `${value.toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits })} ${usesMetricDistance() ? 'm' : 'ft'}`;
+    }
+
+    function formatCentimetersLength(centimeters, digits = 2) {
+      if (usesMetricDistance()) return centimeters >= 100 ? `${(centimeters / 100).toFixed(digits)} m` : `${centimeters.toFixed(digits)} cm`;
+      const inches = centimeters / 2.54;
+      return inches >= 12 ? `${(inches / 12).toFixed(digits)} ft` : `${inches.toFixed(digits)} in`;
+    }
+
+    function formatMillimetersLength(millimeters, digits = 1) {
+      return usesMetricDistance() ? `${millimeters.toFixed(digits)} mm` : `${(millimeters / 25.4).toFixed(digits)} in`;
+    }
+
+    function formatKilometersDistance(kilometers, digits = 1, compact = false) {
+      return formatMilesDistance(kilometers / 1.609344, digits, compact);
+    }
+
+    function formatWindFromMph(mph) {
+      const value = usesMetricDistance() ? mph * 1.609344 : mph;
+      return `${Math.round(value)} ${usesMetricDistance() ? 'km/h' : 'mph'}`;
+    }
+
+    function formatPrecipFromInches(inches) {
+      return usesMetricDistance() ? `${(inches * 25.4).toFixed(1)} mm` : `${inches.toFixed(2)} in`;
     }
 
     function getMoonPhaseIcon(phaseName) {
@@ -9790,7 +9990,7 @@
       return bestIndex;
     }
 
-    function describeHistoricalWeatherCopy(weather) {
+    function legacyDescribeHistoricalWeatherCopy(weather) {
       const place = weather.place || 'that birthplace';
       const dateText = weather.dateText || (weather.year ? `in ${weather.year}` : 'on your birth date');
       if (weather.mode === 'hourly') {
@@ -9809,6 +10009,24 @@
       const min = Number.isFinite(weather.min) ? `${Math.round(weather.min)}°` : '–';
       const precip = Number.isFinite(weather.precip) ? `${weather.precip.toFixed(2)} in precip` : 'precip unavailable';
       return `${place} • Daily summary for ${dateText} in local birthplace time: High ${max} / Low ${min} • ${precip}.`;
+    }
+
+    function describeHistoricalWeatherCopy(weather) {
+      const place = weather.place || 'that birthplace';
+      const dateText = weather.dateText || (weather.year ? `in ${weather.year}` : 'on your birth date');
+      if (weather.mode === 'hourly') {
+        const tempText = Number.isFinite(weather.temperature) ? formatTemperatureFromFahrenheit(weather.temperature, 0) : 'temperature unavailable';
+        const feelsText = Number.isFinite(weather.apparent) ? ` - feels like ${formatTemperatureFromFahrenheit(weather.apparent, 0)}` : '';
+        const windText = Number.isFinite(weather.wind) ? ` - wind ${formatWindFromMph(weather.wind)}` : '';
+        const precipText = Number.isFinite(weather.precipHour) ? ` - ${formatPrecipFromInches(weather.precipHour)} precip in the prior hour` : '';
+        const timingLead = weather.isEstimatedTime ? `Near ${weather.displayTime} in local birthplace time` : `At ${weather.displayTime} in local birthplace time`;
+        const nearestHourNote = weather.isEstimatedTime ? ' (nearest archived hour)' : '';
+        return `${timingLead}${nearestHourNote} on ${dateText} in ${place}, it was ${tempText}${feelsText}${windText}${precipText}.`;
+      }
+      const max = Number.isFinite(weather.max) ? formatTemperatureFromFahrenheit(weather.max, 0) : '-';
+      const min = Number.isFinite(weather.min) ? formatTemperatureFromFahrenheit(weather.min, 0) : '-';
+      const precip = Number.isFinite(weather.precip) ? `${formatPrecipFromInches(weather.precip)} precip` : 'precip unavailable';
+      return `${place} - Daily summary for ${dateText} in local birthplace time: High ${max} / Low ${min} - ${precip}.`;
     }
 
     async function fetchBirthWeather(date, profile) {
@@ -10104,6 +10322,7 @@
       const birthTempC   = interpolateFromAnchors(birthYear, TEMP_ANCHORS_C);
       const currentTempC = interpolateFromAnchors(currentYear, TEMP_ANCHORS_C);
       els.birthTemp.textContent     = formatTempF(birthTempC);
+      if (els.birthTemp.nextElementSibling) els.birthTemp.nextElementSibling.textContent = 'Estimated Global Temperature';
       els.birthTempCopy.textContent = describeTempChange(birthTempC, currentTempC, birthYear);
 
       els.birthCelebTitle.textContent = 'Loading…';
@@ -12374,7 +12593,7 @@ function countPresidentialElectionsExperienced(start, end) {
       if (els.circulationLoopsValue) els.circulationLoopsValue.textContent = formatNamedScale(circulationLoops, 1);
       els.breathsValue.textContent    = breaths.toLocaleString();
       els.stepsValue.textContent      = steps.toLocaleString();
-      els.milesWalkedValue.textContent= `${milesWalked.toLocaleString()} mi`;
+      els.milesWalkedValue.textContent= formatMilesDistance(milesWalked, 0);
       els.sleepHoursValue.textContent = sleepHours.toLocaleString();
       els.mealsValue.textContent      = meals.toLocaleString();
       els.wordsValue.textContent      = words.toLocaleString();
@@ -12388,8 +12607,8 @@ function countPresidentialElectionsExperienced(start, end) {
       if (els.blinkDarknessValue) els.blinkDarknessValue.textContent = `${Math.floor(blinkDarknessHours / 24).toLocaleString()} days`;
       if (els.dreamsValue) els.dreamsValue.textContent = Math.floor(dreamsExperienced).toLocaleString();
       if (els.neutrinoCollisionsValue) els.neutrinoCollisionsValue.textContent = `${neutrinoProbability.toFixed(1)}%`;
-      if (els.hairGrowthValue) els.hairGrowthValue.textContent = `${(hairGrowthMeters * 3.28084).toFixed(1)} ft`;
-      if (els.nailGrowthValue) els.nailGrowthValue.textContent = `${(nailGrowthMeters * 3.28084).toFixed(1)} ft`;
+      if (els.hairGrowthValue) els.hairGrowthValue.textContent = formatMetersLength(hairGrowthMeters, 1);
+      if (els.nailGrowthValue) els.nailGrowthValue.textContent = formatMetersLength(nailGrowthMeters, 1);
       if (els.shedSkinValue) els.shedSkinValue.textContent = `${formatNamedScale(shedSkinCells, 1)} cells`;
 
       els.nextBirthdayDays.textContent = `${nextBirthday.daysUntil.toLocaleString()} DAYS`;
@@ -12590,12 +12809,14 @@ function countPresidentialElectionsExperienced(start, end) {
       if (els.tripsAroundSunCopy) {
         const solarOrbitMiles = years * 584000000;
         const earthRotations = daysExact;
-        els.tripsAroundSunCopy.textContent = `At roughly 584M miles per orbit, that’s about ${formatCompact(solarOrbitMiles, 2)} miles around the Sun and ${formatCompact(earthRotations, 2)} Earth rotations since birth.`;
+        const orbitDistance = formatMilesDistance(solarOrbitMiles, 2, true);
+        const orbitReference = formatMilesDistance(584000000, 2, true);
+        els.tripsAroundSunCopy.textContent = `At roughly ${orbitReference} per orbit, that's about ${orbitDistance} around the Sun and ${formatCompact(earthRotations, 2)} Earth rotations since birth.`;
       }
       els.moonCyclesValue.textContent = (daysExact / 29.53).toFixed(1);
       if (els.moonCyclesCopy) {
         const lunarOrbitMiles = (daysExact / 29.53) * 1483000;
-        els.moonCyclesCopy.textContent = `At roughly 1.48M miles per lunar orbit, that’s about ${formatCompact(lunarOrbitMiles, 2)} miles of moon-cycling around Earth since you were born.`;
+        els.moonCyclesCopy.textContent = `At roughly ${formatMilesDistance(1483000, 2, true)} per lunar orbit, that's about ${formatMilesDistance(lunarOrbitMiles, 2, true)} of moon-cycling around Earth since you were born.`;
       }
       if (els.saturnReturnLabel) els.saturnReturnLabel.textContent = 'Saturn Returns Lived';
       els.saturnReturnValue.textContent = saturnStory.returnsLived.toLocaleString();
@@ -12608,7 +12829,7 @@ function countPresidentialElectionsExperienced(start, end) {
         els.saturnReturnCopy.textContent = `Current Phase: ${saturnStory.phase}. Saturn milestones tend to land about every 29.5 years.\nNext Return: ${nextSaturnLabel}.`;
       }
       const estimatedSpaceMiles = hoursTotal * 514000;
-      els.spaceMilesValue.textContent = formatCompact(estimatedSpaceMiles, 2);
+      els.spaceMilesValue.textContent = formatMilesDistance(estimatedSpaceMiles, 2, true);
       if (els.spaceMilesCopy) {
         const earthCircumferences = estimatedSpaceMiles / 24901;
         els.spaceMilesCopy.textContent = `A frame-dependent comparison combining Earth's solar orbit with the Sun's galactic motion - about ${formatCompact(earthCircumferences, 2)} trips around Earth.`;
@@ -12620,7 +12841,7 @@ function countPresidentialElectionsExperienced(start, end) {
       const galacticCenterDistanceLy = 26000;
       const solarSystemOrbitMiles = hoursTotal * 515000;
       if (els.galacticCenterDistanceValue) els.galacticCenterDistanceValue.textContent = `${galacticCenterDistanceLy.toLocaleString()} light-years`;
-      if (els.galacticCenterDistanceCopy) els.galacticCenterDistanceCopy.textContent = `Approx. current distance; the Solar System has traveled ${formatCompact(solarSystemOrbitMiles, 2)} mi along its galactic orbit since your birth.`;
+      if (els.galacticCenterDistanceCopy) els.galacticCenterDistanceCopy.textContent = `Approx. current distance; the Solar System has traveled ${formatMilesDistance(solarSystemOrbitMiles, 2, true)} along its galactic orbit since your birth.`;
 
       const sunspotCycles = years / 11;
       if (els.sunspotCyclesValue) els.sunspotCyclesValue.textContent = sunspotCycles.toFixed(2);
@@ -12638,7 +12859,7 @@ function countPresidentialElectionsExperienced(start, end) {
       const voyagerOverlapStart = birthMomentGlobal > voyagerLaunch ? birthMomentGlobal : voyagerLaunch;
       const voyagerOverlapSeconds = Math.max(0, (now - voyagerOverlapStart) / 1000);
       const voyagerMiles = voyagerOverlapSeconds * 10.563;
-      if (els.voyagerDistanceValue) els.voyagerDistanceValue.textContent = voyagerOverlapSeconds ? `${formatCompact(voyagerMiles, 2)} mi` : 'Not Launched Yet';
+      if (els.voyagerDistanceValue) els.voyagerDistanceValue.textContent = voyagerOverlapSeconds ? formatMilesDistance(voyagerMiles, 2, true) : 'Not Launched Yet';
       if (els.voyagerDistanceCopy) els.voyagerDistanceCopy.textContent = voyagerOverlapSeconds
         ? `Approx. Voyager 1 travel during your lifetime, or since its 09/05/1977 launch if you were already alive.`
         : `Voyager 1 launches on 09/05/1977 in your personal timeline.`;
@@ -12663,20 +12884,20 @@ function countPresidentialElectionsExperienced(start, end) {
       });
 
       const driftInches = years * 1.5;
-      if (els.continentalDriftValue) els.continentalDriftValue.textContent = driftInches >= 12 ? `${(driftInches / 12).toFixed(1)} ft` : `${driftInches.toFixed(1)} in`;
+      if (els.continentalDriftValue) els.continentalDriftValue.textContent = formatCentimetersLength(driftInches * 2.54, 1);
       if (els.continentalDriftCopy) els.continentalDriftCopy.textContent = `At a fingernail-like pace, Earth's tectonic plates could have shifted roughly this far during your life.`;
 
       const lunarRecessionCm = years * 3.8;
-      if (els.lunarRecessionValue) els.lunarRecessionValue.textContent = `${(lunarRecessionCm / 30.48).toFixed(2)} ft`;
+      if (els.lunarRecessionValue) els.lunarRecessionValue.textContent = formatCentimetersLength(lunarRecessionCm, 2);
       if (els.lunarRecessionCopy) els.lunarRecessionCopy.textContent = `The Moon is roughly this much farther from Earth than when you were born.`;
 
       const solarOrbitExpansionCm = years * 1.5;
-      if (els.solarOrbitExpansionValue) els.solarOrbitExpansionValue.textContent = `${(solarOrbitExpansionCm / 30.48).toFixed(2)} ft`;
+      if (els.solarOrbitExpansionValue) els.solarOrbitExpansionValue.textContent = formatCentimetersLength(solarOrbitExpansionCm, 2);
       if (els.solarOrbitExpansionCopy) els.solarOrbitExpansionCopy.textContent = `Earth's average orbit is modeled to be roughly this much farther from the Sun than when you were born.`;
 
       const cosmicExpansionKmAtOneMpc = secondsTotal * 70;
-      if (els.cosmicExpansionValue) els.cosmicExpansionValue.textContent = `${formatNamedScale(cosmicExpansionKmAtOneMpc, 1)} km`;
-      if (els.cosmicExpansionCopy) els.cosmicExpansionCopy.textContent = `Added separation during your life between two unbound points one megaparsec apart, using 70 km/s/Mpc.`;
+      if (els.cosmicExpansionValue) els.cosmicExpansionValue.textContent = formatKilometersDistance(cosmicExpansionKmAtOneMpc, 1, true);
+      if (els.cosmicExpansionCopy) els.cosmicExpansionCopy.textContent = `Added separation during your life between two unbound points one megaparsec apart, using ${usesMetricDistance() ? '70 km/s/Mpc' : '43.5 mi/s/Mpc'}.`;
 
       const co2Reference = currentLiveData?.reference?.atmosphericCO2;
       const co2Series = co2Reference?.series || {};
@@ -12689,7 +12910,7 @@ function countPresidentialElectionsExperienced(start, end) {
       if (els.co2JumpCopy) els.co2JumpCopy.textContent = `${birthMomentGlobal.getFullYear()}: ${birthCo2.toFixed(1)} ppm  |  Latest: ${latestCo2.toFixed(1)} ppm  |  ${co2Pct >= 0 ? '+' : ''}${co2Pct.toFixed(1)}%.`;
 
       const satelliteEraSeaLevelRiseMm = years * 3.8;
-      if (els.seaLevelRiseValue) els.seaLevelRiseValue.textContent = `${(satelliteEraSeaLevelRiseMm / 25.4).toFixed(1)} in`;
+      if (els.seaLevelRiseValue) els.seaLevelRiseValue.textContent = formatMillimetersLength(satelliteEraSeaLevelRiseMm, 1);
       if (els.seaLevelRiseCopy) els.seaLevelRiseCopy.textContent = `At the recent global satellite-era average of 3.8 mm/year; local coastlines can differ.`;
 
       const oceanWaterCycledKm3 = years * 425000;
@@ -13070,7 +13291,10 @@ function countPresidentialElectionsExperienced(start, end) {
       const currentTech = getTechSnapshot(currentYear);
       const populationDelta = currentPopulation - birthPopulation;
       const populationPct = birthPopulation ? (populationDelta / birthPopulation) * 100 : 0;
-      const tempDeltaF = celsiusToFahrenheit(currentTempC) - celsiusToFahrenheit(birthTempC);
+      const birthDisplayTemp = usesCelsius() ? birthTempC : celsiusToFahrenheit(birthTempC);
+      const currentDisplayTemp = usesCelsius() ? currentTempC : celsiusToFahrenheit(currentTempC);
+      const tempDelta = currentDisplayTemp - birthDisplayTemp;
+      const temperatureUnit = `\u00B0${usesCelsius() ? 'C' : 'F'}`;
       const presidentsLived = countPresidentsExperienced(birthMomentGlobal, now);
       const birthChip = getChipTransistorMilestone(birthYear);
       const currentChip = CHIP_TRANSISTOR_MILESTONES[CHIP_TRANSISTOR_MILESTONES.length - 1];
@@ -13107,14 +13331,16 @@ function countPresidentialElectionsExperienced(start, end) {
       const satellitePercent = birthSatelliteCount > 0 ? satelliteDifference / birthSatelliteCount * 100 : null;
       const birthTallestBuilding = getTallestBuildingAtDate(birthMomentGlobal);
       const currentTallestBuilding = getTallestBuildingAtDate(now);
-      const buildingHeightDifference = currentTallestBuilding.feet - birthTallestBuilding.feet;
+      const buildingHeightDifference = usesMetricDistance()
+        ? currentTallestBuilding.meters - birthTallestBuilding.meters
+        : currentTallestBuilding.feet - birthTallestBuilding.feet;
       const birthBuildingTenure = getTallestBuildingRecordTenure(birthTallestBuilding, now);
       const birthBuildingTenureYears = birthBuildingTenure ? Math.round(birthBuildingTenure.years).toLocaleString() : null;
       const birthBuildingTenureCopy = birthBuildingTenure?.ongoing
         ? `Still holds the record after ${birthBuildingTenureYears} years`
         : `Birth-era record lasted ${birthBuildingTenureYears} years`;
       const buildingHeightCopy = buildingHeightDifference > 0
-        ? `today's record is ${buildingHeightDifference.toLocaleString()} ft taller`
+        ? `today's record is ${buildingHeightDifference.toLocaleString()} ${usesMetricDistance() ? 'm' : 'ft'} taller`
         : `it remains today's record`;
       const lifeExpectancyReference = currentLiveData?.reference?.lifeExpectancy;
       const validLifeExpectancyFeed = Object.fromEntries(Object.entries(lifeExpectancyReference?.series || {}).filter(([, value]) => Number.isFinite(Number(value)) && Number(value) > 0));
@@ -13135,9 +13361,9 @@ function countPresidentialElectionsExperienced(start, end) {
         { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `You arrived after about ${humanHistoryPercentLabel}% of all humans ever born; est. ${formatNamedScale(humansBornSince, 1)} have been born since.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate. The percentage compares estimated cumulative births by your birth year with the estimated cumulative total today.', group: 'world' },
         { icon: '&#10084;', label: 'Global Life Expectancy', then: birthLifeExpectancy == null ? 'Before Coverage' : `${birthLifeExpectancy.toFixed(1)} yrs`, now: `${latestLifeExpectancy.toFixed(1)} yrs`, nowEra: latestLifeExpectancyYear, change: birthLifeExpectancy == null ? `Worldwide annual coverage begins in ${lifeExpectancyYears[0]}.` : `${formatSignedNumber(latestLifeExpectancy - birthLifeExpectancy, 1, ' yrs')} since your birth year.`, diagnostic: 'Worldwide life expectancy at birth from the World Bank and UN Population Division; this is a population average, not an individual lifespan prediction.', group: 'world' },
         { icon: '&#127961;', label: 'Urban Population Share', then: birthUrbanShare == null ? 'Before Coverage' : `${birthUrbanShare.toFixed(1)}%`, now: `${latestUrbanShare.toFixed(1)}%`, nowEra: latestUrbanShareYear, change: birthUrbanShare == null ? `Worldwide annual coverage begins in ${urbanShareYears[0]}.` : `${formatSignedNumber(latestUrbanShare - birthUrbanShare, 1, ' pts')} more of humanity lives in urban areas.`, diagnostic: 'World Bank and UN World Urbanization Prospects. Urban definitions vary by country, so the worldwide percentage is an aggregated estimate.', group: 'world' },
-        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${birthTallestBuilding.feet.toLocaleString()} ft)`, now: `${currentTallestBuilding.name} (${currentTallestBuilding.feet.toLocaleString()} ft)`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}. ${birthBuildingTenureCopy}; ${buildingHeightCopy}.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. Record tenure runs from a building\'s maintained completion date until the next record holder, or through today for the current record.', group: 'world' },
+        { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${usesMetricDistance() ? `${birthTallestBuilding.meters.toLocaleString()} m` : `${birthTallestBuilding.feet.toLocaleString()} ft`})`, now: `${currentTallestBuilding.name} (${usesMetricDistance() ? `${currentTallestBuilding.meters.toLocaleString()} m` : `${currentTallestBuilding.feet.toLocaleString()} ft`})`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}. ${birthBuildingTenureCopy}; ${buildingHeightCopy}.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. Record tenure runs from a building\'s maintained completion date until the next record holder, or through today for the current record.', group: 'world' },
         { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`), group: 'everyday' },
-        { icon: '&#127757;', label: 'Estimated Global Temperature', then: `${celsiusToFahrenheit(birthTempC).toFixed(2)} F`, now: `${celsiusToFahrenheit(currentTempC).toFixed(2)} F`, change: `${formatSignedNumber(tempDeltaF, 2, '\u00B0F')} since birth.`, group: 'world' },
+        { icon: '&#127757;', label: 'Estimated Global Temperature', then: formatTemperatureFromCelsius(birthTempC, 2), now: formatTemperatureFromCelsius(currentTempC, 2), change: `${formatSignedNumber(tempDelta, 2, temperatureUnit)} since birth.`, group: 'world' },
         { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.`, group: 'world' },
         { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.`, group: 'technology' },
         { icon: '&#128752;', label: 'Active Satellites', then: birthSatelliteCount ? birthSatelliteCount.toLocaleString() : 'None Yet', now: latestSatelliteCount.toLocaleString(), nowEra: latestSatelliteYear, change: birthSatelliteCount ? `${satelliteDifference.toLocaleString()} more active satellites now (+${satellitePercent.toFixed(0)}%).` : `${latestSatelliteCount.toLocaleString()} active satellites now orbit Earth; the first launched in 1957.`, diagnostic: `Historical active-payload counts from Jonathan McDowell's General Catalog of Artificial Space Objects. Uses the birth month when the scheduled feed is available and a year-end fallback offline. Latest maintained observation: ${activeSatelliteReference?.latestDate || latestSatelliteYear}.`, group: 'technology' },
@@ -15233,6 +15459,8 @@ function getBirthSkySnapshot() {
       els.btnFemale.addEventListener('click', () => setGender('female'));
       els.dobMonth.addEventListener('change', populateDays);
       els.dobYear.addEventListener('change',  populateDays);
+      els.temperatureUnitSelect?.addEventListener('change', applyMeasurementPreferenceChange);
+      els.distanceUnitSelect?.addEventListener('change', applyMeasurementPreferenceChange);
 
       els.launchBtn.addEventListener('click', async () => {
         if (els.launchBtn.disabled) return;
@@ -15396,6 +15624,7 @@ function getBirthSkySnapshot() {
       organizeDashboardSections();
       loadShareCardPreferences();
       loadAudioPreferences();
+      loadMeasurementPreferences();
       initAudioSettingsMenu();
       bindEvents();
       if (window.location.protocol === 'file:') {
@@ -15422,6 +15651,7 @@ function getBirthSkySnapshot() {
       loadSportsDataFeed();
       initSourceDrawers();
       initCardInfoToggles();
+      syncMeasurementInfoCopy();
       loadSkyEventsFeed();
       loadCostOfLivingData();
       loadPlaceEconomicData();
