@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-11';
+const CACHE_VERSION = 'lifepulse-v5-shell-12';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -8,6 +8,10 @@ const SHELL_ASSETS = [
   './assets/lifepulse-icon-512.png',
   './assets/lifepulse-maskable-512.png',
   './assets/lifepulse-notification.png',
+  './assets/time-flight/1957-sputnik.jpg',
+  './assets/time-flight/1963-march.jpg',
+  './assets/time-flight/2022-webb.jpg',
+  './time-flight.js',
   './cost-of-living-data.json',
   './sports-data-v4.json',
   './sky-events.json'

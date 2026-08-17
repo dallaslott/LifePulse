@@ -4457,6 +4457,21 @@
       font: inherit;
       cursor: pointer;
     }
+    .measurement-apply-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 11px;
+    }
+    .measurement-active-status {
+      color: #9fdcf2;
+      font-size: 0.62rem;
+      font-weight: 750;
+      line-height: 1.35;
+    }
+    .measurement-active-status.is-pending { color: #ffe0a3; }
+    #apply-measurement-btn:disabled { opacity: 0.45; cursor: default; }
     @media (max-width: 430px) {
       .measurement-setting-grid { grid-template-columns: 1fr; }
     }
@@ -4524,6 +4539,300 @@
       .pwa-state-grid { grid-template-columns: 1fr; }
       .notification-options { grid-template-columns: 1fr; }
       .pwa-actions .pwa-action-btn { flex: 1 1 145px; }
+    }
+
+    /* Time Flight prototype */
+    .time-flight-launch-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 22px;
+      align-items: center;
+      min-height: 190px;
+      margin: 18px 0 24px;
+      padding: clamp(22px, 4vw, 34px);
+      border: 1px solid rgba(70, 228, 255, 0.35);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 82% 22%, rgba(99, 78, 255, 0.28), transparent 31%),
+        radial-gradient(circle at 18% 86%, rgba(0, 218, 255, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(8, 19, 42, 0.98), rgba(9, 8, 27, 0.98));
+      box-shadow: inset 0 0 50px rgba(49, 214, 255, 0.06), 0 18px 55px rgba(0, 0, 0, 0.28);
+    }
+    .time-flight-launch-card::before,
+    .time-flight-launch-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .time-flight-launch-card::before {
+      opacity: 0.55;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.92) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(94,226,255,.76) 0 1px, transparent 1.5px);
+      background-size: 57px 57px, 91px 91px;
+      background-position: 4px 9px, 31px 17px;
+      mask-image: linear-gradient(90deg, transparent, #000 30%, #000);
+    }
+    .time-flight-launch-card::after {
+      inset: auto -8% -70% 42%;
+      height: 220px;
+      border: 1px solid rgba(67, 222, 255, 0.22);
+      border-radius: 50%;
+      box-shadow: 0 0 50px rgba(78, 115, 255, 0.16), inset 0 0 40px rgba(0, 224, 255, 0.08);
+      transform: rotate(-12deg);
+    }
+    .time-flight-kicker {
+      display: block;
+      margin-bottom: 8px;
+      color: #61e7ff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .time-flight-launch-title {
+      display: block;
+      margin-bottom: 10px;
+      color: #fff;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.08;
+    }
+    .time-flight-launch-copy {
+      max-width: 650px;
+      margin: 0;
+      color: rgba(239, 247, 255, 0.76);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .time-flight-launch-meta {
+      display: block;
+      margin-top: 12px;
+      color: rgba(173, 222, 255, 0.68);
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .time-flight-launch-btn,
+    .time-flight-mode-btn {
+      border: 1px solid rgba(92, 232, 255, 0.62);
+      border-radius: 999px;
+      color: #05101d;
+      background: linear-gradient(135deg, #8af5ff, #6bb4ff 52%, #a999ff);
+      box-shadow: 0 9px 32px rgba(43, 194, 255, 0.24);
+      font: inherit;
+      font-size: 0.76rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .time-flight-launch-btn { min-width: 150px; padding: 15px 20px; }
+    .time-flight-launch-btn:hover,
+    .time-flight-launch-btn:focus-visible,
+    .time-flight-mode-btn:hover,
+    .time-flight-mode-btn:focus-visible { filter: brightness(1.09); transform: translateY(-1px); }
+
+    body.time-flight-open { overflow: hidden !important; }
+    .time-flight-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30000;
+      display: none;
+      overflow: hidden;
+      color: #fff;
+      background: #02040a;
+      font-family: inherit;
+    }
+    .time-flight-overlay.is-open { display: block; }
+    .time-flight-visual,
+    .time-flight-image,
+    .time-flight-vignette,
+    .time-flight-stars { position: absolute; inset: 0; }
+    .time-flight-visual {
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 74% 25%, rgba(80, 89, 194, 0.42), transparent 38%),
+        linear-gradient(145deg, #0d1a30, #02040a 68%);
+    }
+    .time-flight-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 50%;
+      opacity: 0;
+      transform: scale(1.06);
+      transition: opacity 900ms ease;
+      will-change: transform, opacity;
+    }
+    .time-flight-image.is-active { opacity: 0.78; }
+    .time-flight-image.pan-left.is-active { animation: time-flight-pan-left 6.2s linear both; }
+    .time-flight-image.pan-right.is-active { animation: time-flight-pan-right 6.2s linear both; }
+    @keyframes time-flight-pan-left { from { transform: scale(1.06) translate3d(1.2%,0,0); } to { transform: scale(1.16) translate3d(-1.2%,-0.7%,0); } }
+    @keyframes time-flight-pan-right { from { transform: scale(1.06) translate3d(-1.2%,0,0); } to { transform: scale(1.16) translate3d(1.2%,-0.7%,0); } }
+    .time-flight-stars {
+      opacity: 0.35;
+      background-image:
+        radial-gradient(circle, #fff 0 1px, transparent 1.4px),
+        radial-gradient(circle, #82dcff 0 1px, transparent 1.5px);
+      background-size: 73px 73px, 119px 119px;
+      background-position: 5px 11px, 41px 29px;
+      transform: scale(1.08);
+      animation: time-flight-stars-drift 16s linear infinite;
+    }
+    @keyframes time-flight-stars-drift { to { transform: scale(1.22); opacity: 0.18; } }
+    .time-flight-vignette {
+      background:
+        linear-gradient(90deg, rgba(2,4,10,.82), transparent 38%, rgba(2,4,10,.16)),
+        linear-gradient(0deg, rgba(2,4,10,.95), transparent 55%, rgba(2,4,10,.55)),
+        radial-gradient(circle at center, transparent 34%, rgba(0,0,0,.48) 100%);
+    }
+    .time-flight-hud {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: max(22px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+      pointer-events: none;
+    }
+    .time-flight-topbar,
+    .time-flight-controls,
+    .time-flight-briefing,
+    .time-flight-finale { pointer-events: auto; }
+    .time-flight-topbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .time-flight-brand { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,.84); font-size: .72rem; font-weight: 950; letter-spacing: .17em; text-transform: uppercase; }
+    .time-flight-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: #70efff; box-shadow: 0 0 16px #5de8ff; }
+    .time-flight-close {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(4,9,19,.48);
+      backdrop-filter: blur(14px);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+    .time-flight-progress-shell {
+      position: absolute;
+      top: max(78px, calc(env(safe-area-inset-top) + 62px));
+      left: max(22px, env(safe-area-inset-left));
+      right: max(22px, env(safe-area-inset-right));
+      height: 2px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: rgba(255,255,255,.18);
+    }
+    .time-flight-progress { width: 0; height: 100%; background: linear-gradient(90deg, #73f0ff, #b89aff); box-shadow: 0 0 14px #62eaff; transition: width 500ms ease; }
+    .time-flight-scene-copy {
+      width: min(720px, 88vw);
+      margin-top: auto;
+      margin-bottom: clamp(72px, 11vh, 108px);
+      text-shadow: 0 3px 24px rgba(0,0,0,.85);
+    }
+    .time-flight-scene-copy.is-changing { opacity: 0; transform: translateY(12px); }
+    .time-flight-scene-copy { opacity: 1; transform: translateY(0); transition: opacity 480ms ease, transform 480ms ease; }
+    .time-flight-year { display: block; margin-bottom: 9px; color: #76efff; font-size: clamp(2.8rem, 12vw, 7.4rem); font-weight: 950; line-height: .82; letter-spacing: -.055em; }
+    .time-flight-category { display: inline-flex; margin-bottom: 12px; padding: 5px 9px; border: 1px solid rgba(125,232,255,.34); border-radius: 999px; background: rgba(5,16,31,.54); color: #a5efff; font-size: .64rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; backdrop-filter: blur(10px); }
+    .time-flight-title { margin: 0 0 10px; font-size: clamp(1.55rem, 4.8vw, 3.35rem); line-height: 1.02; }
+    .time-flight-summary { max-width: 650px; margin: 0; color: rgba(246,249,255,.86); font-size: clamp(.9rem, 2vw, 1.08rem); line-height: 1.5; }
+    .time-flight-age { display: block; margin-top: 11px; color: rgba(183,214,255,.78); font-size: .76rem; font-weight: 800; letter-spacing: .04em; }
+    .time-flight-controls {
+      position: absolute;
+      z-index: 5;
+      right: max(22px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 999px;
+      background: rgba(3,8,18,.62);
+      backdrop-filter: blur(16px);
+    }
+    .time-flight-control {
+      min-width: 40px;
+      height: 40px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background: transparent;
+      font: inherit;
+      font-size: .72rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .time-flight-control:hover,
+    .time-flight-control:focus-visible { background: rgba(105,226,255,.16); }
+    .time-flight-counter { min-width: 55px; color: rgba(255,255,255,.62); text-align: center; font-size: .68rem; font-weight: 800; }
+    .time-flight-source {
+      position: absolute;
+      z-index: 5;
+      left: max(22px, env(safe-area-inset-left));
+      bottom: max(20px, env(safe-area-inset-bottom));
+      color: rgba(255,255,255,.55);
+      font-size: .63rem;
+      text-decoration: none;
+    }
+    .time-flight-source:hover,
+    .time-flight-source:focus-visible { color: #8eefff; }
+    .time-flight-briefing,
+    .time-flight-finale {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 35%, rgba(31,80,129,.34), rgba(2,4,10,.94) 58%);
+    }
+    .time-flight-briefing.is-visible,
+    .time-flight-finale.is-visible { display: grid; }
+    .time-flight-briefing-card,
+    .time-flight-finale-card {
+      width: min(640px, 94vw);
+      padding: clamp(24px, 5vw, 42px);
+      border: 1px solid rgba(104,229,255,.28);
+      border-radius: 26px;
+      background: rgba(6,13,28,.76);
+      box-shadow: 0 24px 100px rgba(0,0,0,.48), inset 0 0 45px rgba(73,207,255,.04);
+      text-align: center;
+      backdrop-filter: blur(20px);
+    }
+    .time-flight-briefing-card h2,
+    .time-flight-finale-card h2 { margin: 8px 0 10px; font-size: clamp(1.8rem, 7vw, 3.15rem); line-height: 1; }
+    .time-flight-briefing-card p,
+    .time-flight-finale-card p { margin: 0 auto; max-width: 520px; color: rgba(234,242,255,.75); line-height: 1.55; }
+    .time-flight-mode-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin-top: 26px; }
+    .time-flight-mode-btn { padding: 16px 12px; }
+    .time-flight-mode-btn span { display: block; margin-top: 4px; font-size: .62rem; font-weight: 800; letter-spacing: .03em; text-transform: none; opacity: .68; }
+    .time-flight-credits { max-height: 180px; margin: 18px 0 0; overflow: auto; color: rgba(220,233,255,.66); font-size: .67rem; line-height: 1.5; text-align: left; }
+    .time-flight-credits a { color: #82eaff; }
+    .time-flight-fallback-year { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(118,229,255,.09); font-size: min(38vw, 32rem); font-weight: 950; letter-spacing: -.08em; }
+
+    @media (max-width: 680px) {
+      .time-flight-launch-card { grid-template-columns: 1fr; min-height: 0; }
+      .time-flight-launch-btn { justify-self: start; }
+      .time-flight-hud { padding-left: 18px; padding-right: 18px; }
+      .time-flight-scene-copy { width: calc(100vw - 36px); margin-bottom: 112px; }
+      .time-flight-year { font-size: clamp(3rem, 20vw, 5.5rem); }
+      .time-flight-controls { right: 50%; transform: translateX(50%); bottom: max(18px, env(safe-area-inset-bottom)); }
+      .time-flight-source { bottom: 74px; max-width: calc(100vw - 36px); }
+      .time-flight-mode-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .time-flight-image.pan-left.is-active,
+      .time-flight-image.pan-right.is-active,
+      .time-flight-stars { animation: none; }
+      .time-flight-image { transform: scale(1.02); }
     }
 
   </style>
@@ -4644,6 +4953,62 @@
     </div>
   </div>
 
+  <section class="time-flight-overlay" id="time-flight-overlay" aria-hidden="true" aria-label="Time Flight cinematic timeline">
+    <div class="time-flight-visual" id="time-flight-visual">
+      <div class="time-flight-fallback-year" id="time-flight-fallback-year" aria-hidden="true">2026</div>
+      <img class="time-flight-image" id="time-flight-image" alt="" decoding="async" />
+      <div class="time-flight-stars" aria-hidden="true"></div>
+      <div class="time-flight-vignette" aria-hidden="true"></div>
+    </div>
+    <div class="time-flight-hud">
+      <div class="time-flight-topbar">
+        <span class="time-flight-brand"><span class="time-flight-brand-dot" aria-hidden="true"></span>LifePulse &bull; Time Flight</span>
+        <button class="time-flight-close" id="time-flight-close" type="button" aria-label="Exit Time Flight">&times;</button>
+      </div>
+      <div class="time-flight-progress-shell" aria-hidden="true"><div class="time-flight-progress" id="time-flight-progress"></div></div>
+      <article class="time-flight-scene-copy" id="time-flight-scene-copy" aria-live="polite">
+        <span class="time-flight-year" id="time-flight-year">2026</span>
+        <span class="time-flight-category" id="time-flight-category">World History</span>
+        <h2 class="time-flight-title" id="time-flight-title">Time Flight</h2>
+        <p class="time-flight-summary" id="time-flight-summary">Preparing your lifetime timeline.</p>
+        <span class="time-flight-age" id="time-flight-age"></span>
+      </article>
+      <a class="time-flight-source" id="time-flight-source" href="#" target="_blank" rel="noopener noreferrer">Image credit and source</a>
+      <div class="time-flight-controls" id="time-flight-controls">
+        <button class="time-flight-control" id="time-flight-previous" type="button" aria-label="Previous event">&#9664;</button>
+        <button class="time-flight-control" id="time-flight-pause" type="button" aria-label="Pause Time Flight">Pause</button>
+        <span class="time-flight-counter" id="time-flight-counter">1 / 1</span>
+        <button class="time-flight-control" id="time-flight-next" type="button" aria-label="Next event">&#9654;</button>
+      </div>
+    </div>
+    <div class="time-flight-briefing is-visible" id="time-flight-briefing">
+      <div class="time-flight-briefing-card">
+        <span class="time-flight-kicker">Your Lifetime In Motion</span>
+        <h2 id="time-flight-briefing-title">Ready for departure?</h2>
+        <p id="time-flight-briefing-copy">Choose a one-minute highlight reel or the complete prototype journey. The sequence includes both inspiring and difficult world events.</p>
+        <div class="time-flight-mode-grid">
+          <button class="time-flight-mode-btn" id="time-flight-quick" type="button">Quick Flight<span id="time-flight-quick-meta">Essential moments</span></button>
+          <button class="time-flight-mode-btn" id="time-flight-full" type="button">Full Flight<span id="time-flight-full-meta">Complete prototype</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="time-flight-finale" id="time-flight-finale">
+      <div class="time-flight-finale-card">
+        <span class="time-flight-kicker">Arrival &bull; Present Day</span>
+        <h2 id="time-flight-finale-title">History is still moving.</h2>
+        <p id="time-flight-finale-copy">Your lifetime has crossed these defining moments, and the next chapter is already underway.</p>
+        <div class="time-flight-mode-grid">
+          <button class="time-flight-mode-btn" id="time-flight-replay" type="button">Replay Flight<span>Return to the beginning</span></button>
+          <button class="time-flight-mode-btn" id="time-flight-finish" type="button">Return to LifePulse<span>Continue your dashboard</span></button>
+        </div>
+        <details class="time-flight-credits">
+          <summary>Image Credits &amp; Sources</summary>
+          <div id="time-flight-credits-list"></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
   <div class="portrait-lock-overlay" id="portrait-lock-overlay" aria-live="polite">
     <div class="portrait-lock-message"><span class="portrait-lock-icon" aria-hidden="true">&#128241;</span>LifePulse is designed for portrait view.<br>Rotate your device upright to continue.</div>
   </div>
@@ -4653,7 +5018,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.119.2.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.120.0.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5275,6 +5640,16 @@
     <div class="slate-card slate-card--snapshot" id="birth-snapshot-panel">
       <span class="slate-header slate-header--snapshot">Culture &amp; Technology at Your Birth</span>
 
+      <section class="time-flight-launch-card" aria-labelledby="time-flight-launch-title">
+        <div>
+          <span class="time-flight-kicker">Cinematic Lifetime Prototype</span>
+          <strong class="time-flight-launch-title" id="time-flight-launch-title">Time Flight</strong>
+          <p class="time-flight-launch-copy">Fly through defining world moments that unfolded during your lifetime, with cinematic photographs, your age at each stop, and a path that ends at today.</p>
+          <span class="time-flight-launch-meta" id="time-flight-launch-meta">20 curated moments &bull; Quick and Full flights</span>
+        </div>
+        <button class="time-flight-launch-btn" id="time-flight-launch-btn" type="button">Start Time Flight</button>
+      </section>
+
       <div class="birth-grid" id="birth-snapshot-grid">
         <div class="birth-feature">
           <div class="birth-feature-top">
@@ -5669,7 +6044,7 @@
       <div class="settings-content">
       <div class="measurement-settings" aria-labelledby="measurement-settings-title">
         <span class="measurement-settings-title" id="measurement-settings-title">Measurement Units</span>
-        <p class="measurement-settings-copy">Choose how temperatures and distances appear. U.S. standards are used by default.</p>
+        <p class="measurement-settings-copy">Choose both preferences, then apply them across the complete dashboard. U.S. standards are used by default.</p>
         <div class="measurement-setting-grid">
           <label class="measurement-setting" for="temperature-unit-select">Temperature
             <select id="temperature-unit-select">
@@ -5683,6 +6058,10 @@
               <option value="metric">Kilometers, Meters &amp; Centimeters</option>
             </select>
           </label>
+        </div>
+        <div class="measurement-apply-row">
+          <span class="measurement-active-status" id="measurement-settings-status" role="status" aria-live="polite">Active: Fahrenheit and U.S. distance units.</span>
+          <button class="pwa-action-btn secondary" id="apply-measurement-btn" type="button" disabled>APPLY &amp; SAVE</button>
         </div>
       </div>
       <div class="section-head">
@@ -5802,7 +6181,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.119.2.local';
+    const LOCAL_RELEASE_VERSION = '5.120.0.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -5871,6 +6250,7 @@
     let currentDNA            = null;
     let currentGeneration     = null;
     let birthMomentGlobal     = null;
+    window.getLifePulseBirthMoment = () => birthMomentGlobal;
     let activeTimelineFilter  = 'highlights';
     let lifeTimelineEvents    = [];
     let activeShareTemplate  = 'cosmic';
@@ -5879,6 +6259,7 @@
     let selectedShareHighlight = '';
     let currentProfile          = null;
     let measurementPreferences  = { temperature: 'fahrenheit', distance: 'us' };
+    let pendingMeasurementPreferences = { temperature: 'fahrenheit', distance: 'us' };
     let currentAstronomy        = null;
     let userGender            = 'male';
     let showingHoroscope      = false;
@@ -5978,6 +6359,8 @@
       settingsTabStatus:     document.getElementById('settings-tab-status'),
       temperatureUnitSelect: document.getElementById('temperature-unit-select'),
       distanceUnitSelect:    document.getElementById('distance-unit-select'),
+      measurementSettingsStatus: document.getElementById('measurement-settings-status'),
+      applyMeasurementBtn:   document.getElementById('apply-measurement-btn'),
       notificationOptions:   document.getElementById('notification-options'),
       enableNotificationsBtn:document.getElementById('enable-notifications-btn'),
       testNotificationBtn:   document.getElementById('test-notification-btn'),
@@ -7810,8 +8193,17 @@
     }
 
     function updateMeasurementSettingsUi() {
-      if (els.temperatureUnitSelect) els.temperatureUnitSelect.value = measurementPreferences.temperature;
-      if (els.distanceUnitSelect) els.distanceUnitSelect.value = measurementPreferences.distance;
+      if (els.temperatureUnitSelect) els.temperatureUnitSelect.value = pendingMeasurementPreferences.temperature;
+      if (els.distanceUnitSelect) els.distanceUnitSelect.value = pendingMeasurementPreferences.distance;
+      const hasPendingChanges = pendingMeasurementPreferences.temperature !== measurementPreferences.temperature
+        || pendingMeasurementPreferences.distance !== measurementPreferences.distance;
+      if (els.measurementSettingsStatus) {
+        els.measurementSettingsStatus.textContent = hasPendingChanges
+          ? `Pending: ${pendingMeasurementPreferences.temperature === 'celsius' ? 'Celsius' : 'Fahrenheit'} and ${pendingMeasurementPreferences.distance === 'metric' ? 'metric' : 'U.S.'} distance units.`
+          : `Active: ${usesCelsius() ? 'Celsius' : 'Fahrenheit'} and ${usesMetricDistance() ? 'metric' : 'U.S.'} distance units.`;
+        els.measurementSettingsStatus.classList.toggle('is-pending', hasPendingChanges);
+      }
+      if (els.applyMeasurementBtn) els.applyMeasurementBtn.disabled = !hasPendingChanges;
     }
 
     function loadMeasurementPreferences(profilePreferences = null) {
@@ -7820,6 +8212,7 @@
         try { preferences = JSON.parse(localStorage.getItem(MEASUREMENT_PREFS_KEY) || 'null'); } catch {}
       }
       measurementPreferences = normalizeMeasurementPreferences(preferences);
+      pendingMeasurementPreferences = { ...measurementPreferences };
       updateMeasurementSettingsUi();
     }
 
@@ -7834,8 +8227,16 @@
     function syncMeasurementInfoCopy() {
       const walkingInfo = document.getElementById('card-info-miles-walked');
       if (walkingInfo) walkingInfo.textContent = usesMetricDistance()
-        ? 'The estimated step total converted to kilometers using about 2,200 steps per mile. Stride length and actual daily movement vary by person.'
+        ? 'The estimated step total converted to kilometers from a 2,200-steps-per-mile baseline. Stride length and actual daily movement vary by person.'
         : 'The estimated step total converted to miles using about 2,200 steps per mile. Stride length and actual daily movement vary by person.';
+      const hairInfo = document.getElementById('card-info-hair-growth');
+      if (hairInfo) hairInfo.textContent = usesMetricDistance()
+        ? 'The distance one representative scalp hair could grow using about one centimeter per month. This is not the combined length of every hair on the body.'
+        : 'The distance one representative scalp hair could grow using about 0.39 inch per month. This is not the combined length of every hair on the body.';
+      const nailInfo = document.getElementById('card-info-nail-growth');
+      if (nailInfo) nailInfo.textContent = usesMetricDistance()
+        ? 'The combined estimated growth of ten fingernails using about 3.47 millimeters per nail each month. Toenails are not included.'
+        : 'The combined estimated growth of ten fingernails using about 0.14 inch per nail each month. Toenails are not included.';
     }
 
     function refreshMeasurementDisplays() {
@@ -7845,17 +8246,38 @@
       updateLiveStats(true);
       populateBirthSnapshotCore(birthMomentGlobal);
       if (currentProfile) populateBirthWeather(birthMomentGlobal, currentProfile).catch(() => {});
+      refreshInsightPanels();
+      updateShareCard();
+      renderDiagnostics();
       requestAnimationFrame(fitDisplayLabels);
     }
 
-    function applyMeasurementPreferenceChange() {
-      measurementPreferences = normalizeMeasurementPreferences({
-        temperature: els.temperatureUnitSelect?.value,
-        distance: els.distanceUnitSelect?.value
-      });
+    function stageMeasurementPreferenceChange(event) {
+      const nextPreferences = { ...pendingMeasurementPreferences };
+      if (event?.currentTarget === els.temperatureUnitSelect) {
+        nextPreferences.temperature = event.currentTarget.value;
+      } else if (event?.currentTarget === els.distanceUnitSelect) {
+        nextPreferences.distance = event.currentTarget.value;
+      } else {
+        nextPreferences.temperature = els.temperatureUnitSelect?.value;
+        nextPreferences.distance = els.distanceUnitSelect?.value;
+      }
+      pendingMeasurementPreferences = normalizeMeasurementPreferences(nextPreferences);
+      updateMeasurementSettingsUi();
+    }
+
+    function applyMeasurementPreferences() {
+      const normalized = normalizeMeasurementPreferences(pendingMeasurementPreferences);
+      if (normalized.temperature === measurementPreferences.temperature && normalized.distance === measurementPreferences.distance) {
+        updateMeasurementSettingsUi();
+        return;
+      }
+      measurementPreferences = normalized;
+      pendingMeasurementPreferences = { ...measurementPreferences };
       updateMeasurementSettingsUi();
       saveMeasurementPreferences();
       refreshMeasurementDisplays();
+      window.setTimeout(refreshMeasurementDisplays, 40);
     }
 
     async function applyAudioPreferences(preferences) {
@@ -9451,6 +9873,11 @@
 
     function formatPrecipFromInches(inches) {
       return usesMetricDistance() ? `${(inches * 25.4).toFixed(1)} mm` : `${inches.toFixed(2)} in`;
+    }
+
+    function formatCubicKilometersVolume(cubicKilometers, digits = 1) {
+      const value = usesMetricDistance() ? cubicKilometers : cubicKilometers * 0.239912759;
+      return `${formatNamedScale(value, digits)} ${usesMetricDistance() ? 'km\u00B3' : 'cubic mi'}`;
     }
 
     function getMoonPhaseIcon(phaseName) {
@@ -12911,10 +13338,10 @@ function countPresidentialElectionsExperienced(start, end) {
 
       const satelliteEraSeaLevelRiseMm = years * 3.8;
       if (els.seaLevelRiseValue) els.seaLevelRiseValue.textContent = formatMillimetersLength(satelliteEraSeaLevelRiseMm, 1);
-      if (els.seaLevelRiseCopy) els.seaLevelRiseCopy.textContent = `At the recent global satellite-era average of 3.8 mm/year; local coastlines can differ.`;
+      if (els.seaLevelRiseCopy) els.seaLevelRiseCopy.textContent = `At the recent global satellite-era average of ${usesMetricDistance() ? '3.8 mm/year' : '0.15 in/year'}; local coastlines can differ.`;
 
       const oceanWaterCycledKm3 = years * 425000;
-      if (els.oceanCycleValue) els.oceanCycleValue.textContent = `${formatNamedScale(oceanWaterCycledKm3, 1)} km3`;
+      if (els.oceanCycleValue) els.oceanCycleValue.textContent = formatCubicKilometersVolume(oceanWaterCycledKm3, 1);
       if (els.oceanCycleCopy) els.oceanCycleCopy.textContent = `Approx. ocean water evaporated into Earth's global water cycle during your lifetime.`;
       els.lifeDayClock.textContent = lifeCompressed.clock;
       els.lifeDayCalendar.textContent = lifeCompressed.calendar;
@@ -13008,13 +13435,15 @@ function countPresidentialElectionsExperienced(start, end) {
       const nextVisibleSky = getNextMaintainedSkyEvent(now, event => ['planetary-conjunction', 'planetary-opposition', 'planet-visibility'].includes(event.type));
       const ageDays = Math.max(0, (now - birthMomentGlobal) / 86400000);
       const walkedMiles = ageDays * 7500 / 2200;
-      const walkingMilestone = nextRoundMilestone(walkedMiles);
+      const walkedDisplayDistance = usesMetricDistance() ? walkedMiles * 1.609344 : walkedMiles;
+      const walkingPerDay = usesMetricDistance() ? (7500 / 2200) * 1.609344 : 7500 / 2200;
+      const walkingMilestone = nextRoundMilestone(walkedDisplayDistance);
       const dreamsExperienced = ageDays * 4;
       const dreamMilestone = nextRoundMilestone(dreamsExperienced);
       const highTides = ageDays * 2;
       const tideMilestone = nextRoundMilestone(highTides);
       const events = [
-        { date: dateForDailyRateMilestone(walkedMiles, walkingMilestone, 7500 / 2200, now), category: 'personal', icon: '&#128694;', title: `${walkingMilestone.toLocaleString()} Miles Walked`, detail: 'Your next est. lifetime walking milestone' },
+        { date: dateForDailyRateMilestone(walkedDisplayDistance, walkingMilestone, walkingPerDay, now), category: 'personal', icon: '&#128694;', title: `${walkingMilestone.toLocaleString()} ${usesMetricDistance() ? 'Kilometers' : 'Miles'} Walked`, detail: 'Your next est. lifetime walking milestone' },
         { date: dateForDailyRateMilestone(dreamsExperienced, dreamMilestone, 4, now), category: 'personal', icon: '&#128164;', title: `${dreamMilestone.toLocaleString()} Dreams`, detail: 'Your next est. dreams-experienced milestone' },
         { date: dateForDailyRateMilestone(highTides, tideMilestone, 2, now), category: 'world', icon: '&#127754;', title: `${tideMilestone.toLocaleString()} High Tides`, detail: 'Your next approx. semidiurnal-tide milestone' },
         { date: birthday.nextBirthday, category: 'personal', icon: '🎂', title: `Birthday #${birthday.nextAge}`, detail: 'Your next trip around the Sun' },
@@ -15459,8 +15888,11 @@ function getBirthSkySnapshot() {
       els.btnFemale.addEventListener('click', () => setGender('female'));
       els.dobMonth.addEventListener('change', populateDays);
       els.dobYear.addEventListener('change',  populateDays);
-      els.temperatureUnitSelect?.addEventListener('change', applyMeasurementPreferenceChange);
-      els.distanceUnitSelect?.addEventListener('change', applyMeasurementPreferenceChange);
+      [els.temperatureUnitSelect, els.distanceUnitSelect].filter(Boolean).forEach(select => {
+        select.addEventListener('input', stageMeasurementPreferenceChange);
+        select.addEventListener('change', stageMeasurementPreferenceChange);
+      });
+      els.applyMeasurementBtn?.addEventListener('click', applyMeasurementPreferences);
 
       els.launchBtn.addEventListener('click', async () => {
         if (els.launchBtn.disabled) return;
@@ -15696,6 +16128,7 @@ function getBirthSkySnapshot() {
 
     boot();
   </script>
+  <script src="time-flight.js"></script>
 </body>
 </html>
 
