@@ -89,11 +89,11 @@
     }
     setTimeout(() => {
       if (ui.year) ui.year.textContent = event.date.slice(0,4);
-      if (ui.category) ui.category.textContent = `${event.category}${event.sensitive ? ' • Reflective Moment' : ''}`;
+      if (ui.category) ui.category.textContent = `${event.category}${event.sensitive ? ' - Reflective Moment' : ''}`;
       if (ui.title) ui.title.textContent = event.title;
       if (ui.summary) ui.summary.textContent = event.summary;
       if (ui.age) ui.age.textContent = ageAt(event.date);
-      if (ui.source) { ui.source.href = event.source; ui.source.textContent = `${event.credit} • ${event.license}`; }
+      if (ui.source) { ui.source.href = event.source; ui.source.textContent = `${event.credit} - ${event.license}`; }
       if (ui.counter) ui.counter.textContent = `${bounded + 1} / ${state.events.length}`;
       if (ui.progress) ui.progress.style.width = `${((bounded + 1) / state.events.length) * 100}%`;
       ui.copy?.classList.remove('is-changing');
@@ -131,13 +131,13 @@
     document.body.classList.add('time-flight-open');
     if (ui.briefingTitle) ui.briefingTitle.textContent = all.length ? `Your flight begins in ${all[0].date.slice(0,4)}.` : 'Your story is ahead of this prototype.';
     if (ui.briefingCopy) ui.briefingCopy.textContent = all.length ? `Choose a highlight reel or the complete ${all.length}-moment journey. The sequence includes both inspiring and difficult world events.` : 'The first curated catalog currently covers events through 2024. Future milestones will be added as the prototype grows.';
-    if (ui.quickMeta) ui.quickMeta.textContent = `${quick.length} essential moment${quick.length === 1 ? '' : 's'} • about ${Math.max(1,Math.round(quick.length*4.7/60))} min`;
-    if (ui.fullMeta) ui.fullMeta.textContent = `${all.length} moment${all.length === 1 ? '' : 's'} • about ${Math.max(1,Math.round(all.length*5.7/60))} min`;
+    if (ui.quickMeta) ui.quickMeta.textContent = `${quick.length} essential moment${quick.length === 1 ? '' : 's'} - about ${Math.max(1,Math.round(quick.length*4.7/60))} min`;
+    if (ui.fullMeta) ui.fullMeta.textContent = `${all.length} moment${all.length === 1 ? '' : 's'} - about ${Math.max(1,Math.round(all.length*5.7/60))} min`;
     setTimeout(() => ui.quick?.focus(),50);
   }
   function close() { clearTimer(); ui.overlay?.classList.remove('is-open'); ui.overlay?.setAttribute('aria-hidden','true'); ui.image?.classList.remove('is-active'); document.body.classList.remove('time-flight-open'); ui.launch?.focus(); }
   function togglePause() { state.paused = !state.paused; if (ui.pause) ui.pause.textContent = state.paused ? 'Resume' : 'Pause'; state.paused ? clearTimer() : schedule(); }
-  function updateMeta() { const events = lifetimeEvents(); if (ui.launchMeta) ui.launchMeta.textContent = events.length ? `${events.length} lifetime moment${events.length === 1 ? '' : 's'} • Quick and Full flights` : 'Prototype catalog: 1957–2024 • More moments coming'; }
+  function updateMeta() { const events = lifetimeEvents(); if (ui.launchMeta) ui.launchMeta.textContent = events.length ? `${events.length} lifetime moment${events.length === 1 ? '' : 's'} - Quick and Full flights` : 'Prototype catalog: 1957-2024 - More moments coming'; }
 
   if (!ui.overlay || !ui.launch) return;
   ui.launch.addEventListener('click', () => { updateMeta(); open(); });
