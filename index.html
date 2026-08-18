@@ -4653,14 +4653,38 @@
     .time-flight-visual,
     .time-flight-image,
     .time-flight-vignette,
-    .time-flight-stars { position: absolute; inset: 0; }
+    .time-flight-stars,
+    .time-flight-chronostream { position: absolute; inset: 0; }
     .time-flight-visual {
       overflow: hidden;
       background:
         radial-gradient(circle at 74% 25%, rgba(80, 89, 194, 0.42), transparent 38%),
         linear-gradient(145deg, #0d1a30, #02040a 68%);
     }
+    .time-flight-visual::before {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      inset: -5%;
+      background-image: var(--time-flight-scene-image, none);
+      background-position: var(--time-flight-scene-focus, 50% 50%);
+      background-size: cover;
+      filter: blur(19px) brightness(.42) saturate(.78);
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 700ms ease;
+      pointer-events: none;
+    }
+    .time-flight-visual.preserve-scene::before {
+      opacity: .84;
+      animation: time-flight-backdrop-drift 6.4s ease-in-out both;
+    }
+    @keyframes time-flight-backdrop-drift {
+      from { transform: scale(1.08) translate3d(-.35%,0,0); }
+      to { transform: scale(1.13) translate3d(.35%,-.3%,0); }
+    }
     .time-flight-image {
+      z-index: 1;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -4670,12 +4694,36 @@
       transition: opacity 900ms ease;
       will-change: transform, opacity;
     }
-    .time-flight-image.is-active { opacity: 0.78; }
+    .time-flight-image.is-active { opacity: 0.9; }
     .time-flight-image.pan-left.is-active { animation: time-flight-pan-left 6.2s linear both; }
     .time-flight-image.pan-right.is-active { animation: time-flight-pan-right 6.2s linear both; }
-    @keyframes time-flight-pan-left { from { transform: scale(1.06) translate3d(1.2%,0,0); } to { transform: scale(1.16) translate3d(-1.2%,-0.7%,0); } }
-    @keyframes time-flight-pan-right { from { transform: scale(1.06) translate3d(-1.2%,0,0); } to { transform: scale(1.16) translate3d(1.2%,-0.7%,0); } }
+    @keyframes time-flight-pan-left { from { transform: scale(1.02) translate3d(.7%,0,0); } to { transform: scale(1.075) translate3d(-.7%,-.35%,0); } }
+    @keyframes time-flight-pan-right { from { transform: scale(1.02) translate3d(-.7%,0,0); } to { transform: scale(1.075) translate3d(.7%,-.35%,0); } }
+    .time-flight-image.fit-contain {
+      object-fit: contain;
+      padding: clamp(12px, 2.4vw, 34px);
+      filter: drop-shadow(0 18px 38px rgba(0,0,0,.48));
+    }
+    .time-flight-image.fit-contain.is-active { opacity: .96; }
+    .time-flight-image.fit-contain.pan-left.is-active,
+    .time-flight-image.fit-contain.pan-right.is-active { animation: time-flight-contain-drift 6.2s ease-in-out both; }
+    @keyframes time-flight-contain-drift { from { transform: scale(.985); } to { transform: scale(1.025); } }
+    .time-flight-image.fit-adaptive {
+      object-fit: contain;
+      padding: clamp(12px, 3.5vh, 34px) 0 clamp(132px, 22vh, 218px);
+      filter: drop-shadow(0 18px 42px rgba(0,0,0,.66));
+    }
+    .time-flight-image.fit-adaptive.is-active { opacity: .98; }
+    .time-flight-image.fit-adaptive.pan-left.is-active,
+    .time-flight-image.fit-adaptive.pan-right.is-active {
+      animation: time-flight-adaptive-drift 6.2s ease-in-out both;
+    }
+    @keyframes time-flight-adaptive-drift {
+      from { transform: scale(.992) translate3d(0,.2%,0); }
+      to { transform: scale(1.028) translate3d(0,-.2%,0); }
+    }
     .time-flight-stars {
+      z-index: 0;
       opacity: 0.35;
       background-image:
         radial-gradient(circle, #fff 0 1px, transparent 1.4px),
@@ -4686,6 +4734,27 @@
       animation: time-flight-stars-drift 16s linear infinite;
     }
     @keyframes time-flight-stars-drift { to { transform: scale(1.22); opacity: 0.18; } }
+    .time-flight-visual.has-image .time-flight-stars { opacity: .035; animation-play-state: paused; }
+    .time-flight-visual.has-image .time-flight-fallback-year,
+    .time-flight-visual.has-image .time-flight-fallback-copy { opacity: 0; }
+    .time-flight-chronostream {
+      inset: -24%;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(.72);
+      background:
+        repeating-radial-gradient(ellipse at center, transparent 0 7.8%, rgba(116,231,255,.18) 8.1% 8.35%, transparent 8.7% 14%),
+        conic-gradient(from 12deg at center, transparent 0 8%, rgba(147,119,255,.08) 10%, transparent 13% 25%, rgba(91,220,255,.07) 28%, transparent 31% 100%);
+      mix-blend-mode: screen;
+      will-change: transform, opacity;
+    }
+    .time-flight-visual.is-warping .time-flight-chronostream { animation: time-flight-chronostream 760ms cubic-bezier(.2,.72,.2,1) both; }
+    @keyframes time-flight-chronostream {
+      0% { opacity: 0; transform: scale(.72); }
+      38% { opacity: .14; }
+      100% { opacity: 0; transform: scale(1.2); }
+    }
     .time-flight-vignette {
       background:
         linear-gradient(90deg, rgba(2,4,10,.82), transparent 38%, rgba(2,4,10,.16)),
@@ -4731,18 +4800,30 @@
     }
     .time-flight-progress { width: 0; height: 100%; background: linear-gradient(90deg, #73f0ff, #b89aff); box-shadow: 0 0 14px #62eaff; transition: width 500ms ease; }
     .time-flight-scene-copy {
+      position: relative;
+      isolation: isolate;
       width: min(720px, 88vw);
       margin-top: auto;
-      margin-bottom: clamp(72px, 11vh, 108px);
-      text-shadow: 0 3px 24px rgba(0,0,0,.85);
+      margin-bottom: clamp(58px, 8vh, 82px);
+      padding: 8px 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,.98), 0 4px 18px rgba(0,0,0,.88), 0 0 2px #000;
+    }
+    .time-flight-scene-copy::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -22px -74px -20px -42px;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 27% 62%, rgba(2,6,15,.84) 0%, rgba(2,6,15,.64) 43%, rgba(2,6,15,.25) 66%, transparent 82%);
+      filter: blur(5px);
     }
     .time-flight-scene-copy.is-changing { opacity: 0; transform: translateY(12px); }
     .time-flight-scene-copy { opacity: 1; transform: translateY(0); transition: opacity 480ms ease, transform 480ms ease; }
     .time-flight-year { display: block; margin-bottom: 9px; color: #76efff; font-size: clamp(2.8rem, 12vw, 7.4rem); font-weight: 950; line-height: .82; letter-spacing: -.055em; }
     .time-flight-category { display: inline-flex; margin-bottom: 12px; padding: 5px 9px; border: 1px solid rgba(125,232,255,.34); border-radius: 999px; background: rgba(5,16,31,.54); color: #a5efff; font-size: .64rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; backdrop-filter: blur(10px); }
-    .time-flight-title { margin: 0 0 10px; font-size: clamp(1.55rem, 4.8vw, 3.35rem); line-height: 1.02; }
-    .time-flight-summary { max-width: 650px; margin: 0; color: rgba(246,249,255,.86); font-size: clamp(.9rem, 2vw, 1.08rem); line-height: 1.5; }
-    .time-flight-age { display: block; margin-top: 11px; color: rgba(183,214,255,.78); font-size: .76rem; font-weight: 800; letter-spacing: .04em; }
+    .time-flight-title { margin: 0 0 10px; color: #fff; font-size: clamp(1.55rem, 4.8vw, 3.35rem); line-height: 1.02; }
+    .time-flight-summary { max-width: 650px; margin: 0; color: rgba(249,251,255,.96); font-size: clamp(.9rem, 2vw, 1.08rem); line-height: 1.5; }
+    .time-flight-age { display: block; margin-top: 11px; color: rgba(198,226,255,.9); font-size: .76rem; font-weight: 800; letter-spacing: .04em; }
     .time-flight-controls {
       position: absolute;
       z-index: 5;
@@ -4811,28 +4892,81 @@
     .time-flight-finale-card h2 { margin: 8px 0 10px; font-size: clamp(1.8rem, 7vw, 3.15rem); line-height: 1; }
     .time-flight-briefing-card p,
     .time-flight-finale-card p { margin: 0 auto; max-width: 520px; color: rgba(234,242,255,.75); line-height: 1.55; }
-    .time-flight-mode-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin-top: 26px; }
+    .time-flight-mode-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(155px,1fr)); gap: 12px; margin-top: 26px; }
     .time-flight-mode-btn { padding: 16px 12px; }
     .time-flight-mode-btn span { display: block; margin-top: 4px; font-size: .62rem; font-weight: 800; letter-spacing: .03em; text-transform: none; opacity: .68; }
     .time-flight-credits { max-height: 180px; margin: 18px 0 0; overflow: auto; color: rgba(220,233,255,.66); font-size: .67rem; line-height: 1.5; text-align: left; }
     .time-flight-credits a { color: #82eaff; }
     .time-flight-fallback-year { position: absolute; inset: 0; display: grid; place-items: center; color: rgba(118,229,255,.09); font-size: min(38vw, 32rem); font-weight: 950; letter-spacing: -.08em; }
+    .time-flight-fallback-copy {
+      position: absolute;
+      top: 58%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      color: rgba(185,235,255,.34);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .time-flight-loader {
+      position: absolute;
+      z-index: 3;
+      top: 50%;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 80vw;
+      padding: 9px 13px;
+      border: 1px solid rgba(126,230,255,.2);
+      border-radius: 999px;
+      color: rgba(227,246,255,.78);
+      background: rgba(3,10,22,.66);
+      font-size: .64rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translate(-50%,-50%);
+      transition: opacity 180ms ease;
+      pointer-events: none;
+    }
+    .time-flight-loader::before { content:''; width:12px; height:12px; border:2px solid rgba(124,232,255,.25); border-top-color:#7ceaff; border-radius:50%; animation:time-flight-loader-spin .8s linear infinite; }
+    .time-flight-visual.is-loading .time-flight-loader,
+    .time-flight-visual.image-unavailable .time-flight-loader { opacity: 1; }
+    .time-flight-visual.image-unavailable .time-flight-loader::before { content:'!'; display:grid; place-items:center; border:0; color:#91eaff; animation:none; }
+    @keyframes time-flight-loader-spin { to { transform:rotate(360deg); } }
+    .time-flight-mode-btn.hidden { display:none; }
+    .time-flight-control:disabled { opacity:.52; cursor:default; }
 
     @media (max-width: 680px) {
       .time-flight-launch-card { grid-template-columns: 1fr; min-height: 0; }
       .time-flight-launch-btn { justify-self: start; }
       .time-flight-hud { padding-left: 18px; padding-right: 18px; }
-      .time-flight-scene-copy { width: calc(100vw - 36px); margin-bottom: 112px; }
+      .time-flight-scene-copy { width: calc(100vw - 36px); margin-bottom: 94px; padding: 6px 7px; }
+      .time-flight-scene-copy::before { inset: -18px -30px -17px -24px; background: radial-gradient(ellipse at 30% 62%, rgba(2,6,15,.88) 0%, rgba(2,6,15,.67) 46%, rgba(2,6,15,.26) 70%, transparent 88%); }
       .time-flight-year { font-size: clamp(3rem, 20vw, 5.5rem); }
       .time-flight-controls { right: 50%; transform: translateX(50%); bottom: max(18px, env(safe-area-inset-bottom)); }
       .time-flight-source { bottom: 74px; max-width: calc(100vw - 36px); }
       .time-flight-mode-grid { grid-template-columns: 1fr; }
+      .time-flight-image.fit-adaptive {
+        padding-top: max(12px, env(safe-area-inset-top));
+        padding-bottom: clamp(150px, 24vh, 224px);
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       .time-flight-image.pan-left.is-active,
       .time-flight-image.pan-right.is-active,
+      .time-flight-visual.preserve-scene::before,
       .time-flight-stars { animation: none; }
       .time-flight-image { transform: scale(1.02); }
+      .time-flight-loader::before { animation: none; }
+      .time-flight-scene-copy,
+      .time-flight-image,
+      .time-flight-progress { transition-duration: 1ms; }
     }
 
   </style>
@@ -4953,11 +5087,14 @@
     </div>
   </div>
 
-  <section class="time-flight-overlay" id="time-flight-overlay" aria-hidden="true" aria-label="Time Flight cinematic timeline">
+  <section class="time-flight-overlay" id="time-flight-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Time Flight cinematic timeline">
     <div class="time-flight-visual" id="time-flight-visual">
       <div class="time-flight-fallback-year" id="time-flight-fallback-year" aria-hidden="true">2026</div>
+      <div class="time-flight-fallback-copy" id="time-flight-fallback-copy" aria-hidden="true">World History</div>
       <img class="time-flight-image" id="time-flight-image" alt="" decoding="async" />
+      <div class="time-flight-loader" id="time-flight-loader" role="status" aria-live="polite">Loading archival image</div>
       <div class="time-flight-stars" aria-hidden="true"></div>
+      <div class="time-flight-chronostream" aria-hidden="true"></div>
       <div class="time-flight-vignette" aria-hidden="true"></div>
     </div>
     <div class="time-flight-hud">
@@ -4989,6 +5126,7 @@
         <div class="time-flight-mode-grid">
           <button class="time-flight-mode-btn" id="time-flight-quick" type="button">Quick Flight<span id="time-flight-quick-meta">Essential moments</span></button>
           <button class="time-flight-mode-btn" id="time-flight-full" type="button">Full Flight<span id="time-flight-full-meta">Complete prototype</span></button>
+          <button class="time-flight-mode-btn hidden" id="time-flight-resume" type="button">Resume Flight<span id="time-flight-resume-meta">Continue where you stopped</span></button>
         </div>
       </div>
     </div>
@@ -4999,6 +5137,7 @@
         <p id="time-flight-finale-copy">Your lifetime has crossed these defining moments, and the next chapter is already underway.</p>
         <div class="time-flight-mode-grid">
           <button class="time-flight-mode-btn" id="time-flight-replay" type="button">Replay Flight<span>Return to the beginning</span></button>
+          <button class="time-flight-mode-btn" id="time-flight-on-this-date" type="button">On This Date<span>Visit nearby anniversaries</span></button>
           <button class="time-flight-mode-btn" id="time-flight-finish" type="button">Return to LifePulse<span>Continue your dashboard</span></button>
         </div>
         <details class="time-flight-credits">
@@ -5018,7 +5157,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-        <span class="version-chip" id="version-chip" aria-label="App version">v5.120.0.local</span>
+        <span class="version-chip" id="version-chip" aria-label="App version">v5.128.0.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -6181,7 +6320,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.120.0.local';
+const LOCAL_RELEASE_VERSION = '5.128.0.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -6319,6 +6458,7 @@
       cosmicEstimates: { state: 'static', label: 'Cosmic + Earth estimates', detail: 'Galactic progress uses a 230-million-year solar orbit and NASA\'s approximately 26,000-light-year galactic-center distance. Sunspot cycles use an 11-year average, so their timing is illustrative rather than an official cycle boundary. Halley orbit progress uses 75.32 years. Solar fusion uses 600 million metric tons of hydrogen/second. Voyager 1 overlap uses 10.563 miles/second after 09/05/1977. Continental drift uses a relatable 1.5 inches/year; actual plate speeds vary. Lunar recession uses 3.8 cm/year. Solar orbit expansion uses NASA\'s modeled 1.5 cm/year per AU. Global sea level uses NOAA\'s satellite-era average rate of 3.8 mm/year; it is a global comparison, not a local-coast forecast. Ocean water cycled uses NOAA\'s global ocean evaporation flux of 425,000 km³/year. Cosmic expansion shows the added separation of two unbound points one megaparsec apart using a 70 km/s/Mpc reference; it is not a change in the universe\'s total volume.', source: 'NASA + NOAA + Hubble-law and lunar laser-ranging references + LifePulse stated assumptions' },
       earthEvents: { state: 'static', label: 'Global Earth events', detail: 'Lightning uses NASA\'s rounded global rate of 50 flashes/second. Major earthquakes use the USGS long-term expectation of about 16 magnitude-7-or-greater events/year. Both are lifetime-scale estimates, not personal exposure counts.', source: 'NASA lightning climatology + USGS Earthquake Hazards Program' }
       ,pwa: { state: 'idle', label: 'Installed app', detail: 'Checking service worker, installation, and notification support.', source: 'Browser PWA APIs' }
+      ,timeFlight: { state: 'idle', label: 'Time Flight', detail: 'Waiting for the cinematic timeline controller and local media check.', source: 'Local curated timeline package' }
     };
 
 
@@ -7733,6 +7873,10 @@
       const astronomyReady = !!window.Astronomy
         && typeof window.Astronomy.SearchGlobalSolarEclipse === 'function'
         && typeof window.Astronomy.SearchLocalSolarEclipse === 'function';
+      const timeFlightHealth = window.LifePulseTimeFlight?.getHealthSnapshot?.() || {
+        state: 'error',
+        detail: 'The Time Flight controller did not initialize.'
+      };
 
       return [
         { label: 'Launch state', state: launchReady ? 'live' : 'fallback', detail: launchReady ? 'Profile is hydrated and the dashboard is active.' : 'Launch a profile to verify personalized runtime behavior.' },
@@ -7745,6 +7889,7 @@
         { label: 'Published daily feed', state: selfCheckFeedResult.state, detail: selfCheckFeedResult.detail },
         { label: 'Official local data', state: liveDiagnostics.placeEconomy?.state || 'fallback', detail: liveDiagnostics.placeEconomy?.detail || 'Census and BEA dataset has not initialized.' },
         { label: 'Astronomy calculator', state: astronomyReady ? 'live' : 'error', detail: astronomyReady ? 'Moon, eclipse, and local-visibility calculations are available.' : 'The astronomy library did not load.' },
+        { label: 'Time Flight', state: timeFlightHealth.state, detail: timeFlightHealth.detail },
         { label: 'Layout anchors', state: layoutOkay ? 'live' : 'error', detail: layoutOkay ? 'Primary dashboard and Current Sky elements are present.' : 'A required interface element is missing.' },
         { label: 'Origin mode', state: env.isLocal ? 'local' : 'live', detail: env.isLocal ? 'Local-file mode is active; hosted HTTPS is more reliable for web feeds.' : 'Hosted HTTPS mode is active.' }
       ];
@@ -7820,6 +7965,18 @@
       renderDiagnostics();
 
       try {
+        if (window.LifePulseTimeFlight?.runDiagnostics) {
+          const timeFlightResult = await window.LifePulseTimeFlight.runDiagnostics();
+          liveDiagnostics.timeFlight = {
+            state: timeFlightResult.state,
+            label: 'Time Flight',
+            detail: timeFlightResult.detail,
+            source: 'Local curated timeline package',
+            updatedAt: timeFlightResult.checkedAt
+          };
+        } else {
+          liveDiagnostics.timeFlight = { state:'error', label:'Time Flight', detail:'The controller script is unavailable.', source:'Local curated timeline package', updatedAt:new Date().toISOString() };
+        }
         const payload = await loadScheduledLiveData(true);
         const signCount = payload?.horoscope?.signs ? Object.keys(payload.horoscope.signs).length : 0;
         const updatedMs = Date.parse(payload?.updatedAt || '');
@@ -14570,6 +14727,24 @@ function getBirthSkySnapshot() {
       navigator.serviceWorker?.addEventListener('controllerchange', renderPwaControls);
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) renderPwaControls();
+      });
+
+      document.addEventListener('lifepulse:timeflight-open', () => {
+        if (musicEnabled) stopSoundtrack();
+      });
+      document.addEventListener('lifepulse:timeflight-close', () => {
+        if (!isMuted && musicEnabled && !birthdayIntroPending) startSoundtrack();
+      });
+      document.addEventListener('lifepulse:timeflight-ready', event => {
+        const count = Number(event.detail?.eventCount || 0);
+        liveDiagnostics.timeFlight = {
+          state: count >= 20 ? 'local' : 'fallback',
+          label: 'Time Flight',
+          detail: `${count} curated events registered; run Self-Check to verify every local image and timeline interval.`,
+          source: 'Local curated timeline package',
+          updatedAt: new Date().toISOString()
+        };
+        if (diagnosticsOpen) renderDiagnostics();
       });
       [els.installAppBtn, els.dashboardInstallAppBtn].forEach(button => button?.addEventListener('click', installLifePulseApp));
       els.enableNotificationsBtn?.addEventListener('click', enableLifePulseNotifications);
