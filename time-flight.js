@@ -1,11 +1,27 @@
 (() => {
   'use strict';
 
-  const VERSION = '5.128.0';
+const VERSION = '5.135.0';
   const STORAGE_KEY = 'lifePulseTimeFlightProgress';
   const AUDIO_PREFS_KEY = 'lifePulseAudioPreferences';
   const ASSET_ROOT = 'assets/time-flight/';
   const EVENTS = [
+    { date:'1900-04-14', title:'A New Century Opens in Paris', category:'World & Culture', importance:8, quick:false, summary:'The Paris Exposition opened a vast showcase of electricity, moving pictures, engineering, art, and ideas that helped define the emerging modern age.', image:'1900-paris-exposition.jpg', focal:'50% 48%', alt:'The grounds of the 1900 Paris Exposition crowded with visitors.', credit:'Archival photograph / Wikimedia Commons', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Paris_-_exposition_universelle_1900.jpg' },
+    { date:'1903-12-17', title:'Powered Flight Takes Off', category:'Technology', importance:10, quick:true, summary:'The Wright brothers achieved the first controlled, sustained flight of a powered, heavier-than-air aircraft near Kitty Hawk, North Carolina.', image:'1903-first-flight.jpg', focal:'50% 48%', alt:'The Wright Flyer lifting off at Kitty Hawk during the first powered flight.', credit:'John T. Daniels / Library of Congress', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Wright_First_Flight_1903Dec17_(full_restore_115).jpg' },
+    { date:'1905-06-30', title:'Einstein Reframes Space and Time', category:'Science', importance:10, quick:true, fit:'contain', summary:'Albert Einstein submitted his special-relativity paper, changing humanity\'s understanding of space, time, motion, and energy.', image:'1905-einstein.jpg', focal:'50% 42%', alt:'Portrait of Albert Einstein in 1905.', credit:'Lucien Chavan / Bern Historical Museum', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Albert_Einstein_in_1905_(cropped).jpg' },
+    { date:'1908-10-01', title:'The Model T Puts America on Wheels', category:'Technology', importance:9, quick:false, summary:'Ford introduced the Model T, helping make automobile ownership practical for millions and reshaping cities, work, and travel.', image:'1908-model-t.jpg', focal:'50% 50%', alt:'A 1908 Ford Model T automobile.', credit:'Wikimedia Commons contributor', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:1908_Ford_Model_T.jpg' },
+    { date:'1912-04-15', title:'Titanic Sinks in the North Atlantic', category:'Remembrance', importance:9, quick:false, sensitive:true, summary:'RMS Titanic sank after striking an iceberg on its maiden voyage, killing more than 1,500 people and transforming maritime-safety rules.', image:'1912-titanic.jpg', focal:'50% 48%', alt:'RMS Titanic at sea during trials in April 1912.', credit:'Archival photograph via RMS Titanic history archive', license:'Rights status not independently verified', source:'https://rms-titanic.fr/otb/essais/_t_essais.html' },
+    { date:'1914-07-28', title:'World War I Begins', category:'World History', importance:10, quick:true, sensitive:true, summary:'Austria-Hungary declared war on Serbia, activating alliances that drew much of the world into a devastating four-year conflict.', image:'1914-world-war-i.jpg', focal:'50% 48%', alt:'Soldiers in a trench during World War I.', credit:'Imperial War Museum / Gyldendal via Lex', license:'Rights status not independently verified', source:'https://lex.dk/skyttegrav' },
+    { date:'1918-03-11', title:'The 1918 Influenza Pandemic Spreads', category:'Global Health', importance:10, quick:true, sensitive:true, summary:'An influenza pandemic swept the globe in successive waves, killing tens of millions and revealing how closely connected public health had become.', image:'1918-influenza.jpg', focal:'50% 48%', alt:'Medical staff caring for patients in a 1918 influenza ward.', credit:'Rochester General Hospital archival photograph', license:'Rights status not independently verified', source:'https://www.historyassociates.com/looking-back-at-1918-the-human-experience-of-a-pandemic/' },
+    { date:'1920-08-18', title:'Women Win the Constitutional Right to Vote', category:'Civil Rights', importance:10, quick:true, summary:'Ratification of the 19th Amendment prohibited denying U.S. citizens the vote on the basis of sex, after generations of organizing.', image:'1920-womens-suffrage.jpg', focal:'50% 44%', alt:'Women suffragists marching down Fifth Avenue in New York City.', credit:'New York Times Photo Archive / Library of Congress', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Suffragists_Parade_Down_Fifth_Avenue,_1917.JPG' },
+    { date:'1922-11-04', title:'Tutankhamun\'s Tomb Is Discovered', category:'Discovery', importance:8, quick:false, summary:'Howard Carter\'s team found the entrance to Tutankhamun\'s tomb, opening one of archaeology\'s most famous discoveries.', image:'1922-tutankhamun.jpg', focal:'50% 46%', alt:'Howard Carter and Lord Carnarvon at the entrance to Tutankhamun\'s tomb in Egypt.', credit:'Archival photograph via El Cultural', license:'Rights status not independently verified', source:'https://www.elespanol.com/el-cultural/historia/arqueologia/20221103/howard-carter-hallo-tutankamon-expulsado-revoluciono-arqueologia/713928906_0.html' },
+    { date:'1925-07-10', title:'The Scopes Trial Debates Science and Faith', category:'U.S. History', importance:7, quick:false, summary:'A Tennessee courtroom became a national stage for arguments over evolution, education, religion, and modernity.', image:'1925-scopes-trial.jpg', focal:'50% 45%', alt:'Teacher John Scopes standing in the crowded courtroom during the 1925 Scopes Trial.', credit:'Famous Trials archival collection', license:'Rights status not independently verified', source:'https://famous-trials.com/scopesmonkey/2133-biographies' },
+    { date:'1927-05-21', title:'Lindbergh Crosses the Atlantic Alone', category:'Aviation', importance:8, quick:false, summary:'Charles Lindbergh landed in Paris after the first solo nonstop flight across the Atlantic, demonstrating aviation\'s rapidly expanding reach.', image:'1927-lindbergh.jpg', focal:'50% 48%', alt:'Charles Lindbergh with the Spirit of St. Louis aircraft.', credit:'National Photo Company / Library of Congress', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Lindbergh_Spirit_of_St.Louis,_6-12-27_LCCN2016843107.jpg' },
+    { date:'1929-10-29', title:'Wall Street Crashes', category:'Economy', importance:10, quick:true, sensitive:true, summary:'A historic stock-market collapse deepened a worldwide economic crisis that became the Great Depression.', image:'1929-wall-street-crash.jpg', focal:'50% 48%', alt:'Crowds gathered outside the New York Stock Exchange during the 1929 crash.', credit:'Archival photograph via CNBC', license:'Rights status not independently verified', source:'https://www.cnbc.com/2021/01/27/roaring-20s-after-the-pandemic-big-banks-warn-be-careful-what-you-wish-for.html' },
+    { date:'1933-03-04', title:'The New Deal Era Begins', category:'U.S. History', importance:9, quick:false, summary:'Franklin D. Roosevelt took office amid the Great Depression and launched an unprecedented program of relief, recovery, and reform.', image:'1933-fdr-inauguration.jpg', focal:'50% 46%', alt:'Franklin D. Roosevelt taking the presidential oath of office in 1933.', credit:'Architect of the Capitol archival photograph', license:'Public domain', source:'https://constitutingamerica.org/march-4-1933-president-franklin-d-roosevelt-is-inaugurated-begins-his-hundred-days-of-government-expansion-guest-essayist-andrew-langer/' },
+     { date:'1936-08-09', title:'Jesse Owens Wins Four Olympic Golds', category:'Sports & Society', importance:9, quick:true, fit:'contain', summary:'Jesse Owens completed a four-gold performance at the Berlin Olympics, delivering an enduring rebuke to Nazi racial ideology.', image:'1936-jesse-owens.jpg', focal:'50% 42%', mobileFocal:'50% 42%', alt:'Jesse Owens competing at the 1936 Olympic Games in Berlin.', credit:'Unknown archival photographer via MeisterDrucke', license:'Rights status not independently verified', source:'https://www.meisterdrucke.com/kunstdrucke/Unbekannt/712756/Jesse-Owens-am-Ende-des-100m-Laufs-bei-den-Olympischen-Spielen-in-Berlin%2C-1936.html' },
+    { date:'1937-05-06', title:'The Hindenburg Disaster Ends an Era', category:'Remembrance', importance:8, quick:false, sensitive:true, summary:'The airship Hindenburg caught fire while landing in New Jersey, killing 36 people and bringing the passenger-zeppelin era to a sudden end.', image:'1937-hindenburg.jpg', focal:'50% 48%', alt:'The Hindenburg airship burning while landing at Lakehurst, New Jersey.', credit:'Zeppelin Museum Friedrichshafen archive', license:'Rights status not independently verified', source:'https://www.zeppelin-museum.de/en/digital-offers/legends-myths-speculations' },
+    { date:'1939-09-01', title:'World War II Begins in Europe', category:'World History', importance:10, quick:true, sensitive:true, summary:'Germany invaded Poland, beginning a global war that would transform borders, technology, government, and human life.', image:'1939-world-war-ii.jpg', focal:'50% 44%', alt:'German military forces advancing in Poland in 1939.', credit:'Deseret News archival photograph', license:'Rights status not independently verified', source:'https://www.deseret.com/utah/2024/09/01/deseret-news-archives-germany-invades-poland-then-destroyed-the-nation/' },
     { date:'1940-07-10', title:'The Battle of Britain Begins', category:'World History', importance:10, quick:true, sensitive:true, summary:'Britain and its allies fought a decisive air campaign against Nazi Germany, preventing an invasion and changing the course of World War II.', image:'1940-battle-of-britain.jpg', focal:'50% 50%', alt:'A formation of Royal Air Force fighter aircraft flying during World War II.', credit:'User-provided archival image', license:'Rights status not independently verified', source:'https://www.iwm.org.uk/history/8-things-you-need-to-know-about-the-battle-of-britain' },
     { date:'1941-12-07', title:'Pearl Harbor Brings America Into the War', category:'World History', importance:10, quick:true, sensitive:true, summary:'Japan attacked Pearl Harbor in Hawaii, leading the United States to enter World War II the following day.', image:'1941-pearl-harbor.jpg', focal:'50% 58%', alt:'The USS Shaw exploding during the Japanese attack on Pearl Harbor.', credit:'U.S. Navy / National Archives', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:USS_SHAW_exploding_Pearl_Harbor_Nara_80-G-16871_2.jpg' },
     { date:'1944-06-06', title:'Allied Forces Land in Normandy', category:'World History', importance:10, quick:true, sensitive:true, fit:'contain', summary:'More than 150,000 Allied troops crossed into Normandy on D-Day, opening the western campaign to liberate Europe from Nazi occupation.', image:'1944-d-day.jpg', focal:'50% 50%', alt:'Allied troops leaving a landing craft and moving through the surf during the Normandy landings.', credit:'Robert F. Sargent / U.S. Coast Guard / National Archives', license:'Public domain', source:'https://www.loc.gov/item/2021669739/' },
@@ -39,7 +55,8 @@
     { date:'1981-04-12', title:'The Space Shuttle Era Begins', category:'Space & Technology', importance:8, fit:'contain', summary:'Columbia launched on STS-1, introducing the first reusable orbital spacecraft system.', image:'1981-shuttle.jpg', focal:'50% 58%', alt:'Space Shuttle Columbia lifting off at the start of STS-1.', credit:'NASA', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Sts1-liftoff-columbia.triddle.jpg' },
     { date:'1984-01-24', title:'Personal Computing Finds a New Face', category:'Technology', importance:8, summary:'The Macintosh brought a graphical interface and mouse-driven computing to a much wider public.', image:'1984-macintosh.jpg', focal:'50% 48%', alt:'An original Macintosh 128K computer photographed in 1984.', credit:'Bernard Gotfryd / Library of Congress', license:'No known copyright restrictions', source:'https://commons.wikimedia.org/wiki/File:Macintosh_128k_computer,_January_1984,_by_Bernard_Gotfryd_-_(cropped_to_remove_individual).jpg' },
     { date:'1986-01-28', title:'The Challenger Disaster', category:'Remembrance', importance:9, sensitive:true, summary:'Space Shuttle Challenger and its seven crew members were lost shortly after launch, reshaping the U.S. space program.', image:'1986-challenger.jpg', focal:'50% 42%', alt:'Vapor trails following the Space Shuttle Challenger disaster.', credit:'NASA', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Challenger_explosion.jpg' },
-    { date:'1986-04-26', title:'The Chernobyl Nuclear Disaster', category:'Global Disaster', importance:10, quick:false, sensitive:true, fit:'contain', summary:'A reactor exploded at the Chernobyl nuclear power plant, spreading radioactive contamination and permanently changing nuclear-safety policy.', image:'1986-chernobyl.jpg', focal:'50% 45%', alt:'The destroyed reactor at the Chernobyl nuclear power plant photographed in 1986.', credit:'IAEA Imagebank / USFCRFC', license:'CC BY-SA 2.0', source:'https://commons.wikimedia.org/wiki/File:IAEA_02790015_(5613115146)_(cropped).jpg' },
+     { date:'1986-04-26', title:'The Chernobyl Nuclear Disaster', category:'Global Disaster', importance:10, quick:false, sensitive:true, fit:'contain', summary:'A reactor exploded at the Chernobyl nuclear power plant, spreading radioactive contamination and permanently changing nuclear-safety policy.', image:'1986-chernobyl.jpg', focal:'50% 45%', alt:'The destroyed reactor at the Chernobyl nuclear power plant photographed in 1986.', credit:'IAEA Imagebank / USFCRFC', license:'CC BY-SA 2.0', source:'https://commons.wikimedia.org/wiki/File:IAEA_02790015_(5613115146)_(cropped).jpg' },
+     { date:'1988-12-21', title:'Pan Am Flight 103 Is Bombed Over Lockerbie', category:'Remembrance', importance:10, quick:true, sensitive:true, fit:'contain', summary:'A bomb destroyed Pan Am Flight 103 over Lockerbie, Scotland, killing all 259 people aboard and 11 people on the ground. The memorial image honors the 270 lives lost.', image:'1988-pan-am-103.jpg', focal:'50% 50%', mobileFocal:'50% 50%', alt:'Pan Am Flight 103 Memorial at Arlington National Cemetery.', credit:'Rachel Larue / Arlington National Cemetery via Wikimedia Commons', license:'U.S. Army public domain', source:'https://commons.wikimedia.org/wiki/File:Pan_Am_Flight_103_Memorial_(18840431195).jpg' },
     { date:'1989-11-09', title:'The Berlin Wall Opens', category:'World History', importance:10, summary:'Crowds crossed a border that had divided Berlin for decades, accelerating the end of the Cold War in Europe.', image:'1989-berlin-wall.jpg', focal:'50% 42%', alt:'People standing atop the Berlin Wall near the Brandenburg Gate.', credit:'Sue Ream', license:'CC BY 3.0', source:'https://commons.wikimedia.org/wiki/File:BerlinWall-BrandenburgGate.jpg' },
     { date:'1991-08-06', title:'The World Wide Web Goes Public', category:'Technology', importance:10, summary:'The first public website introduced a system that would eventually connect information and billions of people.', image:'1991-web.jpg', focal:'50% 52%', alt:'The NeXT computer used by Tim Berners-Lee as the first web server at CERN.', credit:'Coolcaesar', license:'CC BY-SA 3.0', source:'https://commons.wikimedia.org/wiki/File:First_Web_Server.jpg' },
     { date:'1991-12-26', title:'The Soviet Union Dissolves', category:'World History', importance:10, quick:false, summary:'The Soviet Union formally ceased to exist, ending a superpower rivalry that had shaped global politics for nearly half a century.', image:'1991-soviet-flag.jpg', focal:'50% 46%', alt:'A Soviet flag photographed in 1991, the final year of the Soviet Union.', credit:'fdecomite', license:'CC BY 2.0', source:'https://commons.wikimedia.org/wiki/File:Soviet_flag_(4388335024).jpg' },
@@ -49,6 +66,7 @@
     { date:'1997-02-22', title:'Dolly Introduces the Cloning Era', category:'Science', importance:9, quick:false, fit:'contain', summary:'Scientists announced Dolly, the first mammal cloned from an adult cell, opening new possibilities and ethical debates in biology.', image:'1997-dolly.jpg', focal:'50% 46%', alt:'Dolly the sheep preserved at the National Museum of Scotland.', credit:'Sgerbic', license:'CC BY-SA 4.0', source:'https://commons.wikimedia.org/wiki/File:Dolly_the_Sheep_National_Museum_of_Scotland.jpg' },
     { date:'1998-12-06', title:'The International Space Station Takes Shape', category:'Space & Cooperation', importance:8, summary:'The first two station modules were joined in orbit, beginning construction of a permanent international laboratory in space.', image:'1998-iss.jpg', focal:'50% 48%', alt:'The Zarya module during the first International Space Station assembly mission.', credit:'NASA on The Commons', license:'No known copyright restrictions', source:'https://commons.wikimedia.org/wiki/File:Zarya_Module_-_International_Space_Station.jpg' },
     { date:'2001-09-11', title:'September 11, 2001', category:'Remembrance', importance:10, sensitive:true, summary:'Coordinated terrorist attacks killed nearly 3,000 people and changed security, foreign policy, and daily life around the world.', image:'2001-september11.jpg', focal:'67% 47%', mobileFocal:'66% 45%', alt:'United Airlines Flight 175 approaching the World Trade Center as smoke pours from the North Tower on September 11, 2001.', credit:'Robert Clark / INSTITUTE', license:'Copyright Robert Clark - limited private review', source:'https://time.com/3449480/911-the-photographs-that-moved-them-most/' },
+    { date:'2003-02-01', title:'Space Shuttle Columbia Is Lost', category:'Remembrance', importance:10, sensitive:true, summary:'Space Shuttle Columbia broke apart during re-entry at the end of mission STS-107, killing all seven crew members and reshaping NASA\'s approach to shuttle safety.', image:'2003-columbia.jpg', focal:'50% 52%', mobileFocal:'50% 48%', alt:'Bright trails and fragments from Space Shuttle Columbia during its final re-entry on February 1, 2003.', credit:'User-provided image', license:'Rights status not independently verified - limited private review', source:'https://www.nasa.gov/mission/sts-107/' },
     { date:'2003-04-14', title:'The Human Genome Project Is Completed', category:'Science & Health', importance:10, quick:true, fit:'contain', summary:'An international research effort completed an essentially comprehensive sequence of the human genome, transforming medicine and biological research.', image:'2003-human-genome.jpg', focal:'50% 50%', alt:'The Human Genome Project logo representing the international mapping effort.', credit:'U.S. Department of Energy Human Genome Program', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Logo_HGP.jpg' },
     { date:'2004-12-26', title:'The Indian Ocean Tsunami', category:'Global Disaster', importance:9, sensitive:true, summary:'A powerful undersea earthquake generated a tsunami across the Indian Ocean, prompting an unprecedented global relief effort.', image:'2004-tsunami.jpg', focal:'50% 54%', alt:'A mosque standing amid tsunami damage in Banda Aceh.', credit:'U.S. Geological Survey', license:'Public domain', source:'https://commons.wikimedia.org/wiki/File:Aceh_2004_tsunami_standing_mosque_USGS_(cropped).jpg' },
     { date:'2007-06-29', title:'The Smartphone Era Arrives', category:'Technology', importance:9, quick:false, summary:'The first iPhone went on sale, helping turn the mobile phone into a pocket computer, camera, navigator, and gateway to the internet.', image:'2007-iphone.jpg', focal:'50% 48%', alt:'A first-generation iPhone.', credit:'Carl Berkeley', license:'CC BY-SA 2.0', source:'https://commons.wikimedia.org/wiki/File:IPhone_First_Generation.jpg' },
@@ -65,16 +83,16 @@
     { date:'2024-07-13', title:'Donald Trump Survives an Assassination Attempt', category:'U.S. History', importance:8, sensitive:true, summary:'A gunman opened fire during a campaign rally in Butler, Pennsylvania. Donald Trump was wounded, one attendee was killed, and two other spectators were seriously wounded.', image:'2024-trump-attempt.jpg', focal:'52% 42%', mobileFocal:'51% 39%', alt:'Donald Trump raising his fist while surrounded by Secret Service agents after the assassination attempt, with an American flag behind him.', credit:'Evan Vucci / Associated Press', license:'Copyright AP - limited private review', source:'https://www.ap.org/news-highlights/spotlights/2024/in-a-world-of-moving-pictures-photographs-capture-indelible-moments-in-trump-assassination-attempt/' }
   ];
 
-  const state = { events:[], mode:'quick', index:0, timer:null, warpTimer:null, paused:false, duration:4700, touchX:null, lastFocus:null, imageFailures:new Set(), health:{state:'fallback', detail:'Time Flight has not been checked yet.', checkedAt:null}, nearbyMode:false };
+  const state = { events:[], mode:'quick', index:0, timer:null, warpTimer:null, paused:false, duration:4700, gesture:null, scrubbing:false, lastFocus:null, imageFailures:new Set(), health:{state:'fallback', detail:'Time Flight has not been checked yet.', checkedAt:null}, nearbyMode:false };
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches || false;
   const $ = id => document.getElementById(id);
   const ui = {
     overlay:$('time-flight-overlay'), visual:$('time-flight-visual'), launch:$('time-flight-launch-btn'), launchMeta:$('time-flight-launch-meta'), close:$('time-flight-close'),
     briefing:$('time-flight-briefing'), briefingTitle:$('time-flight-briefing-title'), briefingCopy:$('time-flight-briefing-copy'),
-    quick:$('time-flight-quick'), full:$('time-flight-full'), resume:$('time-flight-resume'), quickMeta:$('time-flight-quick-meta'), fullMeta:$('time-flight-full-meta'), resumeMeta:$('time-flight-resume-meta'),
+    quick:$('time-flight-quick'), full:$('time-flight-full'), history:$('time-flight-history'), resume:$('time-flight-resume'), quickMeta:$('time-flight-quick-meta'), fullMeta:$('time-flight-full-meta'), historyMeta:$('time-flight-history-meta'), resumeMeta:$('time-flight-resume-meta'),
     finale:$('time-flight-finale'), finaleTitle:$('time-flight-finale-title'), finaleCopy:$('time-flight-finale-copy'), replay:$('time-flight-replay'), onThisDate:$('time-flight-on-this-date'), finish:$('time-flight-finish'), credits:$('time-flight-credits-list'),
     image:$('time-flight-image'), fallbackYear:$('time-flight-fallback-year'), fallbackCopy:$('time-flight-fallback-copy'), loader:$('time-flight-loader'), copy:$('time-flight-scene-copy'), year:$('time-flight-year'), category:$('time-flight-category'), title:$('time-flight-title'), summary:$('time-flight-summary'), age:$('time-flight-age'), source:$('time-flight-source'),
-    progress:$('time-flight-progress'), previous:$('time-flight-previous'), pause:$('time-flight-pause'), next:$('time-flight-next'), counter:$('time-flight-counter')
+    progress:$('time-flight-progress'), previous:$('time-flight-previous'), pause:$('time-flight-pause'), next:$('time-flight-next'), counter:$('time-flight-counter'), timeline:$('time-flight-timeline'), scrubber:$('time-flight-year-scrubber'), scrubberYear:$('time-flight-scrubber-year'), scrubberStart:$('time-flight-scrubber-start'), scrubberEnd:$('time-flight-scrubber-end'), decadeLabels:$('time-flight-decade-labels')
   };
 
   function birthMoment() {
@@ -85,6 +103,10 @@
     const birth = birthMoment();
     const now = new Date();
     return EVENTS.filter(event => { const moment = new Date(`${event.date}T12:00:00`); return moment >= birth && moment <= now; });
+  }
+  function historicalEvents() {
+    const now = new Date();
+    return EVENTS.filter(event => { const moment = new Date(`${event.date}T12:00:00`); return moment.getFullYear() >= 1900 && moment <= now; });
   }
   function quickEvents(events) {
     if (events.length <= 11) return events.slice();
@@ -110,7 +132,11 @@
     let years = moment.getFullYear() - birth.getFullYear();
     const birthday = new Date(moment.getFullYear(), birth.getMonth(), birth.getDate(), birth.getHours(), birth.getMinutes());
     if (moment < birthday) years -= 1;
-    if (years < 0) return '';
+    if (years < 0) {
+      const yearsBefore = Math.floor((birth - moment) / (365.2425 * 86400000));
+      if (yearsBefore < 1) return 'This happened before you were born.';
+      return `${yearsBefore.toLocaleString()} year${yearsBefore === 1 ? '' : 's'} before you were born.`;
+    }
     if (years === 0) return 'This happened during your first year of life.';
     return `You were ${years.toLocaleString()} year${years === 1 ? '' : 's'} old.`;
   }
@@ -118,6 +144,38 @@
   function saveProgress(completed = false) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ version:VERSION, mode:state.mode, index:state.index, completed, updatedAt:new Date().toISOString() })); } catch {} }
   function clearTimer() { if (state.timer) clearTimeout(state.timer); state.timer = null; }
   function schedule() { clearTimer(); if (!reducedMotion && !state.paused && state.events.length) state.timer = setTimeout(nextScene, state.duration); }
+  function nearestEventIndexForYear(year) {
+    if (!state.events.length) return 0;
+    return state.events.reduce((best,indexedEvent,index) => Math.abs(Number(indexedEvent.date.slice(0,4)) - year) < Math.abs(Number(state.events[best].date.slice(0,4)) - year) ? index : best, 0);
+  }
+  function buildTimeline() {
+    if (!state.events.length || !ui.scrubber) return;
+    const firstYear = Number(state.events[0].date.slice(0,4));
+    const lastYear = Number(state.events.at(-1).date.slice(0,4));
+    ui.scrubber.min = String(firstYear); ui.scrubber.max = String(lastYear); ui.scrubber.step = '1';
+    if (ui.scrubberStart) ui.scrubberStart.textContent = String(firstYear);
+    if (ui.scrubberEnd) ui.scrubberEnd.textContent = String(lastYear);
+    if (ui.decadeLabels) {
+      const firstDecade = Math.ceil(firstYear / 10) * 10;
+      const labels = [];
+      for (let year = firstDecade; year <= lastYear; year += 10) {
+        const position = lastYear === firstYear ? 0 : ((year - firstYear) / (lastYear - firstYear)) * 100;
+        const showLabel = year === firstDecade || year === Math.floor(lastYear / 10) * 10 || year % 20 === 0;
+        labels.push(`<span class="time-flight-decade-tick${showLabel ? ' is-labeled' : ''}" style="left:${position.toFixed(2)}%"><span>${showLabel ? year : ''}</span></span>`);
+      }
+      ui.decadeLabels.innerHTML = labels.join('');
+    }
+  }
+  function syncTimeline(event) {
+    if (!event || !ui.scrubber) return;
+    const year = Number(event.date.slice(0,4));
+    const minimum = Number(ui.scrubber.min || year), maximum = Number(ui.scrubber.max || year);
+    const displayedYear = state.scrubbing ? Number(ui.scrubber.value || year) : year;
+    if (!state.scrubbing) ui.scrubber.value = String(year);
+    ui.scrubber.setAttribute('aria-valuetext', `${year}: ${event.title}`);
+    ui.scrubber.style.setProperty('--timeline-progress', `${maximum === minimum ? 0 : ((displayedYear - minimum) / (maximum - minimum)) * 100}%`);
+    if (ui.scrubberYear) ui.scrubberYear.textContent = String(displayedYear);
+  }
   function imageUrl(event) { return `${ASSET_ROOT}${event.image}`; }
   function preloadEvent(event) { if (!event?.image) return; const image = new Image(); image.decoding = 'async'; image.src = imageUrl(event); }
   function preloadNext() { preloadEvent(state.events[state.index + 1]); }
@@ -208,6 +266,7 @@
       if (ui.source) { ui.source.href = event.source; ui.source.textContent = `${event.credit} - ${event.license} - display crop`; }
       if (ui.counter) ui.counter.textContent = `${bounded + 1} / ${state.events.length}`;
       if (ui.progress) ui.progress.style.width = `${((bounded + 1) / state.events.length) * 100}%`;
+      syncTimeline(event);
       ui.copy?.classList.remove('is-changing');
     }, immediate || reducedMotion ? 0 : 240);
     if (!immediate) { pulseChronostream(); flightAudio.transition(1); } preloadNext(); schedule();
@@ -219,41 +278,49 @@
     framingTimer = setTimeout(() => applySceneFraming(state.events[state.index]), 120);
   }, { passive:true });
   function previousScene() { flightAudio.transition(-1); showScene(Math.max(0, state.index - 1), true); }
+  function setPauseButton(paused, disabled = false) {
+    if (!ui.pause) return;
+    ui.pause.innerHTML = `<span class="time-flight-pause-icon" aria-hidden="true">${paused ? '&#9654;' : '&#10074;&#10074;'}</span>`;
+    ui.pause.setAttribute('aria-label', paused ? 'Resume Time Flight' : 'Pause Time Flight');
+    ui.pause.title = paused ? 'Resume Time Flight' : 'Pause Time Flight';
+    ui.pause.disabled = disabled;
+  }
   function showFinale() {
     clearTimer(); state.paused = false; saveProgress(true); flightAudio.stopAmbience();
-    if (ui.pause) ui.pause.textContent = reducedMotion ? 'Manual' : 'Pause';
+    setPauseButton(false, reducedMotion);
     ui.image?.classList.remove('is-active'); setLoading(false,false); ui.finale?.classList.add('is-visible');
     const years = Math.max(0, new Date().getFullYear() - birthMoment().getFullYear());
-    if (ui.finaleTitle) ui.finaleTitle.textContent = `${years.toLocaleString()} years in motion.`;
-    if (ui.finaleCopy) ui.finaleCopy.textContent = `Your flight crossed ${state.events.length.toLocaleString()} defining moment${state.events.length === 1 ? '' : 's'}. History is still being written.`;
+    if (ui.finaleTitle) ui.finaleTitle.textContent = state.mode === 'history' ? 'From 1900 to right now.' : `${years.toLocaleString()} years in motion.`;
+    if (ui.finaleCopy) ui.finaleCopy.textContent = `${state.mode === 'history' ? 'This historical flight' : 'Your flight'} crossed ${state.events.length.toLocaleString()} defining moment${state.events.length === 1 ? '' : 's'}. History is still being written.`;
     ui.replay?.focus();
   }
   function start(mode, startIndex = 0, suppliedEvents = null) {
-    const all = suppliedEvents || lifetimeEvents();
-    state.mode = mode; state.nearbyMode = Boolean(suppliedEvents); state.events = suppliedEvents || (mode === 'quick' ? quickEvents(all) : all); state.duration = mode === 'quick' ? 4700 : 5700; state.index = startIndex; state.paused = reducedMotion;
-    if (ui.pause) { ui.pause.textContent = reducedMotion ? 'Manual' : 'Pause'; ui.pause.disabled = reducedMotion; }
-    buildCredits(state.events); flightAudio.startAmbience(); document.dispatchEvent(new CustomEvent('lifepulse:timeflight-open'));
+    const all = suppliedEvents || (mode === 'history' ? historicalEvents() : lifetimeEvents());
+    state.mode = mode; state.nearbyMode = Boolean(suppliedEvents); state.events = suppliedEvents || (mode === 'quick' ? quickEvents(all) : all); state.duration = mode === 'quick' ? 4700 : 5700; state.index = startIndex; state.paused = reducedMotion; state.gesture = null; state.scrubbing = false;
+    setPauseButton(state.paused, reducedMotion);
+    buildCredits(state.events); buildTimeline(); flightAudio.startAmbience(); document.dispatchEvent(new CustomEvent('lifepulse:timeflight-open'));
     if (!state.events.length) { ui.briefing?.classList.remove('is-visible'); ui.finale?.classList.add('is-visible'); if (ui.finaleTitle) ui.finaleTitle.textContent = 'No anniversary is in range today.'; if (ui.finaleCopy) ui.finaleCopy.textContent = 'On This Date checks the exact date first, then looks within two weeks. Your complete flight is always available.'; return; }
     showScene(Math.min(startIndex,state.events.length-1), true);
   }
   function open() {
-    const all = lifetimeEvents(), quick = quickEvents(all), saved = loadProgress();
-    [all[0], all[1], quick[0]].filter(Boolean).forEach(preloadEvent);
+    const all = lifetimeEvents(), history = historicalEvents(), quick = quickEvents(all), saved = loadProgress();
+    [all[0], all[1], quick[0], history[0]].filter(Boolean).forEach(preloadEvent);
     state.lastFocus = document.activeElement; clearTimer(); state.events=[]; state.paused=false;
     ui.overlay?.classList.add('is-open'); ui.overlay?.setAttribute('aria-hidden','false'); ui.briefing?.classList.add('is-visible'); ui.finale?.classList.remove('is-visible'); ui.image?.classList.remove('is-active');
     document.body.classList.add('time-flight-open');
     if (ui.briefingTitle) ui.briefingTitle.textContent = all.length ? `Your flight begins in ${all[0].date.slice(0,4)}.` : 'Your story begins after this catalog.';
-    if (ui.briefingCopy) ui.briefingCopy.textContent = all.length ? `Choose the essential highlights or the complete ${all.length}-moment journey. Difficult events are clearly labeled before they appear.` : 'The curated catalog currently covers 1940 through 2024.';
+    if (ui.briefingCopy) ui.briefingCopy.textContent = all.length ? `Choose your lifetime highlights, the complete ${all.length}-moment lifetime journey, or explore the full historical route from 1900. Difficult events are clearly labeled before they appear.` : 'The complete historical route begins in 1900.';
     if (ui.quickMeta) ui.quickMeta.textContent = `${quick.length} essential moments - about ${Math.max(1,Math.round(quick.length*4.7/60))} min`;
     if (ui.fullMeta) ui.fullMeta.textContent = `${all.length} moments - about ${Math.max(1,Math.round(all.length*5.7/60))} min`;
+    if (ui.historyMeta) ui.historyMeta.textContent = `${history.length} moments from 1900 - about ${Math.max(1,Math.round(history.length*5.7/60))} min`;
     const resumable = saved && saved.version === VERSION && !saved.completed && Number.isInteger(saved.index) && saved.index > 0;
     ui.resume?.classList.toggle('hidden',!resumable);
-    if (ui.resumeMeta && resumable) ui.resumeMeta.textContent = `Continue ${saved.mode === 'full' ? 'Full' : 'Quick'} Flight at moment ${saved.index + 1}`;
+    if (ui.resumeMeta && resumable) ui.resumeMeta.textContent = `Continue ${saved.mode === 'history' ? '1900 History' : saved.mode === 'full' ? 'Full' : 'Quick'} Flight at moment ${saved.index + 1}`;
     setTimeout(() => (resumable ? ui.resume : ui.quick)?.focus(),50);
   }
   function close() { clearTimer(); flightAudio.stopAmbience(); document.dispatchEvent(new CustomEvent('lifepulse:timeflight-close')); ui.overlay?.classList.remove('is-open'); ui.overlay?.setAttribute('aria-hidden','true'); ui.image?.classList.remove('is-active'); document.body.classList.remove('time-flight-open'); (state.lastFocus || ui.launch)?.focus?.(); }
-  function togglePause() { if (reducedMotion) return; state.paused=!state.paused; if(ui.pause) ui.pause.textContent=state.paused?'Resume':'Pause'; state.paused?clearTimer():schedule(); }
-  function updateMeta() { const events=lifetimeEvents(); if(ui.launchMeta) ui.launchMeta.textContent=events.length?`${events.length} curated lifetime moments - Quick and Full flights`:'Curated catalog: 1940-2024'; }
+  function togglePause() { if (reducedMotion) return; state.paused=!state.paused; setPauseButton(state.paused); state.paused?clearTimer():schedule(); }
+  function updateMeta() { const events=lifetimeEvents(); if(ui.launchMeta) ui.launchMeta.textContent=events.length?`${events.length} lifetime moments - or explore all history from 1900`:'Historical catalog: 1900 to today'; }
 
   async function runDiagnostics() {
     const eventDates=EVENTS.map(event=>new Date(`${event.date}T12:00:00`));
@@ -271,7 +338,7 @@
     const available=results.filter(Boolean).length;
     const domReady=Boolean(ui.overlay&&ui.launch&&ui.image&&ui.finale&&ui.onThisDate);
     const passed=ordered&&cadence&&domReady&&available===uniqueAssets.length;
-    state.health={state:passed?'live':'error',detail:`${EVENTS.length} events, ${available}/${uniqueAssets.length} local images, ${ordered?'ordered':'date-order error'}, ${cadence?'2-4 year cadence':'timeline gap detected'}, ${domReady?'controls ready':'missing control'}.`,checkedAt:new Date().toISOString(),eventCount:EVENTS.length,assetCount:uniqueAssets.length,availableAssets:available,notificationHooks:true,reducedMotion};
+    state.health={state:passed?'live':'error',detail:`${EVENTS.length} events from 1900, ${available}/${uniqueAssets.length} local images, ${ordered?'ordered':'date-order error'}, ${cadence?'continuous cadence':'timeline gap detected'}, ${domReady?'controls ready':'missing control'}.`,checkedAt:new Date().toISOString(),eventCount:EVENTS.length,assetCount:uniqueAssets.length,availableAssets:available,notificationHooks:true,reducedMotion};
     return {...state.health};
   }
   function notificationCandidates(days=14) { const now=new Date(); return lifetimeEvents().map(event=>({...event,daysAway:dayDistance(event.date,now)})).filter(event=>event.daysAway<=days).sort((a,b)=>a.daysAway-b.daysAway).map(({image,...event})=>event); }
@@ -279,12 +346,33 @@
 
   if (!ui.overlay || !ui.launch) return;
   ui.launch.addEventListener('click',()=>{updateMeta();open();}); ui.close?.addEventListener('click',close); ui.finish?.addEventListener('click',close);
-  ui.quick?.addEventListener('click',()=>start('quick')); ui.full?.addEventListener('click',()=>start('full'));
-  ui.resume?.addEventListener('click',()=>{const saved=loadProgress();start(saved?.mode==='full'?'full':'quick',Math.max(0,saved?.index||0));});
+  ui.quick?.addEventListener('click',()=>start('quick')); ui.full?.addEventListener('click',()=>start('full')); ui.history?.addEventListener('click',()=>start('history'));
+  ui.resume?.addEventListener('click',()=>{const saved=loadProgress();const mode=saved?.mode==='history'?'history':saved?.mode==='full'?'full':'quick';start(mode,Math.max(0,saved?.index||0));});
   ui.replay?.addEventListener('click',()=>start(state.mode)); ui.onThisDate?.addEventListener('click',()=>start('anniversary',0,anniversaryEvents()));
   ui.previous?.addEventListener('click',previousScene); ui.next?.addEventListener('click',nextScene); ui.pause?.addEventListener('click',togglePause);
-  ui.overlay.addEventListener('pointerdown',event=>{state.touchX=event.pointerType==='touch'?event.clientX:null;});
-  ui.overlay.addEventListener('pointerup',event=>{if(state.touchX==null||ui.briefing?.classList.contains('is-visible')||ui.finale?.classList.contains('is-visible'))return;const delta=event.clientX-state.touchX;state.touchX=null;if(Math.abs(delta)>=70)delta<0?nextScene():previousScene();});
+  ui.scrubber?.addEventListener('pointerdown',()=>{state.scrubbing=true;clearTimer();});
+  ui.scrubber?.addEventListener('input',event=>{const year=Number(event.currentTarget.value);if(ui.scrubberYear)ui.scrubberYear.textContent=String(year);showScene(nearestEventIndexForYear(year),true);});
+  const finishScrubbing=()=>{state.scrubbing=false;syncTimeline(state.events[state.index]);schedule();};
+  ui.scrubber?.addEventListener('change',finishScrubbing);
+  ui.scrubber?.addEventListener('pointerup',finishScrubbing);
+  ui.scrubber?.addEventListener('pointercancel',finishScrubbing);
+  ui.overlay.addEventListener('pointerdown',event=>{
+    if(event.pointerType!=='touch'||event.button!==0||event.target.closest('button,a,input,summary,.time-flight-navigation')||ui.briefing?.classList.contains('is-visible')||ui.finale?.classList.contains('is-visible'))return;
+    state.gesture={id:event.pointerId,x:event.clientX,y:event.clientY,time:performance.now()};
+    try{ui.overlay.setPointerCapture(event.pointerId);}catch{}
+  });
+  ui.overlay.addEventListener('pointermove',event=>{
+    if(!state.gesture||state.gesture.id!==event.pointerId)return;
+    const deltaX=event.clientX-state.gesture.x,deltaY=event.clientY-state.gesture.y;
+    if(Math.abs(deltaX)>18&&Math.abs(deltaX)>Math.abs(deltaY)*1.15)event.preventDefault();
+  });
+  ui.overlay.addEventListener('pointerup',event=>{
+    if(!state.gesture||state.gesture.id!==event.pointerId)return;
+    const {x,y,time}=state.gesture;state.gesture=null;
+    const deltaX=event.clientX-x,deltaY=event.clientY-y,elapsed=performance.now()-time;
+    if(Math.abs(deltaX)>=52&&Math.abs(deltaX)>Math.abs(deltaY)*1.2&&elapsed<=900)deltaX<0?nextScene():previousScene();
+  });
+  ui.overlay.addEventListener('pointercancel',()=>{state.gesture=null;});
   document.addEventListener('keydown',event=>{
     if(!ui.overlay.classList.contains('is-open'))return;
     if(event.key==='Escape')close();else if(event.key==='ArrowRight')nextScene();else if(event.key==='ArrowLeft')previousScene();else if(event.key===' '){event.preventDefault();togglePause();}

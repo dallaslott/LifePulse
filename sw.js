@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-26';
+const CACHE_VERSION = 'lifepulse-v5-shell-34';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -8,6 +8,22 @@ const SHELL_ASSETS = [
   './assets/lifepulse-icon-512.png',
   './assets/lifepulse-maskable-512.png',
   './assets/lifepulse-notification.png',
+  './assets/time-flight/1900-paris-exposition.jpg',
+  './assets/time-flight/1903-first-flight.jpg',
+  './assets/time-flight/1905-einstein.jpg',
+  './assets/time-flight/1908-model-t.jpg',
+  './assets/time-flight/1912-titanic.jpg',
+  './assets/time-flight/1914-world-war-i.jpg',
+  './assets/time-flight/1918-influenza.jpg',
+  './assets/time-flight/1920-womens-suffrage.jpg',
+  './assets/time-flight/1922-tutankhamun.jpg',
+  './assets/time-flight/1925-scopes-trial.jpg',
+  './assets/time-flight/1927-lindbergh.jpg',
+  './assets/time-flight/1929-wall-street-crash.jpg',
+  './assets/time-flight/1933-fdr-inauguration.jpg',
+  './assets/time-flight/1936-jesse-owens.jpg',
+  './assets/time-flight/1937-hindenburg.jpg',
+  './assets/time-flight/1939-world-war-ii.jpg',
   './assets/time-flight/1940-battle-of-britain.jpg',
   './assets/time-flight/1941-pearl-harbor.jpg',
   './assets/time-flight/1944-d-day.jpg',
@@ -50,7 +66,8 @@ const SHELL_ASSETS = [
   './assets/time-flight/1996-hubble.jpg',
   './assets/time-flight/1997-dolly.jpg',
   './assets/time-flight/1998-iss.jpg',
-  './assets/time-flight/2001-september11.jpg',
+'./assets/time-flight/2001-september11.jpg',
+ './assets/time-flight/2003-columbia.jpg',
   './assets/time-flight/2003-human-genome.jpg',
   './assets/time-flight/2004-tsunami.jpg',
   './assets/time-flight/2007-iphone.jpg',
