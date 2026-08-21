@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-const VERSION = '5.135.0';
+const VERSION = '5.136.0';
   const STORAGE_KEY = 'lifePulseTimeFlightProgress';
   const AUDIO_PREFS_KEY = 'lifePulseAudioPreferences';
   const ASSET_ROOT = 'assets/time-flight/';
@@ -182,16 +182,22 @@ const VERSION = '5.135.0';
   function applySceneFraming(event) {
     if (!event || !ui.image || !ui.visual) return;
     const compact = window.matchMedia?.('(max-width: 1024px)')?.matches || false;
-    const viewportRatio = Math.max(1, window.innerWidth) / Math.max(1, window.innerHeight);
+    const frameWidth = ui.visual.clientWidth || window.innerWidth;
+    const frameHeight = ui.visual.clientHeight || window.innerHeight;
+    const viewportRatio = Math.max(1, frameWidth) / Math.max(1, frameHeight);
     const imageRatio = ui.image.naturalWidth && ui.image.naturalHeight
       ? ui.image.naturalWidth / ui.image.naturalHeight
       : viewportRatio;
     const focus = compact && event.mobileFocal ? event.mobileFocal : (event.focal || '50% 50%');
-    const preserve = compact && (event.fit === 'contain' || imageRatio > viewportRatio * 1.16);
+    const aspectMismatch = imageRatio < viewportRatio * (compact ? 0.78 : 0.72)
+      || imageRatio > viewportRatio * (compact ? 1.18 : 1.42);
+    const adaptive = aspectMismatch;
+    const contain = event.fit === 'contain' && !adaptive;
+    const preserve = adaptive || contain;
     const sceneUrl = imageUrl(event).replace(/"/g, '%22');
     ui.image.style.objectPosition = focus;
-    ui.image.classList.toggle('fit-adaptive', preserve);
-    ui.image.classList.toggle('fit-contain', event.fit === 'contain' && !preserve);
+    ui.image.classList.toggle('fit-adaptive', adaptive);
+    ui.image.classList.toggle('fit-contain', contain);
     ui.visual.classList.toggle('preserve-scene', preserve);
     ui.visual.style.setProperty('--time-flight-scene-image', `url("${sceneUrl}")`);
     ui.visual.style.setProperty('--time-flight-scene-focus', focus);
