@@ -2046,6 +2046,137 @@
       background: linear-gradient(145deg, rgba(255,159,67,0.07), rgba(124,77,255,0.06));
     }
 
+    .dashboard-group[data-group-id="starting-world"][open] { overflow: visible; }
+
+    .starting-world-timeline {
+      position: sticky;
+      top: max(8px, env(safe-area-inset-top));
+      z-index: 18;
+      margin: -2px 0 14px;
+      padding: 10px 12px 9px;
+      border: 1px solid rgba(255,159,67,0.34);
+      border-radius: 15px;
+      background: rgba(10,14,26,0.94);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28), 0 0 18px rgba(255,159,67,0.08);
+      backdrop-filter: blur(16px);
+    }
+
+    .starting-world-timeline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+
+    .starting-world-viewing {
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .starting-world-viewing strong { color: #ffb56b; font-size: 0.86rem; }
+
+    .starting-world-reset {
+      width: auto;
+      min-height: 30px;
+      padding: 5px 9px;
+      border: 1px solid rgba(0,229,255,0.3);
+      border-radius: 999px;
+      background: rgba(0,229,255,0.08);
+      color: var(--primary);
+      font-size: 0.58rem;
+      font-weight: 950;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .starting-world-reset:disabled { opacity: 0.4; cursor: default; }
+
+    .starting-world-scrubber-row {
+      display: grid;
+      grid-template-columns: 30px minmax(0,1fr) 30px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .starting-world-step {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.055);
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .starting-world-step:disabled { opacity: 0.3; cursor: default; }
+
+    .starting-world-scrubber {
+      display: block;
+      width: 100%;
+      margin: 0;
+      accent-color: #ff9f43;
+      cursor: ew-resize;
+      touch-action: pan-y;
+    }
+
+    .starting-world-track-wrap {
+      position: relative;
+      display: grid;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .starting-world-birth-marker {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      left: 50%;
+      z-index: 2;
+      width: 2px;
+      border-radius: 2px;
+      background: #00e5ff;
+      box-shadow: 0 0 7px rgba(0,229,255,0.85);
+      transform: translateX(-1px);
+      pointer-events: none;
+    }
+
+    .starting-world-birth-marker::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00e5ff;
+      transform: translateX(-50%);
+      box-shadow: 0 0 7px rgba(0,229,255,0.9);
+    }
+
+    .starting-world-decades {
+      display: flex;
+      justify-content: space-between;
+      margin: 3px 36px 0;
+      color: var(--text-dim);
+      font-size: 0.49rem;
+      font-weight: 800;
+    }
+
+    @media (max-width: 520px) {
+      .starting-world-timeline { top: max(5px, env(safe-area-inset-top)); padding: 9px 10px 8px; }
+      .starting-world-viewing { font-size: 0.64rem; }
+      .starting-world-viewing strong { font-size: 0.77rem; }
+      .starting-world-reset { padding: 5px 7px; font-size: 0.52rem; }
+      .starting-world-decades { margin-inline: 32px; }
+    }
+
     .comparison-list {
       display: grid;
       gap: 10px;
@@ -5241,7 +5372,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-       <span class="version-chip" id="version-chip" aria-label="App version">v5.137.0.local</span>
+       <span class="version-chip" id="version-chip" aria-label="App version">v5.139.2.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5837,6 +5968,21 @@
     </div>
 
     <div class="panel born-then-now-panel" id="born-then-now-panel">
+      <div class="starting-world-timeline" id="starting-world-timeline" aria-label="Starting World comparison year">
+        <div class="starting-world-timeline-head">
+          <div class="starting-world-viewing">Viewing <strong id="starting-world-selected-year">...</strong> &rarr; Today</div>
+          <button class="starting-world-reset" id="starting-world-reset" type="button">Birth Year</button>
+        </div>
+        <div class="starting-world-scrubber-row">
+          <button class="starting-world-step" id="starting-world-prev-year" type="button" aria-label="Previous comparison year">&#8249;</button>
+          <div class="starting-world-track-wrap">
+            <input class="starting-world-scrubber" id="starting-world-year-scrubber" type="range" min="1900" max="2026" value="1970" step="1" aria-label="Select a historical comparison year" />
+            <span class="starting-world-birth-marker" id="starting-world-birth-marker" aria-hidden="true"></span>
+          </div>
+          <button class="starting-world-step" id="starting-world-next-year" type="button" aria-label="Next comparison year">&#8250;</button>
+        </div>
+        <div class="starting-world-decades" id="starting-world-decades" aria-hidden="true"><span>1900</span><span>1950</span><span>2000</span><span>Now</span></div>
+      </div>
       <div class="section-head">
         <div class="section-title">Born Then / Living Now</div>
         <span class="panel-note" id="born-then-now-years">Then → Now</span>
@@ -5845,7 +5991,7 @@
       <div class="comparison-list" id="born-then-now-list" aria-live="polite"></div>
       <details class="comparison-methods">
         <summary>About These Numbers</summary>
-        <p>These comparisons show nominal U.S. dollar amounts from your birth year beside the latest maintained value. They are not adjusted for inflation. Population and income cards identify official observations, interpolations, estimates, and limited fallback data directly on the card.</p>
+        <p>These comparisons show nominal U.S. dollar amounts from the selected historical year beside the latest maintained value. They are not adjusted for inflation. Use Birth Year to return to your personalized starting point.</p>
         <div class="comparison-method-links">
           <a href="https://fred.stlouisfed.org/series/MSPUS" target="_blank" rel="noopener noreferrer">Housing &amp; Income</a>
           <a href="https://www.census.gov/data/tables/time-series/dec/coh-grossrents.html" target="_blank" rel="noopener noreferrer">Rent</a>
@@ -6404,7 +6550,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.137.0.local';
+    const LOCAL_RELEASE_VERSION = '5.139.2.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -6476,6 +6622,8 @@
     window.getLifePulseBirthMoment = () => birthMomentGlobal;
     let activeTimelineFilter  = 'highlights';
     let lifeTimelineEvents    = [];
+    let startingWorldSelectedYear = null;
+    let startingWorldRenderFrame = null;
     let activeShareTemplate  = 'cosmic';
     let shareShowName        = true;
     let shareShowBirthplace  = true;
@@ -13929,10 +14077,84 @@ function countPresidentialElectionsExperienced(start, end) {
       return '';
     }
 
+    function getStartingWorldYear(now = new Date()) {
+      if (!birthMomentGlobal) return now.getFullYear();
+      const birthYear = birthMomentGlobal.getFullYear();
+      const selected = Number.isFinite(startingWorldSelectedYear) ? startingWorldSelectedYear : birthYear;
+      return Math.max(1900, Math.min(now.getFullYear(), Math.round(selected)));
+    }
+
+    function syncStartingWorldTimeline(now = new Date()) {
+      if (!birthMomentGlobal) return;
+      const birthYear = Math.max(1900, Math.min(now.getFullYear(), birthMomentGlobal.getFullYear()));
+      const selectedYear = getStartingWorldYear(now);
+      const scrubber = document.getElementById('starting-world-year-scrubber');
+      const selectedLabel = document.getElementById('starting-world-selected-year');
+      const resetButton = document.getElementById('starting-world-reset');
+      const previousButton = document.getElementById('starting-world-prev-year');
+      const nextButton = document.getElementById('starting-world-next-year');
+      const birthMarker = document.getElementById('starting-world-birth-marker');
+      const decades = document.getElementById('starting-world-decades');
+      if (scrubber) {
+        scrubber.max = String(now.getFullYear());
+        scrubber.value = String(selectedYear);
+      }
+      if (selectedLabel) selectedLabel.textContent = selectedYear === birthYear ? `${selectedYear} · Birth Year` : String(selectedYear);
+      if (resetButton) resetButton.disabled = selectedYear === birthYear;
+      if (previousButton) previousButton.disabled = selectedYear <= 1900;
+      if (nextButton) nextButton.disabled = selectedYear >= now.getFullYear();
+      if (birthMarker) {
+        const birthRatio = Math.max(0, Math.min(1, (birthYear - 1900) / Math.max(1, now.getFullYear() - 1900)));
+        const birthPosition = birthRatio * 100;
+        const thumbRadius = 8;
+        const trackOffset = thumbRadius * (1 - (2 * birthRatio));
+        birthMarker.style.left = `calc(${birthPosition.toFixed(4)}% + ${trackOffset.toFixed(2)}px)`;
+        birthMarker.title = `Birth year: ${birthYear}`;
+      }
+      if (decades) {
+        const span = now.getFullYear() - 1900;
+        const labels = Array.from({ length: 6 }, (_, index) => index === 0
+          ? 1900
+          : index === 5
+            ? now.getFullYear()
+            : Math.round((1900 + (span * index / 5)) / 5) * 5);
+        decades.innerHTML = labels.map(year => `<span>${year}</span>`).join('');
+      }
+    }
+
+    function setStartingWorldYear(year, now = new Date()) {
+      if (!birthMomentGlobal) return;
+      startingWorldSelectedYear = Math.max(1900, Math.min(now.getFullYear(), Math.round(Number(year) || birthMomentGlobal.getFullYear())));
+      syncStartingWorldTimeline(now);
+      if (startingWorldRenderFrame) cancelAnimationFrame(startingWorldRenderFrame);
+      startingWorldRenderFrame = requestAnimationFrame(() => {
+        startingWorldRenderFrame = null;
+        renderBornThenNow(new Date());
+      });
+    }
+
+    function initStartingWorldTimeline() {
+      const scrubber = document.getElementById('starting-world-year-scrubber');
+      const resetButton = document.getElementById('starting-world-reset');
+      const previousButton = document.getElementById('starting-world-prev-year');
+      const nextButton = document.getElementById('starting-world-next-year');
+      if (!scrubber || scrubber.dataset.bound === 'true') return;
+      scrubber.addEventListener('input', () => setStartingWorldYear(scrubber.value));
+      resetButton?.addEventListener('click', () => setStartingWorldYear(birthMomentGlobal?.getFullYear()));
+      previousButton?.addEventListener('click', () => setStartingWorldYear(getStartingWorldYear() - 1));
+      nextButton?.addEventListener('click', () => setStartingWorldYear(getStartingWorldYear() + 1));
+      scrubber.dataset.bound = 'true';
+    }
+
     function renderBornThenNow(now = new Date()) {
       if (!birthMomentGlobal || !els.bornThenNowList) return;
-      const birthYear = birthMomentGlobal.getFullYear();
+      const actualBirthYear = birthMomentGlobal.getFullYear();
+      const birthYear = getStartingWorldYear(now);
       const currentYear = now.getFullYear();
+      const comparisonDate = createAnniversaryDate(birthYear, birthMomentGlobal.getMonth(), birthMomentGlobal.getDate(), 12, 0);
+      const isBirthYear = birthYear === actualBirthYear;
+      const comparisonStartLabel = isBirthYear ? 'birth' : String(birthYear);
+      syncStartingWorldTimeline(now);
       const populationHistory = currentLiveData?.reference?.populationHistory?.series || {};
       const authoritativeBirthPopulation = Number(populationHistory[birthYear]);
       const birthPopulation = Number.isFinite(authoritativeBirthPopulation)
@@ -13955,7 +14177,7 @@ function countPresidentialElectionsExperienced(start, end) {
       const currentTempC = Number.isFinite(Number(climate?.latestEstimatedAbsoluteC))
         ? Number(climate.latestEstimatedAbsoluteC)
         : interpolateFromAnchors(currentYear, TEMP_ANCHORS_C);
-      const birthPresident = getPresidentAtDate(birthMomentGlobal);
+      const birthPresident = getPresidentAtDate(comparisonDate);
       const currentPresident = currentLiveData?.reference?.civic?.currentPresident || getPresidentAtDate(now)?.name || 'Current President';
       const birthTech = getTechSnapshot(birthYear);
       const currentTech = getTechSnapshot(currentYear);
@@ -13965,7 +14187,7 @@ function countPresidentialElectionsExperienced(start, end) {
       const currentDisplayTemp = usesCelsius() ? currentTempC : celsiusToFahrenheit(currentTempC);
       const tempDelta = currentDisplayTemp - birthDisplayTemp;
       const temperatureUnit = `\u00B0${usesCelsius() ? 'C' : 'F'}`;
-      const presidentsLived = countPresidentsExperienced(birthMomentGlobal, now);
+      const presidentsLived = countPresidentsExperienced(comparisonDate, now);
       const birthChip = getChipTransistorMilestone(birthYear);
       const currentChip = CHIP_TRANSISTOR_MILESTONES[CHIP_TRANSISTOR_MILESTONES.length - 1];
       const transistorMultiplier = currentChip.value / birthChip.value;
@@ -13999,7 +14221,7 @@ function countPresidentialElectionsExperienced(start, end) {
           : Math.round(interpolateFromAnchors(birthYear, activeSatelliteSeries));
       const satelliteDifference = latestSatelliteCount - birthSatelliteCount;
       const satellitePercent = birthSatelliteCount > 0 ? satelliteDifference / birthSatelliteCount * 100 : null;
-      const birthTallestBuilding = getTallestBuildingAtDate(birthMomentGlobal);
+      const birthTallestBuilding = getTallestBuildingAtDate(comparisonDate);
       const currentTallestBuilding = getTallestBuildingAtDate(now);
       const buildingHeightDifference = usesMetricDistance()
         ? currentTallestBuilding.meters - birthTallestBuilding.meters
@@ -14008,7 +14230,7 @@ function countPresidentialElectionsExperienced(start, end) {
       const birthBuildingTenureYears = birthBuildingTenure ? Math.round(birthBuildingTenure.years).toLocaleString() : null;
       const birthBuildingTenureCopy = birthBuildingTenure?.ongoing
         ? `Still holds the record after ${birthBuildingTenureYears} years`
-        : `Birth-era record lasted ${birthBuildingTenureYears} years`;
+        : `${isBirthYear ? 'Birth-era' : `${birthYear}`} record lasted ${birthBuildingTenureYears} years`;
       const buildingHeightCopy = buildingHeightDifference > 0
         ? `today's record is ${buildingHeightDifference.toLocaleString()} ${usesMetricDistance() ? 'm' : 'ft'} taller`
         : `it remains today's record`;
@@ -14027,16 +14249,16 @@ function countPresidentialElectionsExperienced(start, end) {
       const latestUrbanShare = Number(urbanShareSeries[latestUrbanShareYear]);
       const birthUrbanShare = birthYear >= urbanShareYears[0] ? interpolateFromAnchors(birthYear, urbanShareSeries) : null;
       const comparisons = [
-        { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since birth (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
-        { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `You arrived after about ${humanHistoryPercentLabel}% of all humans ever born; est. ${formatNamedScale(humansBornSince, 1)} have been born since.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate. The percentage compares estimated cumulative births by your birth year with the estimated cumulative total today.', group: 'world' },
-        { icon: '&#10084;', label: 'Global Life Expectancy', then: birthLifeExpectancy == null ? 'Before Coverage' : `${birthLifeExpectancy.toFixed(1)} yrs`, now: `${latestLifeExpectancy.toFixed(1)} yrs`, nowEra: latestLifeExpectancyYear, change: birthLifeExpectancy == null ? `Worldwide annual coverage begins in ${lifeExpectancyYears[0]}.` : `${formatSignedNumber(latestLifeExpectancy - birthLifeExpectancy, 1, ' yrs')} since your birth year.`, diagnostic: 'Worldwide life expectancy at birth from the World Bank and UN Population Division; this is a population average, not an individual lifespan prediction.', group: 'world' },
+        { icon: '&#127758;', label: 'World Population', then: formatPopulationBillions(birthPopulation), now: formatPopulationBillions(currentPopulation), change: `${formatSignedNumber(populationDelta, 2, 'B')} people since ${comparisonStartLabel} (${formatSignedNumber(populationPct, 0, '%')}).`, group: 'world' },
+        { icon: '&#128101;', label: 'Humans Ever Born', then: formatNamedScale(humansEverBornAtBirth, 1), now: formatNamedScale(humansEverBornNow, 1), change: `${isBirthYear ? 'You arrived' : `By ${birthYear}, humanity had reached`} about ${humanHistoryPercentLabel}% of the estimated total of all humans ever born; est. ${formatNamedScale(humansBornSince, 1)} have been born since.`, diagnostic: 'Population Reference Bureau benchmark interpolation; prehistoric and historic totals are necessarily approximate. The percentage compares estimated cumulative births in the selected year with the estimated cumulative total today.', group: 'world' },
+        { icon: '&#10084;', label: 'Global Life Expectancy', then: birthLifeExpectancy == null ? 'Before Coverage' : `${birthLifeExpectancy.toFixed(1)} yrs`, now: `${latestLifeExpectancy.toFixed(1)} yrs`, nowEra: latestLifeExpectancyYear, change: birthLifeExpectancy == null ? `Worldwide annual coverage begins in ${lifeExpectancyYears[0]}.` : `${formatSignedNumber(latestLifeExpectancy - birthLifeExpectancy, 1, ' yrs')} since ${comparisonStartLabel}.`, diagnostic: 'Worldwide life expectancy at birth from the World Bank and UN Population Division; this is a population average, not an individual lifespan prediction.', group: 'world' },
         { icon: '&#127961;', label: 'Urban Population Share', then: birthUrbanShare == null ? 'Before Coverage' : `${birthUrbanShare.toFixed(1)}%`, now: `${latestUrbanShare.toFixed(1)}%`, nowEra: latestUrbanShareYear, change: birthUrbanShare == null ? `Worldwide annual coverage begins in ${urbanShareYears[0]}.` : `${formatSignedNumber(latestUrbanShare - birthUrbanShare, 1, ' pts')} more of humanity lives in urban areas.`, diagnostic: 'World Bank and UN World Urbanization Prospects. Urban definitions vary by country, so the worldwide percentage is an aggregated estimate.', group: 'world' },
         { icon: '&#127970;', label: "World's Tallest Building", then: `${birthTallestBuilding.name} (${usesMetricDistance() ? `${birthTallestBuilding.meters.toLocaleString()} m` : `${birthTallestBuilding.feet.toLocaleString()} ft`})`, now: `${currentTallestBuilding.name} (${usesMetricDistance() ? `${currentTallestBuilding.meters.toLocaleString()} m` : `${currentTallestBuilding.feet.toLocaleString()} ft`})`, change: `${birthTallestBuilding.city} to ${currentTallestBuilding.city}. ${birthBuildingTenureCopy}; ${buildingHeightCopy}.`, diagnostic: 'Completed buildings ranked by architectural height under CTBUH criteria. Record tenure runs from a building\'s maintained completion date until the next record holder, or through today for the current record.', group: 'world' },
         { icon: '&#9981;', label: 'U.S. Gas Average', then: `${formatCurrency(birthGas)}/gal`, now: `${formatCurrency(currentGas)}/gal`, change: formatAmountDifference(birthGas, currentGas, value => `${formatCurrency(value)}/gal`), group: 'everyday' },
         { icon: '&#127757;', label: 'Estimated Global Temperature', then: formatTemperatureFromCelsius(birthTempC, 2), now: formatTemperatureFromCelsius(currentTempC, 2), change: `${formatSignedNumber(tempDelta, 2, temperatureUnit)} since birth.`, group: 'world' },
-        { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} have overlapped your lifetime.`, group: 'world' },
+        { icon: '&#127963;', label: 'U.S. President', then: birthPresident?.name || 'Timeline Unavailable', now: currentPresident, change: `${presidentsLived.toLocaleString()} president${presidentsLived === 1 ? '' : 's'} ${isBirthYear ? 'have overlapped your lifetime' : `have served since ${birthYear}`}.`, group: 'world' },
         { icon: '&#128187;', label: 'Everyday Technology', then: birthTech.title, now: currentTech.title, change: `From ${birthTech.title.toLowerCase()} to ${currentTech.title.toLowerCase()}.`, group: 'technology' },
-        { icon: '&#128752;', label: 'Active Satellites', then: birthSatelliteCount ? birthSatelliteCount.toLocaleString() : 'None Yet', now: latestSatelliteCount.toLocaleString(), nowEra: latestSatelliteYear, change: birthSatelliteCount ? `${satelliteDifference.toLocaleString()} more active satellites now (+${satellitePercent.toFixed(0)}%).` : `${latestSatelliteCount.toLocaleString()} active satellites now orbit Earth; the first launched in 1957.`, diagnostic: `Historical active-payload counts from Jonathan McDowell's General Catalog of Artificial Space Objects. Uses the birth month when the scheduled feed is available and a year-end fallback offline. Latest maintained observation: ${activeSatelliteReference?.latestDate || latestSatelliteYear}.`, group: 'technology' },
+        { icon: '&#128752;', label: 'Active Satellites', then: birthSatelliteCount ? birthSatelliteCount.toLocaleString() : 'None Yet', now: latestSatelliteCount.toLocaleString(), nowEra: latestSatelliteYear, change: birthSatelliteCount ? `${satelliteDifference.toLocaleString()} more active satellites now (+${satellitePercent.toFixed(0)}%).` : `${latestSatelliteCount.toLocaleString()} active satellites now orbit Earth; the first launched in 1957.`, diagnostic: `Historical active-payload counts from Jonathan McDowell's General Catalog of Artificial Space Objects. Uses the matching selected month when the scheduled feed is available and a year-end fallback offline. Latest maintained observation: ${activeSatelliteReference?.latestDate || latestSatelliteYear}.`, group: 'technology' },
         { icon: '&#129504;', label: 'Microchip Transistors', then: birthYear < 1971 ? 'Not Yet Invented' : formatNamedScale(birthChip.value, 1), now: formatNamedScale(currentChip.value, 0), thenEra: birthYear < 1971 ? birthYear : birthChip.year, nowEra: currentChip.year, change: birthYear < 1971 ? `${currentChip.chip} now contains ${formatNamedScale(currentChip.value, 0)} transistors.` : `${currentChip.chip} contains about ${formatNamedScale(transistorMultiplier, 1)} times the transistors of the ${birthChip.chip}.`, diagnostic: `Then benchmark: ${birthChip.chip} (${birthChip.year}). Latest maintained benchmark: ${currentChip.chip} (${currentChip.year}).`, group: 'technology' },
         { icon: '&#128190;', label: 'Annual Global Data Created', then: birthDataZb == null ? 'Before Tracking' : formatDigitalData(birthDataZb), now: formatDigitalData(currentDataZb), nowEra: latestDataYear, change: `Est. tracked cumulative total since ${Math.max(birthYear, globalDataYears[0])}: ${formatDigitalData(dataCreatedDuringLife)} created, captured, or replicated globally.`, diagnostic: 'Broad Global Datasphere estimates and interpolation beginning in 2010; this sums estimated annual volumes and does not represent permanently stored unique files.', group: 'technology' },
         { icon: '&#127760;', label: 'Monthly Internet Traffic', then: birthInternetTraffic == null ? 'Before Tracking' : `${birthInternetTraffic.toFixed(1)} EB`, now: `${latestInternetTraffic.toFixed(0)} EB`, nowEra: latestInternetTrafficYear, change: internetTrafficMultiplier ? `Global monthly IP traffic grew about ${internetTrafficMultiplier.toFixed(1)}x from your birth-year estimate.` : `Modern tracking reached ${latestInternetTraffic.toFixed(0)} EB per month by ${latestInternetTrafficYear}.`, diagnostic: 'Cisco VNI historical and forecast anchors through 2022; later values are not extrapolated.', group: 'technology' }
@@ -14106,7 +14328,7 @@ function countPresidentialElectionsExperienced(start, end) {
       comparisons.push(...incomeRows);
       comparisons.push(...buildCostComparisons(birthYear, currentYear));
       if (els.bornThenNowYears) els.bornThenNowYears.textContent = `${birthYear} to ${currentYear}`;
-      if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} comparisons showing how amounts and percentages changed from then to now.`;
+      if (els.bornThenNowSummary) els.bornThenNowSummary.textContent = `${comparisons.length} comparisons showing how ${birthYear} differs from today.${isBirthYear ? ' This is your birth-year view.' : ''}`;
       const groupLabels = { world: 'World & Society', local: 'Local Economy', technology: 'Technology', everyday: 'Everyday Costs', major: 'Major Life Costs' };
       els.bornThenNowList.innerHTML = Object.entries(groupLabels).map(([group, title]) => {
         const rows = comparisons.filter(item => item.group === group);
@@ -15194,6 +15416,7 @@ function getBirthSkySnapshot() {
     function hydrateProfile(profile) {
       const [hh, mm] = profile.time.split(':').map(Number);
       birthMomentGlobal  = new Date(Number(profile.year), Number(profile.month), Number(profile.day), hh, mm, 0, 0);
+      startingWorldSelectedYear = null;
       currentZodiac      = getOriginData(profile.month, profile.day, profile.year);
       currentDNA         = buildDNA(profile);
       currentGeneration  = getGenerationProfile(Number(profile.year));
@@ -15447,6 +15670,7 @@ function getBirthSkySnapshot() {
       soundtrackToneFilter = null;
       audioUnlocked       = false;
       birthMomentGlobal   = null;
+      startingWorldSelectedYear = null;
       currentZodiac       = null;
       currentDNA          = null;
       currentGeneration   = null;
@@ -16313,6 +16537,7 @@ function getBirthSkySnapshot() {
       populateDays();
       organizeBirthSnapshot();
       organizeDashboardSections();
+      initStartingWorldTimeline();
       loadShareCardPreferences();
       loadAudioPreferences();
       loadMeasurementPreferences();
