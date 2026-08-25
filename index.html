@@ -5372,7 +5372,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-       <span class="version-chip" id="version-chip" aria-label="App version">v5.139.2.local</span>
+       <span class="version-chip" id="version-chip" aria-label="App version">v5.139.3.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -6550,7 +6550,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.139.2.local';
+    const LOCAL_RELEASE_VERSION = '5.139.3.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -15797,9 +15797,9 @@ function getBirthSkySnapshot() {
     const DASHBOARD_SECTION_GROUPS = [
       { id: 'right-now', icon: '◉', title: 'Right Now', copy: 'Live age, today’s pulse, celebrations, your next birthday, and upcoming moments.', defaultOpen: true, nodes: ['daily-pulse-section','age-progress-label','age-progress-track','chrono-age-card','time-breakdown-panel','birthday-hero-panel','whats-next-panel'] },
       { id: 'starting-world', icon: '🌅', title: 'Your Starting World', copy: 'Then-versus-now comparisons and the culture surrounding your birth.', nodes: ['born-then-now-panel','birth-snapshot-panel'] },
-      { id: 'identity-archetypes', icon: '✦', title: 'Identity & Archetypes', copy: 'Zodiac alignment, LifePulse DNA, generation context, and the era that shaped you.', nodes: ['zodiac-card','life-dna-panel','generation-panel'] },
       { id: 'lifetime-glance', icon: '⌛', title: 'Lifetime at a Glance', copy: 'Your estimated totals, life percentages, and compressed-life view.', nodes: ['lifetime-estimates-panel','life-percentages-panel','life-compressed-panel'] },
       { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, defining history, Time Flight, major eras, and your personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','time-flight-launch-card','life-atlas-panel','life-timeline-panel'] },
+      { id: 'identity-archetypes', icon: '✦', title: 'Identity & Archetypes', copy: 'Zodiac alignment, LifePulse DNA, generation context, and the era that shaped you.', nodes: ['zodiac-card','life-dna-panel','generation-panel'] },
       { id: 'planetary-cosmic', icon: '🌌', title: 'Planetary & Cosmic', copy: 'Your motion through space, sky cycles, eclipses, planets, and the larger universe.', nodes: ['planetary-cosmic-panel'] },
       { id: 'sports-history', icon: '🏆', title: 'Sports History', copy: 'Championships, Olympic Games, World Cups, and repeat-title eras.', nodes: ['sports-history-panel'] },
       { id: 'share-pulse', icon: '↗', title: 'Share Your Pulse', copy: 'Preview, save, and share your personalized LifePulse card.', nodes: ['share-panel'] }

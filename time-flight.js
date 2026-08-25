@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-const VERSION = '5.139.2';
+const VERSION = '5.139.3';
   const STORAGE_KEY = 'lifePulseTimeFlightProgress';
   const AUDIO_PREFS_KEY = 'lifePulseAudioPreferences';
   const ASSET_ROOT = 'assets/time-flight/';
