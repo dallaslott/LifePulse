@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-19T00:09:25.511Z",
-  "nextReview": "2026-08-26",
+  "updatedAt": "2026-08-26T07:57:46.078Z",
+  "nextReview": "2026-09-02",
   "methodology": "Values are nominal U.S. dollars. Birth-year values use the closest published annual observation or interpolation between published anchors. Labels distinguish medians, averages, and estimates.",
   "metrics": {
     "homePrice": {
