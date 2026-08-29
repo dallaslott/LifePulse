@@ -57,7 +57,12 @@ jobs:
         run: node scripts/update-live-data.mjs
 
       - name: Validate refreshed data
-        run: node scripts/validate-live-data.mjs
+        run: |
+          node --check time-flight.js
+          node --check pulse-run.js
+          node --check orbit-relay.js
+          node scripts/validate-time-flight.mjs
+          node scripts/validate-live-data.mjs
 
       - name: Commit refreshed maintained datasets
         run: |
@@ -77,8 +82,8 @@ jobs:
       - name: Prepare the public site
         run: |
           mkdir -p _site/vendor _site/assets/time-flight
-          cp index.html time-flight.js manifest.webmanifest sw.js offline.html live-data.json version.json sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json _site/
-          cp assets/lifepulse-icon-192.png assets/lifepulse-icon-512.png assets/lifepulse-maskable-512.png _site/assets/
+          cp index.html time-flight.js pulse-run.js pulse-run.css orbit-relay.js orbit-relay.css three.min.js manifest.webmanifest sw.js offline.html live-data.json version.json sports-data-v4.json sky-events.json cost-of-living-data.json place-economic-data.json _site/
+          cp assets/lifepulse-icon-192.png assets/lifepulse-icon-512.png assets/lifepulse-maskable-512.png assets/nasa-blue-marble-2048.png _site/assets/
           cp assets/time-flight/*.jpg _site/assets/time-flight/
           if [ -f assets/lifepulse-notification.png ]; then
             cp assets/lifepulse-notification.png _site/assets/
