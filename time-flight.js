@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-const VERSION = '5.139.3';
+const VERSION = '5.142.1';
   const STORAGE_KEY = 'lifePulseTimeFlightProgress';
   const AUDIO_PREFS_KEY = 'lifePulseAudioPreferences';
   const ASSET_ROOT = 'assets/time-flight/';
@@ -83,7 +83,7 @@ const VERSION = '5.139.3';
     { date:'2024-07-13', title:'Donald Trump Survives an Assassination Attempt', category:'U.S. History', importance:8, sensitive:true, summary:'A gunman opened fire during a campaign rally in Butler, Pennsylvania. Donald Trump was wounded, one attendee was killed, and two other spectators were seriously wounded.', image:'2024-trump-attempt.jpg', focal:'52% 42%', mobileFocal:'51% 39%', alt:'Donald Trump raising his fist while surrounded by Secret Service agents after the assassination attempt, with an American flag behind him.', credit:'Evan Vucci / Associated Press', license:'Copyright AP - limited private review', source:'https://www.ap.org/news-highlights/spotlights/2024/in-a-world-of-moving-pictures-photographs-capture-indelible-moments-in-trump-assassination-attempt/' }
   ];
 
-  const state = { events:[], mode:'quick', index:0, timer:null, warpTimer:null, paused:false, duration:4700, gesture:null, scrubbing:false, lastFocus:null, imageFailures:new Set(), health:{state:'fallback', detail:'Time Flight has not been checked yet.', checkedAt:null}, nearbyMode:false };
+  const state = { events:[], mode:'quick', index:0, startIndex:0, timer:null, warpTimer:null, paused:false, duration:4700, gesture:null, scrubbing:false, lastFocus:null, imageFailures:new Set(), health:{state:'fallback', detail:'Time Flight has not been checked yet.', checkedAt:null}, nearbyMode:false };
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches || false;
   const $ = id => document.getElementById(id);
   const ui = {
@@ -148,10 +148,16 @@ const VERSION = '5.139.3';
     if (!state.events.length) return 0;
     return state.events.reduce((best,indexedEvent,index) => Math.abs(Number(indexedEvent.date.slice(0,4)) - year) < Math.abs(Number(state.events[best].date.slice(0,4)) - year) ? index : best, 0);
   }
+  function firstEventIndexAtOrAfterBirth(events) {
+    if (!events.length) return 0;
+    const birth = birthMoment();
+    const index = events.findIndex(event => new Date(`${event.date}T12:00:00`) >= birth);
+    return index < 0 ? events.length - 1 : index;
+  }
   function buildTimeline() {
     if (!state.events.length || !ui.scrubber) return;
-    const firstYear = Number(state.events[0].date.slice(0,4));
-    const lastYear = Number(state.events.at(-1).date.slice(0,4));
+    const firstYear = 1900;
+    const lastYear = new Date().getFullYear();
     ui.scrubber.min = String(firstYear); ui.scrubber.max = String(lastYear); ui.scrubber.step = '1';
     if (ui.scrubberStart) ui.scrubberStart.textContent = String(firstYear);
     if (ui.scrubberEnd) ui.scrubberEnd.textContent = String(lastYear);
@@ -297,27 +303,32 @@ const VERSION = '5.139.3';
     ui.image?.classList.remove('is-active'); setLoading(false,false); ui.finale?.classList.add('is-visible');
     const years = Math.max(0, new Date().getFullYear() - birthMoment().getFullYear());
     if (ui.finaleTitle) ui.finaleTitle.textContent = state.mode === 'history' ? 'From 1900 to right now.' : `${years.toLocaleString()} years in motion.`;
-    if (ui.finaleCopy) ui.finaleCopy.textContent = `${state.mode === 'history' ? 'This historical flight' : 'Your flight'} crossed ${state.events.length.toLocaleString()} defining moment${state.events.length === 1 ? '' : 's'}. History is still being written.`;
+    const crossedCount = state.mode === 'history' ? state.events.length : Math.max(0,state.events.length - state.startIndex);
+    if (ui.finaleCopy) ui.finaleCopy.textContent = `${state.mode === 'history' ? 'This historical flight' : 'Your flight'} crossed ${crossedCount.toLocaleString()} defining moment${crossedCount === 1 ? '' : 's'}. The complete 1900-to-present timeline remains available whenever you travel backward.`;
     ui.replay?.focus();
   }
-  function start(mode, startIndex = 0, suppliedEvents = null) {
-    const all = suppliedEvents || (mode === 'history' ? historicalEvents() : lifetimeEvents());
-    state.mode = mode; state.nearbyMode = Boolean(suppliedEvents); state.events = suppliedEvents || (mode === 'quick' ? quickEvents(all) : all); state.duration = mode === 'quick' ? 4700 : 5700; state.index = startIndex; state.paused = reducedMotion; state.gesture = null; state.scrubbing = false;
+  function start(mode, startIndex = null, suppliedEvents = null) {
+    const history = historicalEvents();
+    const route = suppliedEvents || (mode === 'quick' ? quickEvents(history) : history);
+    const requestedIndex = Number.isInteger(startIndex) ? startIndex : null;
+    const launchIndex = requestedIndex !== null ? requestedIndex : (mode === 'history' || suppliedEvents ? 0 : firstEventIndexAtOrAfterBirth(route));
+    state.mode = mode; state.nearbyMode = Boolean(suppliedEvents); state.events = route; state.duration = mode === 'quick' ? 4700 : 5700; state.index = launchIndex; state.startIndex = launchIndex; state.paused = reducedMotion; state.gesture = null; state.scrubbing = false;
     setPauseButton(state.paused, reducedMotion);
     buildCredits(state.events); buildTimeline(); flightAudio.startAmbience(); document.dispatchEvent(new CustomEvent('lifepulse:timeflight-open'));
     if (!state.events.length) { ui.briefing?.classList.remove('is-visible'); ui.finale?.classList.add('is-visible'); if (ui.finaleTitle) ui.finaleTitle.textContent = 'No anniversary is in range today.'; if (ui.finaleCopy) ui.finaleCopy.textContent = 'On This Date checks the exact date first, then looks within two weeks. Your complete flight is always available.'; return; }
-    showScene(Math.min(startIndex,state.events.length-1), true);
+    showScene(Math.min(launchIndex,state.events.length-1), true);
   }
   function open() {
-    const all = lifetimeEvents(), history = historicalEvents(), quick = quickEvents(all), saved = loadProgress();
-    [all[0], all[1], quick[0], history[0]].filter(Boolean).forEach(preloadEvent);
+    const all = lifetimeEvents(), history = historicalEvents(), quick = quickEvents(history), saved = loadProgress();
+    const quickStart = firstEventIndexAtOrAfterBirth(quick), fullStart = firstEventIndexAtOrAfterBirth(history);
+    [quick[quickStart], quick[quickStart + 1], history[fullStart], history[0]].filter(Boolean).forEach(preloadEvent);
     state.lastFocus = document.activeElement; clearTimer(); state.events=[]; state.paused=false;
     ui.overlay?.classList.add('is-open'); ui.overlay?.setAttribute('aria-hidden','false'); ui.briefing?.classList.add('is-visible'); ui.finale?.classList.remove('is-visible'); ui.image?.classList.remove('is-active');
     document.body.classList.add('time-flight-open');
-    if (ui.briefingTitle) ui.briefingTitle.textContent = all.length ? `Your flight begins in ${all[0].date.slice(0,4)}.` : 'Your story begins after this catalog.';
-    if (ui.briefingCopy) ui.briefingCopy.textContent = all.length ? `Choose your lifetime highlights, the complete ${all.length}-moment lifetime journey, or explore the full historical route from 1900. Difficult events are clearly labeled before they appear.` : 'The complete historical route begins in 1900.';
-    if (ui.quickMeta) ui.quickMeta.textContent = `${quick.length} essential moments - about ${Math.max(1,Math.round(quick.length*4.7/60))} min`;
-    if (ui.fullMeta) ui.fullMeta.textContent = `${all.length} moments - about ${Math.max(1,Math.round(all.length*5.7/60))} min`;
+    if (ui.briefingTitle) ui.briefingTitle.textContent = `Your flight launches at ${birthMoment().getFullYear()}.`;
+    if (ui.briefingCopy) ui.briefingCopy.textContent = 'Quick and Full flights begin at your birth-year position and move toward today. The timeline always spans 1900 to the present, so you can drag backward whenever you want to explore earlier history.';
+    if (ui.quickMeta) ui.quickMeta.textContent = `${quick.length} route highlights - launches at your birth year`;
+    if (ui.fullMeta) ui.fullMeta.textContent = `${history.length} complete moments - launches at your birth year`;
     if (ui.historyMeta) ui.historyMeta.textContent = `${history.length} moments from 1900 - about ${Math.max(1,Math.round(history.length*5.7/60))} min`;
     const resumable = saved && saved.version === VERSION && !saved.completed && Number.isInteger(saved.index) && saved.index > 0;
     ui.resume?.classList.toggle('hidden',!resumable);

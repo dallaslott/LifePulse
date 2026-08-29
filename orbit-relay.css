@@ -1,0 +1,178 @@
+.orbit-relay-launch-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  margin: 18px 0;
+  padding: 24px;
+  border: 1px solid rgba(153, 124, 255, .38);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(123, 94, 255, .22), transparent 34%),
+    radial-gradient(circle at 72% 90%, rgba(0, 210, 255, .12), transparent 38%),
+    linear-gradient(145deg, rgba(9, 12, 34, .98), rgba(4, 7, 18, .99));
+  box-shadow: inset 0 0 34px rgba(128, 103, 255, .045), 0 12px 34px rgba(0, 0, 0, .28);
+}
+.orbit-relay-launch-title { display: block; margin: 5px 0 8px; color: #f7f4ff; font-size: clamp(1.35rem, 3vw, 2rem); }
+.orbit-relay-launch-copy { max-width: 720px; margin: 0 0 10px; color: #c4c6dc; line-height: 1.55; }
+.orbit-relay-launch-btn,
+.orbit-relay-primary {
+  min-height: 46px;
+  padding: 12px 19px;
+  border: 1px solid rgba(190, 176, 255, .68);
+  border-radius: 999px;
+  color: #060419;
+  background: linear-gradient(135deg, #bfafff, #65d7ff);
+  box-shadow: 0 0 28px rgba(126, 103, 255, .28);
+  font: 900 .75rem/1 Montserrat, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.orbit-relay-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10080;
+  display: none;
+  place-items: center;
+  padding: max(7px, env(safe-area-inset-top)) max(7px, env(safe-area-inset-right)) max(7px, env(safe-area-inset-bottom)) max(7px, env(safe-area-inset-left));
+  background: #010208;
+}
+.orbit-relay-overlay.is-open { display: grid; }
+body.orbit-relay-open { overflow: hidden; }
+.orbit-relay-shell {
+  width: min(1220px, 100%);
+  height: min(820px, calc(100dvh - 14px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid rgba(118, 210, 255, .34);
+  border-radius: 24px;
+  background: #02040c;
+  box-shadow: 0 0 80px rgba(80, 99, 255, .18);
+}
+.orbit-relay-topbar,
+.orbit-relay-hud,
+.orbit-relay-top-actions { display: flex; align-items: center; }
+.orbit-relay-topbar { justify-content: space-between; gap: 12px; min-height: 58px; padding: 9px 16px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.orbit-relay-brand { color: #f3f1ff; font-weight: 900; letter-spacing: .055em; }
+.orbit-relay-brand span { color: #8ce8ff; text-shadow: 0 0 17px rgba(91,214,255,.72); }
+.orbit-relay-top-actions { gap: 8px; }
+.orbit-relay-view-toggle,
+.orbit-relay-close {
+  min-height: 39px;
+  border: 1px solid rgba(255,255,255,.16);
+  color: #e9f9ff;
+  background: rgba(255,255,255,.06);
+  cursor: pointer;
+}
+.orbit-relay-view-toggle { padding: 8px 13px; border-radius: 999px; font: 800 .66rem/1 Montserrat, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.orbit-relay-close { width: 41px; border-radius: 50%; font-size: 1.55rem; }
+.orbit-relay-hud {
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 42px;
+  padding: 7px 17px;
+  color: #b8cada;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+.orbit-relay-stage { position: relative; min-height: 0; overflow: hidden; touch-action: none; background: #010207; }
+#orbit-relay-canvas { display: block; width: 100%; height: 100%; }
+.orbit-relay-cockpit-frame { position:absolute; z-index:3; inset:0; display:none; pointer-events:none; overflow:hidden; }
+.orbit-relay-cockpit-frame.is-visible { display:block; }
+.orbit-relay-canopy { position:absolute; top:-7%; bottom:-14%; width:23%; border-color:rgba(130,216,244,.35); background:linear-gradient(90deg,rgba(1,4,12,.93),rgba(12,20,34,.6)); box-shadow:inset 0 0 35px rgba(81,177,215,.12),0 0 25px rgba(0,0,0,.72); }
+.orbit-relay-canopy-left { left:-8%; transform:skewX(-13deg); border-right:clamp(7px,1.5vw,18px) solid rgba(23,35,53,.96); }
+.orbit-relay-canopy-right { right:-8%; transform:skewX(13deg); border-left:clamp(7px,1.5vw,18px) solid rgba(23,35,53,.96); }
+.orbit-relay-cockpit-frame::after { content:''; position:absolute; left:10%; right:10%; bottom:-8%; height:24%; border:clamp(8px,1.7vw,20px) solid rgba(17,27,43,.96); border-radius:50% 50% 0 0; background:linear-gradient(180deg,rgba(15,26,42,.84),rgba(2,5,12,.98)); box-shadow:0 -5px 25px rgba(77,193,239,.12); }
+.orbit-relay-reticle { position:absolute; left:50%; top:48%; width:62px; height:62px; transform:translate(-50%,-50%); border:1px solid rgba(113,238,255,.66); border-radius:50%; box-shadow:0 0 16px rgba(94,223,255,.22),inset 0 0 12px rgba(94,223,255,.12); }
+.orbit-relay-reticle::before,.orbit-relay-reticle::after { content:''; position:absolute; left:50%; top:50%; background:rgba(119,241,255,.75); transform:translate(-50%,-50%); }
+.orbit-relay-reticle::before { width:88px; height:1px; }
+.orbit-relay-reticle::after { width:1px; height:88px; }
+.orbit-relay-speed-readout { position:absolute; left:50%; bottom:8%; z-index:2; transform:translateX(-50%); color:#8eeeff; font:800 .65rem/1 Montserrat,sans-serif; letter-spacing:.12em; text-shadow:0 0 12px #39cfff; }
+.orbit-relay-impact-warning { position:absolute; z-index:7; left:50%; top:25%; transform:translateX(-50%); color:#ff6a7e; font:900 clamp(.8rem,2.7vw,1.3rem)/1 Montserrat,sans-serif; letter-spacing:.15em; text-transform:uppercase; text-shadow:0 0 20px #ff284f; opacity:0; transition:opacity .12s ease; pointer-events:none; }
+.orbit-relay-impact-warning.is-visible { opacity:1; animation:orbit-relay-warning .34s steps(2,end) 2; }
+@keyframes orbit-relay-warning { 50% { opacity:.18; } }
+.orbit-relay-message {
+  position: absolute;
+  z-index: 6;
+  inset: 50% auto auto 50%;
+  width: min(590px, calc(100% - 30px));
+  padding: clamp(23px, 5vw, 42px);
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(137, 214, 255, .34);
+  border-radius: 26px;
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(5,8,25,.91), rgba(7,5,21,.88));
+  box-shadow: 0 28px 80px rgba(0,0,0,.62), inset 0 0 40px rgba(105,101,255,.06);
+  backdrop-filter: blur(14px);
+}
+.orbit-relay-message[hidden] { display: none; }
+.orbit-relay-message h2 { margin: 7px 0 11px; font-size: clamp(2rem, 6vw, 3.6rem); line-height: .98; letter-spacing: -.04em; }
+.orbit-relay-message p { max-width: 510px; margin: 0 auto 20px; color: #c7cedd; line-height: 1.55; }
+.orbit-relay-kicker { color: #9be8ff; font-size: .66rem; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+.orbit-relay-instructions { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-bottom: 21px; }
+.orbit-relay-instructions span { padding: 6px 10px; border: 1px solid rgba(159,139,255,.16); border-radius: 999px; color: #d5ceff; background: rgba(125,100,255,.1); font-size: .66rem; font-weight: 800; }
+.orbit-relay-boost-meter {
+  position: absolute;
+  z-index: 4;
+  left: 16px;
+  bottom: 15px;
+  width: min(210px, 38vw);
+  height: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(109,224,255,.28);
+  border-radius: 999px;
+  background: rgba(3,6,17,.68);
+}
+.orbit-relay-boost-meter span { position: absolute; inset: 0 auto 0 0; width: 100%; background: linear-gradient(90deg,#776aff,#66e7ff); box-shadow: 0 0 17px #73dfff; transform-origin: left; }
+.orbit-relay-boost-meter strong { position: absolute; inset: 0; display: grid; place-items: center; color: #eefcff; font-size: .52rem; letter-spacing: .12em; }
+.orbit-relay-boost {
+  position: absolute;
+  z-index: 5;
+  right: 16px;
+  bottom: 14px;
+  width: 76px;
+  height: 52px;
+  border: 1px solid rgba(136,220,255,.55);
+  border-radius: 17px;
+  color: #effcff;
+  background: radial-gradient(circle at 50% 32%, rgba(109,220,255,.35), rgba(82,69,211,.34));
+  box-shadow: 0 0 24px rgba(88,133,255,.23);
+  font: 900 .67rem/1 Montserrat,sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  touch-action: none;
+}
+.orbit-relay-boost.is-active { transform: scale(.96); box-shadow: 0 0 35px rgba(101,226,255,.55); }
+.orbit-relay-route {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(42px, 1fr));
+  gap: 5px;
+  padding: 9px 12px 11px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  background: #030611;
+}
+.orbit-relay-route-stop { display: grid; justify-items: center; gap: 3px; color: #667184; font-size: .52rem; font-weight: 800; text-transform: uppercase; }
+.orbit-relay-route-dot { width: 10px; height: 10px; border: 1px solid currentColor; border-radius: 50%; background: rgba(255,255,255,.03); }
+.orbit-relay-route-stop.is-complete { color: #74f0ba; }
+.orbit-relay-route-stop.is-current { color: #91e8ff; text-shadow: 0 0 10px currentColor; }
+.orbit-relay-route-stop.is-current .orbit-relay-route-dot { background: currentColor; box-shadow: 0 0 14px currentColor; }
+@media (max-width: 720px) {
+  .orbit-relay-launch-card { grid-template-columns: 1fr; padding: 19px; }
+  .orbit-relay-launch-btn { width: 100%; }
+  .orbit-relay-overlay { padding: 4px; }
+  .orbit-relay-shell { height: calc(100dvh - 8px); border-radius: 18px; }
+  .orbit-relay-brand { font-size: .77rem; }
+  .orbit-relay-view-toggle { max-width: 112px; padding-inline: 9px; font-size: .56rem; }
+  .orbit-relay-hud { padding-inline: 10px; font-size: .56rem; }
+  .orbit-relay-message { padding: 23px 16px; }
+  .orbit-relay-route { gap: 2px; padding-inline: 6px; }
+  .orbit-relay-route-stop { font-size: .43rem; }
+  .orbit-relay-boost-meter { bottom: 11px; left: 10px; }
+  .orbit-relay-boost { right: 10px; bottom: 8px; width: 70px; height: 48px; }
+}

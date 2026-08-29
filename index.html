@@ -22,6 +22,8 @@
   <link rel="apple-touch-icon" href="assets/lifepulse-icon-512.png" />
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link href="pulse-run.css" rel="stylesheet" />
+  <link href="orbit-relay.css" rel="stylesheet" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
@@ -326,6 +328,52 @@
       clip-path: inset(-100% 100% -100% 0);
       filter: none;
       animation: ecgJumpStart 1250ms cubic-bezier(.22,.61,.36,1) 4090ms 1 both;
+    }
+
+    .entry-title.launch-commit .entry-title__text,
+    .entry-title.launch-commit .entry-initialize-label,
+    .entry-title.launch-commit .entry-brand-word,
+    .entry-title.launch-commit .entry-brand-word .pulse-word__label {
+      animation: none !important;
+    }
+
+    .entry-title.launch-commit .entry-title__text::after,
+    .entry-title.launch-commit .entry-initialize-label::after,
+    .entry-title.launch-commit .entry-brand-word::after {
+      animation: launchCommitUnderline 680ms cubic-bezier(.22,.61,.36,1) 1 both !important;
+    }
+
+    .entry-title.launch-commit .entry-ecg {
+      opacity: 1;
+      animation: none !important;
+      filter: brightness(1.15);
+    }
+
+    .entry-title.launch-commit .entry-ecg .ecg-trace__base {
+      animation: launchCommitBase 680ms ease-out 1 both !important;
+    }
+
+    .entry-title.launch-commit .entry-ecg .ecg-trace__pulse {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      opacity: 1;
+      filter: drop-shadow(0 0 7px var(--primary));
+      animation: launchCommitEcg 680ms cubic-bezier(.22,.61,.36,1) 1 both !important;
+    }
+
+    @keyframes launchCommitUnderline {
+      0% { opacity: 0; transform: scaleX(0); }
+      58%, 100% { opacity: 1; transform: scaleX(1); }
+    }
+
+    @keyframes launchCommitBase {
+      0% { stroke: rgba(0,229,255,0.22); filter: none; }
+      100% { stroke: rgba(0,229,255,0.76); filter: drop-shadow(0 0 5px var(--primary)); }
+    }
+
+    @keyframes launchCommitEcg {
+      0% { clip-path: inset(-100% 100% -100% 0); }
+      72%, 100% { clip-path: inset(-100% 0 -100% 0); }
     }
 
     @keyframes ecgJumpStart {
@@ -1946,6 +1994,7 @@
     }
 
     .dashboard-group[open] {
+      overflow: visible;
       border-color: rgba(0,210,255,0.18);
       background: rgba(5,10,24,0.62);
     }
@@ -1962,6 +2011,23 @@
     }
 
     .dashboard-group-summary::-webkit-details-marker { display: none; }
+
+    .dashboard-group[open] > .dashboard-group-summary {
+      position: sticky;
+      top: max(6px, env(safe-area-inset-top));
+      z-index: 26;
+      border-radius: 19px 19px 14px 14px;
+      border-bottom: 1px solid rgba(0,210,255,0.2);
+      background: linear-gradient(135deg, rgba(8,17,34,0.97), rgba(8,13,28,0.94));
+      box-shadow: 0 9px 22px rgba(0,0,0,0.3), 0 0 16px rgba(0,210,255,0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    .dashboard-group[open] > .dashboard-group-summary .dashboard-group-icon {
+      color: #dffcff;
+      border: 1px solid rgba(0,210,255,0.22);
+      box-shadow: inset 0 0 12px rgba(0,210,255,0.08), 0 0 12px rgba(0,210,255,0.08);
+    }
 
     .dashboard-group-icon {
       display: grid;
@@ -2050,7 +2116,7 @@
 
     .starting-world-timeline {
       position: sticky;
-      top: max(8px, env(safe-area-inset-top));
+      top: calc(max(6px, env(safe-area-inset-top)) + 78px);
       z-index: 18;
       margin: -2px 0 14px;
       padding: 10px 12px 9px;
@@ -2170,7 +2236,7 @@
     }
 
     @media (max-width: 520px) {
-      .starting-world-timeline { top: max(5px, env(safe-area-inset-top)); padding: 9px 10px 8px; }
+      .starting-world-timeline { top: calc(max(5px, env(safe-area-inset-top)) + 72px); padding: 9px 10px 8px; }
       .starting-world-viewing { font-size: 0.64rem; }
       .starting-world-viewing strong { font-size: 0.77rem; }
       .starting-world-reset { padding: 5px 7px; font-size: 0.52rem; }
@@ -4672,6 +4738,442 @@
       .pwa-actions .pwa-action-btn { flex: 1 1 145px; }
     }
 
+    /* LifePulse Time Quest prototype */
+    .time-quest-launch-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      min-height: 170px;
+      margin: 18px 0 24px;
+      padding: clamp(21px, 4vw, 32px);
+      border: 1px solid rgba(255,181,107,0.38);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 84% 20%, rgba(255,126,72,0.24), transparent 34%),
+        radial-gradient(circle at 18% 88%, rgba(0,218,255,0.17), transparent 37%),
+        linear-gradient(138deg, rgba(10,20,42,0.98), rgba(19,8,30,0.98));
+      box-shadow: inset 0 0 54px rgba(255,142,82,0.04), 0 18px 55px rgba(0,0,0,0.27);
+    }
+    .time-quest-launch-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .5;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.92) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,181,107,.8) 0 1px, transparent 1.6px);
+      background-size: 61px 61px, 97px 97px;
+      background-position: 9px 13px, 38px 29px;
+      mask-image: linear-gradient(90deg, transparent 8%, #000 42%, #000);
+    }
+    .time-quest-kicker {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffb56b;
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .time-quest-launch-title {
+      display: block;
+      margin-bottom: 9px;
+      color: #fff;
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      line-height: 1.08;
+    }
+    .time-quest-launch-copy {
+      max-width: 620px;
+      color: rgba(239,247,255,.77);
+      font-size: .9rem;
+      line-height: 1.52;
+    }
+    .time-quest-launch-meta {
+      display: block;
+      margin-top: 11px;
+      color: rgba(255,203,153,.72);
+      font-size: .68rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .time-quest-launch-btn,
+    .time-quest-primary-btn {
+      border: 1px solid rgba(255,210,158,.68);
+      border-radius: 999px;
+      color: #180b06;
+      background: linear-gradient(135deg, #ffe0a8, #ff9b68 54%, #ff77a8);
+      box-shadow: 0 10px 34px rgba(255,126,72,.22);
+      font: inherit;
+      font-size: .76rem;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .time-quest-launch-btn { min-width: 158px; padding: 15px 20px; }
+    .time-quest-primary-btn { padding: 13px 20px; }
+    .time-quest-launch-btn:hover,
+    .time-quest-launch-btn:focus-visible,
+    .time-quest-primary-btn:hover,
+    .time-quest-primary-btn:focus-visible { filter: brightness(1.08); transform: translateY(-1px); }
+
+    body.time-quest-open { overflow: hidden !important; }
+    .time-quest-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 31000;
+      display: none;
+      overflow: auto;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+      color: #fff;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(0,218,255,.16), transparent 30%),
+        radial-gradient(circle at 86% 78%, rgba(255,111,83,.18), transparent 34%),
+        linear-gradient(145deg, #040914, #090619 66%, #130713);
+    }
+    .time-quest-overlay.is-open { display: grid; place-items: center; }
+    .time-quest-overlay::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .48;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.85) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(80,225,255,.65) 0 1px, transparent 1.5px);
+      background-size: 59px 59px, 103px 103px;
+      background-position: 0 0, 31px 22px;
+      animation: timeQuestStarDrift 18s linear infinite;
+    }
+    @keyframes timeQuestStarDrift { to { background-position: 118px 59px, -72px 125px; } }
+    .time-quest-shell {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 100%);
+      min-height: min(720px, calc(100dvh - 32px));
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(104,230,255,.27);
+      border-radius: 26px;
+      background: rgba(5,10,24,.9);
+      box-shadow: 0 24px 80px rgba(0,0,0,.55), inset 0 0 50px rgba(0,210,255,.035);
+      backdrop-filter: blur(18px);
+    }
+    .time-quest-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 17px 18px 10px;
+    }
+    .time-quest-brand {
+      color: #8af5ff;
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .time-quest-close {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(255,255,255,.06);
+      font-size: 1.35rem;
+      cursor: pointer;
+    }
+    .time-quest-pulse-track {
+      position: relative;
+      height: 58px;
+      margin: 0 18px 8px;
+      overflow: hidden;
+    }
+    .time-quest-pulse-track svg { width: 100%; height: 100%; overflow: visible; }
+    .time-quest-pulse-base,
+    .time-quest-pulse-energy { fill: none; stroke-width: 2.2; vector-effect: non-scaling-stroke; }
+    .time-quest-pulse-base { stroke: rgba(104,230,255,.2); }
+    .time-quest-pulse-energy {
+      stroke: url(#time-quest-pulse-gradient);
+      stroke-dasharray: 100;
+      stroke-dashoffset: calc(100 - var(--quest-progress, 0));
+      filter: drop-shadow(0 0 5px rgba(94,235,255,.85));
+      transition: stroke-dashoffset 550ms cubic-bezier(.22,.75,.25,1);
+    }
+    .time-quest-status-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 0 20px 15px;
+      color: rgba(231,244,255,.74);
+      font-size: .72rem;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .time-quest-score,
+    .time-quest-streak { color: #fff; }
+    .time-quest-stage {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 12px clamp(18px, 5vw, 42px) 30px;
+    }
+    .time-quest-card {
+      width: 100%;
+      padding: clamp(21px, 5vw, 34px);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(17,28,52,.96), rgba(14,11,31,.96));
+      box-shadow: 0 18px 48px rgba(0,0,0,.35);
+      animation: timeQuestCardIn 420ms cubic-bezier(.22,.75,.25,1) both;
+    }
+    @keyframes timeQuestCardIn {
+      from { opacity: 0; transform: translateY(14px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .time-quest-category {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 10px;
+      border: 1px solid color-mix(in srgb, var(--quest-color, #63e7ff) 45%, transparent);
+      border-radius: 999px;
+      color: var(--quest-color, #63e7ff);
+      background: color-mix(in srgb, var(--quest-color, #63e7ff) 10%, transparent);
+      font-size: .64rem;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .time-quest-question {
+      margin: 17px 0 20px;
+      color: #fff;
+      font-size: clamp(1.2rem, 4vw, 1.65rem);
+      line-height: 1.26;
+    }
+    .time-quest-answers { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .time-quest-answer {
+      min-height: 62px;
+      padding: 13px 14px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 14px;
+      color: #edfaff;
+      background: rgba(255,255,255,.055);
+      font: inherit;
+      font-size: .86rem;
+      font-weight: 800;
+      line-height: 1.3;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+    .time-quest-answer:hover,
+    .time-quest-answer:focus-visible { transform: translateY(-1px); border-color: rgba(100,231,255,.52); outline: none; }
+    .time-quest-answer.is-correct { border-color: #66f0bd; background: rgba(44,220,157,.17); color: #dcfff2; }
+    .time-quest-answer.is-wrong { border-color: #ff7a8f; background: rgba(255,75,108,.16); color: #ffe3e8; }
+    .time-quest-answer:disabled { cursor: default; transform: none; }
+    .time-quest-feedback {
+      min-height: 48px;
+      margin-top: 15px;
+      color: rgba(234,246,255,.82);
+      font-size: .82rem;
+      line-height: 1.45;
+    }
+    .time-quest-feedback strong { color: #fff; }
+    .time-quest-actions { display: flex; justify-content: flex-end; margin-top: 14px; }
+    .time-quest-primary-btn[hidden] { display: none; }
+    .time-quest-finale { text-align: center; }
+    .time-quest-final-score { margin: 12px 0 5px; color: #8af5ff; font-size: clamp(2.3rem, 10vw, 4rem); font-weight: 950; }
+    .time-quest-final-copy { margin: 0 auto 22px; max-width: 520px; color: rgba(235,246,255,.78); line-height: 1.55; }
+
+    @media (max-width: 600px) {
+      .time-quest-launch-card { grid-template-columns: 1fr; gap: 16px; }
+      .time-quest-launch-btn { width: 100%; }
+      .time-quest-overlay { padding-inline: 8px; }
+      .time-quest-shell { min-height: calc(100dvh - max(16px, env(safe-area-inset-top)) - max(18px, env(safe-area-inset-bottom))); border-radius: 20px; }
+      .time-quest-pulse-track { margin-inline: 12px; }
+      .time-quest-status-row { padding-inline: 15px; }
+      .time-quest-stage { padding: 8px 12px 20px; }
+      .time-quest-card { padding: 20px 16px; }
+      .time-quest-answers { grid-template-columns: 1fr; }
+      .time-quest-answer { min-height: 54px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .time-quest-overlay::before,
+      .time-quest-card { animation: none; }
+    }
+
+    /* Cosmic Chronology prototype */
+    .cosmic-chronology-launch-card {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin: 14px 0 22px;
+      padding: clamp(20px,4vw,30px);
+      border: 1px solid rgba(169,145,255,.38);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 86% 22%, rgba(103,77,255,.3), transparent 33%),
+        radial-gradient(circle at 12% 90%, rgba(0,218,255,.16), transparent 38%),
+        linear-gradient(137deg, rgba(8,17,39,.98), rgba(15,7,35,.98));
+      box-shadow: inset 0 0 44px rgba(143,115,255,.055), 0 16px 45px rgba(0,0,0,.25);
+    }
+    .cosmic-chronology-launch-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .42;
+      background-image: radial-gradient(circle, rgba(255,255,255,.92) 0 1px, transparent 1.5px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(90deg, transparent 4%, #000 48%, #000);
+    }
+    .cosmic-chronology-launch-card > * { position: relative; z-index: 1; }
+    .cosmic-chronology-title { display:block; margin: 5px 0 9px; color:#fff; font-size:clamp(1.25rem,3vw,1.8rem); }
+    .cosmic-chronology-copy { color:rgba(236,244,255,.76); font-size:.88rem; line-height:1.5; }
+    .cosmic-chronology-launch-btn,
+    .cosmic-chronology-action {
+      border: 1px solid rgba(186,171,255,.62);
+      border-radius: 999px;
+      color: #09051a;
+      background: linear-gradient(135deg,#9af4ff,#a991ff 54%,#ef91ff);
+      box-shadow: 0 9px 30px rgba(126,91,255,.23);
+      font: inherit;
+      font-size: .74rem;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .cosmic-chronology-launch-btn { min-width:158px; padding:14px 19px; }
+    .cosmic-chronology-action { padding:12px 18px; }
+
+    body.cosmic-chronology-open { overflow:hidden !important; }
+    .cosmic-chronology-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 31500;
+      display: none;
+      overflow: auto;
+      padding: max(12px,env(safe-area-inset-top)) 10px max(16px,env(safe-area-inset-bottom));
+      color: #fff;
+      background:
+        radial-gradient(circle at 4% 48%, rgba(255,162,64,.22), transparent 21%),
+        radial-gradient(circle at 84% 18%, rgba(76,91,214,.28), transparent 35%),
+        linear-gradient(145deg,#02050d,#07051a 62%,#10071f);
+    }
+    .cosmic-chronology-overlay.is-open { display:grid; place-items:center; }
+    .cosmic-chronology-shell {
+      width:min(900px,100%);
+      min-height:min(760px,calc(100dvh - 28px));
+      display:flex;
+      flex-direction:column;
+      border:1px solid rgba(161,145,255,.28);
+      border-radius:26px;
+      overflow:hidden;
+      background:rgba(4,8,22,.92);
+      box-shadow:0 25px 90px rgba(0,0,0,.62),inset 0 0 56px rgba(116,92,255,.045);
+      backdrop-filter:blur(18px);
+    }
+    .cosmic-chronology-topbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:16px 18px 10px;
+    }
+    .cosmic-chronology-brand { color:#b8a7ff; font-size:.72rem; font-weight:950; letter-spacing:.15em; text-transform:uppercase; }
+    .cosmic-chronology-close {
+      width:38px;height:38px;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:50%;
+      color:#fff;background:rgba(255,255,255,.06);font-size:1.35rem;cursor:pointer;
+    }
+    .cosmic-chronology-route-scroll { overflow-x:auto; padding:8px 18px 12px; scrollbar-width:thin; }
+    .cosmic-chronology-route {
+      --cosmic-position: 0;
+      position:relative;
+      min-width:700px;
+      padding:22px 18px 5px;
+    }
+    .cosmic-chronology-line {
+      position:absolute;
+      left:5%;right:5%;top:43px;height:2px;
+      background:linear-gradient(90deg,rgba(255,178,84,.72),rgba(96,230,255,.5),rgba(169,145,255,.66));
+      box-shadow:0 0 11px rgba(106,218,255,.38);
+    }
+    .cosmic-chronology-ship {
+      position:absolute;
+      z-index:4;
+      left:calc(5% + (var(--cosmic-position) * 12.857%));
+      top:24px;
+      color:#fff;
+      font-size:1rem;
+      filter:drop-shadow(0 0 7px #70ecff);
+      transform:translateX(-50%);
+      transition:left 650ms cubic-bezier(.22,.75,.25,1);
+    }
+    .cosmic-chronology-planets { position:relative;z-index:2;display:grid;grid-template-columns:repeat(8,1fr);gap:8px; }
+    .cosmic-chronology-planet { display:grid;justify-items:center;gap:7px;color:rgba(220,232,255,.52);font-size:.58rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em; }
+    .cosmic-chronology-planet-dot {
+      display:grid;place-items:center;width:42px;height:42px;border:2px solid rgba(255,255,255,.18);border-radius:50%;
+      background:radial-gradient(circle at 32% 27%,color-mix(in srgb,var(--planet-color) 85%,#fff),var(--planet-color) 48%,#070b18 100%);
+      box-shadow:0 0 0 4px rgba(4,8,22,.9),0 0 12px color-mix(in srgb,var(--planet-color) 38%,transparent);
+      transition:transform 240ms ease,box-shadow 240ms ease;
+    }
+    .cosmic-chronology-planet.is-current { color:#fff; }
+    .cosmic-chronology-planet.is-current .cosmic-chronology-planet-dot { transform:scale(1.2);box-shadow:0 0 0 4px rgba(4,8,22,.95),0 0 24px var(--planet-color); }
+    .cosmic-chronology-planet.is-correct .cosmic-chronology-planet-dot { border-color:#63efbb; }
+    .cosmic-chronology-planet.is-missed .cosmic-chronology-planet-dot { border-color:#ff728a;filter:saturate(.55); }
+    .cosmic-chronology-fuel {
+      margin:0 20px 12px;height:9px;border:1px solid rgba(255,255,255,.13);border-radius:999px;overflow:hidden;background:rgba(255,255,255,.05);
+    }
+    .cosmic-chronology-fuel-fill { width:var(--cosmic-fuel,0%);height:100%;background:linear-gradient(90deg,#5eeaff,#a78cff,#ff8fb2);box-shadow:0 0 12px rgba(100,231,255,.7);transition:width 520ms ease; }
+    .cosmic-chronology-status { display:flex;justify-content:space-between;gap:12px;padding:0 20px 13px;color:rgba(229,240,255,.72);font-size:.68rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase; }
+    .cosmic-chronology-stage { flex:1;display:grid;place-items:center;padding:10px clamp(16px,5vw,45px) 28px; }
+    .cosmic-chronology-card {
+      width:100%;padding:clamp(21px,5vw,34px);border:1px solid rgba(255,255,255,.12);border-radius:22px;
+      background:linear-gradient(145deg,rgba(14,24,49,.97),rgba(15,9,34,.97));box-shadow:0 18px 54px rgba(0,0,0,.38);
+      animation:cosmicCardArrival 500ms cubic-bezier(.22,.75,.25,1) both;
+    }
+    @keyframes cosmicCardArrival { from{opacity:0;transform:translateX(22px) scale(.98)} to{opacity:1;transform:none} }
+    .cosmic-chronology-planet-name { color:var(--planet-color,#a991ff);font-size:.72rem;font-weight:950;letter-spacing:.15em;text-transform:uppercase; }
+    .cosmic-chronology-question { margin:14px 0 19px;color:#fff;font-size:clamp(1.18rem,4vw,1.65rem);line-height:1.28; }
+    .cosmic-chronology-answers { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px; }
+    .cosmic-chronology-answer {
+      min-height:58px;padding:12px 14px;border:1px solid rgba(255,255,255,.13);border-radius:14px;color:#eef8ff;
+      background:rgba(255,255,255,.055);font:inherit;font-size:.84rem;font-weight:800;text-align:left;cursor:pointer;
+    }
+    .cosmic-chronology-answer:hover,.cosmic-chronology-answer:focus-visible { border-color:rgba(169,145,255,.6);outline:none; }
+    .cosmic-chronology-answer.is-correct { border-color:#63efbb;background:rgba(44,220,157,.17); }
+    .cosmic-chronology-answer.is-wrong { border-color:#ff728a;background:rgba(255,75,108,.16); }
+    .cosmic-chronology-answer:disabled { cursor:default; }
+    .cosmic-chronology-feedback { min-height:48px;margin-top:15px;color:rgba(235,245,255,.82);font-size:.82rem;line-height:1.45; }
+    .cosmic-chronology-actions { display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:14px; }
+    .cosmic-chronology-action[hidden] { display:none; }
+    .cosmic-chronology-finale { text-align:center; }
+    .cosmic-chronology-final-score { margin:10px 0;color:#a9f5ff;font-size:clamp(2.2rem,9vw,3.8rem);font-weight:950; }
+
+    @media(max-width:600px){
+      .cosmic-chronology-launch-card{grid-template-columns:1fr}.cosmic-chronology-launch-btn{width:100%}
+      .cosmic-chronology-shell{min-height:calc(100dvh - max(12px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)));border-radius:20px}
+      .cosmic-chronology-route-scroll{padding-inline:10px}.cosmic-chronology-stage{padding:8px 12px 20px}.cosmic-chronology-card{padding:20px 16px}
+      .cosmic-chronology-answers{grid-template-columns:1fr}.cosmic-chronology-answer{min-height:52px}
+    }
+
+    @media(prefers-reduced-motion:reduce){.cosmic-chronology-card{animation:none}.cosmic-chronology-ship{transition:none}}
+
     /* Time Flight prototype */
     .time-flight-launch-card {
       position: relative;
@@ -5363,6 +5865,118 @@
     </div>
   </section>
 
+  <section class="time-quest-overlay" id="time-quest-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="LifePulse Time Quest game">
+    <div class="time-quest-shell">
+      <div class="time-quest-topbar">
+        <span class="time-quest-brand">LifePulse &bull; Time Quest</span>
+        <button class="time-quest-close" id="time-quest-close" type="button" aria-label="Exit Time Quest">&times;</button>
+      </div>
+      <div class="time-quest-pulse-track" id="time-quest-pulse-track" style="--quest-progress:0">
+        <svg viewBox="0 0 700 70" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="time-quest-pulse-gradient" x1="0" x2="1">
+              <stop offset="0" stop-color="#54eaff" />
+              <stop offset=".58" stop-color="#a78aff" />
+              <stop offset="1" stop-color="#ff9b68" />
+            </linearGradient>
+          </defs>
+          <path class="time-quest-pulse-base" pathLength="100" d="M0 36 H105 L121 36 L132 22 L143 50 L157 7 L174 62 L188 36 H263 L278 36 L288 26 L299 44 L310 14 L325 56 L341 36 H430 L445 36 L454 24 L466 47 L480 10 L496 60 L511 36 H700" />
+          <path class="time-quest-pulse-energy" pathLength="100" d="M0 36 H105 L121 36 L132 22 L143 50 L157 7 L174 62 L188 36 H263 L278 36 L288 26 L299 44 L310 14 L325 56 L341 36 H430 L445 36 L454 24 L466 47 L480 10 L496 60 L511 36 H700" />
+        </svg>
+      </div>
+      <div class="time-quest-status-row">
+        <span id="time-quest-progress-label">Question 1 of 15</span>
+        <span class="time-quest-score" id="time-quest-score">Score 0</span>
+        <span class="time-quest-streak" id="time-quest-streak">Streak 0</span>
+      </div>
+      <div class="time-quest-stage" id="time-quest-stage"></div>
+    </div>
+  </section>
+
+  <section class="cosmic-chronology-overlay" id="cosmic-chronology-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Cosmic Chronology game">
+    <div class="cosmic-chronology-shell">
+      <div class="cosmic-chronology-topbar">
+        <span class="cosmic-chronology-brand">LifePulse &bull; Cosmic Chronology</span>
+        <button class="cosmic-chronology-close" id="cosmic-chronology-close" type="button" aria-label="Exit Cosmic Chronology">&times;</button>
+      </div>
+      <div class="cosmic-chronology-route-scroll" id="cosmic-chronology-route-scroll">
+        <div class="cosmic-chronology-route" id="cosmic-chronology-route" style="--cosmic-position:0">
+          <div class="cosmic-chronology-line" aria-hidden="true"></div>
+          <span class="cosmic-chronology-ship" aria-hidden="true">&#10022;</span>
+          <div class="cosmic-chronology-planets" id="cosmic-chronology-planets"></div>
+        </div>
+      </div>
+      <div class="cosmic-chronology-fuel" aria-hidden="true"><div class="cosmic-chronology-fuel-fill" id="cosmic-chronology-fuel" style="--cosmic-fuel:0%"></div></div>
+      <div class="cosmic-chronology-status"><span id="cosmic-chronology-progress">Mercury &bull; Stop 1 of 8</span><span id="cosmic-chronology-score">Fuel 0 &bull; Score 0</span></div>
+      <div class="cosmic-chronology-stage" id="cosmic-chronology-stage"></div>
+    </div>
+  </section>
+
+  <section class="pulse-run-overlay" id="pulse-run-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Pulse Run action game">
+    <div class="pulse-run-shell">
+      <div class="pulse-run-topbar">
+        <span class="pulse-run-brand"><span aria-hidden="true">&#9829;</span> LifePulse &bull; Pulse Run</span>
+        <button class="pulse-run-close" id="pulse-run-close" type="button" aria-label="Exit Pulse Run">&times;</button>
+      </div>
+      <div class="pulse-run-hud" aria-live="polite">
+        <span id="pulse-run-year">Timeline Ready</span>
+        <span id="pulse-run-score">Score 0</span>
+        <span id="pulse-run-stability">Stability 3</span>
+      </div>
+      <div class="pulse-run-stage" id="pulse-run-stage">
+        <canvas id="pulse-run-canvas" aria-label="Steer the pulse through three lanes. Collect bright moments and avoid red timeline fractures."></canvas>
+        <div class="pulse-run-message" id="pulse-run-message">
+          <span class="pulse-run-kicker">Action Prototype</span>
+          <h2>Keep History's Pulse Alive</h2>
+          <p>Move between three lanes. Collect glowing moments from history, sports, space, and technology. Avoid red timeline fractures.</p>
+          <div class="pulse-run-instructions"><span>&uarr; &darr; Keys</span><span>Swipe</span><span>Tap A Lane</span></div>
+          <button class="pulse-run-primary" id="pulse-run-start" type="button">Start Pulse Run</button>
+        </div>
+      </div>
+      <div class="pulse-run-mobile-controls" aria-label="Pulse Run movement controls">
+        <button id="pulse-run-up" type="button" aria-label="Move pulse up">&#9650;</button>
+        <button id="pulse-run-down" type="button" aria-label="Move pulse down">&#9660;</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="orbit-relay-overlay" id="orbit-relay-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Orbit Relay space racing game">
+    <div class="orbit-relay-shell">
+      <div class="orbit-relay-topbar">
+        <span class="orbit-relay-brand"><span aria-hidden="true">&#10022;</span> LifePulse &bull; Orbit Relay</span>
+        <div class="orbit-relay-top-actions">
+          <button class="orbit-relay-view-toggle" id="orbit-relay-view-toggle" type="button" aria-label="Switch camera view">Cockpit View</button>
+          <button class="orbit-relay-close" id="orbit-relay-close" type="button" aria-label="Exit Orbit Relay">&times;</button>
+        </div>
+      </div>
+      <div class="orbit-relay-hud" aria-live="polite">
+        <span id="orbit-relay-leg">Earth Relay</span>
+        <span id="orbit-relay-score">Score 0</span>
+        <span id="orbit-relay-shields">Shields 3</span>
+      </div>
+      <div class="orbit-relay-stage" id="orbit-relay-stage">
+        <canvas id="orbit-relay-canvas" aria-label="Steer a spacecraft through planetary orbit gates while avoiding debris."></canvas>
+        <div class="orbit-relay-cockpit-frame" id="orbit-relay-cockpit-frame" aria-hidden="true">
+          <span class="orbit-relay-canopy orbit-relay-canopy-left"></span>
+          <span class="orbit-relay-canopy orbit-relay-canopy-right"></span>
+          <span class="orbit-relay-reticle"></span>
+          <span class="orbit-relay-speed-readout" id="orbit-relay-speed-readout">12,400 KM/S</span>
+        </div>
+        <div class="orbit-relay-impact-warning" id="orbit-relay-impact-warning" aria-live="assertive"></div>
+        <div class="orbit-relay-message" id="orbit-relay-message">
+          <span class="orbit-relay-kicker">Solar-System Racing Prototype</span>
+          <h2>Orbit Relay</h2>
+          <p>Race from Mercury to Neptune. Thread each orbital gate, collect boost energy, and avoid asteroids and abandoned space debris.</p>
+          <div class="orbit-relay-instructions"><span>Drag / Swipe to Steer</span><span>Arrows or WASD</span><span>Hold Boost</span><span>V Changes View</span></div>
+          <button class="orbit-relay-primary" id="orbit-relay-start" type="button">Launch Relay</button>
+        </div>
+        <div class="orbit-relay-boost-meter" aria-label="Boost energy"><span id="orbit-relay-boost-fill"></span><strong>BOOST</strong></div>
+        <button class="orbit-relay-boost" id="orbit-relay-boost" type="button">Boost</button>
+      </div>
+      <div class="orbit-relay-route" id="orbit-relay-route" aria-label="Planetary relay progress"></div>
+    </div>
+  </section>
+
   <div class="portrait-lock-overlay" id="portrait-lock-overlay" aria-live="polite">
     <div class="portrait-lock-message"><span class="portrait-lock-icon" aria-hidden="true">&#128241;</span>LifePulse is designed for portrait view.<br>Rotate your device upright to continue.</div>
   </div>
@@ -5372,7 +5986,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-       <span class="version-chip" id="version-chip" aria-label="App version">v5.139.3.local</span>
+       <span class="version-chip" id="version-chip" aria-label="App version">v5.145.9.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -5780,6 +6394,15 @@
 
     <div class="panel panel-planet" id="planetary-cosmic-panel">
       <div class="section-title">Planetary + Cosmic Mode</div>
+      <section class="cosmic-chronology-launch-card" id="cosmic-chronology-launch-card" aria-labelledby="cosmic-chronology-title">
+        <div>
+          <span class="time-quest-kicker">Playable Prototype</span>
+          <strong class="cosmic-chronology-title" id="cosmic-chronology-title">Cosmic Chronology</strong>
+          <p class="cosmic-chronology-copy">Travel from Mercury to Neptune. Every planet opens a different LifePulse category, and correct answers provide the fuel needed to finish the voyage.</p>
+          <span class="time-quest-launch-meta">8 planets &bull; 8 category challenges &bull; Randomized route questions</span>
+        </div>
+        <button class="cosmic-chronology-launch-btn" id="cosmic-chronology-launch-btn" type="button">Begin Voyage</button>
+      </section>
       <div class="planet-row">
         <select id="planetChoice">
           <option value="0.24">MERCURY</option>
@@ -6017,6 +6640,36 @@
           <span class="time-flight-launch-meta" id="time-flight-launch-meta">20 curated moments &bull; Quick and Full flights</span>
         </div>
         <button class="time-flight-launch-btn" id="time-flight-launch-btn" type="button">Start Time Flight</button>
+      </section>
+
+      <section class="time-quest-launch-card" id="time-quest-launch-card" aria-labelledby="time-quest-launch-title">
+        <div>
+          <span class="time-quest-kicker">Playable Prototype</span>
+          <strong class="time-quest-launch-title" id="time-quest-launch-title">LifePulse Time Quest</strong>
+          <p class="time-quest-launch-copy">Charge the timeline through 15 fast challenges spanning history, sports, space, technology, and your own place in time.</p>
+          <span class="time-quest-launch-meta">15 questions &bull; Personalized round &bull; Score and streaks</span>
+        </div>
+        <button class="time-quest-launch-btn" id="time-quest-launch-btn" type="button">Start Time Quest</button>
+      </section>
+
+      <section class="pulse-run-launch-card" id="pulse-run-launch-card" aria-labelledby="pulse-run-launch-title">
+        <div>
+          <span class="time-quest-kicker">Action Prototype</span>
+          <strong class="pulse-run-launch-title" id="pulse-run-launch-title">Pulse Run</strong>
+          <p class="pulse-run-launch-copy">Steer an ECG signal through a speeding timeline. Collect bright cultural, sports, space, and technology moments while dodging red timeline fractures.</p>
+          <span class="time-quest-launch-meta">Touch + keyboard controls &bull; Increasing speed &bull; Local high score</span>
+        </div>
+        <button class="pulse-run-launch-btn" id="pulse-run-launch-btn" type="button">Start Pulse Run</button>
+      </section>
+
+      <section class="orbit-relay-launch-card" id="orbit-relay-launch-card" aria-labelledby="orbit-relay-launch-title">
+        <div>
+          <span class="time-quest-kicker">Space Racing Prototype</span>
+          <strong class="orbit-relay-launch-title" id="orbit-relay-launch-title">Orbit Relay</strong>
+          <p class="orbit-relay-launch-copy">Race through a cinematic solar-system course in Cockpit or Chase view. Clear planetary orbit gates, collect boost energy, and dodge debris.</p>
+          <span class="time-quest-launch-meta">8 planetary checkpoints &bull; Two camera views &bull; Touch + keyboard</span>
+        </div>
+        <button class="orbit-relay-launch-btn" id="orbit-relay-launch-btn" type="button">Launch Orbit Relay</button>
       </section>
 
       <div class="birth-grid" id="birth-snapshot-grid">
@@ -6550,7 +7203,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.139.3.local';
+    const LOCAL_RELEASE_VERSION = '5.145.9.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -6577,6 +7230,21 @@
       pulse.classList.remove('ecg-cruising');
       void row.offsetWidth;
       row.classList.add('identity-handoff');
+    }
+
+    function runLauncherCommitAnimation() {
+      const title = document.querySelector('.entry-title');
+      const pulse = title?.querySelector('.entry-ecg .ecg-trace__pulse');
+      if (!title) return Promise.resolve();
+      title.classList.remove('launch-commit');
+      pulse?.classList.remove('ecg-cruising');
+      void title.offsetWidth;
+      title.classList.add('launch-commit');
+      return new Promise(resolve => window.setTimeout(resolve, 760));
+    }
+
+    function clearLauncherCommitAnimation() {
+      document.querySelector('.entry-title')?.classList.remove('launch-commit');
     }
 
     document.addEventListener('animationend', event => {
@@ -15798,12 +16466,26 @@ function getBirthSkySnapshot() {
       { id: 'right-now', icon: '◉', title: 'Right Now', copy: 'Live age, today’s pulse, celebrations, your next birthday, and upcoming moments.', defaultOpen: true, nodes: ['daily-pulse-section','age-progress-label','age-progress-track','chrono-age-card','time-breakdown-panel','birthday-hero-panel','whats-next-panel'] },
       { id: 'starting-world', icon: '🌅', title: 'Your Starting World', copy: 'Then-versus-now comparisons and the culture surrounding your birth.', nodes: ['born-then-now-panel','birth-snapshot-panel'] },
       { id: 'lifetime-glance', icon: '⌛', title: 'Lifetime at a Glance', copy: 'Your estimated totals, life percentages, and compressed-life view.', nodes: ['lifetime-estimates-panel','life-percentages-panel','life-compressed-panel'] },
-      { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, defining history, Time Flight, major eras, and your personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','time-flight-launch-card','life-atlas-panel','life-timeline-panel'] },
+      { id: 'life-story', icon: '🧭', title: 'Your Life Story', copy: 'Calendar patterns, defining history, Time Flight, Time Quest, major eras, and your personal timeline.', nodes: ['on-this-date-panel','lived-through-panel','time-flight-launch-card','time-quest-launch-card','life-atlas-panel','life-timeline-panel'] },
       { id: 'identity-archetypes', icon: '✦', title: 'Identity & Archetypes', copy: 'Zodiac alignment, LifePulse DNA, generation context, and the era that shaped you.', nodes: ['zodiac-card','life-dna-panel','generation-panel'] },
       { id: 'planetary-cosmic', icon: '🌌', title: 'Planetary & Cosmic', copy: 'Your motion through space, sky cycles, eclipses, planets, and the larger universe.', nodes: ['planetary-cosmic-panel'] },
       { id: 'sports-history', icon: '🏆', title: 'Sports History', copy: 'Championships, Olympic Games, World Cups, and repeat-title eras.', nodes: ['sports-history-panel'] },
       { id: 'share-pulse', icon: '↗', title: 'Share Your Pulse', copy: 'Preview, save, and share your personalized LifePulse card.', nodes: ['share-panel'] }
     ];
+
+    const lifeStorySection = DASHBOARD_SECTION_GROUPS.find(section => section.id === 'life-story');
+    if (lifeStorySection) {
+      lifeStorySection.copy = 'Calendar patterns, defining history, major eras, and your personal timeline.';
+      lifeStorySection.nodes = lifeStorySection.nodes.filter(id => !['time-flight-launch-card', 'time-quest-launch-card'].includes(id));
+    }
+
+    DASHBOARD_SECTION_GROUPS.splice(4, 0, {
+      id: 'experiences',
+      icon: '&#9889;',
+      title: 'LifePulse Experiences',
+      copy: 'Cinematic history, knowledge challenges, cosmic exploration, and action gameplay.',
+      nodes: ['time-flight-launch-card', 'time-quest-launch-card', 'cosmic-chronology-launch-card', 'pulse-run-launch-card', 'orbit-relay-launch-card']
+    });
 
     function readSectionPreferences() {
       try { return JSON.parse(localStorage.getItem(SECTION_STORAGE_KEY) || '{}') || {}; }
@@ -16301,6 +16983,402 @@ function getBirthSkySnapshot() {
       document.addEventListener('keydown', onEscape);
     }
 
+    const TIME_QUEST_BASE_QUESTIONS = [
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'In what year did Apollo 11 land humans on the Moon?', answers: ['1965','1969','1972','1977'], correct: '1969', fact: 'Apollo 11 landed on July 20, 1969. Neil Armstrong and Buzz Aldrin walked on the lunar surface.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'Which event happened in 1989?', answers: ['The Berlin Wall opened','The Soviet Union dissolved','The first iPhone launched','The World Wide Web became public'], correct: 'The Berlin Wall opened', fact: 'The Berlin Wall opened on November 9, 1989. German reunification followed in 1990.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'President John F. Kennedy was assassinated in which year?', answers: ['1959','1963','1968','1974'], correct: '1963', fact: 'John F. Kennedy was assassinated in Dallas on November 22, 1963.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'The United Nations was founded immediately after which global conflict?', answers: ['World War I','World War II','The Korean War','The Cold War'], correct: 'World War II', fact: 'The United Nations officially began on October 24, 1945, after World War II.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'The first game later called the Super Bowl was played in which year?', answers: ['1957','1963','1967','1972'], correct: '1967', fact: 'Green Bay defeated Kansas City in the first AFL-NFL World Championship Game on January 15, 1967.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'The original U.S. basketball Dream Team competed at which Olympics?', answers: ['Seoul 1988','Barcelona 1992','Atlanta 1996','Sydney 2000'], correct: 'Barcelona 1992', fact: 'The 1992 U.S. Olympic men\'s basketball team featured NBA stars together in Olympic competition for the first time.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Which team ended a 108-year World Series championship drought in 2016?', answers: ['Boston Red Sox','Chicago Cubs','Cleveland Indians','Houston Astros'], correct: 'Chicago Cubs', fact: 'The Chicago Cubs won the 2016 World Series, their first championship since 1908.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Voyager 1 began its journey through the outer solar system in which year?', answers: ['1969','1973','1977','1981'], correct: '1977', fact: 'Voyager 1 launched on September 5, 1977, and is now the most distant human-made object.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'The James Webb Space Telescope launched in which year?', answers: ['2012','2016','2021','2024'], correct: '2021', fact: 'Webb launched on December 25, 2021, and began releasing science images in 2022.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Halley\'s Comet most recently reached perihelion in which year?', answers: ['1969','1977','1986','1997'], correct: '1986', fact: 'Halley\'s Comet reached perihelion on February 9, 1986. Its next perihelion is expected in 2061.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Intel introduced the 4004, widely recognized as the first commercial microprocessor, in which year?', answers: ['1965','1971','1977','1984'], correct: '1971', fact: 'Intel announced the 4004 microprocessor in 1971, fitting a programmable CPU onto one chip.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'The first iPhone went on sale in which year?', answers: ['2001','2004','2007','2010'], correct: '2007', fact: 'Apple released the first iPhone in the United States on June 29, 2007.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'The World Wide Web became publicly available in which year?', answers: ['1984','1989','1991','1995'], correct: '1991', fact: 'Tim Berners-Lee made the World Wide Web project publicly available on the internet in 1991.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'The Burj Khalifa officially opened as the world\'s tallest building in which year?', answers: ['1998','2004','2010','2016'], correct: '2010', fact: 'The Burj Khalifa opened in Dubai on January 4, 2010, at 2,717 feet tall.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'The attack on Pearl Harbor brought the United States into World War II in which year?', answers: ['1939','1941','1943','1945'], correct: '1941', fact: 'Japan attacked Pearl Harbor on December 7, 1941. The United States declared war the following day.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'Which landmark ruling declared racial segregation in U.S. public schools unconstitutional?', answers: ['Brown v. Board of Education','Miranda v. Arizona','Roe v. Wade','Gideon v. Wainwright'], correct: 'Brown v. Board of Education', fact: 'The U.S. Supreme Court decided Brown v. Board of Education in 1954.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'Which disaster occurred at a nuclear power plant in 1986?', answers: ['Three Mile Island','Chernobyl','Fukushima','Windscale'], correct: 'Chernobyl', fact: 'Reactor 4 at the Chernobyl nuclear power plant exploded on April 26, 1986.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'Which leader resigned the U.S. presidency during the Watergate scandal?', answers: ['Lyndon Johnson','Richard Nixon','Gerald Ford','Jimmy Carter'], correct: 'Richard Nixon', fact: 'Richard Nixon resigned on August 9, 1974, becoming the first U.S. president to do so.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'The Soviet Union formally dissolved in which year?', answers: ['1987','1989','1991','1993'], correct: '1991', fact: 'The Soviet Union formally dissolved in December 1991.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'Pan Am Flight 103 was destroyed over which Scottish town?', answers: ['Aberdeen','Glasgow','Lockerbie','Stirling'], correct: 'Lockerbie', fact: 'Pan Am Flight 103 was bombed over Lockerbie, Scotland, on December 21, 1988.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'Which city hosted the signing of the United Nations Charter in 1945?', answers: ['New York','Geneva','San Francisco','London'], correct: 'San Francisco', fact: 'Delegates signed the United Nations Charter in San Francisco on June 26, 1945.' },
+      { category: 'World History', icon: '&#127758;', color: '#66e5ff', prompt: 'The September 11 attacks occurred in which year?', answers: ['1998','2000','2001','2003'], correct: '2001', fact: 'The September 11 attacks occurred in 2001 in New York, Virginia, and Pennsylvania.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Who broke Major League Baseball\'s modern color barrier in 1947?', answers: ['Satchel Paige','Jackie Robinson','Willie Mays','Hank Aaron'], correct: 'Jackie Robinson', fact: 'Jackie Robinson debuted with the Brooklyn Dodgers on April 15, 1947.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'The "Miracle on Ice" took place during which Winter Olympics?', answers: ['Sapporo 1972','Innsbruck 1976','Lake Placid 1980','Sarajevo 1984'], correct: 'Lake Placid 1980', fact: 'The U.S. hockey team defeated the Soviet Union at Lake Placid in 1980.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Who became the first person officially recorded running a mile in under four minutes?', answers: ['Roger Bannister','Jesse Owens','Emil Zatopek','Jim Ryun'], correct: 'Roger Bannister', fact: 'Roger Bannister ran the mile in 3:59.4 on May 6, 1954.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Which country won the first FIFA World Cup in 1930?', answers: ['Brazil','Italy','Argentina','Uruguay'], correct: 'Uruguay', fact: 'Host nation Uruguay defeated Argentina to win the first FIFA World Cup in 1930.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Which golfer won the 1997 Masters by a record 12 strokes?', answers: ['Jack Nicklaus','Tiger Woods','Phil Mickelson','Ernie Els'], correct: 'Tiger Woods', fact: 'Tiger Woods won the 1997 Masters at age 21 with a then-record score of 18 under par.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Which nation won the celebrated 1999 FIFA Women\'s World Cup final?', answers: ['China','Germany','Norway','United States'], correct: 'United States', fact: 'The United States defeated China on penalties at the Rose Bowl in 1999.' },
+      { category: 'Sports', icon: '&#127942;', color: '#ffd166', prompt: 'Which team ended an 86-year World Series title drought in 2004?', answers: ['Boston Red Sox','Chicago White Sox','San Francisco Giants','New York Mets'], correct: 'Boston Red Sox', fact: 'The Boston Red Sox swept St. Louis in 2004 for their first championship since 1918.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'What was the first artificial satellite placed into Earth orbit?', answers: ['Explorer 1','Sputnik 1','Vanguard 1','Luna 1'], correct: 'Sputnik 1', fact: 'The Soviet Union launched Sputnik 1 on October 4, 1957.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Who became the first human to travel into space?', answers: ['Alan Shepard','John Glenn','Yuri Gagarin','Alexei Leonov'], correct: 'Yuri Gagarin', fact: 'Yuri Gagarin completed one orbit of Earth aboard Vostok 1 on April 12, 1961.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Which mission first carried a woman into space?', answers: ['Vostok 6','Apollo 8','Soyuz 4','Skylab 2'], correct: 'Vostok 6', fact: 'Valentina Tereshkova flew aboard Vostok 6 in June 1963.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Which damaged lunar mission returned safely after the phrase "Houston, we\'ve had a problem"?', answers: ['Apollo 8','Apollo 11','Apollo 13','Apollo 15'], correct: 'Apollo 13', fact: 'An oxygen tank exploded aboard Apollo 13 in April 1970, forcing the Moon landing to be aborted.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'What was the first reusable spacecraft in NASA\'s Space Shuttle program to reach orbit?', answers: ['Challenger','Columbia','Discovery','Enterprise'], correct: 'Columbia', fact: 'Space Shuttle Columbia launched on STS-1 on April 12, 1981.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Which space telescope launched in 1990 and transformed astronomy?', answers: ['Kepler','Chandra','Hubble','Spitzer'], correct: 'Hubble', fact: 'The Hubble Space Telescope launched aboard Space Shuttle Discovery on April 24, 1990.' },
+      { category: 'Space', icon: '&#128640;', color: '#a991ff', prompt: 'Which rover landed in Gale Crater on Mars in 2012?', answers: ['Spirit','Opportunity','Curiosity','Perseverance'], correct: 'Curiosity', fact: 'NASA\'s Curiosity rover landed in Gale Crater on August 6, 2012 UTC.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Which invention demonstrated at Bell Labs in 1947 became a foundation of modern electronics?', answers: ['The transistor','The laser','The integrated circuit','The floppy disk'], correct: 'The transistor', fact: 'Bell Labs researchers demonstrated the first working transistor in December 1947.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Which early general-purpose electronic computer was publicly unveiled in 1946?', answers: ['ENIAC','UNIVAC I','Colossus','Altair 8800'], correct: 'ENIAC', fact: 'ENIAC was publicly unveiled at the University of Pennsylvania in February 1946.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'ARPANET sent its first host-to-host message in which year?', answers: ['1965','1969','1973','1977'], correct: '1969', fact: 'The first ARPANET message was sent from UCLA to Stanford Research Institute in 1969.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Which home video game console launched in 1977 and popularized interchangeable cartridges?', answers: ['Atari 2600','Intellivision','Nintendo Entertainment System','ColecoVision'], correct: 'Atari 2600', fact: 'The Atari Video Computer System, later called the Atari 2600, launched in 1977.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'IBM introduced its influential Personal Computer model 5150 in which year?', answers: ['1977','1981','1984','1989'], correct: '1981', fact: 'IBM introduced the Model 5150 Personal Computer on August 12, 1981.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Which online encyclopedia launched in 2001?', answers: ['Wikipedia','Britannica Online','Encarta','Wolfram Alpha'], correct: 'Wikipedia', fact: 'Wikipedia launched on January 15, 2001.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Which video-sharing platform launched in 2005?', answers: ['Vimeo','YouTube','TikTok','Twitch'], correct: 'YouTube', fact: 'YouTube was founded in 2005, and its first video was uploaded that April.' },
+      { category: 'Technology', icon: '&#128187;', color: '#62f0bd', prompt: 'Bitcoin\'s first block, known as the genesis block, was mined in which year?', answers: ['2005','2007','2009','2011'], correct: '2009', fact: 'Bitcoin\'s genesis block was mined on January 3, 2009.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'Which building held the world height record immediately before the Burj Khalifa?', answers: ['Petronas Towers','Taipei 101','Sears Tower','Shanghai Tower'], correct: 'Taipei 101', fact: 'Taipei 101 held the official tallest-building title from 2004 until the Burj Khalifa opened in 2010.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'Human population reached approximately eight billion in which year?', answers: ['2012','2018','2022','2025'], correct: '2022', fact: 'The United Nations marked November 15, 2022, as the day world population reached eight billion.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'Which came first?', answers: ['The first mobile phone call','The first GPS satellite launch','The first Space Shuttle flight','The first commercial CD player'], correct: 'The first mobile phone call', fact: 'The first handheld mobile phone call occurred in 1973, before the first GPS satellite in 1978.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'Which technology arrived first?', answers: ['Commercial compact discs','The World Wide Web','DVD players','Google Search'], correct: 'Commercial compact discs', fact: 'Commercial compact discs arrived in 1982, before the public Web, DVDs, and Google.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'Which milestone is the most recent?', answers: ['The first iPhone','Bitcoin\'s genesis block','Instagram\'s launch','The James Webb Space Telescope launch'], correct: 'The James Webb Space Telescope launch', fact: 'Webb launched in 2021, after the iPhone, Bitcoin, and Instagram.' },
+      { category: 'Then & Now', icon: '&#9203;', color: '#ff9b68', prompt: 'Which object has traveled farthest from Earth?', answers: ['Voyager 1','Voyager 2','New Horizons','Pioneer 10'], correct: 'Voyager 1', fact: 'Voyager 1 is the most distant human-made object from Earth.' }
+    ];
+
+    let timeQuestState = null;
+    let timeQuestPreviousPrompts = new Set();
+
+    function shuffledTimeQuestItems(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function buildPersonalTimeQuestQuestion() {
+      const birthYear = Number(currentProfile?.year || els.dobYear?.value || new Date().getFullYear());
+      const milestones = [
+        { year: 1945, label: 'The United Nations was founded' },
+        { year: 1955, label: 'The Salk polio vaccine was announced' },
+        { year: 1969, label: 'Apollo 11 landed on the Moon' },
+        { year: 1977, label: 'Voyager 1 launched' },
+        { year: 1989, label: 'The Berlin Wall opened' },
+        { year: 1991, label: 'The World Wide Web became public' },
+        { year: 2001, label: 'The September 11 attacks occurred' },
+        { year: 2007, label: 'The first iPhone went on sale' },
+        { year: 2021, label: 'The James Webb Space Telescope launched' }
+      ];
+      const ranked = [...milestones].sort((a, b) => Math.abs(a.year - birthYear) - Math.abs(b.year - birthYear));
+      const choices = ranked.slice(0, 4);
+      const closest = choices[0];
+      const difference = Math.abs(closest.year - birthYear);
+      const relationship = difference === 0 ? 'during your birth year' : `${difference} year${difference === 1 ? '' : 's'} ${closest.year < birthYear ? 'before' : 'after'} your birth year`;
+      return {
+        category: 'Your Lifetime', icon: '&#128153;', color: '#ff7fb5',
+        prompt: `You were born in ${birthYear}. Which landmark event occurred closest to your birth year?`,
+        answers: choices.map(item => item.label),
+        correct: closest.label,
+        fact: `${closest.label} in ${closest.year}, ${relationship}.`
+      };
+    }
+
+    function buildTimeQuestRound() {
+      const categoryCounts = { 'World History': 3, 'Sports': 3, 'Space': 3, 'Technology': 3, 'Then & Now': 2 };
+      const selected = [];
+      Object.entries(categoryCounts).forEach(([category, count]) => {
+        const pool = TIME_QUEST_BASE_QUESTIONS.filter(question => question.category === category);
+        const fresh = shuffledTimeQuestItems(pool.filter(question => !timeQuestPreviousPrompts.has(question.prompt)));
+        const fallback = shuffledTimeQuestItems(pool.filter(question => timeQuestPreviousPrompts.has(question.prompt)));
+        selected.push(...fresh.concat(fallback).slice(0, count));
+      });
+      selected.push(buildPersonalTimeQuestQuestion());
+      timeQuestPreviousPrompts = new Set(selected.filter(question => question.category !== 'Your Lifetime').map(question => question.prompt));
+      return shuffledTimeQuestItems(selected);
+    }
+
+    function updateTimeQuestHud(completed = false) {
+      if (!timeQuestState) return;
+      const total = timeQuestState.questions.length;
+      const progress = total ? Math.round((timeQuestState.correct / total) * 100) : 0;
+      const track = document.getElementById('time-quest-pulse-track');
+      if (track) track.style.setProperty('--quest-progress', String(progress));
+      const progressLabel = document.getElementById('time-quest-progress-label');
+      if (progressLabel) progressLabel.textContent = completed ? `Complete &bull; ${total} questions` : `Question ${timeQuestState.index + 1} of ${total}`;
+      const score = document.getElementById('time-quest-score');
+      const streak = document.getElementById('time-quest-streak');
+      if (score) score.textContent = `Score ${timeQuestState.score}`;
+      if (streak) streak.textContent = `Streak ${timeQuestState.streak}`;
+    }
+
+    function renderTimeQuestQuestion() {
+      const stage = document.getElementById('time-quest-stage');
+      if (!stage || !timeQuestState) return;
+      const question = timeQuestState.questions[timeQuestState.index];
+      timeQuestState.answered = false;
+      timeQuestState.displayAnswers = shuffledTimeQuestItems(question.answers);
+      updateTimeQuestHud(false);
+      stage.innerHTML = `
+        <article class="time-quest-card" style="--quest-color:${question.color}">
+          <span class="time-quest-category">${question.icon} ${escapeHtml(question.category)}</span>
+          <h2 class="time-quest-question">${escapeHtml(question.prompt)}</h2>
+          <div class="time-quest-answers">
+            ${timeQuestState.displayAnswers.map((answer, index) => `<button class="time-quest-answer" type="button" data-time-quest-answer="${index}">${answer.includes('&bull;') ? answer : escapeHtml(answer)}</button>`).join('')}
+          </div>
+          <div class="time-quest-feedback" id="time-quest-feedback" aria-live="polite"></div>
+          <div class="time-quest-actions"><button class="time-quest-primary-btn" id="time-quest-next" type="button" hidden>${timeQuestState.index === timeQuestState.questions.length - 1 ? 'See Results' : 'Next Challenge'}</button></div>
+        </article>`;
+    }
+
+    function answerTimeQuest(answerIndex) {
+      if (!timeQuestState || timeQuestState.answered) return;
+      const question = timeQuestState.questions[timeQuestState.index];
+      const selected = timeQuestState.displayAnswers[answerIndex];
+      const correct = selected === question.correct;
+      timeQuestState.answered = true;
+      if (correct) {
+        timeQuestState.streak += 1;
+        timeQuestState.bestStreak = Math.max(timeQuestState.bestStreak, timeQuestState.streak);
+        timeQuestState.correct += 1;
+        timeQuestState.score += 100 + Math.min(5, timeQuestState.streak - 1) * 20;
+        playInterfaceSound('detail-open');
+      } else {
+        timeQuestState.streak = 0;
+        playInterfaceSound('detail-close');
+      }
+      document.querySelectorAll('[data-time-quest-answer]').forEach((button, index) => {
+        button.disabled = true;
+        const answer = timeQuestState.displayAnswers[index];
+        if (answer === question.correct) button.classList.add('is-correct');
+        else if (index === answerIndex) button.classList.add('is-wrong');
+      });
+      const feedback = document.getElementById('time-quest-feedback');
+      if (feedback) feedback.innerHTML = `<strong>${correct ? 'Correct - pulse charged.' : 'Not quite.'}</strong> ${escapeHtml(question.fact)}`;
+      const next = document.getElementById('time-quest-next');
+      if (next) next.hidden = false;
+      updateTimeQuestHud(false);
+    }
+
+    function renderTimeQuestFinale() {
+      const stage = document.getElementById('time-quest-stage');
+      if (!stage || !timeQuestState) return;
+      updateTimeQuestHud(true);
+      const percentage = Math.round((timeQuestState.correct / timeQuestState.questions.length) * 100);
+      const title = percentage >= 87 ? 'Timeline Master' : percentage >= 67 ? 'Chronology Navigator' : percentage >= 47 ? 'Time Explorer' : 'History Rookie';
+      const chargeCopy = timeQuestState.correct === timeQuestState.questions.length ? 'The ECG is fully charged.' : 'The ECG shows only the charge earned from correct answers.';
+      stage.innerHTML = `
+        <article class="time-quest-card time-quest-finale" style="--quest-color:#8af5ff">
+          <span class="time-quest-category">Time Quest Complete</span>
+          <h2 class="time-quest-question">${title}</h2>
+          <div class="time-quest-final-score">${timeQuestState.score}</div>
+          <p class="time-quest-final-copy">You answered <strong>${timeQuestState.correct} of ${timeQuestState.questions.length}</strong> correctly with a best streak of <strong>${timeQuestState.bestStreak}</strong>. ${chargeCopy}</p>
+          <div class="time-quest-actions" style="justify-content:center;gap:10px;flex-wrap:wrap">
+            <button class="time-quest-primary-btn" id="time-quest-replay" type="button">Play Again</button>
+            <button class="time-quest-primary-btn" id="time-quest-finish" type="button">Return to LifePulse</button>
+          </div>
+        </article>`;
+    }
+
+    function advanceTimeQuest() {
+      if (!timeQuestState?.answered) return;
+      timeQuestState.index += 1;
+      if (timeQuestState.index >= timeQuestState.questions.length) renderTimeQuestFinale();
+      else renderTimeQuestQuestion();
+    }
+
+    function startTimeQuest() {
+      const overlay = document.getElementById('time-quest-overlay');
+      if (!overlay) return;
+      timeQuestState = { questions: buildTimeQuestRound(), index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, displayAnswers: [] };
+      document.body.classList.add('time-quest-open');
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      renderTimeQuestQuestion();
+      playInterfaceSound('drawer-open');
+      document.getElementById('time-quest-close')?.focus({ preventScroll: true });
+    }
+
+    function closeTimeQuest() {
+      const overlay = document.getElementById('time-quest-overlay');
+      if (!overlay?.classList.contains('is-open')) return;
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('time-quest-open');
+      playInterfaceSound('drawer-close');
+      document.getElementById('time-quest-launch-btn')?.focus({ preventScroll: true });
+    }
+
+    function bindTimeQuest() {
+      const overlay = document.getElementById('time-quest-overlay');
+      const stage = document.getElementById('time-quest-stage');
+      document.getElementById('time-quest-launch-btn')?.addEventListener('click', startTimeQuest);
+      document.getElementById('time-quest-close')?.addEventListener('click', closeTimeQuest);
+      overlay?.addEventListener('click', event => { if (event.target === overlay) closeTimeQuest(); });
+      stage?.addEventListener('click', event => {
+        const answer = event.target.closest('[data-time-quest-answer]');
+        if (answer) { answerTimeQuest(Number(answer.dataset.timeQuestAnswer)); return; }
+        if (event.target.closest('#time-quest-next')) { advanceTimeQuest(); return; }
+        if (event.target.closest('#time-quest-replay')) { startTimeQuest(); return; }
+        if (event.target.closest('#time-quest-finish')) closeTimeQuest();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && overlay?.classList.contains('is-open')) closeTimeQuest();
+      });
+    }
+
+    const COSMIC_CHRONOLOGY_STOPS = [
+      { name:'Mercury', color:'#aeb8c4', category:'Rapid Time', questions:[
+        { prompt:'About how long is one Mercury year?', answers:['24 Earth days','88 Earth days','225 Earth days','365 Earth days'], correct:'88 Earth days', fact:'Mercury completes one orbit of the Sun in about 88 Earth days.' },
+        { prompt:'Which planet completes the fastest orbit around the Sun?', answers:['Mercury','Venus','Earth','Mars'], correct:'Mercury', fact:'Mercury moves around the Sun faster than any other planet.' }
+      ]},
+      { name:'Venus', color:'#f0b46c', category:'Culture', questions:[
+        { prompt:'Saturday Night Live premiered in which year?', answers:['1969','1975','1981','1989'], correct:'1975', fact:'Saturday Night Live premiered on NBC on October 11, 1975.' },
+        { prompt:'The Simpsons began airing as a full half-hour series in which year?', answers:['1985','1987','1989','1992'], correct:'1989', fact:'The Simpsons premiered as a half-hour series on December 17, 1989.' }
+      ]},
+      { name:'Earth', color:'#51b8ff', category:'World History', questions:[
+        { prompt:'Which international organization officially began in 1945?', answers:['NATO','The United Nations','The European Union','The World Trade Organization'], correct:'The United Nations', fact:'The United Nations officially began on October 24, 1945.' },
+        { prompt:'Which barrier opened in November 1989 and became a symbol of the Cold War ending?', answers:['The Iron Curtain','The Berlin Wall','The Maginot Line','Hadrian\'s Wall'], correct:'The Berlin Wall', fact:'The Berlin Wall opened on November 9, 1989.' }
+      ]},
+      { name:'Mars', color:'#dc694d', category:'Exploration', questions:[
+        { prompt:'Which mission made the first fully successful landing on Mars?', answers:['Mariner 4','Viking 1','Pathfinder','Spirit'], correct:'Viking 1', fact:'Viking 1 landed successfully on Mars on July 20, 1976.' },
+        { prompt:'Which Mars rover landed in Jezero Crater in 2021?', answers:['Curiosity','Opportunity','Perseverance','Sojourner'], correct:'Perseverance', fact:'Perseverance landed in Jezero Crater on February 18, 2021.' }
+      ]},
+      { name:'Jupiter', color:'#d3a06e', category:'Sports', questions:[
+        { prompt:'The original U.S. basketball Dream Team competed in which year?', answers:['1988','1992','1996','2000'], correct:'1992', fact:'The original Dream Team won Olympic gold in Barcelona in 1992.' },
+        { prompt:'The first Super Bowl-era championship game was played in which year?', answers:['1961','1967','1970','1976'], correct:'1967', fact:'Green Bay defeated Kansas City in the first AFL-NFL World Championship Game in 1967.' }
+      ]},
+      { name:'Saturn', color:'#e6ce83', category:'Your Lifetime', questions:[
+        { prompt:'One Saturn return takes approximately how many Earth years?', answers:['12 years','19 years','29.5 years','50 years'], correct:'29.5 years', fact:'Saturn takes about 29.5 Earth years to orbit the Sun, creating the traditional Saturn-return interval.' },
+        { prompt:'A person generally reaches a first Saturn return at approximately what age?', answers:['18','21','29','40'], correct:'29', fact:'A first Saturn return generally arrives around ages 29 to 30.' }
+      ]},
+      { name:'Uranus', color:'#75e1e6', category:'Technology', questions:[
+        { prompt:'ARPANET sent its first host-to-host message in which year?', answers:['1965','1969','1977','1983'], correct:'1969', fact:'The first ARPANET host-to-host message was sent in 1969.' },
+        { prompt:'The first iPhone went on sale in which year?', answers:['2003','2005','2007','2009'], correct:'2007', fact:'The first iPhone went on sale in the United States in 2007.' }
+      ]},
+      { name:'Neptune', color:'#547dff', category:'Deep Space', questions:[
+        { prompt:'Which spacecraft is the only one to have visited Neptune?', answers:['Voyager 1','Voyager 2','New Horizons','Cassini'], correct:'Voyager 2', fact:'Voyager 2 flew past Neptune in August 1989 and remains the only spacecraft to visit it.' },
+        { prompt:'Approximately how long does Neptune take to orbit the Sun?', answers:['84 Earth years','120 Earth years','165 Earth years','248 Earth years'], correct:'165 Earth years', fact:'Neptune completes one solar orbit in about 165 Earth years.' }
+      ]}
+    ];
+
+    let cosmicChronologyState = null;
+
+    function buildCosmicChronologyRoute() {
+      return COSMIC_CHRONOLOGY_STOPS.map(stop => ({ ...stop, question: shuffledTimeQuestItems(stop.questions)[0] }));
+    }
+
+    function renderCosmicChronologyRoute() {
+      if (!cosmicChronologyState) return;
+      const planets = document.getElementById('cosmic-chronology-planets');
+      const route = document.getElementById('cosmic-chronology-route');
+      if (route) route.style.setProperty('--cosmic-position', String(cosmicChronologyState.index));
+      if (planets) {
+        planets.innerHTML = cosmicChronologyState.stops.map((stop,index) => {
+          const result = cosmicChronologyState.results[index];
+          const stateClass = index === cosmicChronologyState.index ? 'is-current' : result === true ? 'is-correct' : result === false ? 'is-missed' : '';
+          return `<span class="cosmic-chronology-planet ${stateClass}" data-cosmic-planet="${index}" style="--planet-color:${stop.color}"><span class="cosmic-chronology-planet-dot" aria-hidden="true"></span><span>${stop.name}</span></span>`;
+        }).join('');
+      }
+      const total = cosmicChronologyState.stops.length;
+      const fuelPercent = Math.round((cosmicChronologyState.correct / total) * 100);
+      const fuel = document.getElementById('cosmic-chronology-fuel');
+      if (fuel) fuel.style.setProperty('--cosmic-fuel', `${fuelPercent}%`);
+      const progress = document.getElementById('cosmic-chronology-progress');
+      const score = document.getElementById('cosmic-chronology-score');
+      const stop = cosmicChronologyState.stops[Math.min(cosmicChronologyState.index,total - 1)];
+      if (progress) progress.textContent = cosmicChronologyState.finished ? 'Voyage Complete' : `${stop.name} &bull; Stop ${cosmicChronologyState.index + 1} of ${total}`;
+      if (score) score.textContent = `Fuel ${fuelPercent}% &bull; Score ${cosmicChronologyState.score}`;
+      requestAnimationFrame(() => document.querySelector(`[data-cosmic-planet="${Math.min(cosmicChronologyState.index,total - 1)}"]`)?.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' }));
+    }
+
+    function renderCosmicChronologyQuestion() {
+      const stage = document.getElementById('cosmic-chronology-stage');
+      if (!stage || !cosmicChronologyState) return;
+      const stop = cosmicChronologyState.stops[cosmicChronologyState.index];
+      const question = stop.question;
+      cosmicChronologyState.answered = false;
+      cosmicChronologyState.displayAnswers = shuffledTimeQuestItems(question.answers);
+      renderCosmicChronologyRoute();
+      stage.innerHTML = `
+        <article class="cosmic-chronology-card" style="--planet-color:${stop.color}">
+          <span class="cosmic-chronology-planet-name">${stop.name} &bull; ${escapeHtml(stop.category)}</span>
+          <h2 class="cosmic-chronology-question">${escapeHtml(question.prompt)}</h2>
+          <div class="cosmic-chronology-answers">${cosmicChronologyState.displayAnswers.map((answer,index) => `<button class="cosmic-chronology-answer" type="button" data-cosmic-answer="${index}">${escapeHtml(answer)}</button>`).join('')}</div>
+          <div class="cosmic-chronology-feedback" id="cosmic-chronology-feedback" aria-live="polite"></div>
+          <div class="cosmic-chronology-actions"><button class="cosmic-chronology-action" id="cosmic-chronology-next" type="button" hidden>${cosmicChronologyState.index === cosmicChronologyState.stops.length - 1 ? 'Complete Voyage' : `Travel to ${cosmicChronologyState.stops[cosmicChronologyState.index + 1].name}`}</button></div>
+        </article>`;
+    }
+
+    function answerCosmicChronology(answerIndex) {
+      if (!cosmicChronologyState || cosmicChronologyState.answered) return;
+      const stop = cosmicChronologyState.stops[cosmicChronologyState.index];
+      const question = stop.question;
+      const selected = cosmicChronologyState.displayAnswers[answerIndex];
+      const correct = selected === question.correct;
+      cosmicChronologyState.answered = true;
+      cosmicChronologyState.results[cosmicChronologyState.index] = correct;
+      if (correct) { cosmicChronologyState.correct += 1; cosmicChronologyState.score += 150; playInterfaceSound('detail-open'); }
+      else playInterfaceSound('detail-close');
+      document.querySelectorAll('[data-cosmic-answer]').forEach((button,index) => {
+        button.disabled = true;
+        const answer = cosmicChronologyState.displayAnswers[index];
+        if (answer === question.correct) button.classList.add('is-correct');
+        else if (index === answerIndex) button.classList.add('is-wrong');
+      });
+      const feedback = document.getElementById('cosmic-chronology-feedback');
+      if (feedback) feedback.innerHTML = `<strong>${correct ? 'Fuel collected.' : 'No fuel collected at this stop.'}</strong> ${escapeHtml(question.fact)}`;
+      const next = document.getElementById('cosmic-chronology-next');
+      if (next) next.hidden = false;
+      renderCosmicChronologyRoute();
+    }
+
+    function renderCosmicChronologyFinale() {
+      const stage = document.getElementById('cosmic-chronology-stage');
+      if (!stage || !cosmicChronologyState) return;
+      cosmicChronologyState.finished = true;
+      renderCosmicChronologyRoute();
+      const fuelPercent = Math.round((cosmicChronologyState.correct / cosmicChronologyState.stops.length) * 100);
+      const title = fuelPercent === 100 ? 'Perfect Planetary Passage' : fuelPercent >= 75 ? 'Outer-System Navigator' : fuelPercent >= 50 ? 'Solar-System Explorer' : 'Cosmic Cadet';
+      stage.innerHTML = `<article class="cosmic-chronology-card cosmic-chronology-finale" style="--planet-color:#9af4ff"><span class="cosmic-chronology-planet-name">Neptune Reached</span><h2 class="cosmic-chronology-question">${title}</h2><div class="cosmic-chronology-final-score">${fuelPercent}% Fuel</div><p class="time-quest-final-copy">You answered <strong>${cosmicChronologyState.correct} of ${cosmicChronologyState.stops.length}</strong> correctly and scored <strong>${cosmicChronologyState.score}</strong>.</p><div class="cosmic-chronology-actions" style="justify-content:center"><button class="cosmic-chronology-action" id="cosmic-chronology-replay" type="button">Fly Again</button><button class="cosmic-chronology-action" id="cosmic-chronology-finish" type="button">Return to LifePulse</button></div></article>`;
+    }
+
+    function advanceCosmicChronology() {
+      if (!cosmicChronologyState?.answered) return;
+      cosmicChronologyState.index += 1;
+      if (cosmicChronologyState.index >= cosmicChronologyState.stops.length) renderCosmicChronologyFinale();
+      else renderCosmicChronologyQuestion();
+    }
+
+    function startCosmicChronology() {
+      const overlay = document.getElementById('cosmic-chronology-overlay');
+      if (!overlay) return;
+      cosmicChronologyState = { stops:buildCosmicChronologyRoute(),index:0,correct:0,score:0,answered:false,finished:false,results:Array(8).fill(null),displayAnswers:[] };
+      document.body.classList.add('cosmic-chronology-open');
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden','false');
+      renderCosmicChronologyQuestion();
+      playInterfaceSound('drawer-open');
+      document.getElementById('cosmic-chronology-close')?.focus({preventScroll:true});
+    }
+
+    function closeCosmicChronology() {
+      const overlay = document.getElementById('cosmic-chronology-overlay');
+      if (!overlay?.classList.contains('is-open')) return;
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden','true');
+      document.body.classList.remove('cosmic-chronology-open');
+      playInterfaceSound('drawer-close');
+      document.getElementById('cosmic-chronology-launch-btn')?.focus({preventScroll:true});
+    }
+
+    function bindCosmicChronology() {
+      const overlay = document.getElementById('cosmic-chronology-overlay');
+      const stage = document.getElementById('cosmic-chronology-stage');
+      document.getElementById('cosmic-chronology-launch-btn')?.addEventListener('click',startCosmicChronology);
+      document.getElementById('cosmic-chronology-close')?.addEventListener('click',closeCosmicChronology);
+      overlay?.addEventListener('click',event => { if(event.target === overlay) closeCosmicChronology(); });
+      stage?.addEventListener('click',event => {
+        const answer = event.target.closest('[data-cosmic-answer]');
+        if(answer){ answerCosmicChronology(Number(answer.dataset.cosmicAnswer)); return; }
+        if(event.target.closest('#cosmic-chronology-next')){ advanceCosmicChronology(); return; }
+        if(event.target.closest('#cosmic-chronology-replay')){ startCosmicChronology(); return; }
+        if(event.target.closest('#cosmic-chronology-finish')) closeCosmicChronology();
+      });
+      document.addEventListener('keydown',event => { if(event.key === 'Escape' && overlay?.classList.contains('is-open')) closeCosmicChronology(); });
+    }
+
     function bindSnLEasterEgg() {
       const card = document.getElementById('snl-easter-card');
       if (!card || card.dataset.easterBound === 'true') return;
@@ -16365,6 +17443,8 @@ function getBirthSkySnapshot() {
       bindPwaEvents();
       bindSimpsonsEasterEgg();
       bindSnLEasterEgg();
+      bindTimeQuest();
+      bindCosmicChronology();
       bindNestedDetailSounds();
       els.resultView?.addEventListener('toggle', () => requestAnimationFrame(fitDisplayLabels), true);
       els.btnMale.addEventListener('click',   () => setGender('male'));
@@ -16384,9 +17464,11 @@ function getBirthSkySnapshot() {
         els.launchBtn.textContent = 'LAUNCHING...';
         try {
           await unlockAudio();
-          await arrivalPause(220);
+          await runLauncherCommitAnimation();
+          await arrivalPause(110);
           await igniteTracker();
         } finally {
+          clearLauncherCommitAnimation();
           els.launchBtn.disabled = false;
           els.launchBtn.textContent = priorLabel;
         }
@@ -16612,7 +17694,80 @@ function getBirthSkySnapshot() {
 
     boot();
   </script>
+  <script>
+    function loadOrbitRelayScript(source, id) {
+      return new Promise((resolve, reject) => {
+        const existing = document.getElementById(id);
+        if (existing) {
+          if (existing.dataset.loaded === 'true') resolve();
+          else {
+            existing.addEventListener('load', resolve, { once: true });
+            existing.addEventListener('error', () => reject(new Error(`Could not load ${source}`)), { once: true });
+          }
+          return;
+        }
+        const script = document.createElement('script');
+        script.id = id;
+        script.src = source;
+        script.onload = () => { script.dataset.loaded = 'true'; resolve(); };
+        script.onerror = () => reject(new Error(`Could not load ${source}`));
+        document.head.appendChild(script);
+      });
+    }
+    function waitForOrbitController(timeout = 2200) {
+      return new Promise((resolve, reject) => {
+        const started = performance.now();
+        const check = () => {
+          if (window.LifePulseOrbitRelay?.open) return resolve();
+          if (performance.now() - started >= timeout) return reject(new Error('Orbit Relay initialized without a launch controller.'));
+          window.setTimeout(check, 40);
+        };
+        check();
+      });
+    }
+    window.launchOrbitRelay = async function(event) {
+      event?.preventDefault?.();
+      if (window.LifePulseOrbitRelay?.open) {
+        window.LifePulseOrbitRelay.open();
+        return false;
+      }
+      const overlay = document.getElementById('orbit-relay-overlay');
+      const message = document.getElementById('orbit-relay-message');
+      document.body.classList.add('orbit-relay-open');
+      overlay?.classList.add('is-open');
+      overlay?.setAttribute('aria-hidden', 'false');
+      if (message) {
+        message.hidden = false;
+        message.innerHTML = '<span class="orbit-relay-kicker">Flight Computer Starting</span><h2>Preparing Orbit Relay</h2><p>Loading the 3D flight engine and solar-system course...</p>';
+      }
+      let engineError = '';
+      const captureEngineError = event => {
+        const file = String(event.filename || '');
+        if (file.includes('orbit-relay') || file.includes('three.min')) engineError = String(event.message || event.error?.message || 'Browser script error');
+      };
+      window.addEventListener('error', captureEngineError);
+      try {
+        if (!window.THREE) await loadOrbitRelayScript('./three.min.js?v=5.145.9', 'orbit-relay-three-engine');
+        if (!window.LifePulseOrbitRelay) await loadOrbitRelayScript('./orbit-relay.js?v=5.145.9', 'orbit-relay-game-engine');
+        await waitForOrbitController();
+        window.removeEventListener('error', captureEngineError);
+        window.LifePulseOrbitRelay.open();
+      } catch (error) {
+        window.removeEventListener('error', captureEngineError);
+        if (message) {
+          message.hidden = false;
+          message.innerHTML = `<span class="orbit-relay-kicker">Flight Computer Offline</span><h2>Orbit Relay Could Not Load</h2><p>${engineError || String(error?.message || error)}</p><p>Make sure <strong>orbit-relay.js</strong> and <strong>three.min.js</strong> are stored beside <strong>index.html</strong>.</p>`;
+        }
+      }
+      return false;
+    };
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest?.('#orbit-relay-launch-btn')) return;
+      window.launchOrbitRelay(event);
+    });
+  </script>
   <script src="time-flight.js"></script>
+  <script src="pulse-run.js"></script>
 </body>
 </html>
 
