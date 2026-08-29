@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-59';
+const CACHE_VERSION = 'lifepulse-v5-shell-60';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -58,6 +58,8 @@ const SHELL_ASSETS = [
   './assets/time-flight/1984-macintosh.jpg',
   './assets/time-flight/1986-challenger.jpg',
   './assets/time-flight/1986-chernobyl.jpg',
+  './assets/time-flight/1986-chernobyl-user.jpg',
+  './assets/time-flight/1988-pan-am-103.jpg',
   './assets/time-flight/1989-berlin-wall.jpg',
   './assets/time-flight/1991-web.jpg',
   './assets/time-flight/1991-soviet-flag.jpg',
@@ -79,6 +81,7 @@ const SHELL_ASSETS = [
   './assets/time-flight/2019-black-hole.jpg',
   './assets/time-flight/2020-covid.jpg',
   './assets/time-flight/2022-ukraine.jpg',
+  './assets/time-flight/2022-russia-ukraine-user.jpg',
   './assets/time-flight/2022-webb.jpg',
   './assets/time-flight/2024-eclipse.jpg',
   './assets/time-flight/2024-trump-attempt.jpg',
