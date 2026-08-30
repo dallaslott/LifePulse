@@ -23,7 +23,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
   <link href="pulse-run.css" rel="stylesheet" />
-  <link href="orbit-relay.css" rel="stylesheet" />
+  <link href="orbit-relay.css?v=5.146.0" rel="stylesheet" />
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
@@ -5964,9 +5964,9 @@
         </div>
         <div class="orbit-relay-impact-warning" id="orbit-relay-impact-warning" aria-live="assertive"></div>
         <div class="orbit-relay-message" id="orbit-relay-message">
-          <span class="orbit-relay-kicker">Solar-System Racing Prototype</span>
+          <span class="orbit-relay-kicker">Expanded Solar-System Racing</span>
           <h2>Orbit Relay</h2>
-          <p>Race from Mercury to Neptune. Thread each orbital gate, collect boost energy, and avoid asteroids and abandoned space debris.</p>
+          <p>Race from Mercury to Neptune through precision gates, debris surges, bonus fields, time dilation, and unstable wormholes.</p>
           <div class="orbit-relay-instructions"><span>Drag / Swipe to Steer</span><span>Arrows or WASD</span><span>Hold Boost</span><span>V Changes View</span></div>
           <button class="orbit-relay-primary" id="orbit-relay-start" type="button">Launch Relay</button>
         </div>
@@ -5986,7 +5986,7 @@
     <div class="build-ribbon">
       <div class="build-identity">
         <span class="build-chip" id="build-chip">LIFEPULSE</span>
-       <span class="version-chip" id="version-chip" aria-label="App version">v5.145.9.local</span>
+       <span class="version-chip" id="version-chip" aria-label="App version">v5.146.0.local</span>
       </div>
       <button class="update-available-btn hidden" id="update-available-btn" type="button">UPDATE AVAILABLE</button>
       <button class="control-btn diagnostics-toggle" id="diagnostics-toggle" type="button" aria-expanded="false" aria-controls="diagnostics-panel">DIAGNOSTICS</button>
@@ -6666,8 +6666,8 @@
         <div>
           <span class="time-quest-kicker">Space Racing Prototype</span>
           <strong class="orbit-relay-launch-title" id="orbit-relay-launch-title">Orbit Relay</strong>
-          <p class="orbit-relay-launch-copy">Race through a cinematic solar-system course in Cockpit or Chase view. Clear planetary orbit gates, collect boost energy, and dodge debris.</p>
-          <span class="time-quest-launch-meta">8 planetary checkpoints &bull; Two camera views &bull; Touch + keyboard</span>
+          <p class="orbit-relay-launch-copy">Race through a deeper solar-system course in Cockpit or Chase view. Build streaks with close calls, collect tactical bonuses, and dive through wormholes.</p>
+          <span class="time-quest-launch-meta">8 planetary sectors &bull; Wormholes + time warps &bull; Touch + keyboard</span>
         </div>
         <button class="orbit-relay-launch-btn" id="orbit-relay-launch-btn" type="button">Launch Orbit Relay</button>
       </section>
@@ -7203,7 +7203,7 @@
     const BUILD_CODENAME = 'LIFEPULSE';
     const BUILD_VARIANT  = '';
     const BUILD_LABEL    = `${BUILD_CODENAME} • ${BUILD_VARIANT}`;
-    const LOCAL_RELEASE_VERSION = '5.145.9.local';
+    const LOCAL_RELEASE_VERSION = '5.146.0.local';
     const HISTORY_BASE    = 'https://history.muffinlabs.com/date';
     const GEOCODE_BASE    = 'https://nominatim.openstreetmap.org/search';
     const GEOCODE_SUGGEST_BASE = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -17747,8 +17747,8 @@ function getBirthSkySnapshot() {
       };
       window.addEventListener('error', captureEngineError);
       try {
-        if (!window.THREE) await loadOrbitRelayScript('./three.min.js?v=5.145.9', 'orbit-relay-three-engine');
-        if (!window.LifePulseOrbitRelay) await loadOrbitRelayScript('./orbit-relay.js?v=5.145.9', 'orbit-relay-game-engine');
+        if (!window.THREE) await loadOrbitRelayScript('./three.min.js?v=5.146.0', 'orbit-relay-three-engine');
+        if (!window.LifePulseOrbitRelay) await loadOrbitRelayScript('./orbit-relay.js?v=5.146.0', 'orbit-relay-game-engine');
         await waitForOrbitController();
         window.removeEventListener('error', captureEngineError);
         window.LifePulseOrbitRelay.open();

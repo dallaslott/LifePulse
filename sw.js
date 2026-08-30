@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-60';
+const CACHE_VERSION = 'lifepulse-v5-shell-61';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
