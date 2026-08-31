@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'lifepulse-v5-shell-61';
+const CACHE_VERSION = 'lifepulse-v5-shell-62';
 const OFFLINE_URL = './offline.html';
 const SHELL_ASSETS = [
   './',
@@ -85,6 +85,7 @@ const SHELL_ASSETS = [
   './assets/time-flight/2022-webb.jpg',
   './assets/time-flight/2024-eclipse.jpg',
   './assets/time-flight/2024-trump-attempt.jpg',
+  './assets/time-flight/2026-roman-launch.jpg',
   './time-flight.js',
   './pulse-run.css',
   './pulse-run.js',
