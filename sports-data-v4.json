@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-09",
+  "version": "2026-09-08",
   "championshipRefresh": {
     "source": "Wikimedia championship pages",
     "sourceUrl": "https://en.wikipedia.org/w/api.php",
@@ -1659,9 +1659,9 @@
       "fifa": "https://www.fifa.com/en/tournaments/mens/worldcup"
     },
     "nextCheck": {
-      "summerOlympics": "2026-09-08",
-      "winterOlympics": "2026-09-08",
-      "worldCup": "2026-09-08"
+      "summerOlympics": "2026-10-08",
+      "winterOlympics": "2026-10-08",
+      "worldCup": "2026-10-08"
     }
   },
   "technologyReview": {
