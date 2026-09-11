@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-10T01:23:59.528Z",
-  "nextReview": "2026-09-11",
+  "updatedAt": "2026-09-11T12:11:30.829Z",
+  "nextReview": "2026-09-18",
   "populationLatestYear": 2024,
   "incomeLatestYear": 2024,
   "places": {
@@ -585713,6 +585713,7 @@
     "Census 2000: 25,375 places",
     "Census 2010: 29,514 places",
     "Census 2020: 31,909 places",
+    "Census 2025 retained (HTTP 404)",
     "Census 2024: 32,330 places",
     "BEA county income: 3,149 counties through 2024"
   ]
