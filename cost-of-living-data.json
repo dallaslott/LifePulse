@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-09T12:19:34.090Z",
-  "nextReview": "2026-09-16",
+  "updatedAt": "2026-09-16T12:35:48.264Z",
+  "nextReview": "2026-09-23",
   "methodology": "Values are nominal U.S. dollars. Birth-year values use the closest published annual observation or interpolation between published anchors. Labels distinguish medians, averages, and estimates.",
   "metrics": {
     "homePrice": {
@@ -612,6 +612,6 @@
     "income through 2024",
     "rent through 2024",
     "movie tickets retained (HTTP 404)",
-    "BLS basket through 2026"
+    "BLS basket retained (BLS HTTP 503)"
   ]
 }
