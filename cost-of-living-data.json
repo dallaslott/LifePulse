@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-21T12:54:55.887Z",
-  "nextReview": "2026-10-28",
+  "updatedAt": "2026-10-28T13:59:36.394Z",
+  "nextReview": "2026-11-04",
   "methodology": "Values are nominal U.S. dollars. Birth-year values use the closest published annual observation or interpolation between published anchors. Labels distinguish medians, averages, and estimates.",
   "metrics": {
     "homePrice": {
@@ -79,7 +79,7 @@
         "2023": 426525,
         "2024": 418975,
         "2025": 415400,
-        "2026": 409600
+        "2026": 405100
       },
       "estimatedYears": []
     },
