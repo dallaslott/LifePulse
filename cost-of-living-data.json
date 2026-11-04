@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T13:59:36.394Z",
-  "nextReview": "2026-11-04",
+  "updatedAt": "2026-11-04T15:23:31.026Z",
+  "nextReview": "2026-11-11",
   "methodology": "Values are nominal U.S. dollars. Birth-year values use the closest published annual observation or interpolation between published anchors. Labels distinguish medians, averages, and estimates.",
   "metrics": {
     "homePrice": {
@@ -102,7 +102,8 @@
         "2010": 855,
         "2020": 1163,
         "2023": 1406,
-        "2024": 1487
+        "2024": 1487,
+        "2025": 1557
       }
     },
     "newCar": {
@@ -611,7 +612,7 @@
   "lastRefreshNotes": [
     "home through 2026",
     "income through 2025",
-    "rent through 2024",
+    "rent through 2025",
     "movie tickets retained (HTTP 404)",
     "BLS basket through 2026"
   ]
