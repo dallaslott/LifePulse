@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-08",
+  "version": "2026-11-06",
   "championshipRefresh": {
     "source": "Wikimedia championship pages",
     "sourceUrl": "https://en.wikipedia.org/w/api.php",
@@ -7,7 +7,7 @@
     "checkAfter": {
       "nfl": "2027-02-15",
       "nba": "2027-06-24",
-      "mlb": "2026-11-06"
+      "mlb": "2027-11-06"
     }
   },
   "summerOlympicsDates": [
@@ -1127,6 +1127,12 @@
       "league": "NL",
       "date": "2025-11-01",
       "team": "Los Angeles Dodgers"
+    },
+    {
+      "year": 2026,
+      "league": "NL",
+      "team": "Milwaukee Brewers",
+      "date": "2026-10-28"
     }
   ],
   "dynastyMilestones": [
